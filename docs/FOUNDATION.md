@@ -1,6 +1,6 @@
 # Grundlagenvertrag – SF-003 und SF-004
 
-**Stand 11.11.2026:** Implementiert, zur Prüfung. Der Nutzer hat beide Tickets ausdrücklich gemeinsam beauftragt; keine automatische Folgeimplementierung. Lokaler Build mit CodeCop/UICop gegen BC-28.5-Symbole, Runtime 17. Reale Sandbox-/Rechteverifikation noch offen.
+**Foundation-Stand SF-003/SF-004, 11.11.2026:** Implementiert, zur Prüfung. Die nachfolgenden Angaben beschreiben diese ursprüngliche Basis. Erweiterungen aus SF-005/SF-006 (Sprachfeld, Konfigurationsguard, erweiterte ADMIN-Rechte und eng begrenzte Snapshot-Insert-Permissions) stehen in [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md). Der Nutzer hat beide Tickets ausdrücklich gemeinsam beauftragt; keine automatische Folgeimplementierung. Lokaler Build mit CodeCop/UICop gegen BC-28.5-Symbole, Runtime 17. Reale Sandbox-/Rechteverifikation noch offen.
 
 ## Ziel, Scope und Risiken vor Umsetzung
 

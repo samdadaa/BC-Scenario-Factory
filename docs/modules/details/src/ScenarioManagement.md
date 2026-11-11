@@ -1,6 +1,6 @@
 # ScenarioManagement – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/ScenarioManagement/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** Teilweise implementiert (20 AL-Objekte), zur Prüfung; weitere Funktionen geplant. **Pfad:** `src/ScenarioManagement/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -36,4 +36,10 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 
 ## Objektplanung SF-002
 
-Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.ScenarioManagement`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.ScenarioManagement`; Präfix: `BCSF`. Die Vorlagen-/Ziel-/Snapshot-Objekte sind seit SF-005/SF-006 vorhanden; Run Step und Wizard bleiben Planung. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+
+## Aktueller Stand SF-005/SF-006 und Sprachen
+
+Fünf Tabellen, drei Enums, acht Pages und vier Codeunits für Vorlagen, Ziele, Kopien/Revisionen und atomare unveränderliche Draft-Snapshots. Kein Profil-/Generator-/Queue-/Run-Step- oder Wizard-Ersatz. Live- und eingefrorene Namensvorschauen verwenden den Sprachvertrag.
+
+Vertrag, konkrete Objekte, Datenfluss und offene Laufzeitprüfungen: [SCENARIO_CONFIGURATION.md](../../../SCENARIO_CONFIGURATION.md), [OBJECT_PLAN.md](../../../OBJECT_PLAN.md), [TESTS.md](../../../TESTS.md).

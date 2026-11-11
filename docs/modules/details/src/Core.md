@@ -1,6 +1,6 @@
 # Core – Modulspezifikation
 
-**Status:** Grundlagen implementiert (8 AL-Objekte), zur Prüfung; weitergehende Funktionen geplant. **Pfad:** `src/Core/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** Teilweise implementiert (10 AL-Objekte), zur Prüfung; weitere Funktionen geplant. **Pfad:** `src/Core/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -41,3 +41,9 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Implementierter Stand SF-003/SF-004
 
 Setup-Tabelle/Card, drei Enums, Permission Set, Setup Management und Run State Mgt. Datenfluss, Felder, Rechte und Grenzen siehe [FOUNDATION.md](../../../FOUNDATION.md). Tatsächlicher Build mit CodeCop/UICop gegen lokale BC-28.5-/Runtime-17-Symbole erfolgreich; Laufzeit-/Rechte-/Sandboxfälle noch offen, siehe [TESTS.md](../../../TESTS.md). Keine Fachgeneratoren oder Queue-Worker.
+
+## Aktueller Stand SF-005/SF-006 und Sprachen
+
+Zusätzlich Datensprachen-Enum 90108 und Language Mgt 90109; neues Factory-Sprachfeld, BC-Sprachwechselaktion und erweiterte deklarative Rechte. Sprachkatalog verwendet explizite eingefrorene Sprache, keine Änderung der persönlichen BC-Präferenzen.
+
+Vertrag, konkrete Objekte, Datenfluss und offene Laufzeitprüfungen: [SCENARIO_CONFIGURATION.md](../../../SCENARIO_CONFIGURATION.md), [OBJECT_PLAN.md](../../../OBJECT_PLAN.md), [TESTS.md](../../../TESTS.md).

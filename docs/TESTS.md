@@ -164,3 +164,45 @@ Reproduzierbarer Build-Aufruf (lokale Pfade über den tatsächlich vorhandenen V
 | SF-004 Teilfehler/Konkurrenz | Ungültige Änderung beim Speichern; zwei parallele Initialisierungen | Fehlerhafte Operation nicht persistiert; ein Singleton, keine Rücksetzung vorhandener Freigaben |
 
 **Verbleibende Grenzen:** Kein Login/Deployment, keine ausgeführten AL-Unit-/Integrations-/Lasttests, kein Nachweis tatsächlich vorhandener Testfirma/Rechte, keine Kollisionsprüfung gegen unbekannte Fremd-Apps. Build nur gegen vorhandene 28.5-Pakete, nicht gegen ursprüngliche 28.0-Pakete oder jede Lokalisierung. Spätere Worker/Generatoren müssen den Guard und konkrete Standardtabellenrechte einbinden; sie existieren hier noch nicht.
+
+
+## SF-005/SF-006 und Deutsch/Englisch – Prüfungen vom 11.11.2026
+
+**Beauftragt:** Beide Tickets plus zweisprachige UI-/Datengrundlage. Vor Änderungen Manifest, Launch, TODO und vorhandene neun AL-Dateien lokal gesichert. Aktuell 32 AL-Objekte; App/Test nicht vermischt, keine neue AL-Test-App und keine Standard-BC-Datengenerierung. Keine Installation, Veröffentlichung, Anmeldung oder Remote-Übersetzung.
+
+### Tatsächlich ausgeführt
+
+| Prüfung | Ergebnis |
+| --- | --- |
+| Pflichtdokumentation/Bestand/XERJ | Regeln, Tickets, zentrale Dokumente und betroffene Module geprüft; XERJ-Suche/Definition ausschließlich bcsf-docs und gegen aktuelle Dateien abgeglichen. Verfügbare Symbole/Runtime wie in der Foundation |
+| Compiler/CodeCop/UICop | Vollständiger Cloud-Build, Runtime 17, vorhandene fünf Microsoft-28.5-Pakete, AL Compiler 18.1.43.24897 über vorhandenen .NET-10.0.15-Host, generatecode+ und warnaserror+: Exit 0. Keine Fehler/Warnungen. Zwei AW0006-Informationen für nicht separat durchsuchbare Detailkarten; Listen sind durchsuchbar |
+| Korrigierte Erstbefunde | Enumcaption-Kommas AL0649, Variablenreihenfolge AA0021, ungenutzte Variable AA0137 und unklarer Revision-only-Update AA0214 beim ersten Build gefunden und behoben; keine Warnungen unterdrückt |
+| Übersetzungen | 285 generierte UI-Einheiten vollständig in de-DE/de-AT/de-CH/de-LI/de-LU und en-US; IDs, Quelltexte, Platzhalter, Maximalbreiten, Status und regionale Gleichheit mit `python3 scripts/check_translations.py --sync` sowie Prüfmodus validiert. Alle bestehenden Foundation-UI-Texte eingeschlossen; sieben XLIFF-Dateien insgesamt |
+| Übersetzungs-Negativfälle | Sechs nur im Arbeitsspeicher beschädigte Varianten (fehlendes Target, veralteter Source, verlorener Platzhalter, falsche Kultur, unbestätigter Status, überschrittene Textlänge) korrekt abgewiesen. Projektdateien nicht beschädigt |
+| IDs/Kollisionen | 32 eindeutige IDs/Namen innerhalb 90100–90999; Namen höchstens 30 Zeichen. Keine Kollision mit 8.361 Objektdeklarationen der fünf lokalen Microsoft-Pakete. Keine Aussage zu nicht vorliegenden Fremd-Apps |
+| Sicherheitsverdrahtung | Je 20 neue verpflichtende Content- und Lifecycle-Subscriber auf fünf Tabellen, Skip-Flags false, kein RunTrigger-/GuiAllowed-Bypass. Nur temporäre Anzeige-DTOs ohne DB-Wirkung ausgenommen; bestehende Setup-Subscriber unverändert zwingend |
+| Snapshot/Rechte – statisch | Gemeinsamer Parent-Lock vor Kindänderungen, Parent-/Setup-Lock beim Capture, CommitBehavior::Error, kein Commit/TryFunction; Header+Payload-Insert im festen Schreiber. Rollen nur Ri auf beide Tabellen, eng begrenztes Insert im Writer; Modify/Delete/Rename unveränderlicher Records blockiert. Alle zwölf fachlichen Vorlagenfelder in Payload-Mapping, rekonstruierende Lesewege ohne aktuelle Vorlage |
+| Datensprache – statisch | ISO-de-Prüfung statt einzelner Region; Resolver bei Capture, Requested/Resolved Language und Katalogversion gespeichert. Datenkatalog wählt explizite gesperrte deutsche/englische Datenwerte, ohne GlobalLanguage zu ändern. Laufvorschau liest die erfasste Sprache/Katalogversion |
+| Mengenformel | 70 Decimal-Rechenbeispiele zur im Quellcode abgeglichenen Abrundungs-/Restformel, Mengen 0 bis Integer-Maximum und Randquoten: Teilmengen nicht negativ, Summe exakt Ziel. Dies sind Rechen-/Quellprüfungen, keine ausgeführten AL-Laufzeittests |
+| Scope | Manifest nur TranslationFile ergänzt, App-ID/Version/Range/Dependencies erhalten; Launch und andere Ticketdetails unverändert. Objektplan, Modulbestand und Verweise gegen vorhandene Dateien abgeglichen; kein Folge-Ticket implementiert |
+
+Build-Aufruf wie Foundation mit `/target:Cloud /generatecode+ /warnaserror+ /analyzer:<CodeCop>,<UICop>`, Ausgabe nur als temporäres lokales Paket. Nach vollständigem Build muss der aktuelle deutsche Master zu `.g.xlf` passen; der Prüfer übersetzt unbekannte Texte nicht automatisch. Englisch ist Quellsprache, deutsche Regionaldateien werden bewusst vom Master abgeleitet.
+
+### BC-Laufzeitprüfplan – nicht ausgeführt
+
+| Bereich | Konkreter Prüffall / erwartetes Ergebnis |
+| --- | --- |
+| UI Deutsch | BC-Sprachen de-DE, de-AT, de-CH, de-LI, de-LU: Captions, Tooltips, Enums und Fehler auf Deutsch. Weitere deutsche Kulturen: primärer deutscher Fallback. Alle verwendeten Pages/Unterseiten einschließlich Foundation prüfen |
+| UI Englisch/Fallback | en-US/en-GB sowie z. B. fr-FR bei deutscher Landes-/Standardsprache: App-Texte sollen Englisch verwenden. Native BC-Fallbackreihenfolge ist noch nicht praktisch verifiziert; keine automatische Änderung von Benutzer-/Serverpräferenzen |
+| Datensprachen | Automatisch unter den fünf deutschen LCIDs → German; unter en/fr/nl → English. Explizite Auswahl überschreibt Auto. Vorlagenvorschau entsprechend; gespeicherter Lauf bleibt nach Wechsel der UI-/Worker-Sprache unverändert |
+| Katalog | Katalogversion 1: CUSTOMER/VENDOR/ITEM mit positiver Nummer in Deutsch/Englisch; Auto/ungültige Version/unbekannter Typ/Nummer <=0 abgewiesen. Historische Version 1 bei späterer Katalogerweiterung erhalten |
+| Vorlage/Kopie | Neue GUID, Defaults aus Setup, ein vollständiges unabhängiges Copy; Original/Kopie unabhängig editierbar. Revision steigt bei Kopf-/Modul-/Zieländerung; parallele Änderung verlangt konsistente Versionskontrolle |
+| Ziele/Quoten | Getrennte Entity-Ziele, null deaktiviert, negative/über Limit abgewiesen, Preset nur auf aktueller Entität. Quoten außerhalb 0–100, mehr als fünf Dezimalstellen oder inkonsistente direkte Zuweisung abgewiesen; UI-Restquote plausibel aktualisiert |
+| Modi | Stammdaten ohne Dokumentquoten, Quotes ungebucht, teilweise nur Aufträge/Bestellungen; aktiver Zielmodus nicht über Szenariomaximum. Modul nicht deaktivier-/löschbar bei positiven Zielen |
+| Snapshot | Profilkennung/-version und positives Ziel erforderlich. Capture erzeugt genau einen Draft plus Payload, keine Queue/Standarddaten. Kopf/Arrays/Seed/Zeitraum/Limits/Sprache/Katalog vollständig und nach Änderungen an Vorlage/Setup identisch lesbar |
+| Transaktion/Konkurrenz | Fehler nach Kopf- vor Payload-Insert unter normalem Aufruf hinterlässt keine Teilkonfiguration. Zwei Capture-/Kind-/Setup-Schreibsitzungen erzeugen konsistente Revisionen/Settings; Deadlock/Fehler bleibt sichtbar. Keine TryFunction-Rollback-Annahme |
+| Unveränderlichkeit/Rechte | Direkte und RecordRef-/Insert(false)/Modify(false)/DeleteAll-/Rename-Pfade unter Sandbox/Produktion, falscher Firma, fehlenden Execute-/Read-/Write-Rechten und Security-Filtern prüfen. Nutzer kann nicht direkt in Run/Snapshot einfügen; fester Writer darf gültig indirekt inserten |
+| Temporäre Ansicht | Eingefrorene Module/Ziele und Sprachvorschauen aus Snapshot, niemals aus aktueller Vorlage; keine DB-Schreibwirkung. Aktuelles Setup/Generierungsfreigabe kann danach geändert werden, Leseansicht bleibt erhalten |
+| Eingaben/Datum | Leere Pflichtangaben, unbekannte Enums, Enddatum vor Startdatum, Paketgröße <=0/über Max werden abgewiesen. Fehlender Profilkatalog/Generator wird durch Snapshot-Erfassung nicht als bestanden ausgegeben |
+
+**Grenzen:** Keine ausgeführten AL-Unit-/Integrationstests oder UI-/Sandbox-/Rechte-/Lasttests, kein Deployment. Die lokalen Prüfungen bestätigen Code/Übersetzungsabdeckung und Paketierbarkeit, nicht die komplette BC-Laufzeitakzeptanz. Objekt-/Sprach-/Schema-Vertrag: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md). Status beider Tickets: **Zur Prüfung**.

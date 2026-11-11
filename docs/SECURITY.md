@@ -58,3 +58,12 @@ Guard 90375 prüft bei jeder Anfrage tatsächliches SaaS/Sandbox/Production-Merk
 `BCSF ADMIN`: nur Setup RIM und notwendige Table/Page/Codeunit-Ausführung; keine Delete- oder Standardbuchungsrechte und keine automatische Rollenzuweisung. Setup wird nur explizit und deaktiviert angelegt. Firma ist OrganizationIdentifiableInformation; keine Benutzerkennungen protokolliert. Produktroutine erzeugt derzeit keine Standard-BC-Daten. Künftige Generatoren/Worker müssen vor jeder Mutation den Guard erneut aufrufen und die konkreten Zielrechte/Freigaben prüfen. Der aktuelle Schutz bezieht sich auf die tatsächlich vorhandene Setup-Tabelle, keine behauptete Absicherung zukünftigen Codes. Vollständiger Vertrag: [FOUNDATION.md](FOUNDATION.md).
 
 Build und statische Verdrahtung geprüft, aber keine Produktions-, Sandbox-, Rechte-, Security-Filter- oder Background-Laufzeittests durchgeführt. Diese Fälle stehen mit erwarteten Ergebnissen in [TESTS.md](TESTS.md).
+
+
+## Erweiterung SF-005/SF-006
+
+Vorlagen-/Zielschreiben bleibt sandboxgebunden, erlaubt aber Planung ohne aktivierte Generation/Buchung. Alle fünf neuen Tabellen besitzen verpflichtende Before-Sicherheitsereignisse. Zusätzliche Inhaltsevents verhindern direkte Persistenz ungültiger Mengen/Modi und jede Mutation erfasster Laufköpfe/Snapshots. Neue temporäre Anzeige-DTOs überspringen nur persistente Schreibprüfungen, haben keine Datenbankwirkung. Die bestehenden Setup-Events und der explizite Generierungs-Guard werden nicht gelockert.
+
+Das ADMIN-Set erweitert sich um Konfigurationsrechte; Run Header/Snapshot lediglich R plus indirektes i. Nur Snapshot Writer hat direkte Insert-Rechte auf diese eigenen Tabellen. Keine Modify-/Delete-Rechte, kein beliebiger JSON-Eingabeparameter, keine Standard-BC-Schreibrechte und kein Commit. Fremde TryFunction-Aufrufer dürfen keine pauschale Rollback-Sicherheit unterstellen. Transaktions-/Sprach-/Datenklassifizierungsgrenzen: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).
+
+XLIFF-Dateien, Katalog und Tests enthalten ausschließlich App-Texte/synthetische Beispiele; keine Geheimnisse, Kundendaten oder Benutzerkennungen. Keine Sprachpräferenzen oder Server-/Tenant-Einstellungen automatisch geändert, keine Übersetzungsdienste aufgerufen.

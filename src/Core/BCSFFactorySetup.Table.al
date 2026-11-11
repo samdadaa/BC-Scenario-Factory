@@ -69,6 +69,11 @@ table 90100 "BCSF Factory Setup"
       InitValue = 100000;
       ToolTip = 'Specifies the record limit checked for each entity request. It is a configurable limit, not a throughput guarantee.';
     }
+    field(18; "Default Data Language"; Enum "BCSF Data Language")
+    {
+      Caption = 'Default Generated Data Language';
+      ToolTip = 'Specifies the default data language for new scenarios. Automatic uses German for any German BC language and English otherwise.';
+    }
   }
 
   keys
@@ -95,6 +100,8 @@ table 90100 "BCSF Factory Setup"
     TestField("Primary Key", GetSetupKey());
     TestField("Allowed Environment Name");
     TestField("Allowed Company Name");
+    if not ("Default Data Language" in ["BCSF Data Language"::Automatic, "BCSF Data Language"::German, "BCSF Data Language"::English]) then
+      FieldError("Default Data Language", UnknownModeErr);
     if "Default Batch Size" <= 0 then
       FieldError("Default Batch Size", PositiveValueErr);
     if "Maximum Batch Size" <= 0 then

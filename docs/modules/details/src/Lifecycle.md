@@ -1,6 +1,6 @@
 # Lifecycle – Modulspezifikation
 
-**Status:** Grundlagen implementiert (1 AL-Objekte), zur Prüfung; weitergehende Funktionen geplant. **Pfad:** `src/Lifecycle/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** Teilweise implementiert (2 AL-Objekte), zur Prüfung; weitere Funktionen geplant. **Pfad:** `src/Lifecycle/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -41,3 +41,9 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Implementierter Stand SF-003/SF-004
 
 Environment Guard mit verpflichtenden Setup-Datenbank-Subscribern. Datenfluss, Felder, Rechte und Grenzen siehe [FOUNDATION.md](../../../FOUNDATION.md). Tatsächlicher Build mit CodeCop/UICop gegen lokale BC-28.5-/Runtime-17-Symbole erfolgreich; Laufzeit-/Rechte-/Sandboxfälle noch offen, siehe [TESTS.md](../../../TESTS.md). Keine Fachgeneratoren oder Queue-Worker.
+
+## Aktueller Stand SF-005/SF-006 und Sprachen
+
+Zusätzlich Scenario Guard 90377 mit 20 Before-Subscriber-Bindungen; der bestehende Environment Guard bietet EnsureCanConfigure. Planung braucht keine aktivierte Generierung, bleibt aber sandbox-/firmen-/rechtegebunden. Nur neue temporäre Anzeigezeilen haben keine persistente Schreibprüfung.
+
+Vertrag, konkrete Objekte, Datenfluss und offene Laufzeitprüfungen: [SCENARIO_CONFIGURATION.md](../../../SCENARIO_CONFIGURATION.md), [OBJECT_PLAN.md](../../../OBJECT_PLAN.md), [TESTS.md](../../../TESTS.md).

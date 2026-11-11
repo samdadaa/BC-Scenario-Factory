@@ -1,6 +1,6 @@
 # Bedienkonzept, Seiten und Dashboard
 
-**Status:** Wizard/Dashboard bleiben Entwurf. Seit SF-004 existiert die Setup-Card für explizite, deaktivierte Initialisierung und Konfiguration; siehe [FOUNDATION.md](FOUNDATION.md). Die folgenden Szenarioabläufe sind noch nicht implementiert.
+**Status:** Wizard/Dashboard bleiben Entwurf. Setup-Card sowie Vorlagenliste/-karte, Modul-/Zielunterseiten und immutable Laufansicht sind seit SF-004–SF-006 vorhanden. Wizard, Dashboard und Queue-Abläufe bleiben Entwurf. Implementierte Bedienung und Sprachauswahl: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).
 
 ## Navigation (sechs Bereiche)
 

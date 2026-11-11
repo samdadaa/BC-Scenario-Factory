@@ -1,6 +1,6 @@
 # BC Scenario Factory
 
-**Status: Erste AL-Grundlagen implementiert (SF-003/SF-004), weitere Module geplant.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
+**Status: Grundlagen, Szenariovorlagen, Entitätsziele und Deutsch/Englisch implementiert (SF-003–SF-006); Fachgeneratoren und Queue weiterhin geplant.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
 
 ## Zielgruppen und Nutzen
 
@@ -49,7 +49,7 @@
 - [Startanleitung](GETTING_STARTED.md) · [Architektur](docs/ARCHITECTURE.md) · [Fachkonzept](docs/REQUIREMENTS.md)
 - [Szenarien & Branchen](docs/SCENARIOS.md) · [Generierungsregeln](docs/DATA_MODEL.md) · [Hintergrundjobs](docs/BACKGROUND_PROCESSING.md)
 - [UI und Dashboard](docs/UI_WORKFLOWS.md) · [Teststrategie](docs/TESTS.md) · [Sicherheit](docs/SECURITY.md)
-- [Setup und Sicherheitsvertrag](docs/FOUNDATION.md) · [Objektplan](docs/OBJECT_PLAN.md) · [Modulindex](docs/modules/INDEX.md) · [Entscheidungen](docs/DECISIONS.md) · [Umsetzungs-Tickets](TODO.md)
+- [Szenarien und Sprachen](docs/SCENARIO_CONFIGURATION.md) · [Setup und Sicherheitsvertrag](docs/FOUNDATION.md) · [Objektplan](docs/OBJECT_PLAN.md) · [Modulindex](docs/modules/INDEX.md) · [Entscheidungen](docs/DECISIONS.md) · [Umsetzungs-Tickets](TODO.md)
 
 ## Lizenz / Support
 
@@ -58,3 +58,12 @@ Urheberrechte, kommerzielle Lizenz, Supportkanal und Veröffentlichungsweg: **Zu
 ## Implementierter Stand SF-003/SF-004
 
 Neun AL-Objekte für firmenbezogenes Setup, Enums, GUID-/Statushilfen, Permission Set und Environment Guard. Die Setup-Seite initialisiert nur auf ausdrückliche Aktion; Generierung und Posting sind standardmäßig aus. Noch keine Fachgeneratoren oder Queue-Worker. Lokaler Build inklusive CodeCop/UICop gegen vorhandene BC-28.5-/DE-Symbole (Runtime 17) erfolgreich; Sandbox- und Berechtigungstests stehen aus. Bedienung, Grenzen und Prüfnachweise: [FOUNDATION.md](docs/FOUNDATION.md), [TESTS.md](docs/TESTS.md).
+
+
+## Szenarien und Sprachen (SF-005/SF-006)
+
+Über „Scenario Factory Scenarios“ / „Scenario-Factory-Szenarien“ Vorlagen anlegen, kopieren, Module und Entitätsmengen/Quoten konfigurieren. Ein Lauf-Snapshot friert die gesamte aktuelle Konfiguration als Entwurf ein; spätere Vorlagenänderungen haben darauf keinen Einfluss. Noch keine Daten-/Queue-Ausführung.
+
+Die Setup-Aktion „Anzeigesprache ändern“ öffnet die BC-Spracheinstellungen. XLIFF deckt alle 285 App-Texteinheiten auf Deutsch (DE/AT/CH/LI/LU) und Englisch ab. Die Datensprache ist separat als Automatisch/Deutsch/Englisch einstellbar: Automatisch erkennt jede deutsche BC-Sprachregion, sonst Englisch. Sprache und Textkatalogversion werden je Lauf eingefroren; synthetische Namensvorschauen auf Vorlage und Lauf verwenden diesen Vertrag. Vorhandene Texte werden beim Sprachwechsel nicht nachträglich geändert.
+
+32 AL-Objekte gegen lokale BC-28.5-/Runtime-17-Symbole mit CodeCop/UICop gebaut; UI-/Rechte-/Snapshot-Laufzeittests stehen aus. Neue Texte nach vollständigem Build im deutschen XLIFF-Master pflegen, regionale Dateien mit `python3 scripts/check_translations.py --sync` ableiten und mit `python3 scripts/check_translations.py` prüfen. Details: [SCENARIO_CONFIGURATION.md](docs/SCENARIO_CONFIGURATION.md).

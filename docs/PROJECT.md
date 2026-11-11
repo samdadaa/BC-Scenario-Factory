@@ -72,3 +72,10 @@ Der Nutzer hat `app.json` selbst auf `90100..90999` geändert und die Verwendung
 Neun AL-Objekte: acht Core-Objekte (90100–90107) und ein Lifecycle-Guard (90375), übrige 22 Module leer. app.json und launch.json im Rahmen dieser beiden Tickets unverändert. Setup-Vertrag, Felder, technische Defaults und Berechtigungen: [FOUNDATION.md](FOUNDATION.md). Keine Benutzer, Standard-BC-Daten, Generatoren oder Jobs angelegt.
 
 Fünf lokale Microsoft-Symbolpakete vorhanden: System 28.0.57066.0, System Application/Base Application 28.5.54976.57342, Application/Business Foundation 28.5.54976.56550; DE in den Application-Metadaten, Runtime 17. Diese lokalen Fakten ersetzen die frühere Aussage „keine Symbole“ für den aktuellen Bestand, belegen jedoch keine reale Sandbox-Version oder Testfirmen-Einrichtung. Compiler 18.1.43.24897 über bereits vorhandenen VS-Code-.NET-10.0.15-Cache ausführbar; Build mit CodeCop/UICop erfolgreich. Keine Installation vorgenommen. Publisher bleibt unverändert ein Platzhalter; ursprüngliche BC-28.0-Kompatibilität und tatsächliche Sandbox-/Rechteprüfung weiterhin offen.
+
+
+## Aktueller Bestand SF-005/SF-006 und Zweisprachigkeit (11.11.2026)
+
+32 AL-Objekte: Core 10, ScenarioManagement 20, Lifecycle 2; 21 weitere Module noch ohne AL. Vorlagen, Module, Mengen-/Quotenparameter, Kopieren/Revision und unveränderliche Draft-Lauf-Snapshots vorhanden; keine implementierten Fachgeneratoren, Profile, Queue-Worker oder Standardbuchungen. Sieben XLIFF-Dateien (generierte Referenz, Englisch und fünf deutsche Regionen), Übersetzungsprüfer und sprachstabile synthetische Namensvorschauen. Einzelheiten: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).
+
+Manifest ausschließlich um TranslationFile ergänzt, Identität/Version/Range/Dependencies erhalten; Launch unverändert. Bisherige Sicherheitsgrenzen erweitert auf fünf Konfigurationstabellen und immutable Snapshot-Schreibwege. Narrow-Insert-Permissions im Snapshot-Schreiber nur auf eigene App-Tabellen. Publisher und echte Sandbox-/Testfirmen-/Rechteprüfung bleiben offen; Build weiterhin gegen vorhandene BC-28.5-/DE-Symbole, Runtime 17.

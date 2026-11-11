@@ -1,6 +1,6 @@
 # Zielarchitektur und implementierte Grundlagen
 
-**Status:** Das End-to-End-Bild bleibt Zielarchitektur. Core-Grundlagen und Lifecycle-Guard sind seit SF-003/SF-004 in neun AL-Objekten implementiert; die übrigen 22 Module enthalten noch keinen AL-Code. Build-/Laufzeitgrenzen siehe [FOUNDATION.md](FOUNDATION.md) und [TESTS.md](TESTS.md).
+**Status:** Das End-to-End-Bild bleibt Zielarchitektur. Core, Lifecycle-Sicherheit und Szenariokonfiguration sind seit SF-003–SF-006 in 32 AL-Objekten implementiert; die übrigen 21 Module enthalten noch keinen AL-Code. Build-/Laufzeitgrenzen siehe [FOUNDATION.md](FOUNDATION.md) und [TESTS.md](TESTS.md).
 
 ## End-to-End
 
@@ -85,3 +85,12 @@ Neue Industrieprofile konfigurieren die vorhandenen Fachgeneratoren. Weitere ISV
 ## Umsetzung SF-003/SF-004 (11.11.2026)
 
 Setup-Card → Core Setup Management → firmenbezogene Setup-Tabelle; Lifecycle-Subscriber prüfen den tatsächlichen Sandbox-/Firmenkontext vor Insert/Modify. Delete/Rename sind gesperrt. Keine ausführbare Core-Rückreferenz auf Lifecycle; ausschließlich das deklarative Core-Permission-Set bündelt dessen Execute-Recht. Tabelle prüft vollständige Datensätze auch ohne Feld-Validate. Reines Öffnen/Lesen schreibt nicht, Initialisierung sperrt/prüft Existenz und schreibt ohne eigenen Commit. Der Guard bietet den wiederholt aufzurufenden Vertrag für spätere Worker; persistierte Laufzustände und fachliches Retry sind noch nicht vorhanden. Details und Run-Zustandsgraph: [FOUNDATION.md](FOUNDATION.md).
+
+
+## Umsetzung SF-005/SF-006 und Sprache
+
+Vorlagenliste/-karte → Scenario Manager/Policy → firmenbezogene Vorlage/Module/Ziele; Kindschreibwege sperren/erhöhen den Elternkopf. Lifecycle sichert die fünf neuen Tabellen per verpflichtendem Before-Event, ScenarioManagement prüft Inhalte und Unveränderlichkeit. Keine ausführbare Rückabhängigkeit zu Lifecycle.
+
+Snapshot Writer sperrt Elternkopf und Setup, erstellt Draft-Laufkopf plus JSON-BLOB ohne Commit. Nur dieser feste Codepfad erhält indirektes Insert; Kopf/Payload bleiben nach Insert unveränderlich. Lauf-Unterseiten laden temporäre Anzeigekopien aus dem Payload; kein Lesen aktueller Vorlagen für die Rekonstruktion. Keine persistente Statusverarbeitung oder Queue vorweggenommen.
+
+Core löst Automatisch zu Deutsch/Englisch auf; der Snapshot hält Auflösung und Katalogversion fest. UI-Captions laufen über XLIFF, synthetische Daten über den explizit gewählten Katalog ohne Änderung der Worker-Sprache. Weitere Felder/Profilregeln erfordern zukünftig eine explizite neue Snapshot-Schemaversion. Details: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).

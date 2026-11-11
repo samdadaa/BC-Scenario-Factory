@@ -33,3 +33,7 @@ Feste Vorgabemengen wie 1.000/10.000/50.000/100.000 nur Presets, **kein globales
 ## Nachprüfung
 
 Validierungsregeln: Soll/Ist je Entity, eindeutige logische Schlüssel, vorhandene Relationen, korrekte Beleg- und Buchungszustände, dimensions-/steuerliche Konsistenz und, bei Buchungen, verknüpfte resultierende Posten. Bei Performance zusätzlich Erstellungszeit, Batchgröße, Fehlerrate, Wiederanläufe – als Messwerte, nicht versprochene Kennzahlen.
+
+## Umgesetzte Konfigurationsbasis SF-005/SF-006
+
+Szenario-GUID/Revision, positive bzw. deaktivierte Entitätsziele, getrennte Mengen-/Modus-/Quotenparameter und Schema-1-JSON-Snapshots sind vorhanden. Momentan nur Planungsdaten, keine Standardstammdaten-/Ledgergenerierung. Der Snapshot bindet aufgelöste Deutsch-/Englisch-Datensprache und Textkatalogversion; spätere Worker müssen beide beibehalten. Technische Feldabdeckung und Grenzen: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).

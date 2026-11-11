@@ -75,3 +75,12 @@ Aktuelle, vom Nutzer bestätigte Range: `90100..90999`. 25 Werte je Modul (`9010
 ## Umsetzungshinweise SF-003/SF-004
 
 Core-Geschäftslogik bleibt ohne Lifecycle-Referenz. Das Core-Permission-Set ist eine rein deklarative Ausnahme zur Modulreferenzregel: es vergibt Execute für den Lifecycle-Guard. Standard-Datenbank-Events binden diesen Guard an Setup-Schreibzugriffe. Keine Abkürzung über `RunTrigger = false` oder `GuiAllowed`; Subscriber überspringen fehlende Lizenz/Rechte nicht. Validierung muss vollständige Datensätze vor Persistenz prüfen; OnValidate allein genügt nicht. Pages besitzen keine `Access`-Property; Tabelle/Enums/Codeunits verwenden `Access = Internal`. Stabile Enumwerte nach Persistenz nicht umnummerieren.
+
+
+## SF-005/SF-006 – Sprache und Snapshots
+
+Englische Quell-Captions/Labels mit TranslationFile; alle UI-Texte einschließlich Fehlermeldungen in XLIFF vollständig pflegen. Deutscher Master de-DE, identische Regionalableitungen de-AT/de-CH/de-LI/de-LU und en-US-Spiegel. Nach Änderungen vollständigen Build und `scripts/check_translations.py` ausführen; keine automatischen Platzhalterübersetzungen. Gesperrte Katalogeinträge sind synthetische Datenwerte, keine UI-Texte.
+
+Automatische Datensprache anhand ISO-Sprachkennung de bestimmen, nicht anhand einer einzelnen Region oder der Landesversion. Beim Snapshot auflösen und versionieren; Generatoren dürfen die Worker-Sprache nicht neu als Datensprache verwenden. Keine nachträgliche Übersetzung vorhandener Daten.
+
+Snapshot-Schema-/Enum-/Katalogversionen stabil halten. Immutable Datensätze nie per Trigger-false verändern. Narrow-Insert-Permissions nur im festen Snapshot-Schreiber, normale Nutzer mit indirektem Insert; keine pauschalen TableData-Rechte oder Schreib-TryFunctions. Temporäre Snapshot-Unterseiten müssen ausschließlich lokale Darstellungskopien enthalten.

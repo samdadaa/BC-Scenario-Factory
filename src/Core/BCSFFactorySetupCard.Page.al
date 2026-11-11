@@ -1,5 +1,7 @@
 namespace BCScenarioFactory.Core;
 
+using System.Environment.Configuration;
+
 page 90101 "BCSF Factory Setup Card"
 {
   ApplicationArea = All;
@@ -31,6 +33,7 @@ page 90101 "BCSF Factory Setup Card"
         field("Default Process Mode"; Rec."Default Process Mode") { }
         field("Default Usage Mode"; Rec."Default Usage Mode") { }
         field("Default Seed"; Rec."Default Seed") { }
+        field("Default Data Language"; Rec."Default Data Language") { }
       }
       group(Limits)
       {
@@ -47,6 +50,14 @@ page 90101 "BCSF Factory Setup Card"
   {
     area(Processing)
     {
+      action(ChangeDisplayLanguage)
+      {
+        ApplicationArea = All;
+        Caption = 'Change Display Language';
+        ToolTip = 'Changes the BC display language in My Settings. German variants use German app translations; English is the source language.';
+        Image = Language;
+        RunObject = page "User Settings";
+      }
       action(InitializeSetup)
       {
         ApplicationArea = All;

@@ -18,3 +18,5 @@
 10. **Umsetzung:** TODO-Tickets sind Plan, sämtliche Tests/Builds/Benchmarks noch offen.
 
 Die Dokumentation darf Codex nicht zu unüberprüften Annahmen über BC-APIs, Branchenprofile, Datenmodelle oder Resultate verleiten.
+
+**Aktueller Zusatz SF-005/SF-006:** 32 AL-Objekte, Szenariokonfiguration und 285 vollständig erfasste XLIFF-Einheiten in Englisch und fünf deutschen Regionen. Wirkliche UI-Sprachauflösung, Rechte, atomare Persistenz/Konkurrenz und Snapshot-Rekonstruktion sind weiterhin in BC zu prüfen. Noch keine Fachgeneratoren/Queue. Aktueller Vertrag: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).

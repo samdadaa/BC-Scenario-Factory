@@ -7,6 +7,19 @@ codeunit 90375 "BCSF Environment Guard"
 {
   Access = Internal;
 
+  /// <summary>Checks configuration writes without enabling generation or approving posting.</summary>
+  procedure EnsureCanConfigure(TargetCompanyName: Text)
+  var
+    FactorySetup: Record "BCSF Factory Setup";
+    SetupManagement: Codeunit "BCSF Setup Management";
+  begin
+    EnsureSandbox();
+    EnsureCurrentCompany(TargetCompanyName);
+    EnsureSetupPermissions(FactorySetup);
+    SetupManagement.GetSetup(FactorySetup);
+    EnsureConfiguredTarget(FactorySetup);
+  end;
+
   /// <summary>Checks the real environment, company, current permissions, setup opt-in, limits and posting approval on every invocation.</summary>
   /// <param name="TargetCompanyName">Pass the actual target record's CurrentCompany, including for background calls.</param>
   procedure EnsureCanGenerate(TargetCompanyName: Text; ProcessMode: Enum "BCSF Process Mode"; RequestedRecords: Integer; RequestedBatchSize: Integer; PostingApproved: Boolean)

@@ -1,11 +1,11 @@
 # Modulindex – Zielarchitektur
 
-**Aktueller Bestand nach SF-003/SF-004:** Core enthält acht AL-Objekte, Lifecycle einen Environment Guard; die übrigen 22 Verzeichnisse enthalten weiterhin nur `.gitkeep`. Alle weitergehenden Modulverantwortungen bleiben Planung. Neun AL-Objekte erfolgreich lokal gebaut; keine Sandbox-Laufzeitabnahme.
+**Aktueller Bestand nach SF-005/SF-006:** Core 10, ScenarioManagement 20 und Lifecycle 2 AL-Objekte; übrige 21 Verzeichnisse weiterhin leer. 32 Objekte lokal gebaut; Fachgeneratoren, Registry, Profilkatalog, Queue und Dashboard noch geplant. Deutsch/Englisch mit XLIFF und eingefrorener Datensprache ergänzt; BC-Laufzeitabnahme steht aus.
 
 | Modul | Kategorie | Ziel | Status |
 | --- | --- | --- | --- |
-| [Core](details/src/Core.md) | Kern | `src/Core/` | Grundlagen: 8 AL-Objekte, zur Prüfung |
-| [ScenarioManagement](details/src/ScenarioManagement.md) | Kern | `src/ScenarioManagement/` | Geplant, ohne Code |
+| [Core](details/src/Core.md) | Kern | `src/Core/` | Grundlagen/Sprache: 10 AL-Objekte, zur Prüfung |
+| [ScenarioManagement](details/src/ScenarioManagement.md) | Kern | `src/ScenarioManagement/` | Vorlagen/Ziele/Snapshots: 20 AL-Objekte, zur Prüfung |
 | [IndustryProfiles](details/src/IndustryProfiles.md) | Kern | `src/IndustryProfiles/` | Geplant, ohne Code |
 | [ModuleRegistry](details/src/ModuleRegistry.md) | Kern | `src/ModuleRegistry/` | Geplant, ohne Code |
 | [DependencyManager](details/src/DependencyManager.md) | Kern | `src/DependencyManager/` | Geplant, ohne Code |
@@ -15,7 +15,7 @@
 | [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | Geplant, ohne Code |
 | [Validation](details/src/Validation.md) | Kern | `src/Validation/` | Geplant, ohne Code |
 | [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | Geplant, ohne Code |
-| [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Guard: 1 AL-Objekt, zur Prüfung |
+| [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Setup-/Szenarioguards: 2 AL-Objekte, zur Prüfung |
 | [Finance](details/src/Finance.md) | Fach | `src/Finance/` | Geplant, ohne Code |
 | [Sales](details/src/Sales.md) | Fach | `src/Sales/` | Geplant, ohne Code |
 | [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | Geplant, ohne Code |
@@ -32,3 +32,5 @@
 **MVP:** Alle Kernverantwortungen konzeptionell notwendig, zunächst Finance, Sales, Purchasing, Inventory umsetzen. Warehouse usw. dürfen als leere Verzeichnisse bleiben. Jedes Modul besitzt eine eigene Spezifikation; bei Implementierung tatsächliche AL-Objekte nachtragen.
 
 **SF-002, 11.11.2026:** Für alle 24 Module sind ID-Blöcke, Namespaces, geplante Objekte und erlaubte Codeabhängigkeiten in [OBJECT_PLAN.md](../OBJECT_PLAN.md) dokumentiert. Modulspezifikationen darauf abgestimmt. Historischer Stand von SF-002: 0 AL-Objekte, 59 numerische Planobjekte und ein Interface. Der aktuelle Implementierungsstand steht oben; der Objektplan enthält inzwischen zusätzlich die Management-Codeunits 90106/90107.
+
+**SF-005/SF-006:** Gegenüber der Foundation 23 neue Objekte. Keine Implementierung weiterer Modulverantwortungen; Quelle und Grenzen: [SCENARIO_CONFIGURATION.md](../SCENARIO_CONFIGURATION.md).

@@ -1,0 +1,1719 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="en-US" original="BC Scenario Factory">
+    <body>
+      <group id="body">
+        <trans-unit id="Table 2136352217 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Setup</source>
+          <target state="translated">Scenario Factory Setup</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - NamedType 2417619304" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a value that does not exceed Maximum Batch Size.</source>
+          <target state="translated">Enter a value that does not exceed Maximum Batch Size.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - NamedType BatchLimitErr</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - NamedType 128408757" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a value that does not exceed Maximum Records per Entity.</source>
+          <target state="translated">Enter a value that does not exceed Maximum Records per Entity.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - NamedType EntityLimitErr</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - NamedType 1367869655" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a value greater than zero.</source>
+          <target state="translated">Enter a value greater than zero.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - NamedType PositiveValueErr</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - NamedType 1653668312" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enable posting before selecting a default mode that posts documents.</source>
+          <target state="translated">Enable posting before selecting a default mode that posts documents.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - NamedType PostingRequiredErr</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - NamedType 2164759026" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a supported mode.</source>
+          <target state="translated">Select a supported mode.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - NamedType UnknownModeErr</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 1507825860 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the isolated test company permitted for generation. It must match the current session company.</source>
+          <target state="translated">Specifies the isolated test company permitted for generation. It must match the current session company.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Allowed Company Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 1507825860 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Allowed Company Name</source>
+          <target state="translated">Allowed Company Name</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Allowed Company Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 787003382 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the exact sandbox environment name permitted for this setup. A name never overrides the sandbox type check.</source>
+          <target state="translated">Specifies the exact sandbox environment name permitted for this setup. A name never overrides the sandbox type check.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Allowed Environment Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 787003382 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Allowed Environment Name</source>
+          <target state="translated">Allowed Environment Name</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Allowed Environment Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 3660015094 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the suggested batch size. It must be positive and cannot exceed the maximum batch size.</source>
+          <target state="translated">Specifies the suggested batch size. It must be positive and cannot exceed the maximum batch size.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Default Batch Size - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 3660015094 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Default Batch Size</source>
+          <target state="translated">Default Batch Size</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Default Batch Size - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 1875875355 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the default data language for new scenarios. Automatic uses German for any German BC language and English otherwise.</source>
+          <target state="translated">Specifies the default data language for new scenarios. Automatic uses German for any German BC language and English otherwise.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Default Data Language - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 1875875355 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Default Generated Data Language</source>
+          <target state="translated">Default Generated Data Language</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Default Data Language - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 4000402341 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the suggested process scope for a new scenario. This setting never starts generation.</source>
+          <target state="translated">Specifies the suggested process scope for a new scenario. This setting never starts generation.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Default Process Mode - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 4000402341 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Default Process Mode</source>
+          <target state="translated">Default Process Mode</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Default Process Mode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 1472471520 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the suggested integer seed. Seed-based generation is implemented separately.</source>
+          <target state="translated">Specifies the suggested integer seed. Seed-based generation is implemented separately.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Default Seed - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 1472471520 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Default Seed</source>
+          <target state="translated">Default Seed</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Default Seed - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 3867257207 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the suggested usage mode for a new scenario.</source>
+          <target state="translated">Specifies the suggested usage mode for a new scenario.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Default Usage Mode - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 3867257207 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Default Usage Mode</source>
+          <target state="translated">Default Usage Mode</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Default Usage Mode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 3760000005 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether generation is explicitly allowed in the configured sandbox and company. Disabled by default.</source>
+          <target state="translated">Specifies whether generation is explicitly allowed in the configured sandbox and company. Disabled by default.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Generation Enabled - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 3760000005 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generation Enabled</source>
+          <target state="translated">Generation Enabled</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Generation Enabled - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 4114794875 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the largest permitted batch size. It cannot exceed the maximum records per entity.</source>
+          <target state="translated">Specifies the largest permitted batch size. It cannot exceed the maximum records per entity.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Maximum Batch Size - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 4114794875 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Maximum Batch Size</source>
+          <target state="translated">Maximum Batch Size</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Maximum Batch Size - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 1201109470 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the record limit checked for each entity request. It is a configurable limit, not a throughput guarantee.</source>
+          <target state="translated">Specifies the record limit checked for each entity request. It is a configurable limit, not a throughput guarantee.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Maximum Records per Entity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 1201109470 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Maximum Records per Entity</source>
+          <target state="translated">Maximum Records per Entity</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Maximum Records per Entity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 2659629831 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether posting may be requested. Each posting invocation also requires explicit approval.</source>
+          <target state="translated">Specifies whether posting may be requested. Each posting invocation also requires explicit approval.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Posting Enabled - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 2659629831 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting Enabled</source>
+          <target state="translated">Posting Enabled</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Posting Enabled - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2136352217 - Field 1663593181 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Primary Key</source>
+          <target state="translated">Primary Key</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Factory Setup - Field Primary Key - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1377125252 - NamedType 278387330" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a supported synthetic name type, a positive sequence and a supported catalog version.</source>
+          <target state="translated">Select a supported synthetic name type, a positive sequence and a supported catalog version.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Language Mgt - NamedType CatalogErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1377125252 - NamedType 215412640" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use the resolved data language from the run snapshot.</source>
+          <target state="translated">Use the resolved data language from the run snapshot.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Language Mgt - NamedType UnresolvedLanguageErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1377125252 - NamedType 2625592686" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select Automatic, German or English as the data language.</source>
+          <target state="translated">Select Automatic, German or English as the data language.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Language Mgt - NamedType UnsupportedLanguageErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3948296152 - NamedType 3442277741" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The run status cannot change from %1 to %2. Follow the documented run lifecycle.</source>
+          <target state="translated">The run status cannot change from %1 to %2. Follow the documented run lifecycle.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = current status, %2 = requested status</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Run State Mgt - NamedType InvalidTransitionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1721325956 - NamedType 4090211762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Open Scenario Factory Setup and initialize the settings in the approved sandbox and test company.</source>
+          <target state="translated">Open Scenario Factory Setup and initialize the settings in the approved sandbox and test company.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Setup Management - NamedType MissingSetupErr</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Setup</source>
+          <target state="translated">Scenario Factory Setup</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 1162456241" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The settings are available. Review the safety settings before explicitly enabling generation.</source>
+          <target state="translated">The settings are available. Review the safety settings before explicitly enabling generation.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType SetupAvailableMsg</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 1100141636 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Defaults</source>
+          <target state="translated">Scenario Defaults</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Defaults - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 2333062506 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Limits</source>
+          <target state="translated">Limits</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Limits - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 2947605808 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Safety</source>
+          <target state="translated">Safety</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Safety - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 371679354 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Changes the BC display language in My Settings. German variants use German app translations; English is the source language.</source>
+          <target state="translated">Changes the BC display language in My Settings. German variants use German app translations; English is the source language.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action ChangeDisplayLanguage - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 371679354 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Change Display Language</source>
+          <target state="translated">Change Display Language</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action ChangeDisplayLanguage - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 3649698641 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates disabled default settings in the approved sandbox and current test company. Existing settings are retained.</source>
+          <target state="translated">Creates disabled default settings in the approved sandbox and current test company. Existing settings are retained.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action InitializeSetup - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 3649698641 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Initialize Setup</source>
+          <target state="translated">Initialize Setup</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action InitializeSetup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1321738634 - EnumValue 683922871 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Automatic (BC Language)</source>
+          <target state="translated">Automatic (BC Language)</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Data Language - EnumValue Automatic - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1321738634 - EnumValue 2819219526 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>English</source>
+          <target state="translated">English</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Data Language - EnumValue English - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1321738634 - EnumValue 1279938038 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>German</source>
+          <target state="translated">German</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Data Language - EnumValue German - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3619121336 - EnumValue 3805326691 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Follow-up Processes</source>
+          <target state="translated">Follow-up Processes</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Process Mode - EnumValue FollowUpProcesses - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3619121336 - EnumValue 1296870299 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted Movements</source>
+          <target state="translated">Posted Movements</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Process Mode - EnumValue PostedMovements - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3619121336 - EnumValue 2155571524 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Setup and Master Data</source>
+          <target state="translated">Setup and Master Data</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Process Mode - EnumValue SetupAndMasterData - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3619121336 - EnumValue 3908764482 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unposted Documents</source>
+          <target state="translated">Unposted Documents</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Process Mode - EnumValue UnpostedDocuments - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 4069904181 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cancelled</source>
+          <target state="translated">Cancelled</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue Cancelled - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 3665605423 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Completed</source>
+          <target state="translated">Completed</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue Completed - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 763342930 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Completed with Warnings</source>
+          <target state="translated">Completed with Warnings</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue CompletedWithWarnings - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 253238575 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Draft</source>
+          <target state="translated">Draft</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue Draft - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 3826689261 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Failed</source>
+          <target state="translated">Failed</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue Failed - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 1264998402 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Paused</source>
+          <target state="translated">Paused</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue Paused - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 1528298513 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Preflight</source>
+          <target state="translated">Preflight</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue Preflight - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 1508051368 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Preflight Failed</source>
+          <target state="translated">Preflight Failed</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue PreflightFailed - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 749506527 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Queued</source>
+          <target state="translated">Queued</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue Queued - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 2521603205 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ready</source>
+          <target state="translated">Ready</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue Ready - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 1686925946 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Resume Pending</source>
+          <target state="translated">Resume Pending</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue ResumePending - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 1752522425 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Running</source>
+          <target state="translated">Running</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue Running - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1471477675 - EnumValue 3431804371 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scheduled</source>
+          <target state="translated">Scheduled</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue Scheduled - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 2974153622 - EnumValue 1834312821 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Demo</source>
+          <target state="translated">Demo</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Usage Mode - EnumValue Demo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 2974153622 - EnumValue 1449721393 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Functional Test</source>
+          <target state="translated">Functional Test</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Usage Mode - EnumValue Functional - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 2974153622 - EnumValue 4172271644 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Performance Test</source>
+          <target state="translated">Performance Test</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Usage Mode - EnumValue Performance - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 2974153622 - EnumValue 2116756124 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Training</source>
+          <target state="translated">Training</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Usage Mode - EnumValue Training - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PermissionSet 709880629 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Setup Admin</source>
+          <target state="translated">Scenario Factory Setup Admin</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">PermissionSet BCSF ADMIN - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 2417619304" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Request a positive batch size within Maximum Batch Size and the requested record count.</source>
+          <target state="translated">Request a positive batch size within Maximum Batch Size and the requested record count.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType BatchLimitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 496693286" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use the approved test company in the current session. Cross-company generation and setup writes are blocked.</source>
+          <target state="translated">Use the approved test company in the current session. Cross-company generation and setup writes are blocked.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType CompanyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 1458864712" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Setup cannot be deleted. Disable generation instead.</source>
+          <target state="translated">Scenario Factory Setup cannot be deleted. Disable generation instead.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType DeleteErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 1673409193" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The actual sandbox name does not match the allowed environment. Review Scenario Factory Setup in the approved sandbox.</source>
+          <target state="translated">The actual sandbox name does not match the allowed environment. Review Scenario Factory Setup in the approved sandbox.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType EnvironmentNameErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory requires effective read and write access to its setup. Ask an administrator to review BCSF ADMIN and the current company permissions.</source>
+          <target state="translated">Scenario Factory requires effective read and write access to its setup. Ask an administrator to review BCSF ADMIN and the current company permissions.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 1908583446" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explicitly approve posting for this invocation before requesting posted movements or follow-up processes.</source>
+          <target state="translated">Explicitly approve posting for this invocation before requesting posted movements or follow-up processes.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType PostingApprovalErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 1290204698" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory cannot write data in a production environment. Use an approved sandbox.</source>
+          <target state="translated">Scenario Factory cannot write data in a production environment. Use an approved sandbox.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType ProductionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 800366975" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Request a positive record count within Maximum Records per Entity.</source>
+          <target state="translated">Request a positive record count within Maximum Records per Entity.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType RecordLimitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 430254759" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Setup cannot be renamed.</source>
+          <target state="translated">Scenario Factory Setup cannot be renamed.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType RenameErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 381116628" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory requires a confirmed sandbox environment. Unknown and on-premises environments are blocked.</source>
+          <target state="translated">Scenario Factory requires a confirmed sandbox environment. Unknown and on-premises environments are blocked.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType SandboxErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 2164759026" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a supported Scenario Factory process mode.</source>
+          <target state="translated">Select a supported Scenario Factory process mode.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType UnknownModeErr</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entity Target</source>
+          <target state="translated">Entity Target</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 3247369565 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the entity whose quantity and distribution are configured.</source>
+          <target state="translated">Specifies the entity whose quantity and distribution are configured.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Entity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 3247369565 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entity</source>
+          <target state="translated">Entity</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Entity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 520258886 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the business module derived from the entity.</source>
+          <target state="translated">Specifies the business module derived from the entity.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Module - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 520258886 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Module</source>
+          <target state="translated">Module</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Module - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 3370927044 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the partial order share. The remaining unposted share is calculated automatically; only sales and purchase orders support partial processing.</source>
+          <target state="translated">Specifies the partial order share. The remaining unposted share is calculated automatically; only sales and purchase orders support partial processing.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Partial Percent - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 3370927044 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partially Processed %</source>
+          <target state="translated">Partially Processed %</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Partial Percent - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 2995567734 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the fully posted document share. The remaining unposted share is calculated automatically.</source>
+          <target state="translated">Specifies the fully posted document share. The remaining unposted share is calculated automatically.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Posted Percent - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 2995567734 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted %</source>
+          <target state="translated">Posted %</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Posted Percent - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 3206867468 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies this entity scope within the scenario maximum.</source>
+          <target state="translated">Specifies this entity scope within the scenario maximum.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Process Mode - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 3206867468 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Process Mode</source>
+          <target state="translated">Process Mode</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Process Mode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 2704404533 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the separate target for this entity. Zero excludes it from generation.</source>
+          <target state="translated">Specifies the separate target for this entity. Zero excludes it from generation.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Quantity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 2704404533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Target Quantity</source>
+          <target state="translated">Target Quantity</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Quantity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 1093751773 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the owning scenario.</source>
+          <target state="translated">Specifies the owning scenario.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Scenario Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 1093751773 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario ID</source>
+          <target state="translated">Scenario ID</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Scenario Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 3061110651 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the unposted document share. The posted share is adjusted so all shares total 100.</source>
+          <target state="translated">Specifies the unposted document share. The posted share is adjusted so all shares total 100.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Unposted Percent - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1750321255 - Field 3061110651 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unposted %</source>
+          <target state="translated">Unposted %</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Unposted Percent - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Captured Run</source>
+          <target state="translated">Captured Run</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 596754667 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the captured batch size.</source>
+          <target state="translated">Specifies the captured batch size.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Batch Size - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 596754667 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Batch Size</source>
+          <target state="translated">Batch Size</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Batch Size - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3997336476 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the company bound to this run.</source>
+          <target state="translated">Specifies the company bound to this run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Company Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3997336476 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Company</source>
+          <target state="translated">Company</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Company Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 2570673311 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies when the configuration was captured.</source>
+          <target state="translated">Specifies when the configuration was captured.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Created At - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 2570673311 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Created At</source>
+          <target state="translated">Created At</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Created At - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 711346558 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the fixed German or English language for this run, independent of worker language.</source>
+          <target state="translated">Specifies the fixed German or English language for this run, independent of worker language.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Data Language - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 711346558 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Resolved Data Language</source>
+          <target state="translated">Resolved Data Language</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Data Language - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the captured scenario description.</source>
+          <target state="translated">Specifies the captured scenario description.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target state="translated">Description</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 458406397 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the last captured scenario date.</source>
+          <target state="translated">Specifies the last captured scenario date.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Ending Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 458406397 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ending Date</source>
+          <target state="translated">Ending Date</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Ending Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 1768934958 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the sandbox bound to this run.</source>
+          <target state="translated">Specifies the sandbox bound to this run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Environment Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 1768934958 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Environment</source>
+          <target state="translated">Environment</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Environment Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3206867468 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the captured maximum process scope.</source>
+          <target state="translated">Specifies the captured maximum process scope.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Process Mode - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3206867468 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Maximum Process Scope</source>
+          <target state="translated">Maximum Process Scope</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Process Mode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3498366530 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the captured profile identifier.</source>
+          <target state="translated">Specifies the captured profile identifier.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Profile Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3498366530 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Profile Code</source>
+          <target state="translated">Profile Code</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Profile Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 1530506779 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the captured profile version.</source>
+          <target state="translated">Specifies the captured profile version.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Profile Version - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 1530506779 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Profile Version</source>
+          <target state="translated">Profile Version</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Profile Version - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3633922808 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the stable identity of the captured run.</source>
+          <target state="translated">Specifies the stable identity of the captured run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Run Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3633922808 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Run ID</source>
+          <target state="translated">Run ID</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Run Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 1093751773 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the source template identity retained after later template changes.</source>
+          <target state="translated">Specifies the source template identity retained after later template changes.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Scenario Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 1093751773 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario ID</source>
+          <target state="translated">Scenario ID</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Scenario Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3074828887 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the captured source revision.</source>
+          <target state="translated">Specifies the captured source revision.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Scenario Revision - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3074828887 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Revision</source>
+          <target state="translated">Scenario Revision</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Scenario Revision - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3911796413 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the schema used to reconstruct this run.</source>
+          <target state="translated">Specifies the schema used to reconstruct this run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Schema Version - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3911796413 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Snapshot Schema Version</source>
+          <target state="translated">Snapshot Schema Version</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Schema Version - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3416119001 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the captured seed.</source>
+          <target state="translated">Specifies the captured seed.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Seed - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 3416119001 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Seed</source>
+          <target state="translated">Seed</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Seed - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 460889064 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the first captured scenario date.</source>
+          <target state="translated">Specifies the first captured scenario date.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Starting Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 460889064 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Starting Date</source>
+          <target state="translated">Starting Date</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Starting Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 513339096 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the run state. Capturing a snapshot creates a draft and does not start processing.</source>
+          <target state="translated">Specifies the run state. Capturing a snapshot creates a draft and does not start processing.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Status - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 513339096 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Status</source>
+          <target state="translated">Status</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Status - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 236310178 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the captured usage mode.</source>
+          <target state="translated">Specifies the captured usage mode.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Usage Mode - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1174910550 - Field 236310178 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Usage Mode</source>
+          <target state="translated">Usage Mode</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Header - Field Usage Mode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3765772331 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Run Snapshot</source>
+          <target state="translated">Run Snapshot</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Snapshot - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3765772331 - NamedType 1981320726" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The captured configuration cannot be read. Do not retry generation until it has been reviewed.</source>
+          <target state="translated">The captured configuration cannot be read. Do not retry generation until it has been reviewed.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Snapshot - NamedType InvalidPayloadErr</note>
+        </trans-unit>
+        <trans-unit id="Table 3765772331 - Field 4208776898 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Contains the immutable configuration used to reconstruct this run.</source>
+          <target state="translated">Contains the immutable configuration used to reconstruct this run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Snapshot - Field Payload - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3765772331 - Field 4208776898 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Frozen Configuration</source>
+          <target state="translated">Frozen Configuration</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Snapshot - Field Payload - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3765772331 - Field 3633922808 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the owning run.</source>
+          <target state="translated">Specifies the owning run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Snapshot - Field Run Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3765772331 - Field 3633922808 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Run ID</source>
+          <target state="translated">Run ID</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Snapshot - Field Run Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3765772331 - Field 3911796413 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the payload schema version.</source>
+          <target state="translated">Specifies the payload schema version.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Snapshot - Field Schema Version - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3765772331 - Field 3911796413 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Snapshot Schema Version</source>
+          <target state="translated">Snapshot Schema Version</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Snapshot - Field Schema Version - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario</source>
+          <target state="translated">Scenario</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 596754667 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the requested batch size, capped by the factory limits.</source>
+          <target state="translated">Specifies the requested batch size, capped by the factory limits.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Batch Size - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 596754667 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Batch Size</source>
+          <target state="translated">Batch Size</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Batch Size - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 711346558 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the data language. Automatic resolves German variants to German and all other languages to English when a run is captured.</source>
+          <target state="translated">Specifies the data language. Automatic resolves German variants to German and all other languages to English when a run is captured.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Data Language - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 711346558 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generated Data Language</source>
+          <target state="translated">Generated Data Language</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Data Language - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the purpose of this scenario template.</source>
+          <target state="translated">Specifies the purpose of this scenario template.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target state="translated">Description</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 458406397 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the last date in the scenario period.</source>
+          <target state="translated">Specifies the last date in the scenario period.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Ending Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 458406397 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ending Date</source>
+          <target state="translated">Ending Date</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Ending Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3206867468 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the highest process mode allowed for entity targets.</source>
+          <target state="translated">Specifies the highest process mode allowed for entity targets.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Process Mode - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3206867468 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Maximum Process Scope</source>
+          <target state="translated">Maximum Process Scope</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Process Mode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3498366530 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the intended industry profile identifier.</source>
+          <target state="translated">Specifies the intended industry profile identifier.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Profile Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3498366530 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Profile Code</source>
+          <target state="translated">Profile Code</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Profile Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 1530506779 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the profile version captured with each run.</source>
+          <target state="translated">Specifies the profile version captured with each run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Profile Version - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 1530506779 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Profile Version</source>
+          <target state="translated">Profile Version</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Profile Version - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2718661101 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the revision, including module and target changes.</source>
+          <target state="translated">Specifies the revision, including module and target changes.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Revision - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2718661101 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Revision</source>
+          <target state="translated">Revision</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Revision - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 1093751773 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the stable identity of this template.</source>
+          <target state="translated">Specifies the stable identity of this template.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Scenario Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 1093751773 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario ID</source>
+          <target state="translated">Scenario ID</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Scenario Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3416119001 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the seed captured for reproducible input data.</source>
+          <target state="translated">Specifies the seed captured for reproducible input data.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Seed - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3416119001 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Seed</source>
+          <target state="translated">Seed</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Seed - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 460889064 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the first date in the scenario period.</source>
+          <target state="translated">Specifies the first date in the scenario period.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Starting Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 460889064 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Starting Date</source>
+          <target state="translated">Starting Date</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Starting Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 236310178 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether the scenario is intended for demos, training or tests.</source>
+          <target state="translated">Specifies whether the scenario is intended for demos, training or tests.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Usage Mode - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 236310178 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Usage Mode</source>
+          <target state="translated">Usage Mode</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Usage Mode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2022924260 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Module</source>
+          <target state="translated">Scenario Module</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario Module - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2022924260 - Field 2891538263 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this module is included in the captured plan.</source>
+          <target state="translated">Specifies whether this module is included in the captured plan.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario Module - Field Enabled - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2022924260 - Field 2891538263 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enabled</source>
+          <target state="translated">Enabled</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario Module - Field Enabled - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2022924260 - Field 520258886 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a selected business module. Selection does not imply an available generator.</source>
+          <target state="translated">Specifies a selected business module. Selection does not imply an available generator.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario Module - Field Module - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2022924260 - Field 520258886 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Module</source>
+          <target state="translated">Module</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario Module - Field Module - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2022924260 - Field 1093751773 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the owning scenario.</source>
+          <target state="translated">Specifies the owning scenario.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario Module - Field Scenario Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2022924260 - Field 1093751773 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario ID</source>
+          <target state="translated">Scenario ID</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario Module - Field Scenario Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1340704077 - NamedType 496693286" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Edit scenarios only in the current approved company.</source>
+          <target state="translated">Edit scenarios only in the current approved company.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario DB Events - NamedType CompanyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1340704077 - NamedType 1381824369" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Captured runs and snapshots cannot be changed or deleted. Template and entity keys cannot be renamed; create a copy or a new target instead.</source>
+          <target state="translated">Captured runs and snapshots cannot be changed or deleted. Template and entity keys cannot be renamed; create a copy or a new target instead.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario DB Events - NamedType ImmutableErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1340704077 - NamedType 2104771778" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This template has reached its revision limit. Create a copy.</source>
+          <target state="translated">This template has reached its revision limit. Create a copy.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario DB Events - NamedType RevisionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1340704077 - NamedType 475271403" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The captured configuration is incomplete or inconsistent. Create a new snapshot from a valid template.</source>
+          <target state="translated">The captured configuration is incomplete or inconsistent. Create a new snapshot from a valid template.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario DB Events - NamedType SnapshotErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 3108365835" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Copy of %1</source>
+          <target state="translated">Copy of %1</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source scenario description</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType CopyScenarioLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 1340377372" size-unit="char" translate="yes" xml:space="preserve">
+          <source>New Scenario</source>
+          <target state="translated">New Scenario</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType NewScenarioLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 2024709530" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Frozen configuration can only be loaded into temporary display records.</source>
+          <target state="translated">Frozen configuration can only be loaded into temporary display records.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType TemporaryErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 1698601683" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a positive batch size within the factory maximum.</source>
+          <target state="translated">Enter a positive batch size within the factory maximum.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType BatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 1707647923" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a starting date and an ending date on or after it.</source>
+          <target state="translated">Enter a starting date and an ending date on or after it.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType DateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 2418959347" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a document mode consistent with the requested posted and partial shares.</source>
+          <target state="translated">Select a document mode consistent with the requested posted and partial shares.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType DocumentModeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 3524866482" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a supported entity.</source>
+          <target state="translated">Select a supported entity.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType EntityErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 3753144309" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the scenario with a new, nonempty identity.</source>
+          <target state="translated">Create the scenario with a new, nonempty identity.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType IdentityErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 2253019571" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Master data requires Setup and Master Data mode and no posted or partial document shares.</source>
+          <target state="translated">Master data requires Setup and Master Data mode and no posted or partial document shares.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType MasterDataErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 3702260186" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a supported process and usage mode.</source>
+          <target state="translated">Select a supported process and usage mode.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType ModeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 2101994529" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a supported business module.</source>
+          <target state="translated">Select a supported business module.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType ModuleErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 3378856389" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set the module entity targets to zero before disabling or removing the module.</source>
+          <target state="translated">Set the module entity targets to zero before disabling or removing the module.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType ModuleInUseErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 377874450" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select and enable the module before assigning a positive entity target.</source>
+          <target state="translated">Select and enable the module before assigning a positive entity target.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType ModuleRequiredErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 3631912442" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partial processing shares are supported only for sales orders and purchase orders.</source>
+          <target state="translated">Partial processing shares are supported only for sales orders and purchase orders.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType PartialErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 1773221554" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a percentage between 0 and 100 with at most five decimal places.</source>
+          <target state="translated">Enter a percentage between 0 and 100 with at most five decimal places.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType PercentErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 3323878400" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The unposted, posted and partially processed shares must total 100.</source>
+          <target state="translated">The unposted, posted and partially processed shares must total 100.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType PercentTotalErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 1473162410" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a nonnegative quantity within the factory limit for each entity.</source>
+          <target state="translated">Enter a nonnegative quantity within the factory limit for each entity.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType QuantityErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 2906417001" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales quotes must remain unposted.</source>
+          <target state="translated">Sales quotes must remain unposted.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType QuoteErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2353035614 - NamedType 3036859145" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The entity process scope cannot exceed the scenario maximum. Adjust the targets first.</source>
+          <target state="translated">The entity process scope cannot exceed the scenario maximum. Adjust the targets first.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType ScopeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1543854089 - NamedType 3770859965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter at least one positive entity target before capturing a run.</source>
+          <target state="translated">Enter at least one positive entity target before capturing a run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Snapshot Writer - NamedType EmptyPlanErr</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entity Targets</source>
+          <target state="translated">Entity Targets</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Control 674911024 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a quantity preset for the currently selected entity only.</source>
+          <target state="translated">Specifies a quantity preset for the currently selected entity only.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Control SelectedPreset - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Control 674911024 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quantity Preset</source>
+          <target state="translated">Quantity Preset</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Control SelectedPreset - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Control 4215934827 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the planned partially processed order count.</source>
+          <target state="translated">Shows the planned partially processed order count.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Control EstimatedPartial - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Control 4215934827 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Estimated Partial Orders</source>
+          <target state="translated">Estimated Partial Orders</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Control EstimatedPartial - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Control 3040084733 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the planned posted document count, not the number of ledger entries.</source>
+          <target state="translated">Shows the planned posted document count, not the number of ledger entries.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Control EstimatedPosted - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Control 3040084733 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Estimated Posted Documents</source>
+          <target state="translated">Estimated Posted Documents</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Control EstimatedPosted - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Control 204609556 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the planned document count after rounding. Master data is not counted as documents.</source>
+          <target state="translated">Shows the planned document count after rounding. Master data is not counted as documents.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Control EstimatedUnposted - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Control 204609556 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Estimated Unposted Documents</source>
+          <target state="translated">Estimated Unposted Documents</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Control EstimatedUnposted - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Action 2438730931 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Applies the selected quantity preset to the current entity only, subject to the factory limit.</source>
+          <target state="translated">Applies the selected quantity preset to the current entity only, subject to the factory limit.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Action ApplyPreset - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1240461586 - Action 2438730931 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Apply Preset to Entity</source>
+          <target state="translated">Apply Preset to Entity</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Data Targets - Action ApplyPreset - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2572083249 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Captured Modules</source>
+          <target state="translated">Captured Modules</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Modules - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2344503928 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Captured Entity Targets</source>
+          <target state="translated">Captured Entity Targets</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Targets - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2344503928 - Control 4215934827 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the planned partially processed order count.</source>
+          <target state="translated">Shows the planned partially processed order count.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Targets - Control EstimatedPartial - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2344503928 - Control 4215934827 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Estimated Partial Orders</source>
+          <target state="translated">Estimated Partial Orders</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Targets - Control EstimatedPartial - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2344503928 - Control 3040084733 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the planned posted document count, not the number of ledger entries.</source>
+          <target state="translated">Shows the planned posted document count, not the number of ledger entries.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Targets - Control EstimatedPosted - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2344503928 - Control 3040084733 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Estimated Posted Documents</source>
+          <target state="translated">Estimated Posted Documents</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Targets - Control EstimatedPosted - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2344503928 - Control 204609556 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the planned document count after rounding. Master data is not counted as documents.</source>
+          <target state="translated">Shows the planned document count after rounding. Master data is not counted as documents.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Targets - Control EstimatedUnposted - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2344503928 - Control 204609556 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Estimated Unposted Documents</source>
+          <target state="translated">Estimated Unposted Documents</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Targets - Control EstimatedUnposted - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Captured Scenario Run</source>
+          <target state="translated">Captured Scenario Run</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 4126130292 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Captured Configuration</source>
+          <target state="translated">Captured Configuration</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control Configuration - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 2607913180 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Data Language Preview</source>
+          <target state="translated">Data Language Preview</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control LanguagePreview - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1792098842 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows a synthetic example using the captured data language and catalog version.</source>
+          <target state="translated">Shows a synthetic example using the captured data language and catalog version.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control CustomerPreview - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1792098842 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Name Preview</source>
+          <target state="translated">Customer Name Preview</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control CustomerPreview - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1701862409 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows a synthetic example using the captured data language and catalog version.</source>
+          <target state="translated">Shows a synthetic example using the captured data language and catalog version.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control ItemPreview - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1701862409 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Name Preview</source>
+          <target state="translated">Item Name Preview</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control ItemPreview - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 3504447218 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows a synthetic example using the captured data language and catalog version.</source>
+          <target state="translated">Shows a synthetic example using the captured data language and catalog version.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control VendorPreview - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 3504447218 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Name Preview</source>
+          <target state="translated">Vendor Name Preview</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control VendorPreview - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 2917886547 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Captured Modules</source>
+          <target state="translated">Captured Modules</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control Modules - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 2651689342 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Captured Entity Targets</source>
+          <target state="translated">Captured Entity Targets</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control Targets - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4184647097 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Captured Runs</source>
+          <target state="translated">Scenario Factory Captured Runs</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run List - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Scenario</source>
+          <target state="translated">Scenario Factory Scenario</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 2445482498 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>General</source>
+          <target state="translated">General</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control General - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 2607913180 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Data Language Preview</source>
+          <target state="translated">Data Language Preview</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control LanguagePreview - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 1792098842 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows a synthetic example in the selected data language.</source>
+          <target state="translated">Shows a synthetic example in the selected data language.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control CustomerPreview - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 1792098842 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Name Preview</source>
+          <target state="translated">Customer Name Preview</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control CustomerPreview - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 1701862409 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows a synthetic example in the selected data language.</source>
+          <target state="translated">Shows a synthetic example in the selected data language.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control ItemPreview - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 1701862409 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Name Preview</source>
+          <target state="translated">Item Name Preview</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control ItemPreview - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 3504447218 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows a synthetic example in the selected data language.</source>
+          <target state="translated">Shows a synthetic example in the selected data language.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control VendorPreview - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 3504447218 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Name Preview</source>
+          <target state="translated">Vendor Name Preview</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control VendorPreview - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 2917886547 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Module Selection</source>
+          <target state="translated">Module Selection</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control Modules - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 1987575564 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning Minimums</source>
+          <target state="translated">Planning Minimums</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control PlanningMinimums - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 461932563 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the minimum reusable customer references required by the selected sales documents. This is not a customer generation target.</source>
+          <target state="translated">Shows the minimum reusable customer references required by the selected sales documents. This is not a customer generation target.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control MinimumCustomers - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 461932563 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Minimum Customer References</source>
+          <target state="translated">Minimum Customer References</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control MinimumCustomers - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 1497898331 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the minimum reusable vendor references required by the selected purchase documents. This is not a vendor generation target.</source>
+          <target state="translated">Shows the minimum reusable vendor references required by the selected purchase documents. This is not a vendor generation target.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control MinimumVendors - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 1497898331 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Minimum Vendor References</source>
+          <target state="translated">Minimum Vendor References</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control MinimumVendors - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 593885934 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Period and Scope</source>
+          <target state="translated">Scenario Period and Scope</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control Scope - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 2651689342 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entity Targets</source>
+          <target state="translated">Entity Targets</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control Targets - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Action 707938486 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens the captured configuration history.</source>
+          <target state="translated">Opens the captured configuration history.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action CapturedRuns - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Action 707938486 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Captured Runs</source>
+          <target state="translated">Captured Runs</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action CapturedRuns - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Action 1627888687 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Freezes the current settings and resolved data language as a new draft run. No data generation or queue start occurs.</source>
+          <target state="translated">Freezes the current settings and resolved data language as a new draft run. No data generation or queue start occurs.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action CaptureRun - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Action 1627888687 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Capture Run Snapshot</source>
+          <target state="translated">Capture Run Snapshot</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action CaptureRun - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Action 3113347229 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates an independent copy of this template, including modules and targets.</source>
+          <target state="translated">Creates an independent copy of this template, including modules and targets.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action CopyScenario - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Action 3113347229 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Copy Scenario</source>
+          <target state="translated">Copy Scenario</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action CopyScenario - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Scenarios</source>
+          <target state="translated">Scenario Factory Scenarios</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 707938486 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens the captured configuration history.</source>
+          <target state="translated">Opens the captured configuration history.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action CapturedRuns - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 707938486 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Captured Runs</source>
+          <target state="translated">Captured Runs</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action CapturedRuns - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 3113347229 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates an independent copy of this template, including modules and targets.</source>
+          <target state="translated">Creates an independent copy of this template, including modules and targets.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action CopyScenario - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 3113347229 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Copy Scenario</source>
+          <target state="translated">Copy Scenario</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action CopyScenario - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 4226921406 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a new template from the factory defaults.</source>
+          <target state="translated">Creates a new template from the factory defaults.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action CreateScenario - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 4226921406 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>New Scenario</source>
+          <target state="translated">New Scenario</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action CreateScenario - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3005984901 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Modules</source>
+          <target state="translated">Scenario Modules</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Modules - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 1994964448 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customers</source>
+          <target state="translated">Customers</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue Customer - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 3276313895 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Items</source>
+          <target state="translated">Items</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue Item - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 1156622152 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Credit Memos</source>
+          <target state="translated">Purchase Credit Memos</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue PurchaseCreditMemo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 783370822 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Invoices</source>
+          <target state="translated">Purchase Invoices</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue PurchaseInvoice - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 1640572759 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Orders</source>
+          <target state="translated">Purchase Orders</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue PurchaseOrder - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 4275230785 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales Credit Memos</source>
+          <target state="translated">Sales Credit Memos</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue SalesCreditMemo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 927944371 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales Invoices</source>
+          <target state="translated">Sales Invoices</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue SalesInvoice - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 3617415722 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales Orders</source>
+          <target state="translated">Sales Orders</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue SalesOrder - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 647151006 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales Quotes</source>
+          <target state="translated">Sales Quotes</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue SalesQuote - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 1936001480 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendors</source>
+          <target state="translated">Vendors</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue Vendor - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 2573847538 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assembly</source>
+          <target state="translated">Assembly</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue Assembly - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 1972443056 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>CRM</source>
+          <target state="translated">CRM</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue CRM - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 17419004 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Finance</source>
+          <target state="translated">Finance</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue Finance - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 1464838095 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fixed Assets</source>
+          <target state="translated">Fixed Assets</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue FixedAssets - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 2105307182 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inventory</source>
+          <target state="translated">Inventory</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue Inventory - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 124933732 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manufacturing</source>
+          <target state="translated">Manufacturing</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue Manufacturing - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 4106336951 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning</source>
+          <target state="translated">Planning</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue Planning - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 2411200322 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Projects</source>
+          <target state="translated">Projects</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue Projects - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 1554716946 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchasing</source>
+          <target state="translated">Purchasing</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue Purchasing - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 1406942772 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales</source>
+          <target state="translated">Sales</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue Sales - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 2655224266 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Service Management</source>
+          <target state="translated">Service Management</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue ServiceManagement - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 51623922 - EnumValue 1484878399 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Warehouse</source>
+          <target state="translated">Warehouse</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Module Type - EnumValue Warehouse - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3442624814 - EnumValue 520600169 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>100000</source>
+          <target state="translated">100000</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Quantity Preset - EnumValue ExtraLarge - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3442624814 - EnumValue 1520536759 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>50000</source>
+          <target state="translated">50000</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Quantity Preset - EnumValue Large - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3442624814 - EnumValue 432767615 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>10000</source>
+          <target state="translated">10000</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Quantity Preset - EnumValue Medium - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3442624814 - EnumValue 1840687697 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>1000</source>
+          <target state="translated">1000</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Quantity Preset - EnumValue Small - Property Caption</note>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

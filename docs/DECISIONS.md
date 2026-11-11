@@ -68,3 +68,12 @@ Der Nutzer beauftragt ausdrücklich beide Tickets gemeinsam; die Ein-Ticket-Rege
 - Lokale fünf Microsoft-Symbolpakete sind jetzt nachgewiesen; tatsächliche APIs und erfolgreicher Cloud-Build mit CodeCop/UICop geprüft. Keine Behauptung, dass die Sandbox erreichbar oder negativ auf Produktion getestet wurde.
 
 Konkrete Felder, Guard-Aufruf und Zustandsübergänge: [FOUNDATION.md](FOUNDATION.md). Noch ausstehende Laufzeitfälle: [TESTS.md](TESTS.md). Beide Tickets maximal `Zur Prüfung`.
+
+
+## SF-005/SF-006 – bestätigte Sprachvorgabe und Umsetzung
+
+Nutzer beauftragt ausdrücklich beide Tickets und Deutsch/Englisch einschließlich generierter Inhalte. **Bestätigte Regel:** Automatisch Deutsch für jede deutsche Sprachregion, sonst Englisch. Oberfläche folgt der BC-Sprachauswahl; Datensprache zusätzlich explizit konfigurierbar, Auflösung bei Snapshot-Erstellung. UI-XLIFF und Datenkatalog sind getrennt, da BC gespeicherte Geschäftsdaten nicht automatisch übersetzt.
+
+Umgesetzte technische Entscheidungen zur Prüfung: GUID-/revisionsbasierte Vorlagen, vollständige JSON-Snapshots Schema 1, Draft ohne Queue, nach Insert immutable Köpfe/Payloads, separate Mengen/Quoten pro Entität, abgerundete gebuchte/teilweise Mengen mit Rest auf ungebucht. Modul-/Profilbezeichner ersetzen keine spätere Capability-/Preflight-Prüfung. Nur Snapshot Writer erhält indirekte Insert-Rechte auf eigene immutable Tabellen. Der ursprüngliche Foundation-Vertrag wird für neue temporäre Anzeigezeilen und deklarative Rollenaggregation präzisiert, nicht für Standarddaten gelockert.
+
+Details, neue IDs und tatsächliche Build-/Übersetzungsnachweise: [OBJECT_PLAN.md](OBJECT_PLAN.md), [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md), [TESTS.md](TESTS.md). Keine automatische Abnahme anderer Tickets.

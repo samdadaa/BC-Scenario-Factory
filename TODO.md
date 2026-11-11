@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 11.11.2026 – SF-003/SF-004 als erste neun AL-Grundlagenobjekte implementiert, zur Prüfung. Build mit CodeCop/UICop gegen lokale BC-28.5-Symbole erfolgreich; keine BC-Laufzeittests. SF-001 bleibt mit dokumentierten offenen Entscheidungen blockiert.
+**Stand:** 11.11.2026 – SF-005/SF-006 mit Szenariokonfiguration, Snapshots und Deutsch/Englisch implementiert, zur Prüfung. 32 AL-Objekte lokal mit CodeCop/UICop gebaut; keine BC-Laufzeittests. SF-001 bleibt mit dokumentierten offenen Punkten blockiert.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -21,8 +21,8 @@
 |x[SF-002](#sf-002) | 0 / Fundierung | P0 | AL-Struktur, Namenskonventionen und Objektplan finalisieren | Zur Prüfung |
 |x[SF-003](#sf-003) | 0 / Fundierung | P0 | Sicherheitsguard: Sandbox, Mandant, Berechtigung | Zur Prüfung |
 |x[SF-004](#sf-004) | 0 / Fundierung | P0 | Globale Factory-Einstellungen und Statusgrundlagen | Zur Prüfung |
-| [SF-005](#sf-005) | 0 / Fundierung | P0 | Szenariovorlagen und versionierte Run-Snapshots | Offen |
-| [SF-006](#sf-006) | 0 / Fundierung | P0 | Entitätsmengen, Quoten und Prozessmodi konfigurieren | Offen |
+| [SF-005](#sf-005) | 0 / Fundierung | P0 | Szenariovorlagen und versionierte Run-Snapshots | Zur Prüfung |
+| [SF-006](#sf-006) | 0 / Fundierung | P0 | Entitätsmengen, Quoten und Prozessmodi konfigurieren | Zur Prüfung |
 | [SF-007](#sf-007) | 0 / Fundierung | P0 | Generator-Vertrag und Registry definieren | Offen |
 | [SF-008](#sf-008) | 0 / Fundierung | P0 | Abhängigkeitsgraph und Ausführungsplan | Offen |
 | [SF-009](#sf-009) | 0 / Fundierung | P0 | BC-Setup-Prüfung und nicht-destruktiver Setup-Diff | Offen |
@@ -236,7 +236,7 @@
 
 ### SF-005 — Szenariovorlagen und versionierte Run-Snapshots
 
-**Status:** Offen  
+**Status:** Zur Prüfung\
 **Priorität:** P0  
 **Abhängigkeiten:** SF-004  
 **Verantwortung / betroffene Module:** ScenarioManagement  
@@ -246,18 +246,24 @@
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Tabellen/Pages nach freigegebenem Schema; Snapshots bei Start atomar speichern; Änderungsschutz.
 
+**Umsetzung 11.11.2026:** Vorlagen-GUID/Revision, fachliche Modulauswahl, Copy und unveränderliche Draft-Laufköpfe/Schema-1-Snapshots implementiert. Capture sperrt Vorlage/Setup, schreibt Kopf und vollständigen JSON-Payload ohne Commit atomar im normalen Aufrufpfad. Laufansicht rekonstruiert eingefrorene Ziele/Module und Sprache unabhängig von der Vorlage. Kein Queue-Start, keine Fachgeneratoren.
+
+**Zusätzlich ausdrücklich beauftragte Sprache:** UI vollständig in englischer Quellsprache und deutschem XLIFF-Master mit fünf Regionalableitungen; Englischdatei ebenfalls vorhanden. Datensprache Automatisch/Deutsch/Englisch in Setup/Vorlage; jede deutsche ISO-Sprachvariante wird automatisch Deutsch, sonst Englisch. Auflösung/Katalogversion im Snapshot eingefroren, bilinguale synthetische Namensvorschau ohne Änderung der Worker-Sprache. Keine automatische Übersetzung vorhandener Benutzerdaten oder behauptete Implementierung zukünftiger Generatoren.
+
+**Nachweise / Grenzen:** [SCENARIO_CONFIGURATION.md](docs/SCENARIO_CONFIGURATION.md), [TESTS.md](docs/TESTS.md) und aktualisierter Objektplan. 32 AL-Objekte gegen vorhandene BC-28.5-/Runtime-17-Symbole mit CodeCop/UICop und Warnungen als Fehlern gebaut; zwei AW0006-Informationen für absichtlich über Listen geöffnete Detailkarten. 285 UI-Einheiten in sechs Zielkulturen geprüft; sechs beschädigte Übersetzungsvarianten erkannt. Keine ausgeführten BC-Laufzeit-, Rechte-, Konkurrenz- oder UI-Sprachtests; konkrete Fälle bleiben offen.
+
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Gleiche Vorlage kopierbar, aktiver Run unveränderlich und vollständig rekonstruierbar.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
 - [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
@@ -270,7 +276,7 @@
 
 ### SF-006 — Entitätsmengen, Quoten und Prozessmodi konfigurieren
 
-**Status:** Offen  
+**Status:** Zur Prüfung\
 **Priorität:** P0  
 **Abhängigkeiten:** SF-005  
 **Verantwortung / betroffene Module:** ScenarioManagement  
@@ -280,18 +286,24 @@
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Validation bei widersprüchlichen Mengen/Modi, kein irreführender Globalzähler.
 
+**Umsetzung 11.11.2026:** Getrennte Mengen, Quoten und Modi für zehn Entitäten, Validierung, pro Entität anwendbare Presets und nachvollziehbare Dokument-Mengenprojektionen implementiert. Aktive Ziele erfordern passende aktivierte Module, Angebote bleiben ungebucht, Teilverarbeitung nur für Aufträge/Bestellungen. Mindest-Partnerreferenzen sind gekennzeichnete Planungsuntergrenzen, kein globaler Datensatz-/Ledgerzähler.
+
+**Zusätzlich ausdrücklich beauftragte Sprache:** UI vollständig in englischer Quellsprache und deutschem XLIFF-Master mit fünf Regionalableitungen; Englischdatei ebenfalls vorhanden. Datensprache Automatisch/Deutsch/Englisch in Setup/Vorlage; jede deutsche ISO-Sprachvariante wird automatisch Deutsch, sonst Englisch. Auflösung/Katalogversion im Snapshot eingefroren, bilinguale synthetische Namensvorschau ohne Änderung der Worker-Sprache. Keine automatische Übersetzung vorhandener Benutzerdaten oder behauptete Implementierung zukünftiger Generatoren.
+
+**Nachweise / Grenzen:** [SCENARIO_CONFIGURATION.md](docs/SCENARIO_CONFIGURATION.md), [TESTS.md](docs/TESTS.md) und aktualisierter Objektplan. 32 AL-Objekte gegen vorhandene BC-28.5-/Runtime-17-Symbole mit CodeCop/UICop und Warnungen als Fehlern gebaut; zwei AW0006-Informationen für absichtlich über Listen geöffnete Detailkarten. 285 UI-Einheiten in sechs Zielkulturen geprüft; sechs beschädigte Übersetzungsvarianten erkannt. Keine ausgeführten BC-Laufzeit-, Rechte-, Konkurrenz- oder UI-Sprachtests; konkrete Fälle bleiben offen.
+
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Anwender definiert getrennte Ziele und sieht plausibel nötige Folgedaten.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
 - [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.

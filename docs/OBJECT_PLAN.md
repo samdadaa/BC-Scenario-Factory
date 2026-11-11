@@ -111,6 +111,22 @@ Die Tabelle ist der vollständige Plan. Vorhandene Dateien sind im Abschnitt „
 | CRM | 90650 | Codeunit | `BCSF CRM Generator` | `src/CRM/BCSFCRMGenerator.Codeunit.al` | SF-033 |
 | Planning | 90675 | Codeunit | `BCSF Planning Generator` | `src/Planning/BCSFPlanningGenerator.Codeunit.al` | SF-033 |
 
+| Core | 90108 | Enum | `BCSF Data Language` | `src/Core/BCSFDataLanguage.Enum.al` | SF-005 |
+| Core | 90109 | Codeunit | `BCSF Language Mgt` | `src/Core/BCSFLanguageMgt.Codeunit.al` | SF-005 |
+| Lifecycle | 90377 | Codeunit | `BCSF Scenario Guard` | `src/Lifecycle/BCSFScenarioGuard.Codeunit.al` | SF-005 |
+| ScenarioManagement | 90137 | Page | `BCSF Data Targets` | `src/ScenarioManagement/BCSFDataTargets.Page.al` | SF-006 |
+| ScenarioManagement | 90135 | Enum | `BCSF Entity Type` | `src/ScenarioManagement/BCSFEntityType.Enum.al` | SF-006 |
+| ScenarioManagement | 90141 | Page | `BCSF Frozen Modules` | `src/ScenarioManagement/BCSFFrozenModules.Page.al` | SF-005 |
+| ScenarioManagement | 90140 | Page | `BCSF Frozen Targets` | `src/ScenarioManagement/BCSFFrozenTargets.Page.al` | SF-005 |
+| ScenarioManagement | 90146 | Enum | `BCSF Module Type` | `src/ScenarioManagement/BCSFModuleType.Enum.al` | SF-006 |
+| ScenarioManagement | 90142 | Enum | `BCSF Quantity Preset` | `src/ScenarioManagement/BCSFQuantityPreset.Enum.al` | SF-006 |
+| ScenarioManagement | 90139 | Page | `BCSF Run Card` | `src/ScenarioManagement/BCSFRunCard.Page.al` | SF-005 |
+| ScenarioManagement | 90138 | Page | `BCSF Run List` | `src/ScenarioManagement/BCSFRunList.Page.al` | SF-005 |
+| ScenarioManagement | 90145 | Codeunit | `BCSF Scenario DB Events` | `src/ScenarioManagement/BCSFScenarioDBEvents.Codeunit.al` | SF-005 |
+| ScenarioManagement | 90136 | Page | `BCSF Scenario Modules` | `src/ScenarioManagement/BCSFScenarioModules.Page.al` | SF-005 |
+| ScenarioManagement | 90143 | Codeunit | `BCSF Scenario Policy` | `src/ScenarioManagement/BCSFScenarioPolicy.Codeunit.al` | SF-006 |
+| ScenarioManagement | 90144 | Codeunit | `BCSF Snapshot Writer` | `src/ScenarioManagement/BCSFSnapshotWriter.Codeunit.al` | SF-005 |
+
 ## Verträge und Aufrufgrenzen
 
 - `BCSF Generator` ist das geplante Interface in `BCScenarioFactory.ModuleRegistry`, Dateipfad `src/ModuleRegistry/BCSFGenerator.Interface.al`, ohne deklarierte numerische ID. Das Interface verwendet gemeinsame Core-Typen; Registry/Core referenzieren keine konkreten Fachgeneratoren. Fachmodule implementieren und registrieren ihre Fähigkeiten. Enum-basierte Auflösung und endgültige Methodensignaturen gehören zu SF-007, öffentliche Fremdanbieter-Verträge zu SF-034.
@@ -145,3 +161,10 @@ Quellen geprüft am 11.11.2026. Tatsächliche Prüfergebnisse: [TESTS.md](TESTS.
 Core enthält Tabelle, Setup-Card, drei Enums, Setup Management, Run State Management und das Permission Set. Lifecycle sichert die vier Datenbankereignisse der Setup-Tabelle ab. Ausführbarer Core-Code referenziert Lifecycle nicht; das Permission Set ist als deklarative Berechtigungszusammenstellung die ausdrückliche Ausnahme und referenziert den Guard. Daraus entsteht kein zyklischer Geschäftslogik-Aufruf.
 
 Run-/Batch-Persistenz bleibt bei SF-005/012; insbesondere ist der Batch-Status 90301 noch nicht implementiert. Die GUID-Hilfen ändern nur einen übergebenen leeren Wert. Statusnummern 0–12 sind im neuen Run-Enum festgelegt; Übergänge im [Foundation-Vertrag](FOUNDATION.md). Kompiliert mit vorhandenen BC-28.5-Symbolen/Runtime 17; noch kein Sandbox- oder Berechtigungs-Laufzeittest.
+
+
+## Implementierter Stand SF-005/SF-006 und Sprachen (11.11.2026)
+
+Aktuell 32 AL-Objekte: Core 10, ScenarioManagement 20, Lifecycle 2; übrige 21 Module leer. Neu gegenüber SF-003/SF-004: zwei Core-Sprachobjekte (90108/90109), 20 ScenarioManagement-Objekte und Lifecycle-Konfigurationsguard 90377. Die Tabelle enthält jetzt 76 numerische Planobjekte; alle neuen Werte stammen aus zuvor freien Modulwerten. Run Step 90129, Wizard 90132 und alle übrigen Folgetickets bleiben unimplementiert.
+
+Sicherheitsbindung über Datenbank-Subscriber; keine ausführbare ScenarioManagement→Lifecycle-Rückreferenz. Nur das aggregierende Permission Set referenziert beide deklarativ. Der Snapshot Writer besitzt eng begrenzte Insert-Rechte auf eigene Lauf-/Snapshot-Tabellen, Anwender lediglich indirektes Insert. Erfasste Köpfe und Payloads sind aktuell vollständig unveränderlich. Vollständiger Feld-/Transaktions-/Sprachvertrag: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md). Sprachkatalog ist Teil der Core-Grundlage; er ersetzt keinen geplanten Generator.
