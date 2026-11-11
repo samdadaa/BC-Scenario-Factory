@@ -49,3 +49,12 @@ AL-Kontext: https://alguidelines.dev/docs/agentic-coding/gettingstarted/setup/
 - Cleanup unterscheidet eigene ungebuchte Daten, gebuchte Dokumente und Ledgerposten. Gebuchte Daten niemals per pauschalem Delete entfernen; Reset durch neue Firma/Sandbox als Standardoption prüfen.
 - Auch bei Job-Queue-Start aus Hintergrundsitzung Environment Guard und explizite Lauferlaubnis erneut prüfen.
 - **XERJ** ist lokale Entwicklerhilfe und keine BC-Laufzeitanbindung. Kundencode/Datensätze nur bei vorliegender Berechtigung lokal indizieren; keine personenbezogenen Daten in den XERJ-Index übernehmen.
+
+
+## Implementierte Foundation-Grenzen SF-003 (11.11.2026)
+
+Guard 90375 prüft bei jeder Anfrage tatsächliches SaaS/Sandbox/Production-Merkmal, Umgebungsnamen, aktuelle/erlaubte Firma, Setup-Rechte, Generation-/Postingfreigabe und Mengenlimits. Die Before-Events für alle vier Setup-Schreiboperationen sind ohne Skip-Option gebunden und abhängig weder von GUI noch RunTrigger. Keine Sicherheitscache-, Test-/IsHandled- oder TryFunction-Umgehung. Core ruft Lifecycle nicht direkt auf; das Permission Set bündelt nur deklarativ dessen Execute-Recht. Tabelle/Codeunits sind Internal, was ausdrücklich keine Sicherheitsgrenze ersetzt.
+
+`BCSF ADMIN`: nur Setup RIM und notwendige Table/Page/Codeunit-Ausführung; keine Delete- oder Standardbuchungsrechte und keine automatische Rollenzuweisung. Setup wird nur explizit und deaktiviert angelegt. Firma ist OrganizationIdentifiableInformation; keine Benutzerkennungen protokolliert. Produktroutine erzeugt derzeit keine Standard-BC-Daten. Künftige Generatoren/Worker müssen vor jeder Mutation den Guard erneut aufrufen und die konkreten Zielrechte/Freigaben prüfen. Der aktuelle Schutz bezieht sich auf die tatsächlich vorhandene Setup-Tabelle, keine behauptete Absicherung zukünftigen Codes. Vollständiger Vertrag: [FOUNDATION.md](FOUNDATION.md).
+
+Build und statische Verdrahtung geprüft, aber keine Produktions-, Sandbox-, Rechte-, Security-Filter- oder Background-Laufzeittests durchgeführt. Diese Fälle stehen mit erwarteten Ergebnissen in [TESTS.md](TESTS.md).

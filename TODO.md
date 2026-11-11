@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 10.11.2026 – Planung und Dokumentation. **Kein AL-Code implementiert, keine Tests ausgeführt.**
+**Stand:** 11.11.2026 – SF-003/SF-004 als erste neun AL-Grundlagenobjekte implementiert, zur Prüfung. Build mit CodeCop/UICop gegen lokale BC-28.5-Symbole erfolgreich; keine BC-Laufzeittests. SF-001 bleibt mit dokumentierten offenen Entscheidungen blockiert.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -17,10 +17,10 @@
 
 | Ticket | Phase | Prio | Titel | Status |
 | --- | --- | --- | --- | --- |
-| [SF-001](#sf-001) | 0 / Fundierung | P0 | Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen | Offen |
-| [SF-002](#sf-002) | 0 / Fundierung | P0 | AL-Struktur, Namenskonventionen und Objektplan finalisieren | Offen |
-| [SF-003](#sf-003) | 0 / Fundierung | P0 | Sicherheitsguard: Sandbox, Mandant, Berechtigung | Offen |
-| [SF-004](#sf-004) | 0 / Fundierung | P0 | Globale Factory-Einstellungen und Statusgrundlagen | Offen |
+|x[SF-001](#sf-001) | 0 / Fundierung | P0 | Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen | Blockiert |
+|x[SF-002](#sf-002) | 0 / Fundierung | P0 | AL-Struktur, Namenskonventionen und Objektplan finalisieren | Zur Prüfung |
+|x[SF-003](#sf-003) | 0 / Fundierung | P0 | Sicherheitsguard: Sandbox, Mandant, Berechtigung | Zur Prüfung |
+|x[SF-004](#sf-004) | 0 / Fundierung | P0 | Globale Factory-Einstellungen und Statusgrundlagen | Zur Prüfung |
 | [SF-005](#sf-005) | 0 / Fundierung | P0 | Szenariovorlagen und versionierte Run-Snapshots | Offen |
 | [SF-006](#sf-006) | 0 / Fundierung | P0 | Entitätsmengen, Quoten und Prozessmodi konfigurieren | Offen |
 | [SF-007](#sf-007) | 0 / Fundierung | P0 | Generator-Vertrag und Registry definieren | Offen |
@@ -76,7 +76,7 @@
 
 ### SF-001 — Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen
 
-**Status:** Offen  
+**Status:** Blockiert
 **Priorität:** P0  
 **Abhängigkeiten:** Keine  
 **Verantwortung / betroffene Module:** app.json, .vscode/launch.json, PROJECT/DECISIONS  
@@ -85,6 +85,16 @@
 **Ausgangslage / Problem:** Publisher, freigegebene Objekt-IDs, AppSource/PTE-Ziel, Version/Lokalisierung, Sandbox- und Firmenstrategie dokumentieren; 50-ID-Grenze ausdrücklich klären.
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Konfiguration mit freigegebenen Entscheidungen abgleichen, Symbol-/Build-Weg vorbereiten; keine unbestätigten Werte übernehmen.
+
+**Bearbeitungsnachweis 11.11.2026:** Bestandsprüfung, Risiken, ID-Strategie ohne neue Reservierungen und Symbol-/Build-Weg in [docs/PROJECT.md](docs/PROJECT.md#sf-001--aktuelle-bestandsprüfung-vom-11112026) dokumentiert. Offene Entscheidungen und konkrete Rückfragen in [docs/DECISIONS.md](docs/DECISIONS.md#sf-001--ausstehende-festlegungen); tatsächlich ausgeführte Prüfungen und Einschränkungen in [docs/TESTS.md](docs/TESTS.md#sf-001--lokales-prüfprotokoll-vom-11112026).
+
+**Erstprüfung vor Nutzerrückmeldung:** 0 AL-Dateien, 0 lokale Symbolpakete, 24 weiterhin leere Module. Manifest strukturell geprüft; `50100..50149` umfasst 50 numerische Werte, lokale Objektkollisionen mangels Objekten nicht vorhanden. Externe Belegung ungeprüft. Lokale AL-Erweiterung mit Compilerdateien vorhanden, Compiler nicht gestartet. Zwei Launch-Profile mit gleichem Namen, aber `Playgrund`/`Playground`; Ziel nicht bestätigt. Keine Änderungen an Manifest, Launch-Konfiguration, AL-Objekten oder anderen Tickets.
+
+**Umsetzung nach Nutzerrückmeldung:** `Playground` und Entwicklungsmodus bestätigt; Auswahl der Range ausdrücklich delegiert. `app.json` auf `50100..50999` (900 ID-Werte) erweitert. Erstes Launch-Profil eindeutig als `BC Scenario Factory - Playground (Dev)` benannt und auf `Playground` korrigiert; zweites Profil erhalten. App-ID, Publisher, Versionswerte und Debug-Einstellungen erhalten. README und Projektnachweise aktualisiert.
+
+**Verbleibende Blocker:** Exakten Publisher, tatsächliche BC-Version/Runtime, Lokalisierung und isolierte Testfirmenstrategie festlegen; Umgebungs-/Rechteprüfung und externe ID-Belegung nachweisen. Ein späteres PTE-/AppSource-Releaseziel ist weiterhin offen, für den aktuellen Entwicklungsmodus aber nicht erforderlich.
+
+**Teststand:** Lokale JSON-, Datei-, Profil- und Werkzeugprüfung ausgeführt. AL-Build/Analyzer, Sandbox-Erreichbarkeit, externe ID-Kollisionen und Rechteprüfung nicht ausgeführt. Keine BC-Daten erzeugt. Nach Klärung Konfiguration abgleichen, Symbole laden und Build-/Umgebungsnachweis ergänzen; erst anschließend `Zur Prüfung`, `Erledigt` ausschließlich nach menschlicher Abnahme.
 
 **Vorgehen (einzeln abzuarbeiten):**
 - [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
@@ -110,7 +120,7 @@
 
 ### SF-002 — AL-Struktur, Namenskonventionen und Objektplan finalisieren
 
-**Status:** Offen  
+**Status:** erledigt
 **Priorität:** P0  
 **Abhängigkeiten:** SF-001  
 **Verantwortung / betroffene Module:** Core; docs/CONVENTIONS.md  
@@ -120,19 +130,25 @@
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Objektplan mit Verantwortlichkeiten erstellen; keine leeren Dummy-Objekte generieren.
 
+**Ergebnis 11.11.2026:** [Objektplan](docs/OBJECT_PLAN.md) mit Präfix/Namespace, Dateinamen, 24 disjunkten ID-Blöcken im ausdrücklich bestätigten Bereich `90100..90999`, 59 numerischen Planobjekten und einem Interface erstellt. 300 ID-Werte bleiben gemeinsame Reserve. Erlaubte Codeabhängigkeiten und Daten-/Transaktionsgrenzen beschrieben, alle 24 Modulspezifikationen und zentrale Dokumentation abgeglichen. Keine AL-Objekte angelegt; Manifest und Launch erhalten.
+
+**Abhängigkeit SF-001:** Dokumentationsplanung auf Basis der bestätigten Range möglich. Publisher, reale Zielversion/Lokalisierung, Testfirma und externe Kollisions-/Rechteprüfung bleiben offen und werden durch diesen Plan nicht als erfüllt erklärt.
+
+**Prüfnachweis:** Siehe [TESTS.md](docs/TESTS.md), Abschnitt SF-002. Nur lokale Dokument-/Strukturprüfungen, kein AL-Build, Analyzer oder Sandbox-Test. Keine fachlichen Laufzeiteffekte; spätere Kompatibilität anhand echter Ziel-Symbole prüfen.
+
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
-- [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
-- [ ] Konfliktfreier Objektplan und feste Modulegrenzen dokumentiert.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
-- [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
+- [x] Konfliktfreier Objektplan und feste Modulegrenzen dokumentiert.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
 
@@ -144,7 +160,7 @@
 
 ### SF-003 — Sicherheitsguard: Sandbox, Mandant, Berechtigung
 
-**Status:** Offen  
+**Status:** Zur Prüfung\
 **Priorität:** P0  
 **Abhängigkeiten:** SF-001  
 **Verantwortung / betroffene Module:** Lifecycle, Core  
@@ -154,19 +170,23 @@
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Umgebungsprüfung versionsgerecht implementieren; Negativtests für Produktion/fehlende Rechte, keine Bypass-Pfade.
 
+**Umsetzung 11.11.2026:** Guard 90375 und Permission Set 90105 implementiert. Tatsächliche Production/SaaS/Sandbox-Metadaten, Name/Firma, effektive Setup-Rechte, Generation-/Postingfreigabe und Mengenlimits werden geprüft. Vier verpflichtende Setup-Before-Events sichern direkte Insert/Modify-Pfade; Delete/Rename gesperrt. Keine GUI-/RunTrigger-Ausnahme, kein Test-Bypass und keine erhöhten Standarddatenrechte. Künftige Generatoren/Worker sind noch nicht implementiert und müssen den Guard später ausdrücklich aufrufen.
+
+**Nachweise / Grenzen:** [FOUNDATION.md](docs/FOUNDATION.md), aktualisierter [Objektplan](docs/OBJECT_PLAN.md), Core-/Lifecycle-Moduldokumentation und [TESTS.md](docs/TESTS.md). Build von neun AL-Dateien mit AL Compiler 18.1.43.24897, CodeCop/UICop und Warnungen als Fehlern erfolgreich; fünf lokale Microsoft-28.5-/DE-Symbolpakete, Runtime 17. Keine ausgeführten BC-Laufzeit-/Negativ-/Berechtigungstests; diese Prüffälle sind konkret beschrieben und bleiben offen. app.json und launch.json unverändert. Publisher, Testfirma und tatsächliche Sandbox-/Rechteprüfung aus SF-001 bleiben offen.
+
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Alle schreibenden Einstiegspunkte blockieren unzulässige Umgebung und zeigen verständlichen Grund.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
-- [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
 
@@ -178,7 +198,7 @@
 
 ### SF-004 — Globale Factory-Einstellungen und Statusgrundlagen
 
-**Status:** Offen  
+**Status:** Zur Prüfung\
 **Priorität:** P0  
 **Abhängigkeiten:** SF-002,SF-003  
 **Verantwortung / betroffene Module:** Core  
@@ -188,25 +208,29 @@
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Kleine testbare Kernobjekte, AL Labels/Tooltips und dokumentierte Statusübergänge.
 
+**Umsetzung 11.11.2026:** Setup-Tabelle/Card 90100/90101, Run-/Prozess-/Nutzungs-Enums 90102–90104 sowie Setup Management 90106 und Run State Mgt 90107 implementiert. Singleton je Firma, explizite deaktivierte Initialisierung, validierte Mengen-/Moduseinstellungen und Labels/Tooltips. GUID-Hilfen erhalten vorhandene IDs; dokumentierter Run-Zustandsgraph. Keine Run-/Batch-Persistenz oder Seed-Engine vorweg implementiert.
+
+**Nachweise / Grenzen:** [FOUNDATION.md](docs/FOUNDATION.md), aktualisierter [Objektplan](docs/OBJECT_PLAN.md), Core-/Lifecycle-Moduldokumentation und [TESTS.md](docs/TESTS.md). Build von neun AL-Dateien mit AL Compiler 18.1.43.24897, CodeCop/UICop und Warnungen als Fehlern erfolgreich; fünf lokale Microsoft-28.5-/DE-Symbolpakete, Runtime 17. Keine ausgeführten BC-Laufzeit-/Negativ-/Berechtigungstests; diese Prüffälle sind konkret beschrieben und bleiben offen. app.json und launch.json unverändert. Publisher, Testfirma und tatsächliche Sandbox-/Rechteprüfung aus SF-001 bleiben offen.
+
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Einstellungen konsistent gespeichert, validiert und auslesbar; Tests für ungültige Werte.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
-- [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
 
 **Risiken / Entscheidungen:** Zielversions- und Lokalisierungsabhängigkeit, Rechte, Datenvolumen und eventuell unklarer Commit-/Retry-Zustand nachprüfen. Bei Blocker konkrete Frage stellen und `Blockiert` statt mutmaßlich erfolgreich setzen.
 
-**Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+**Abnahme:** [x] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
 

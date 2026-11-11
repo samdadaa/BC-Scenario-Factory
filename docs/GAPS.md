@@ -1,5 +1,7 @@
 # Offene Punkte / Bestandsprüfung
 
+**Aktualisierung SF-003/SF-004, 11.11.2026:** Die nachfolgende ZIP-Bestandsaufnahme ist historisch. Aktuell gelten `90100..90999`, neun implementierte Grundlagenobjekte und fünf lokale Microsoft-Symbolpakete. Build/CodeCop/UICop gegen BC 28.5 erfolgreich; keine Sandbox-Laufzeittests. Publisher, Testfirma, tatsächliche Sandbox-Rechte und unbekannte Fremd-App-Kollisionen bleiben offen. Aktueller Vertrag und Grenzen: [FOUNDATION.md](FOUNDATION.md), tatsächliche Prüfnachweise: [TESTS.md](TESTS.md).
+
 **Stand der bereitgestellten ZIP:** 24 leere fachlich benannte Modulordner, keine AL-Dateien in `src`; `app.json`, VS-Code-Konfiguration und generische AL-Agentura-Dokumentation vorhanden. Keine AL-Kompilierung oder Sandbox-Tests ausgeführt.
 
 ## Blocker vor produktiver AL-Implementierung

@@ -1,6 +1,6 @@
-# Zielarchitektur (Planung – noch nicht implementiert)
+# Zielarchitektur und implementierte Grundlagen
 
-**Status:** Entwurfsarchitektur aus bestätigter Produktidee; keine technischen Komponenten sind in AL bereits umgesetzt. `docs/modules/INDEX.md` kennzeichnet alle Module als geplant.
+**Status:** Das End-to-End-Bild bleibt Zielarchitektur. Core-Grundlagen und Lifecycle-Guard sind seit SF-003/SF-004 in neun AL-Objekten implementiert; die übrigen 22 Module enthalten noch keinen AL-Code. Build-/Laufzeitgrenzen siehe [FOUNDATION.md](FOUNDATION.md) und [TESTS.md](TESTS.md).
 
 ## End-to-End
 
@@ -77,3 +77,11 @@ Finanz-Grundsetup (Buchungsgruppen, Nummernserien, Steuer-/MWSt.-Kontext, Zahlun
 ## Erweiterbarkeit und Grenzen
 
 Neue Industrieprofile konfigurieren die vorhandenen Fachgeneratoren. Weitere ISV-/Branchen-Generatoren können **erst nach festgelegtem Interfacevertrag** registriert werden. Nicht jedes Standard-BC-Modul ist in jeder Lizenz/Lokalisierung vorhanden; Features zur Laufzeit geprüft. XERJ/Codex sind Entwicklungswerkzeuge außerhalb von BC und **nicht Bestandteil** der Extension.
+
+## Konkretisierung durch SF-002 (11.11.2026)
+
+[OBJECT_PLAN.md](OBJECT_PLAN.md) definiert geplante Objektzuständigkeiten, Namen, IDs und erlaubte direkte Codeabhängigkeiten. Dieser Graph ersetzt die früheren allgemeinen Code-Abhängigkeitsannahmen in den Modulskeletten. Fachliche Reihenfolgen bleiben davon getrennte Laufplanregeln. Core ist unabhängig; Generatoren implementieren den Vertrag aus ModuleRegistry. Run Header/Run Step/Snapshot gehören ScenarioManagement, Batches BackgroundProcessing, Herkunft DataGeneration, Validierungsbefunde Validation. Monitoring liest Ausführungsstände, Ausführung referenziert Monitoring nicht. Tabellen und Pages sind weiterhin nicht implementiert; der Plan legt noch keine BC-APIs oder Commit-Garantien fest.
+
+## Umsetzung SF-003/SF-004 (11.11.2026)
+
+Setup-Card → Core Setup Management → firmenbezogene Setup-Tabelle; Lifecycle-Subscriber prüfen den tatsächlichen Sandbox-/Firmenkontext vor Insert/Modify. Delete/Rename sind gesperrt. Keine ausführbare Core-Rückreferenz auf Lifecycle; ausschließlich das deklarative Core-Permission-Set bündelt dessen Execute-Recht. Tabelle prüft vollständige Datensätze auch ohne Feld-Validate. Reines Öffnen/Lesen schreibt nicht, Initialisierung sperrt/prüft Existenz und schreibt ohne eigenen Commit. Der Guard bietet den wiederholt aufzurufenden Vertrag für spätere Worker; persistierte Laufzustände und fachliches Retry sind noch nicht vorhanden. Details und Run-Zustandsgraph: [FOUNDATION.md](FOUNDATION.md).

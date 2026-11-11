@@ -1,6 +1,6 @@
 # BC Scenario Factory
 
-**Status: Architektur und Planung, noch keine AL-Implementierung.** Ein neues AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
+**Status: Erste AL-Grundlagen implementiert (SF-003/SF-004), weitere Module geplant.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
 
 ## Zielgruppen und Nutzen
 
@@ -32,7 +32,7 @@
 
 ## Stand und Installation
 
-`app.json` enthält bereits App-ID, `application: 28.0.0.0`, `runtime: 17.0` und ID-Bereich `50100–50149`, aber der Publisher ist noch `Default Publisher`. **Diese Werte wurden aus der gelieferten ZIP übernommen, nicht als funktionsfähig validiert.** Zielversion, Publisher, Objektbereich, Build-/Sandbox-Umgebung müssen vor der ersten Implementierung geprüft werden.
+`app.json` enthält bereits App-ID, `application: 28.0.0.0`, `runtime: 17.0` und ID-Bereich `90100–90999`, aber der Publisher ist noch `Default Publisher`. Der Nutzer hat den Objektbereich anschließend auf `90100–90999` geändert und für SF-002 bestätigt (900 ID-Werte); Ziel ist `Playground` im Entwicklungsmodus. **Versionswerte stammen aus der gelieferten ZIP und sind nicht als funktionsfähig validiert.** Publisher, Zielversion/Lokalisierung, Testfirma, externe ID-Konflikte und Build-/Sandbox-Zugriff bleiben zu prüfen.
 
 1. Projekt in VS Code mit der Microsoft AL Language Extension öffnen.
 2. `app.json` und `.vscode/launch.json` mit der vorgesehenen Sandbox abgleichen; keine produktive Umgebung verwenden.
@@ -49,8 +49,12 @@
 - [Startanleitung](GETTING_STARTED.md) · [Architektur](docs/ARCHITECTURE.md) · [Fachkonzept](docs/REQUIREMENTS.md)
 - [Szenarien & Branchen](docs/SCENARIOS.md) · [Generierungsregeln](docs/DATA_MODEL.md) · [Hintergrundjobs](docs/BACKGROUND_PROCESSING.md)
 - [UI und Dashboard](docs/UI_WORKFLOWS.md) · [Teststrategie](docs/TESTS.md) · [Sicherheit](docs/SECURITY.md)
-- [Modulindex](docs/modules/INDEX.md) · [Entscheidungen](docs/DECISIONS.md) · [Umsetzungs-Tickets](TODO.md)
+- [Setup und Sicherheitsvertrag](docs/FOUNDATION.md) · [Objektplan](docs/OBJECT_PLAN.md) · [Modulindex](docs/modules/INDEX.md) · [Entscheidungen](docs/DECISIONS.md) · [Umsetzungs-Tickets](TODO.md)
 
 ## Lizenz / Support
 
 Urheberrechte, kommerzielle Lizenz, Supportkanal und Veröffentlichungsweg: **Zu prüfen**. Es wurde keine Lizenz eingeräumt.
+
+## Implementierter Stand SF-003/SF-004
+
+Neun AL-Objekte für firmenbezogenes Setup, Enums, GUID-/Statushilfen, Permission Set und Environment Guard. Die Setup-Seite initialisiert nur auf ausdrückliche Aktion; Generierung und Posting sind standardmäßig aus. Noch keine Fachgeneratoren oder Queue-Worker. Lokaler Build inklusive CodeCop/UICop gegen vorhandene BC-28.5-/DE-Symbole (Runtime 17) erfolgreich; Sandbox- und Berechtigungstests stehen aus. Bedienung, Grenzen und Prüfnachweise: [FOUNDATION.md](docs/FOUNDATION.md), [TESTS.md](docs/TESTS.md).

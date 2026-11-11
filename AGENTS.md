@@ -89,3 +89,30 @@ Diese Anweisungen sind **eigenständig formulierte, projektsichere Ableitungen**
 - Alle 24 Module im Index sind **geplant und leer**. Module, Objekte, Laufzeiten und Tests niemals als existent/erfolgreich ausgeben, bevor nachgewiesen.
 - Bei Entwurfs-/Dokumentationsaufträgen darf die ausdrücklich beauftragte Dokumentationsänderung erfolgen. Für Implementierung weiterhin genau ein gewähltes Ticket.
 - Zusätzliche Pflichtlektüre bei passenden Tickets: `docs/REQUIREMENTS.md`, `docs/SCENARIOS.md`, `docs/DATA_MODEL.md`, `docs/BACKGROUND_PROCESSING.md`, `docs/UI_WORKFLOWS.md`, `docs/DECISIONS.md`.
+
+
+## XERJ – Automatische Projektsuche und Wissensverwaltung
+
+XERJ ist der bevorzugte lokale Such- und Wissensdienst für dieses Projekt. Verwende ausschließlich den Projektindex `bcsf-docs` und niemals Indizes anderer Projekte.
+
+### Automatische Nutzung
+- Verwende XERJ bei jeder nichttrivialen Entwicklungsaufgabe eigenständig, ohne Aufforderung durch den Benutzer.
+- Suche vor der Implementierung nach relevanten AL-Objekten, bestehenden Methoden, Architekturentscheidungen, Modulabhängigkeiten, Tests und offenen Tickets.
+- Verwende `xerj_search`, `xerj_batch_search` oder `xerj_hybrid_search` für projektweite Suchen.
+- Verwende `xerj_code_search` und `xerj_def`, wenn vorhandener AL-Code analysiert oder erweitert wird.
+- Nutze `xerj_memory_recall` bei umfangreichen oder fortgesetzten Aufgaben, um frühere Entscheidungen zu berücksichtigen.
+- Speichere mit `xerj_memory_store` nur wichtige, bestätigte und langfristig relevante Architekturentscheidungen. Keine Geheimnisse oder personenbezogenen Daten speichern.
+- Prüfe relevante Ergebnisse gegen aktuelle lokale Dateien. Bei Widersprüchen gelten die aktuellen Projektdateien und verbindlichen AGENTS.md-Regeln.
+- Nach Änderungen müssen betroffene AL-Objekte, Tests und Dokumentation konsistent bleiben. Berücksichtige, dass ein Index verzögert aktualisiert sein kann.
+- Falls XERJ nicht erreichbar ist, arbeite mit den lokalen Dateien weiter und melde die Einschränkung kurz. Keine erfundenen Suchergebnisse.
+- Vermeide unnötige XERJ-Abfragen, wenn die erforderlichen Informationen bereits zuverlässig vorliegen.
+
+### Arbeitsweise
+1. Aufgabe und relevante Projektregeln erfassen.
+2. Vorhandenes Wissen und relevante Implementierungen über XERJ ermitteln.
+3. Aktuelle Quelldateien prüfen und betroffene Abhängigkeiten analysieren.
+4. Implementierung nach bestehender Architektur durchführen.
+5. Zugehörige Tests ausführen oder ergänzen und Dokumentation aktualisieren.
+6. Ergebnis, relevante Tests und eventuelle Einschränkungen kurz berichten.
+
+Der Benutzer muss XERJ-Werkzeuge nicht ausdrücklich anfordern. XERJ ist Entwicklungsunterstützung und keine Laufzeitabhängigkeit der BC-App.

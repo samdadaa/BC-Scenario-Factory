@@ -1,10 +1,10 @@
 # Modulindex – Zielarchitektur
 
-**Bestand:** Alle 24 Verzeichnisse sind geplant und enthalten nur `.gitkeep`; **0 implementierte AL-Objekte**. Aus einem Ordnernamen folgt keine bereits existente Funktion. Kernmodule/Fachmodule und Verantwortungen sind **Entwurfsdefinitionen**.
+**Aktueller Bestand nach SF-003/SF-004:** Core enthält acht AL-Objekte, Lifecycle einen Environment Guard; die übrigen 22 Verzeichnisse enthalten weiterhin nur `.gitkeep`. Alle weitergehenden Modulverantwortungen bleiben Planung. Neun AL-Objekte erfolgreich lokal gebaut; keine Sandbox-Laufzeitabnahme.
 
 | Modul | Kategorie | Ziel | Status |
 | --- | --- | --- | --- |
-| [Core](details/src/Core.md) | Kern | `src/Core/` | Geplant, ohne Code |
+| [Core](details/src/Core.md) | Kern | `src/Core/` | Grundlagen: 8 AL-Objekte, zur Prüfung |
 | [ScenarioManagement](details/src/ScenarioManagement.md) | Kern | `src/ScenarioManagement/` | Geplant, ohne Code |
 | [IndustryProfiles](details/src/IndustryProfiles.md) | Kern | `src/IndustryProfiles/` | Geplant, ohne Code |
 | [ModuleRegistry](details/src/ModuleRegistry.md) | Kern | `src/ModuleRegistry/` | Geplant, ohne Code |
@@ -15,7 +15,7 @@
 | [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | Geplant, ohne Code |
 | [Validation](details/src/Validation.md) | Kern | `src/Validation/` | Geplant, ohne Code |
 | [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | Geplant, ohne Code |
-| [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Geplant, ohne Code |
+| [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Guard: 1 AL-Objekt, zur Prüfung |
 | [Finance](details/src/Finance.md) | Fach | `src/Finance/` | Geplant, ohne Code |
 | [Sales](details/src/Sales.md) | Fach | `src/Sales/` | Geplant, ohne Code |
 | [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | Geplant, ohne Code |
@@ -30,3 +30,5 @@
 | [Planning](details/src/Planning.md) | Fach | `src/Planning/` | Geplant, ohne Code |
 
 **MVP:** Alle Kernverantwortungen konzeptionell notwendig, zunächst Finance, Sales, Purchasing, Inventory umsetzen. Warehouse usw. dürfen als leere Verzeichnisse bleiben. Jedes Modul besitzt eine eigene Spezifikation; bei Implementierung tatsächliche AL-Objekte nachtragen.
+
+**SF-002, 11.11.2026:** Für alle 24 Module sind ID-Blöcke, Namespaces, geplante Objekte und erlaubte Codeabhängigkeiten in [OBJECT_PLAN.md](../OBJECT_PLAN.md) dokumentiert. Modulspezifikationen darauf abgestimmt. Historischer Stand von SF-002: 0 AL-Objekte, 59 numerische Planobjekte und ein Interface. Der aktuelle Implementierungsstand steht oben; der Objektplan enthält inzwischen zusätzlich die Management-Codeunits 90106/90107.

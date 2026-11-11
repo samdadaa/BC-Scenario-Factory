@@ -1,6 +1,6 @@
 # Bedienkonzept, Seiten und Dashboard
 
-**Status:** Entwurf, noch keine AL-Pages vorhanden.
+**Status:** Wizard/Dashboard bleiben Entwurf. Seit SF-004 existiert die Setup-Card für explizite, deaktivierte Initialisierung und Konfiguration; siehe [FOUNDATION.md](FOUNDATION.md). Die folgenden Szenarioabläufe sind noch nicht implementiert.
 
 ## Navigation (sechs Bereiche)
 

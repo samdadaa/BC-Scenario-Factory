@@ -1,6 +1,6 @@
 # Lifecycle – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/Lifecycle/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** Grundlagen implementiert (1 AL-Objekte), zur Prüfung; weitergehende Funktionen geplant. **Pfad:** `src/Lifecycle/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -12,11 +12,11 @@ Sandbox Guard; Permission Sets; Laufaufbewahrung; nicht-destruktive Cleanup-Plä
 
 ## Schnittstellen / Daten
 
-Eingang: freigegebener Run-Snapshot (Branche, Nutzungsziel, Entitäten und Zielmengen, Seed, Zeitraum, Prozessmodus) und bereits validierte Vorgänger. Ausgang: datensparsame Ergebnisse pro Batch, Herkunftsnachweis und fachliche Validierungsbefunde. Konkrete AL-Objektnamen/Signaturen sind noch **zu prüfen**.
+Eingang: freigegebener Run-Snapshot (Branche, Nutzungsziel, Entitäten und Zielmengen, Seed, Zeitraum, Prozessmodus) und bereits validierte Vorgänger. Ausgang: datensparsame Ergebnisse pro Batch, Herkunftsnachweis und fachliche Validierungsbefunde. Die weitergehenden Schnittstellen bleiben Planung; vorhandene Foundation-Signaturen stehen in [FOUNDATION.md](../../../FOUNDATION.md).
 
 ## Abhängigkeiten
 
-Core, ScenarioManagement, Validation. Verpflichtende und optionale Beziehungen erst beim konkreten Generator im Dependency Manager fixieren; Zyklen verhindern.
+Core, ScenarioManagement. Dies sind erlaubte direkte Codeabhängigkeiten gemäß [SF-002-Objektplan](../../../OBJECT_PLAN.md), keine zusätzlichen App-Abhängigkeiten. Fachliche Prozessvoraussetzungen werden separat im Dependency Manager geplant.
 
 ## Grenzen und Risiken
 
@@ -33,3 +33,11 @@ Keine Löschung gebuchter Ledger-Einträge als Standard-Reset. Bestehende Daten 
 ## Vor Implementierung klären
 
 Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; danach Objektplan und Testfälle im passenden **einzeln freigegebenen TODO-Ticket** konkretisieren. Nach Implementierung hier reale Objekte, Datenflüsse und tatsächliche Testnachweise ergänzen.
+
+## Objektplanung SF-002
+
+Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.Lifecycle`; Präfix: `BCSF`. Die Foundation-Objekte sind seit SF-003/SF-004 vorhanden; die übrigen Planzeilen sind weiterhin unimplementiert. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+
+## Implementierter Stand SF-003/SF-004
+
+Environment Guard mit verpflichtenden Setup-Datenbank-Subscribern. Datenfluss, Felder, Rechte und Grenzen siehe [FOUNDATION.md](../../../FOUNDATION.md). Tatsächlicher Build mit CodeCop/UICop gegen lokale BC-28.5-/Runtime-17-Symbole erfolgreich; Laufzeit-/Rechte-/Sandboxfälle noch offen, siehe [TESTS.md](../../../TESTS.md). Keine Fachgeneratoren oder Queue-Worker.

@@ -16,7 +16,7 @@ Eingang: freigegebener Run-Snapshot (Branche, Nutzungsziel, Entitäten und Zielm
 
 ## Abhängigkeiten
 
-Core, DependencyManager. Verpflichtende und optionale Beziehungen erst beim konkreten Generator im Dependency Manager fixieren; Zyklen verhindern.
+Core. Dies sind erlaubte direkte Codeabhängigkeiten gemäß [SF-002-Objektplan](../../../OBJECT_PLAN.md), keine zusätzlichen App-Abhängigkeiten. Fachliche Prozessvoraussetzungen werden separat im Dependency Manager geplant.
 
 ## Grenzen und Risiken
 
@@ -33,3 +33,7 @@ Keine Annahme über dynamische AL-Typinstanziierung ohne geprüften Interface-Ve
 ## Vor Implementierung klären
 
 Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; danach Objektplan und Testfälle im passenden **einzeln freigegebenen TODO-Ticket** konkretisieren. Nach Implementierung hier reale Objekte, Datenflüsse und tatsächliche Testnachweise ergänzen.
+
+## Objektplanung SF-002
+
+Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.ModuleRegistry`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
