@@ -94,3 +94,10 @@ Vorlagenliste/-karte → Scenario Manager/Policy → firmenbezogene Vorlage/Modu
 Snapshot Writer sperrt Elternkopf und Setup, erstellt Draft-Laufkopf plus JSON-BLOB ohne Commit. Nur dieser feste Codepfad erhält indirektes Insert; Kopf/Payload bleiben nach Insert unveränderlich. Lauf-Unterseiten laden temporäre Anzeigekopien aus dem Payload; kein Lesen aktueller Vorlagen für die Rekonstruktion. Keine persistente Statusverarbeitung oder Queue vorweggenommen.
 
 Core löst Automatisch zu Deutsch/Englisch auf; der Snapshot hält Auflösung und Katalogversion fest. UI-Captions laufen über XLIFF, synthetische Daten über den explizit gewählten Katalog ohne Änderung der Worker-Sprache. Weitere Felder/Profilregeln erfordern zukünftig eine explizite neue Snapshot-Schemaversion. Details: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).
+
+
+## Aktueller Stand SF-007/SF-008 – 11.11.2026
+
+Realer Datenfluss: eingefrorener Run → Registry/Dependency Planner → temporäre Vorschau oder immutable Run Steps. Registry → Core; DependencyManager → Core/Registry/ScenarioManagement. PageExtension im DependencyManager hält den ausführbaren Modulgraphen azyklisch. Lifecycle bindet verpflichtende Sicherheitsereignisse. Queue/Worker und Fachgeneratoren weiterhin geplant.
+
+Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.

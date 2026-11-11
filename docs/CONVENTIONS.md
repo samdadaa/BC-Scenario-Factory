@@ -6,7 +6,7 @@
 
 - Objektpräfix: `BCSF ` (mit Leerzeichen), kein zusätzliches Suffix. Für kurze Permission-Set-Namen ebenfalls `BCSF` verwenden. Keine externe Registrierung behaupten.
 - Namespace: `BCScenarioFactory.<Modul>`; Modulname exakt wie das Verzeichnis unter `src/`. Kein Publisher-Platzhalter im Namespace. Explizite, alphabetisch sortierte `using`-Anweisungen; bei Mehrdeutigkeit qualifizierte Namen.
-- Dateiname: Objektname ohne Leerzeichen plus vollständiger Objekttyp, z. B. `BCSFFactorySetup.Table.al`, `BCSFGenerator.Interface.al`. Auch `TableExtension`/`PageExtension` ausschreiben, keine gemischten Typkürzel. Eine Datei pro Objekt.
+- Dateiname: Objektname ohne Leerzeichen plus vollständiger Objekttyp, z. B. `BCSFFactorySetup.Table.al`, `BCSFGenerator.Interface.al`. Für die erste implementierte PageExtension (SF-008) gilt entsprechend CodeCop `.PageExt.al`; sonst vollständiger Objekttyp. Keine Bestandsdateien hierfür umbenennen. Eine Datei pro Objekt.
 - AL-Objektnamen müssen die plattformspezifischen Längenrestriktionen erfüllen (in der Regel maximal 30 Zeichen inklusive Prefix/Suffix); eindeutige, verständliche Begriffe wählen.
 - Objektplan und reservierte Namen/IDs: [OBJECT_PLAN.md](OBJECT_PLAN.md). Neue Namen maximal 30 Zeichen einschließlich Präfix als konservative Projektgrenze; auch ohne Unterscheidung der Groß-/Kleinschreibung auf Eindeutigkeit prüfen.
 - PascalCase für benannte Elemente, wo AL-Syntax und Bestand es erlauben; bei AL-Objektbezeichnungen mit Leerzeichen lesbare Fachbegriffe beibehalten.
@@ -84,3 +84,5 @@ Englische Quell-Captions/Labels mit TranslationFile; alle UI-Texte einschließli
 Automatische Datensprache anhand ISO-Sprachkennung de bestimmen, nicht anhand einer einzelnen Region oder der Landesversion. Beim Snapshot auflösen und versionieren; Generatoren dürfen die Worker-Sprache nicht neu als Datensprache verwenden. Keine nachträgliche Übersetzung vorhandener Daten.
 
 Snapshot-Schema-/Enum-/Katalogversionen stabil halten. Immutable Datensätze nie per Trigger-false verändern. Narrow-Insert-Permissions nur im festen Snapshot-Schreiber, normale Nutzer mit indirektem Insert; keine pauschalen TableData-Rechte oder Schreib-TryFunctions. Temporäre Snapshot-Unterseiten müssen ausschließlich lokale Darstellungskopien enthalten.
+
+SF-007/SF-008: Temporäre Record-Variablen mit `Temp` benennen; gemeinsame JSON-Werte vor fremder Implementierung tief kopieren. Vertrag-/Katalogversionen prüfen, Probe-Bindungen aus echten Plänen ausschließen. Details: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md).

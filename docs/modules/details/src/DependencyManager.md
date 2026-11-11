@@ -1,6 +1,6 @@
 # DependencyManager – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/DependencyManager/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** Teilweise implementiert, 9 AL-Objekte, Zur Prüfung. **Pfad:** `src/DependencyManager/`. Historische Planungsangaben unten gelten nur für noch nicht implementierte Teile.
 
 ## Fachlicher Auftrag
 
@@ -36,4 +36,21 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 
 ## Objektplanung SF-002
 
-Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.DependencyManager`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.DependencyManager`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; die noch nicht implementierten Teile bleiben geplant. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+
+
+## Aktueller Nachweis SF-007/SF-008
+
+Reale Dateien:
+
+- `BCSFDependency.Table.al`
+- `BCSFDependencyPlanner.Codeunit.al`
+- `BCSFGraphSelfCheck.Codeunit.al`
+- `BCSFGraphSorter.Codeunit.al`
+- `BCSFPlanNode.Table.al`
+- `BCSFPlanPreview.Page.al`
+- `BCSFPlanWriter.Codeunit.al`
+- `BCSFRunPlanning.PageExt.al`
+- `BCSFSavedRunSteps.Page.al`
+
+Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Sicherheitsgrenzen: [GENERATOR_PLANNING.md](../../../GENERATOR_PLANNING.md). Build/Übersetzung lokal geprüft; Selbstprüfungen nur kompiliert, kein BC-Laufzeittest. Fachgeneratoren und Queue weiterhin geplant.

@@ -1,6 +1,6 @@
 # Lifecycle – Modulspezifikation
 
-**Status:** Teilweise implementiert (2 AL-Objekte), zur Prüfung; weitere Funktionen geplant. **Pfad:** `src/Lifecycle/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** Teilweise implementiert, 3 AL-Objekte, Zur Prüfung. **Pfad:** `src/Lifecycle/`. Historische Planungsangaben unten gelten nur für noch nicht implementierte Teile.
 
 ## Fachlicher Auftrag
 
@@ -47,3 +47,16 @@ Environment Guard mit verpflichtenden Setup-Datenbank-Subscribern. Datenfluss, F
 Zusätzlich Scenario Guard 90377 mit 20 Before-Subscriber-Bindungen; der bestehende Environment Guard bietet EnsureCanConfigure. Planung braucht keine aktivierte Generierung, bleibt aber sandbox-/firmen-/rechtegebunden. Nur neue temporäre Anzeigezeilen haben keine persistente Schreibprüfung.
 
 Vertrag, konkrete Objekte, Datenfluss und offene Laufzeitprüfungen: [SCENARIO_CONFIGURATION.md](../../../SCENARIO_CONFIGURATION.md), [OBJECT_PLAN.md](../../../OBJECT_PLAN.md), [TESTS.md](../../../TESTS.md).
+
+
+## Aktueller Nachweis SF-007/SF-008
+
+Reale Dateien:
+
+- `BCSFEnvironmentGuard.Codeunit.al`
+- `BCSFPlanningGuard.Codeunit.al`
+- `BCSFScenarioGuard.Codeunit.al`
+
+Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Sicherheitsgrenzen: [GENERATOR_PLANNING.md](../../../GENERATOR_PLANNING.md). Build/Übersetzung lokal geprüft; Selbstprüfungen nur kompiliert, kein BC-Laufzeittest. Fachgeneratoren und Queue weiterhin geplant.
+
+Neue tatsächliche Codeabhängigkeiten: ModuleRegistry und DependencyManager für verpflichtende Guard-Subscriber; kein ausführbarer Rückverweis aus dem Planer auf Lifecycle.

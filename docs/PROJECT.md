@@ -79,3 +79,10 @@ Fünf lokale Microsoft-Symbolpakete vorhanden: System 28.0.57066.0, System Appli
 32 AL-Objekte: Core 10, ScenarioManagement 20, Lifecycle 2; 21 weitere Module noch ohne AL. Vorlagen, Module, Mengen-/Quotenparameter, Kopieren/Revision und unveränderliche Draft-Lauf-Snapshots vorhanden; keine implementierten Fachgeneratoren, Profile, Queue-Worker oder Standardbuchungen. Sieben XLIFF-Dateien (generierte Referenz, Englisch und fünf deutsche Regionen), Übersetzungsprüfer und sprachstabile synthetische Namensvorschauen. Einzelheiten: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).
 
 Manifest ausschließlich um TranslationFile ergänzt, Identität/Version/Range/Dependencies erhalten; Launch unverändert. Bisherige Sicherheitsgrenzen erweitert auf fünf Konfigurationstabellen und immutable Snapshot-Schreibwege. Narrow-Insert-Permissions im Snapshot-Schreiber nur auf eigene App-Tabellen. Publisher und echte Sandbox-/Testfirmen-/Rechteprüfung bleiben offen; Build weiterhin gegen vorhandene BC-28.5-/DE-Symbole, Runtime 17.
+
+
+## Aktueller Stand SF-007/SF-008 – 11.11.2026
+
+56 AL-Objekte in fünf Modulen implementiert; 19 Module ohne AL-Code. Manifest/Launch unverändert; lokale Symbole BC 28.5/DE, Runtime 17. Registry/Planung samt Übersetzung lokal gebaut. Publisher und reale Playground-/Testfirmen-/Rechteprüfung aus SF-001 weiterhin offen.
+
+Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.

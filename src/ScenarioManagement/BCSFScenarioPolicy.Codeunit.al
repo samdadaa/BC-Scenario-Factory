@@ -26,6 +26,42 @@ codeunit 90143 "BCSF Scenario Policy"
     Error(EntityErr);
   end;
 
+  procedure GetEntityCode(Value: Enum "BCSF Entity Type"): Code[30]
+  begin
+    case Value of
+      "BCSF Entity Type"::Customer: exit('CUSTOMER');
+      "BCSF Entity Type"::Vendor: exit('VENDOR');
+      "BCSF Entity Type"::Item: exit('ITEM');
+      "BCSF Entity Type"::SalesQuote: exit('SALES.QUOTE');
+      "BCSF Entity Type"::SalesOrder: exit('SALES.ORDER');
+      "BCSF Entity Type"::SalesInvoice: exit('SALES.INVOICE');
+      "BCSF Entity Type"::PurchaseOrder: exit('PURCHASE.ORDER');
+      "BCSF Entity Type"::PurchaseInvoice: exit('PURCHASE.INVOICE');
+      "BCSF Entity Type"::SalesCreditMemo: exit('SALES.CREDIT');
+      "BCSF Entity Type"::PurchaseCreditMemo: exit('PURCHASE.CREDIT');
+    end;
+    Error(EntityErr);
+  end;
+
+  procedure GetModuleCode(Value: Enum "BCSF Module Type"): Code[30]
+  begin
+    case Value of
+      "BCSF Module Type"::Sales: exit('SALES');
+      "BCSF Module Type"::Purchasing: exit('PURCHASING');
+      "BCSF Module Type"::Inventory: exit('INVENTORY');
+      "BCSF Module Type"::Finance: exit('FINANCE');
+      "BCSF Module Type"::Warehouse: exit('WAREHOUSE');
+      "BCSF Module Type"::Manufacturing: exit('MANUFACTURING');
+      "BCSF Module Type"::Assembly: exit('ASSEMBLY');
+      "BCSF Module Type"::Projects: exit('PROJECTS');
+      "BCSF Module Type"::ServiceManagement: exit('SERVICE');
+      "BCSF Module Type"::FixedAssets: exit('FIXEDASSETS');
+      "BCSF Module Type"::CRM: exit('CRM');
+      "BCSF Module Type"::Planning: exit('PLANNING');
+    end;
+    Error(ModuleErr);
+  end;
+
   procedure IsDocument(Entity: Enum "BCSF Entity Type"): Boolean
   begin
     GetEntityModule(Entity);

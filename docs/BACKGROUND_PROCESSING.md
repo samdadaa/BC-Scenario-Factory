@@ -42,3 +42,10 @@ Run-/Batch-ID, Modul, Zielfortschritt, Istmenge, Versuchszahl, Start/Ende, Laufz
 ## Grenzen und Umsetzungshinweise
 
 Kein 'über Nacht fertig' versprechen: Betriebsunterbrechungen, SaaS-Job-Limits, Verfügbarkeit des Background Scheduler, neue BC-Versionen und Buchungslogik können Laufzeit beeinflussen. Job Queue 'erzeugt alle Daten' nur mit vorher implementierter Wiederaufnahme/Idempotenz. `TryFunction` ist kein allgemeiner Rollback-Mechanismus. Vor Implementierung versionsgerechte Microsoft-APIs und Scheduler-Berechtigungen prüfen.
+
+
+## Aktueller Stand SF-007/SF-008 – 11.11.2026
+
+Planung und gespeicherte Steps sind vorhanden; Startprüfung ist ein blockierendes Gate ohne Statuswechsel/Queue-Eintrag. Der spätere Dispatcher/Worker muss CheckStart und die Umgebungs-/Freigabeprüfung erneut anwenden. Kein Checkpoint, Claim, Retry oder Posting-Ergebnisabgleich durch SF-007/SF-008 zugesichert.
+
+Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.

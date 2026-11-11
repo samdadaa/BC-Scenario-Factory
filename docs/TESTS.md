@@ -206,3 +206,19 @@ Build-Aufruf wie Foundation mit `/target:Cloud /generatecode+ /warnaserror+ /ana
 | Eingaben/Datum | Leere Pflichtangaben, unbekannte Enums, Enddatum vor Startdatum, Paketgröße <=0/über Max werden abgewiesen. Fehlender Profilkatalog/Generator wird durch Snapshot-Erfassung nicht als bestanden ausgegeben |
 
 **Grenzen:** Keine ausgeführten AL-Unit-/Integrationstests oder UI-/Sandbox-/Rechte-/Lasttests, kein Deployment. Die lokalen Prüfungen bestätigen Code/Übersetzungsabdeckung und Paketierbarkeit, nicht die komplette BC-Laufzeitakzeptanz. Objekt-/Sprach-/Schema-Vertrag: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md). Status beider Tickets: **Zur Prüfung**.
+
+## SF-007/SF-008 – lokaler Prüfnachweis 11.11.2026
+
+**Ausgeführt:**
+
+- Vollständiger Cloud-Build von 56 AL-Dateien mit AL Compiler 18.1.43.24897, vorhandener .NET-10.0.15-Laufzeit, fünf lokalen Microsoft-Symbolpaketen (BC 28.5/DE, System 28.0), Runtime 17. CodeCop und UICop eingeschaltet, Warnungen als Fehler. Letzter Lauf 16:27:32–16:27:38 laut Compiler, Exit 0; keine Fehler/Warnungen. Drei AW0006-Informationen für Scenario Card, Run Card und Plan Preview: bewusst über Listen/Laufkarte geöffnet, nicht separat suchbar. Keine Analyzer-Regel unterdrückt.
+- Paket-Symbolreferenz ausgewertet: 10 Tabellen, 21 Codeunits, 12 Pages, eine PageExtension, zehn Enums, ein Permission Set und ein Interface = 56 Objekte. Sieben XLIFF-Dateien (Quellkatalog und sechs Zielkulturen) im erzeugten Paket nachgewiesen. Build-Artefakt/Protokoll außerhalb des Repositories, kein Deployment.
+- `python3 scripts/check_translations.py --sync` und anschließend `python3 scripts/check_translations.py`: PASS, 443 Texteinheiten mit identischen Quellen/IDs, Platzhaltern, Breiten und vollständigen Zieltexten für de-DE/de-AT/de-CH/de-LI/de-LU sowie en-US.
+- Lokale Inventarprüfung: 55 eindeutige numerische IDs innerhalb 90100..90999 und ein Interface ohne numerische ID; Namen eindeutig und höchstens 30 Zeichen. Alle implementierten Dateien im Objektplan, insgesamt 93 numerische Planzeilen. Bestand nach Modul: Core 13, ScenarioManagement 21, ModuleRegistry 10, DependencyManager 9, Lifecycle 3. Keine neuen AL-Testobjekte.
+- Typ-/ID- und Namenskollisionen gegen 9.589 Objekte der fünf verfügbaren Microsoft-Symbolpakete geprüft: keine. Dies ist keine Prüfung sämtlicher im Zieltenant installierter Fremd-Apps.
+- Baselinevergleich: app.json und launch.json unverändert; detaillierte TODO-Abschnitte außerhalb SF-007/SF-008 unverändert. Bestehende Nutzeränderungen bleiben erhalten.
+- Quellprüfung: sieben verpflichtende Interface-Methoden, explizite Fehlerbindung für unbekannte Enumwerte, Ausschluss der Proben aus echten Plänen, tiefe Kontextkopien, sechs verpflichtende neue Guard-Subscriber, enges Insert-Recht des Plan Writers und unveränderliche gespeicherte Steps. Keine SQL-/Fachdatenänderung durch die beiden Proben; keine Standardposten-Inserts, Queue-Starts oder Ready-Übergänge ergänzt.
+
+**Nicht ausgeführt / offene Abnahme:**
+
+Die beiden normalen Selbstprüfungs-Codeunits sind kompiliert, aber nicht in Business Central ausgeführt. Keine separate Test-App vorhanden oder neu erstellt. Kein Playground-/Produktions-Negativtest, keine UI-/Berechtigungs-/Parallelitäts-/Postingprüfung. Reale Fachgeneratoren und externe Vorbedingungsprüfungen sind weiterhin nicht implementiert. Ausführliche manuelle Fälle und Sicherheitsgrenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Vor Freigabe beide Selbstprüfungen sowie Plan-Persistenz, erneutes Speichern, fehlende Module/Generatoren, optionale/Pflichtabhängigkeiten, Zyklus, versionsgeänderte Bindungen, Trigger-false-Schreibversuche und DE/EN in freigegebener Sandbox tatsächlich prüfen. Tickets bleiben **Zur Prüfung**.

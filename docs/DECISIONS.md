@@ -77,3 +77,10 @@ Nutzer beauftragt ausdrücklich beide Tickets und Deutsch/Englisch einschließli
 Umgesetzte technische Entscheidungen zur Prüfung: GUID-/revisionsbasierte Vorlagen, vollständige JSON-Snapshots Schema 1, Draft ohne Queue, nach Insert immutable Köpfe/Payloads, separate Mengen/Quoten pro Entität, abgerundete gebuchte/teilweise Mengen mit Rest auf ungebucht. Modul-/Profilbezeichner ersetzen keine spätere Capability-/Preflight-Prüfung. Nur Snapshot Writer erhält indirekte Insert-Rechte auf eigene immutable Tabellen. Der ursprüngliche Foundation-Vertrag wird für neue temporäre Anzeigezeilen und deklarative Rollenaggregation präzisiert, nicht für Standarddaten gelockert.
 
 Details, neue IDs und tatsächliche Build-/Übersetzungsnachweise: [OBJECT_PLAN.md](OBJECT_PLAN.md), [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md), [TESTS.md](TESTS.md). Keine automatische Abnahme anderer Tickets.
+
+
+## Aktueller Stand SF-007/SF-008 – 11.11.2026
+
+Technische Umsetzung SF-007/SF-008: internes klassisches Interface, statische Enum-Bindungen mit expliziter Fehlerimplementierung statt persistenter frei editierbarer Registry. Zwei lesende Probe-Generatoren zur Vertragsprüfung; ausgeschlossen aus echten Plänen. Kahn-Sortierung und immutable Planversion 1 mit eingefrorener Generatorversion. Externe Setup-/Bestandsvoraussetzungen bleiben ungeprüft und blockierend bis zu ihren Folgetickets. Erste PageExtension verwendet CodeCop-konform `.PageExt.al`. Dies sind Implementierungsentscheidungen innerhalb des Auftrags, keine menschliche Abnahme oder neue Releasefreigabe.
+
+Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.

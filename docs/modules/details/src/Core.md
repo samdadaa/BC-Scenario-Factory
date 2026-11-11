@@ -1,6 +1,6 @@
 # Core – Modulspezifikation
 
-**Status:** Teilweise implementiert (10 AL-Objekte), zur Prüfung; weitere Funktionen geplant. **Pfad:** `src/Core/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** Teilweise implementiert, 13 AL-Objekte, Zur Prüfung. **Pfad:** `src/Core/`. Historische Planungsangaben unten gelten nur für noch nicht implementierte Teile.
 
 ## Fachlicher Auftrag
 
@@ -47,3 +47,24 @@ Setup-Tabelle/Card, drei Enums, Permission Set, Setup Management und Run State M
 Zusätzlich Datensprachen-Enum 90108 und Language Mgt 90109; neues Factory-Sprachfeld, BC-Sprachwechselaktion und erweiterte deklarative Rechte. Sprachkatalog verwendet explizite eingefrorene Sprache, keine Änderung der persönlichen BC-Präferenzen.
 
 Vertrag, konkrete Objekte, Datenfluss und offene Laufzeitprüfungen: [SCENARIO_CONFIGURATION.md](../../../SCENARIO_CONFIGURATION.md), [OBJECT_PLAN.md](../../../OBJECT_PLAN.md), [TESTS.md](../../../TESTS.md).
+
+
+## Aktueller Nachweis SF-007/SF-008
+
+Reale Dateien:
+
+- `BCSFADMIN.PermissionSet.al`
+- `BCSFContractJSON.Codeunit.al`
+- `BCSFDataLanguage.Enum.al`
+- `BCSFDependencyKind.Enum.al`
+- `BCSFFactorySetup.Table.al`
+- `BCSFFactorySetupCard.Page.al`
+- `BCSFLanguageMgt.Codeunit.al`
+- `BCSFPlanIssue.Enum.al`
+- `BCSFProcessMode.Enum.al`
+- `BCSFRunStateMgt.Codeunit.al`
+- `BCSFRunStatus.Enum.al`
+- `BCSFSetupManagement.Codeunit.al`
+- `BCSFUsageMode.Enum.al`
+
+Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Sicherheitsgrenzen: [GENERATOR_PLANNING.md](../../../GENERATOR_PLANNING.md). Build/Übersetzung lokal geprüft; Selbstprüfungen nur kompiliert, kein BC-Laufzeittest. Fachgeneratoren und Queue weiterhin geplant.

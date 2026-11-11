@@ -1,6 +1,6 @@
 # ScenarioManagement – Modulspezifikation
 
-**Status:** Teilweise implementiert (20 AL-Objekte), zur Prüfung; weitere Funktionen geplant. **Pfad:** `src/ScenarioManagement/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** Teilweise implementiert, 21 AL-Objekte, Zur Prüfung. **Pfad:** `src/ScenarioManagement/`. Historische Planungsangaben unten gelten nur für noch nicht implementierte Teile.
 
 ## Fachlicher Auftrag
 
@@ -43,3 +43,32 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 Fünf Tabellen, drei Enums, acht Pages und vier Codeunits für Vorlagen, Ziele, Kopien/Revisionen und atomare unveränderliche Draft-Snapshots. Kein Profil-/Generator-/Queue-/Run-Step- oder Wizard-Ersatz. Live- und eingefrorene Namensvorschauen verwenden den Sprachvertrag.
 
 Vertrag, konkrete Objekte, Datenfluss und offene Laufzeitprüfungen: [SCENARIO_CONFIGURATION.md](../../../SCENARIO_CONFIGURATION.md), [OBJECT_PLAN.md](../../../OBJECT_PLAN.md), [TESTS.md](../../../TESTS.md).
+
+
+## Aktueller Nachweis SF-007/SF-008
+
+Reale Dateien:
+
+- `BCSFDataTarget.Table.al`
+- `BCSFDataTargets.Page.al`
+- `BCSFEntityType.Enum.al`
+- `BCSFFrozenModules.Page.al`
+- `BCSFFrozenTargets.Page.al`
+- `BCSFModuleType.Enum.al`
+- `BCSFQuantityPreset.Enum.al`
+- `BCSFRunCard.Page.al`
+- `BCSFRunHeader.Table.al`
+- `BCSFRunList.Page.al`
+- `BCSFRunSnapshot.Table.al`
+- `BCSFRunStep.Table.al`
+- `BCSFScenario.Table.al`
+- `BCSFScenarioCard.Page.al`
+- `BCSFScenarioDBEvents.Codeunit.al`
+- `BCSFScenarioList.Page.al`
+- `BCSFScenarioManager.Codeunit.al`
+- `BCSFScenarioModule.Table.al`
+- `BCSFScenarioModules.Page.al`
+- `BCSFScenarioPolicy.Codeunit.al`
+- `BCSFSnapshotWriter.Codeunit.al`
+
+Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Sicherheitsgrenzen: [GENERATOR_PLANNING.md](../../../GENERATOR_PLANNING.md). Build/Übersetzung lokal geprüft; Selbstprüfungen nur kompiliert, kein BC-Laufzeittest. Fachgeneratoren und Queue weiterhin geplant.

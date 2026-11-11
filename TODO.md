@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 11.11.2026 – SF-005/SF-006 mit Szenariokonfiguration, Snapshots und Deutsch/Englisch implementiert, zur Prüfung. 32 AL-Objekte lokal mit CodeCop/UICop gebaut; keine BC-Laufzeittests. SF-001 bleibt mit dokumentierten offenen Punkten blockiert.
+**Stand:** 11.11.2026 – SF-007/SF-008 mit Generatorvertrag, Registry und blockierender Laufplanung implementiert, Zur Prüfung. 56 AL-Objekte lokal mit CodeCop/UICop gebaut; 443 Texteinheiten übersetzt. Keine BC-Laufzeittests; SF-001 bleibt mit offenen Punkten blockiert.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -23,8 +23,8 @@
 |x[SF-004](#sf-004) | 0 / Fundierung | P0 | Globale Factory-Einstellungen und Statusgrundlagen | Zur Prüfung |
 | [SF-005](#sf-005) | 0 / Fundierung | P0 | Szenariovorlagen und versionierte Run-Snapshots | Zur Prüfung |
 | [SF-006](#sf-006) | 0 / Fundierung | P0 | Entitätsmengen, Quoten und Prozessmodi konfigurieren | Zur Prüfung |
-| [SF-007](#sf-007) | 0 / Fundierung | P0 | Generator-Vertrag und Registry definieren | Offen |
-| [SF-008](#sf-008) | 0 / Fundierung | P0 | Abhängigkeitsgraph und Ausführungsplan | Offen |
+| [SF-007](#sf-007) | 0 / Fundierung | P0 | Generator-Vertrag und Registry definieren | Zur Prüfung |
+| [SF-008](#sf-008) | 0 / Fundierung | P0 | Abhängigkeitsgraph und Ausführungsplan | Zur Prüfung |
 | [SF-009](#sf-009) | 0 / Fundierung | P0 | BC-Setup-Prüfung und nicht-destruktiver Setup-Diff | Offen |
 | [SF-010](#sf-010) | 0 / Fundierung | P0 | Synthetischer Realismus und Seed-Engine | Offen |
 | [SF-011](#sf-011) | 0 / Fundierung | P0 | Erzeugte Datensätze und Belegketten nachverfolgen | Offen |
@@ -264,7 +264,7 @@
 - [ ] Gleiche Vorlage kopierbar, aktiver Run unveränderlich und vollständig rekonstruierbar.
 - [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
 - [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
-- [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
+- [x] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
 
@@ -316,7 +316,7 @@
 
 ### SF-007 — Generator-Vertrag und Registry definieren
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-002,SF-004  
 **Verantwortung / betroffene Module:** ModuleRegistry, Core  
@@ -326,18 +326,22 @@
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Technische Alternativen und spätere Drittanbieter-Erweiterung prüfen, deterministische Registry.
 
+**Umsetzung 11.11.2026:** Internes Interface mit sieben Methoden, deterministischer Enum-Registry, geprüften Capabilities und zwei getrennten lesenden Vertragsproben implementiert. Probe-Ausführung ist sandboxgeschützt; echte Pläne schließen Proben aus. Versionierter JSON-/Sprachvertrag und begrenzte Batchplanung; kein öffentlicher SDK oder echter Fachgenerator.
+
+**Nachweise / Grenzen:** [GENERATOR_PLANNING.md](docs/GENERATOR_PLANNING.md), Objektplan, Moduldateien und [TESTS.md](docs/TESTS.md). 56 Dateien mit CodeCop/UICop lokal gebaut; 443 XLIFF-Einheiten vollständig geprüft. AL-Selbstprüfungen kompiliert, nicht in BC ausgeführt. Sandbox-/Rechte-/UI-/Parallelitätsprüfung und menschliche Abnahme offen. Manifest/Launch unverändert.
+
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Zwei Testgeneratoren lassen sich ohne Änderung der zentralen Steuerung unterscheiden und ansprechen.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
 - [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
@@ -350,7 +354,7 @@
 
 ### SF-008 — Abhängigkeitsgraph und Ausführungsplan
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-006,SF-007  
 **Verantwortung / betroffene Module:** DependencyManager  
@@ -360,18 +364,22 @@
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Topologische Planung, verständliche Konfliktmeldungen, Startverbot bei Blockern.
 
+**Umsetzung 11.11.2026:** Snapshot-basierter Graph mit Pflicht-/Optional-/Extern-Regeln, deterministischer topologischer Sortierung, Zyklus-/Fehlermeldungen und versionierten unveränderlichen Run Steps implementiert. Laufkarte um Vorschau/Speichern/Startprüfung erweitert. Fehlende echte Generatoren und ungeprüfte externe Voraussetzungen blockieren; keine Queue oder Ready-Transition.
+
+**Nachweise / Grenzen:** [GENERATOR_PLANNING.md](docs/GENERATOR_PLANNING.md), Objektplan, Moduldateien und [TESTS.md](docs/TESTS.md). 56 Dateien mit CodeCop/UICop lokal gebaut; 443 XLIFF-Einheiten vollständig geprüft. AL-Selbstprüfungen kompiliert, nicht in BC ausgeführt. Sandbox-/Rechte-/UI-/Parallelitätsprüfung und menschliche Abnahme offen. Manifest/Launch unverändert.
+
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Finance→Stamm→Einkauf→Bestand→Verkauf in korrekter Reihenfolge; absichtlich zyklische Regel wird erkannt.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
 - [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.

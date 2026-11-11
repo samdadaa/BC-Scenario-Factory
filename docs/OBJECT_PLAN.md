@@ -29,7 +29,7 @@ Vor jedem neuen Objekt ID und Name gegen diesen Plan, aktuellen Quellcode und ve
 | BackgroundProcessing | 90300 | 90324 | `BCScenarioFactory.BackgroundProcessing` | Core, ScenarioManagement, ModuleRegistry, DependencyManager, SetupManager, DataGeneration, ProcessEngine, Lifecycle, Validation |
 | Validation | 90325 | 90349 | `BCScenarioFactory.Validation` | Core, ScenarioManagement, DataGeneration |
 | Monitoring | 90350 | 90374 | `BCScenarioFactory.Monitoring` | Core, ScenarioManagement, BackgroundProcessing, Validation |
-| Lifecycle | 90375 | 90399 | `BCScenarioFactory.Lifecycle` | Core, ScenarioManagement |
+| Lifecycle | 90375 | 90399 | `BCScenarioFactory.Lifecycle` | Core, ScenarioManagement, ModuleRegistry, DependencyManager |
 | Finance | 90400 | 90424 | `BCScenarioFactory.Finance` | Core, ScenarioManagement, ModuleRegistry, SetupManager, DataGeneration, ProcessEngine, Lifecycle |
 | Sales | 90425 | 90449 | `BCScenarioFactory.Sales` | Core, ScenarioManagement, ModuleRegistry, SetupManager, DataGeneration, ProcessEngine, Lifecycle |
 | Purchasing | 90450 | 90474 | `BCScenarioFactory.Purchasing` | Core, ScenarioManagement, ModuleRegistry, SetupManager, DataGeneration, ProcessEngine, Lifecycle |
@@ -127,9 +127,27 @@ Die Tabelle ist der vollständige Plan. Vorhandene Dateien sind im Abschnitt „
 | ScenarioManagement | 90143 | Codeunit | `BCSF Scenario Policy` | `src/ScenarioManagement/BCSFScenarioPolicy.Codeunit.al` | SF-006 |
 | ScenarioManagement | 90144 | Codeunit | `BCSF Snapshot Writer` | `src/ScenarioManagement/BCSFSnapshotWriter.Codeunit.al` | SF-005 |
 
+| Core | 90111 | Codeunit | `BCSF Contract JSON` | `src/Core/BCSFContractJSON.Codeunit.al` | SF-007 |
+| Core | 90112 | Enum | `BCSF Dependency Kind` | `src/Core/BCSFDependencyKind.Enum.al` | SF-007 |
+| Core | 90110 | Enum | `BCSF Plan Issue` | `src/Core/BCSFPlanIssue.Enum.al` | SF-007 |
+| DependencyManager | 90207 | Codeunit | `BCSF Graph Self Check` | `src/DependencyManager/BCSFGraphSelfCheck.Codeunit.al` | SF-008 |
+| DependencyManager | 90202 | Codeunit | `BCSF Graph Sorter` | `src/DependencyManager/BCSFGraphSorter.Codeunit.al` | SF-008 |
+| DependencyManager | 90203 | Table | `BCSF Plan Node` | `src/DependencyManager/BCSFPlanNode.Table.al` | SF-008 |
+| DependencyManager | 90205 | Page | `BCSF Plan Preview` | `src/DependencyManager/BCSFPlanPreview.Page.al` | SF-008 |
+| DependencyManager | 90204 | Codeunit | `BCSF Plan Writer` | `src/DependencyManager/BCSFPlanWriter.Codeunit.al` | SF-008 |
+| DependencyManager | 90208 | PageExtension | `BCSF Run Planning` | `src/DependencyManager/BCSFRunPlanning.PageExt.al` | SF-008 |
+| DependencyManager | 90206 | Page | `BCSF Saved Run Steps` | `src/DependencyManager/BCSFSavedRunSteps.Page.al` | SF-008 |
+| Lifecycle | 90378 | Codeunit | `BCSF Planning Guard` | `src/Lifecycle/BCSFPlanningGuard.Codeunit.al` | SF-008 |
+| ModuleRegistry | 90181 | Codeunit | `BCSF Contract Self Check` | `src/ModuleRegistry/BCSFContractSelfCheck.Codeunit.al` | SF-007 |
+| ModuleRegistry | 90178 | Codeunit | `BCSF Customer Probe` | `src/ModuleRegistry/BCSFCustomerProbe.Codeunit.al` | SF-007 |
+| ModuleRegistry | 90182 | Page | `BCSF Generator Catalog` | `src/ModuleRegistry/BCSFGeneratorCatalog.Page.al` | SF-007 |
+| ModuleRegistry | 90180 | Codeunit | `BCSF Missing Generator` | `src/ModuleRegistry/BCSFMissingGenerator.Codeunit.al` | SF-007 |
+| ModuleRegistry | 90183 | Codeunit | `BCSF Probe Support` | `src/ModuleRegistry/BCSFProbeSupport.Codeunit.al` | SF-007 |
+| ModuleRegistry | 90179 | Codeunit | `BCSF Vendor Probe` | `src/ModuleRegistry/BCSFVendorProbe.Codeunit.al` | SF-007 |
+
 ## Verträge und Aufrufgrenzen
 
-- `BCSF Generator` ist das geplante Interface in `BCScenarioFactory.ModuleRegistry`, Dateipfad `src/ModuleRegistry/BCSFGenerator.Interface.al`, ohne deklarierte numerische ID. Das Interface verwendet gemeinsame Core-Typen; Registry/Core referenzieren keine konkreten Fachgeneratoren. Fachmodule implementieren und registrieren ihre Fähigkeiten. Enum-basierte Auflösung und endgültige Methodensignaturen gehören zu SF-007, öffentliche Fremdanbieter-Verträge zu SF-034.
+- `BCSF Generator` ist das implementierte interne Interface in `BCScenarioFactory.ModuleRegistry`, Dateipfad `src/ModuleRegistry/BCSFGenerator.Interface.al`, ohne deklarierte numerische ID. Das Interface verwendet gemeinsame Core-Typen; Registry/Core referenzieren keine konkreten Fachgeneratoren. Fachmodule implementieren und registrieren ihre Fähigkeiten. Enum-basierte Auflösung und Methodensignaturen sind in SF-007 umgesetzt, öffentliche Fremdanbieter-Verträge zu SF-034.
 - Core enthält ausschließlich Basistypen und globale Einstellungen. Laufkonfiguration, Run Header, Run Step und Snapshot gehören ScenarioManagement; Core referenziert weder ScenarioManagement noch Lifecycle. Der Environment Guard gehört Lifecycle und wird an jedem mutierenden Einstieg einschließlich Worker aufgerufen.
 - ScenarioManagement hält Vorlagen/Snapshots und Modul-/Entitätsauswahl. IndustryProfiles löst Regeln darauf auf; Profile enthalten keine kopierte Generatorlogik. ModuleRegistry verwaltet Fähigkeiten, DependencyManager plant fachliche Reihenfolgen, SetupManager erstellt lesende Diffs und setzt nur freigegebene Änderungen um.
 - DataGeneration hält deterministische Werte und Datensatzherkunft. ProcessEngine koordiniert Dokument-/Postingmodi; konkrete geprüfte BC-Standardaufrufe verbleiben bei den Fachgeneratoren. Kein Direktinsert in Standardledger.
@@ -168,3 +186,8 @@ Run-/Batch-Persistenz bleibt bei SF-005/012; insbesondere ist der Batch-Status 9
 Aktuell 32 AL-Objekte: Core 10, ScenarioManagement 20, Lifecycle 2; übrige 21 Module leer. Neu gegenüber SF-003/SF-004: zwei Core-Sprachobjekte (90108/90109), 20 ScenarioManagement-Objekte und Lifecycle-Konfigurationsguard 90377. Die Tabelle enthält jetzt 76 numerische Planobjekte; alle neuen Werte stammen aus zuvor freien Modulwerten. Run Step 90129, Wizard 90132 und alle übrigen Folgetickets bleiben unimplementiert.
 
 Sicherheitsbindung über Datenbank-Subscriber; keine ausführbare ScenarioManagement→Lifecycle-Rückreferenz. Nur das aggregierende Permission Set referenziert beide deklarativ. Der Snapshot Writer besitzt eng begrenzte Insert-Rechte auf eigene Lauf-/Snapshot-Tabellen, Anwender lediglich indirektes Insert. Erfasste Köpfe und Payloads sind aktuell vollständig unveränderlich. Vollständiger Feld-/Transaktions-/Sprachvertrag: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md). Sprachkatalog ist Teil der Core-Grundlage; er ersetzt keinen geplanten Generator.
+
+
+## Implementierter Stand SF-007/SF-008 (11.11.2026)
+
+56 AL-Objekte: Core 13, ScenarioManagement 21, ModuleRegistry 10 einschließlich Interface, DependencyManager 9, Lifecycle 3; 19 Module ohne AL-Code. 93 numerische Planobjekte plus Interface; alle 55 implementierten IDs innerhalb ihrer Modulblöcke. Implementierte Dateien sind direkt unter `src/` nachweisbar; übrige Zeilen bleiben Planung. Run Step 90129 ist jetzt implementiert. Process Coordinator 90275 bleibt ein Planobjekt für die spätere reale Prozessausführung; SF-007 liefert den Vertrag. PageExtension-Dateien verwenden beim ersten tatsächlichen Objekt das von CodeCop verlangte `.PageExt.al` (CONVENTIONS). Registry und Planner: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md).

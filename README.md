@@ -1,6 +1,6 @@
 # BC Scenario Factory
 
-**Status: Grundlagen, Szenariovorlagen, Entitätsziele und Deutsch/Englisch implementiert (SF-003–SF-006); Fachgeneratoren und Queue weiterhin geplant.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
+**Status: Grundlagen, Szenariovorlagen, Entitätsziele und Deutsch/Englisch sowie Registry und Laufplanung implementiert (SF-003–SF-008); Fachgeneratoren und Queue weiterhin geplant.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
 
 ## Zielgruppen und Nutzen
 
@@ -64,6 +64,11 @@ Neun AL-Objekte für firmenbezogenes Setup, Enums, GUID-/Statushilfen, Permissio
 
 Über „Scenario Factory Scenarios“ / „Scenario-Factory-Szenarien“ Vorlagen anlegen, kopieren, Module und Entitätsmengen/Quoten konfigurieren. Ein Lauf-Snapshot friert die gesamte aktuelle Konfiguration als Entwurf ein; spätere Vorlagenänderungen haben darauf keinen Einfluss. Noch keine Daten-/Queue-Ausführung.
 
-Die Setup-Aktion „Anzeigesprache ändern“ öffnet die BC-Spracheinstellungen. XLIFF deckt alle 285 App-Texteinheiten auf Deutsch (DE/AT/CH/LI/LU) und Englisch ab. Die Datensprache ist separat als Automatisch/Deutsch/Englisch einstellbar: Automatisch erkennt jede deutsche BC-Sprachregion, sonst Englisch. Sprache und Textkatalogversion werden je Lauf eingefroren; synthetische Namensvorschauen auf Vorlage und Lauf verwenden diesen Vertrag. Vorhandene Texte werden beim Sprachwechsel nicht nachträglich geändert.
+Die Setup-Aktion „Anzeigesprache ändern“ öffnet die BC-Spracheinstellungen. XLIFF deckt alle 443 App-Texteinheiten auf Deutsch (DE/AT/CH/LI/LU) und Englisch ab. Die Datensprache ist separat als Automatisch/Deutsch/Englisch einstellbar: Automatisch erkennt jede deutsche BC-Sprachregion, sonst Englisch. Sprache und Textkatalogversion werden je Lauf eingefroren; synthetische Namensvorschauen auf Vorlage und Lauf verwenden diesen Vertrag. Vorhandene Texte werden beim Sprachwechsel nicht nachträglich geändert.
 
-32 AL-Objekte gegen lokale BC-28.5-/Runtime-17-Symbole mit CodeCop/UICop gebaut; UI-/Rechte-/Snapshot-Laufzeittests stehen aus. Neue Texte nach vollständigem Build im deutschen XLIFF-Master pflegen, regionale Dateien mit `python3 scripts/check_translations.py --sync` ableiten und mit `python3 scripts/check_translations.py` prüfen. Details: [SCENARIO_CONFIGURATION.md](docs/SCENARIO_CONFIGURATION.md).
+56 AL-Objekte gegen lokale BC-28.5-/Runtime-17-Symbole mit CodeCop/UICop gebaut; UI-/Rechte-/Snapshot-Laufzeittests stehen aus. Neue Texte nach vollständigem Build im deutschen XLIFF-Master pflegen, regionale Dateien mit `python3 scripts/check_translations.py --sync` ableiten und mit `python3 scripts/check_translations.py` prüfen. Details: [SCENARIO_CONFIGURATION.md](docs/SCENARIO_CONFIGURATION.md).
+
+
+## Registry und Laufplanung (SF-007/SF-008)
+
+Generator-Katalog mit zwei lesenden Vertragsproben, versionierter interner Schnittstelle und Selbstprüfung. Laufkarte um Graphvorschau, unveränderliche Planschritte und blockierende Startprüfung ergänzt. Fehlende Generatoren, externe Setup-/Bestandsnachweise und Zyklen verhindern den Start. Noch keine echte Datengenerierung oder Queue. Bedienung, Sicherheitsgrenzen und ausstehende Sandbox-Prüfungen: [GENERATOR_PLANNING.md](docs/GENERATOR_PLANNING.md). **Zur Prüfung**.

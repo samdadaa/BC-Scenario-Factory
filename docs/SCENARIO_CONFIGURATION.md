@@ -60,3 +60,10 @@ XLIFF übersetzt UI-Texte, nicht automatisch gespeicherte Geschäftsdaten. Der v
 **Pflege:** Nach vollständigem Build `.g.xlf` als generierte Referenz nutzen, neue/änderte Einheiten im deutschen Master pflegen, `python3 scripts/check_translations.py --sync` leitet regionale Dateien und Englisch ab; anschließend `python3 scripts/check_translations.py` prüft Abdeckung, Quellen, IDs, Platzhalter, Status und Längen. Der Prüfer erfindet keine fehlenden Übersetzungen. Keine DTS-/Remote-Übersetzungsdienste. Keine inkrementellen/RAD-Veröffentlichungen als Übersetzungsnachweis verwenden.
 
 Die native Sprach-Fallback-Reihenfolge, insbesondere nicht deutsche UI-Sprache bei deutschem Umgebungsstandard, ist als tatsächlicher BC-Prüffall offen. Die XLIFF-Paketierung und der Daten-Sprachresolver sind lokal geprüft, das Laufzeitverhalten der Oberfläche ist noch nicht verifiziert. Quellen: [Microsoft – Übersetzungsauflösung](https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/devenv-translations-overview), [XLIFF](https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/devenv-work-with-translation-files), [Sprach-/Regionseinstellungen](https://learn.microsoft.com/en-us/dynamics365/business-central/about-locale-language), geprüft am 11.11.2026. Konkrete Nachweise und ausstehende BC-Fälle: [TESTS.md](TESTS.md).
+
+
+## Aktueller Stand SF-007/SF-008 – 11.11.2026
+
+Zusätzlich zu den bisher 32 Objekten sind Registry/Planner/Guards ergänzt (gesamt 56). Run Steps 90129 können nun aus dem eingefrorenen Snapshot als Planversion 1 gespeichert werden. Bereits gespeicherte Steps werden nicht neu berechnet; Vorschau nutzt aktuelle Registry. Run Header und Snapshot bleiben vollständig unveränderlich; Status Draft bleibt bestehen. Die Datensprache und Katalogversion des Snapshots werden an den Generatorvertrag weitergereicht.
+
+Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.

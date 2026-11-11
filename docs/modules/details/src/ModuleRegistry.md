@@ -1,6 +1,6 @@
 # ModuleRegistry – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/ModuleRegistry/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** Teilweise implementiert, 10 AL-Objekte, Zur Prüfung. **Pfad:** `src/ModuleRegistry/`. Historische Planungsangaben unten gelten nur für noch nicht implementierte Teile.
 
 ## Fachlicher Auftrag
 
@@ -12,7 +12,7 @@ Stabile Identifikatoren; Modul-Capabilities; Modus-/Versionsunterstützung; Regi
 
 ## Schnittstellen / Daten
 
-Eingang: freigegebener Run-Snapshot (Branche, Nutzungsziel, Entitäten und Zielmengen, Seed, Zeitraum, Prozessmodus) und bereits validierte Vorgänger. Ausgang: datensparsame Ergebnisse pro Batch, Herkunftsnachweis und fachliche Validierungsbefunde. Konkrete AL-Objektnamen/Signaturen sind noch **zu prüfen**.
+Eingang: freigegebener Run-Snapshot (Branche, Nutzungsziel, Entitäten und Zielmengen, Seed, Zeitraum, Prozessmodus) und bereits validierte Vorgänger. Ausgang: datensparsame Ergebnisse pro Batch, Herkunftsnachweis und fachliche Validierungsbefunde. Konkrete AL-Signaturen sind im implementierten Interface festgelegt.
 
 ## Abhängigkeiten
 
@@ -36,4 +36,22 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 
 ## Objektplanung SF-002
 
-Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.ModuleRegistry`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.ModuleRegistry`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; unimplementierte Modulanteile bleiben geplant. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+
+
+## Aktueller Nachweis SF-007/SF-008
+
+Reale Dateien:
+
+- `BCSFContractSelfCheck.Codeunit.al`
+- `BCSFCustomerProbe.Codeunit.al`
+- `BCSFGenerator.Interface.al`
+- `BCSFGeneratorCatalog.Page.al`
+- `BCSFGeneratorRegistry.Table.al`
+- `BCSFGeneratorRegistryMgt.Codeunit.al`
+- `BCSFGeneratorType.Enum.al`
+- `BCSFMissingGenerator.Codeunit.al`
+- `BCSFProbeSupport.Codeunit.al`
+- `BCSFVendorProbe.Codeunit.al`
+
+Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Sicherheitsgrenzen: [GENERATOR_PLANNING.md](../../../GENERATOR_PLANNING.md). Build/Übersetzung lokal geprüft; Selbstprüfungen nur kompiliert, kein BC-Laufzeittest. Fachgeneratoren und Queue weiterhin geplant.

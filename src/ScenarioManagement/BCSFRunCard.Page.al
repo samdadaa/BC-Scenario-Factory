@@ -63,6 +63,10 @@ page 90139 "BCSF Run Card"
       part(Targets; "BCSF Frozen Targets") { Caption = 'Captured Entity Targets'; }
     }
   }
+  actions
+  {
+    area(Processing) { }
+  }
   trigger OnAfterGetCurrRecord()
   var
     Manager: Codeunit "BCSF Scenario Manager";

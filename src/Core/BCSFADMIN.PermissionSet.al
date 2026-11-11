@@ -1,6 +1,8 @@
 namespace BCScenarioFactory.Core;
 
+using BCScenarioFactory.DependencyManager;
 using BCScenarioFactory.Lifecycle;
+using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.ScenarioManagement;
 using System.Environment.Configuration;
 
@@ -39,5 +41,25 @@ permissionset 90105 "BCSF ADMIN"
     codeunit "BCSF Scenario Policy" = X,
     codeunit "BCSF Snapshot Writer" = X,
     codeunit "BCSF Scenario DB Events" = X,
-    codeunit "BCSF Scenario Guard" = X;
+    codeunit "BCSF Scenario Guard" = X,
+    tabledata "BCSF Run Step" = Ri,
+    table "BCSF Run Step" = X,
+    table "BCSF Generator Registry" = X,
+    table "BCSF Dependency" = X,
+    table "BCSF Plan Node" = X,
+    page "BCSF Generator Catalog" = X,
+    page "BCSF Plan Preview" = X,
+    page "BCSF Saved Run Steps" = X,
+    codeunit "BCSF Contract JSON" = X,
+    codeunit "BCSF Generator Registry Mgt" = X,
+    codeunit "BCSF Customer Probe" = X,
+    codeunit "BCSF Vendor Probe" = X,
+    codeunit "BCSF Missing Generator" = X,
+    codeunit "BCSF Probe Support" = X,
+    codeunit "BCSF Contract Self Check" = X,
+    codeunit "BCSF Dependency Planner" = X,
+    codeunit "BCSF Graph Sorter" = X,
+    codeunit "BCSF Plan Writer" = X,
+    codeunit "BCSF Graph Self Check" = X,
+    codeunit "BCSF Planning Guard" = X;
 }

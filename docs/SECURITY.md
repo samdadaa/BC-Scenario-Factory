@@ -67,3 +67,10 @@ Vorlagen-/Zielschreiben bleibt sandboxgebunden, erlaubt aber Planung ohne aktivi
 Das ADMIN-Set erweitert sich um Konfigurationsrechte; Run Header/Snapshot lediglich R plus indirektes i. Nur Snapshot Writer hat direkte Insert-Rechte auf diese eigenen Tabellen. Keine Modify-/Delete-Rechte, kein beliebiger JSON-Eingabeparameter, keine Standard-BC-Schreibrechte und kein Commit. Fremde TryFunction-Aufrufer dürfen keine pauschale Rollback-Sicherheit unterstellen. Transaktions-/Sprach-/Datenklassifizierungsgrenzen: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).
 
 XLIFF-Dateien, Katalog und Tests enthalten ausschließlich App-Texte/synthetische Beispiele; keine Geheimnisse, Kundendaten oder Benutzerkennungen. Keine Sprachpräferenzen oder Server-/Tenant-Einstellungen automatisch geändert, keine Übersetzungsdienste aufgerufen.
+
+
+## Aktueller Stand SF-007/SF-008 – 11.11.2026
+
+Persistente Steps nur durch den Plan Writer mit eigener enger Insert-Berechtigung und indirektem Anwender-Insert. Vier verpflichtende Before-Datenbankereignisse prüfen Sandbox/Firma/Entwurf und sperren Modify/Delete/Rename. Zwei weitere Pflicht-Subscriber sichern Vertragsproben und Startprüfung. Vorschauen/Graph/Capabilities sind temporär; Probe-Generatoren erzeugen keine Geschäftsdaten. Aktuelle fehlende echte Generatoren/externe Nachweise verhindern Start. Keine zusätzlichen Standarddatenrechte oder automatischen Postingfreigaben.
+
+Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.
