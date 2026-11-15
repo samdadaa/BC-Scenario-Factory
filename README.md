@@ -1,6 +1,6 @@
 # BC Scenario Factory
 
-**Status: Grundlagen, Szenariovorlagen, Entitätsziele und Deutsch/Englisch sowie Registry und Laufplanung implementiert (SF-003–SF-008); Fachgeneratoren und Queue weiterhin geplant.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
+**Status: Grundlagen, Szenarien, Planung, Setupprüfung, Seed-Engine, Herkunftsregistry und Queue-Grundlage implementiert (SF-003–SF-012), zur Prüfung; schreibende Fachgeneratoren, Recovery und End-to-End-Abnahme weiterhin ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
 
 ## Zielgruppen und Nutzen
 
@@ -72,3 +72,11 @@ Die Setup-Aktion „Anzeigesprache ändern“ öffnet die BC-Spracheinstellungen
 ## Registry und Laufplanung (SF-007/SF-008)
 
 Generator-Katalog mit zwei lesenden Vertragsproben, versionierter interner Schnittstelle und Selbstprüfung. Laufkarte um Graphvorschau, unveränderliche Planschritte und blockierende Startprüfung ergänzt. Fehlende Generatoren, externe Setup-/Bestandsnachweise und Zyklen verhindern den Start. Noch keine echte Datengenerierung oder Queue. Bedienung, Sicherheitsgrenzen und ausstehende Sandbox-Prüfungen: [GENERATOR_PLANNING.md](docs/GENERATOR_PLANNING.md). **Zur Prüfung**.
+
+## Setupprüfung und Seed-Engine (SF-009/SF-010)
+
+Auf der Laufkarte stehen eine lesende Einrichtungsvorprüfung mit Maßnahmenplan sowie eine synthetische Werte-Vorschau bereit. Neue Snapshots frieren Engine-/Regelversion, Klassenquoten und Preisbereiche ein. Gleiches Profil, Seed und logische Schlüssel liefern dieselben Eingangswerte unabhängig von Lauf-ID und Batchreihenfolge. Keine Standarddatenanlage oder automatische Setupänderung; konkrete Generatorbindungen bleiben blockierend. Vertrag und Grenzen: [SETUP_SEED.md](docs/SETUP_SEED.md). **Zur Prüfung**; BC-Laufzeitabnahme offen.
+
+## Herkunft und Queue-Grundlage (SF-011/SF-012)
+
+Unveränderliche Herkunftseinträge verbinden logische Einheiten und Belegketten mit tatsächlichen SystemIds. Laufkarte und persistente Listen zeigen einen separaten Ausführungsstatus, Batches und Ergebnisse. Dispatcher und begrenzter Standard-Job-Queue-Worker sind implementiert; vorhandene Generator-/Setupblocker verhindern weiterhin reale Starts. Keine automatische Wiederholung unsicherer Arbeit. Vertrag, Bedienung und Grenzen: [EXECUTION_REGISTRY.md](docs/EXECUTION_REGISTRY.md). **Zur Prüfung**, keine BC-Laufzeitabnahme.

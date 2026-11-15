@@ -23,6 +23,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     Languages: Codeunit "BCSF Language Mgt";
     EnvironmentInformation: Codeunit "Environment Information";
     Payload: JsonObject;
+    SyntheticRules: JsonObject;
     Targets: JsonArray;
     Modules: JsonArray;
     Item: JsonObject;
@@ -112,6 +113,9 @@ codeunit 90144 "BCSF Snapshot Writer"
       Error(EmptyPlanErr);
     Payload.Add('modules', Modules);
     Payload.Add('targets', Targets);
+    OnBuildSyntheticRules(SyntheticRules);
+    Payload.Add('seedEngineVersion', 1);
+    Payload.Add('syntheticRules', SyntheticRules);
     // Header and payload are inserted in the same transaction. No status update or queue start is performed.
     Header.Insert(true);
     Snapshot.Init();
@@ -123,6 +127,11 @@ codeunit 90144 "BCSF Snapshot Writer"
     Clear(Output);
     Snapshot.Insert(true);
     exit(Header."Run Id");
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnBuildSyntheticRules(var Rules: JsonObject)
+  begin
   end;
 
   var

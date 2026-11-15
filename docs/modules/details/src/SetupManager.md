@@ -1,6 +1,6 @@
 # SetupManager – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/SetupManager/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** 4 AL-Objekte: temporärer Setup-Diff, Manager, Vorschau und Laufkarten-Erweiterung; zur Prüfung. **Pfad:** `src/SetupManager/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -37,3 +37,8 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 ## Objektplanung SF-002
 
 Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.SetupManager`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+
+
+## Implementierter Stand SF-009/SF-010 – 15.11.2026
+
+90225 Setup Diff; 90226 Setup Manager; 90227 Setup Diff Preview; 90228 Run Preflight. Keine Standarddatenmutation. Vertrag, Rechte, Transaktionsgrenzen und reale Prüfnachweise: [Setup und Seed](../../../SETUP_SEED.md), [Tests](../../../TESTS.md). Frühere Planabschnitte bleiben Zielbild.

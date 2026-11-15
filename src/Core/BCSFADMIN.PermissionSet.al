@@ -1,9 +1,14 @@
 namespace BCScenarioFactory.Core;
 
+using BCScenarioFactory.BackgroundProcessing;
+using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.DependencyManager;
+using BCScenarioFactory.Finance;
+using BCScenarioFactory.IndustryProfiles;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.ScenarioManagement;
+using BCScenarioFactory.SetupManager;
 using System.Environment.Configuration;
 
 permissionset 90105 "BCSF ADMIN"
@@ -61,5 +66,28 @@ permissionset 90105 "BCSF ADMIN"
     codeunit "BCSF Graph Sorter" = X,
     codeunit "BCSF Plan Writer" = X,
     codeunit "BCSF Graph Self Check" = X,
-    codeunit "BCSF Planning Guard" = X;
+    codeunit "BCSF Planning Guard" = X,
+    table "BCSF Setup Diff" = X,
+    codeunit "BCSF Setup Manager" = X,
+    page "BCSF Setup Diff Preview" = X,
+    codeunit "BCSF Seed Engine" = X,
+    codeunit "BCSF Synthetic Rules" = X,
+    codeunit "BCSF Finance Setup Check" = X,
+    tabledata "BCSF Generated Record" = Ri,
+    table "BCSF Generated Record" = X,
+    codeunit "BCSF Record Registry" = X,
+    codeunit "BCSF Provenance Guard" = X,
+    page "BCSF Generated Records" = X,
+    tabledata "BCSF Run Execution" = Rim,
+    tabledata "BCSF Batch" = Rim,
+    table "BCSF Run Execution" = X,
+    table "BCSF Batch" = X,
+    codeunit "BCSF Queue Dispatcher" = X,
+    codeunit "BCSF Batch Worker" = X,
+    codeunit "BCSF Batch Runner" = X,
+    codeunit "BCSF Execution Rules" = X,
+    codeunit "BCSF Queue Failure" = X,
+    page "BCSF Execution List" = X,
+    page "BCSF Batch List" = X,
+    page "BCSF Schedule Request" = X;
 }

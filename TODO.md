@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 11.11.2026 – SF-007/SF-008 mit Generatorvertrag, Registry und blockierender Laufplanung implementiert, Zur Prüfung. 56 AL-Objekte lokal mit CodeCop/UICop gebaut; 443 Texteinheiten übersetzt. Keine BC-Laufzeittests; SF-001 bleibt mit offenen Punkten blockiert.
+**Stand:** 15.11.2026 – SF-011/SF-012 mit unveränderlicher Herkunftsregistry und serieller Queue-Grundlage implementiert, Zur Prüfung. 81 AL-Objekte lokal mit CodeCop/UICop gebaut; 606 Texteinheiten übersetzt. Keine BC-Laufzeittests; echte Generator-/Setupbindungen und SF-001-Restfragen bleiben offen.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -25,10 +25,10 @@
 | [SF-006](#sf-006) | 0 / Fundierung | P0 | Entitätsmengen, Quoten und Prozessmodi konfigurieren | Zur Prüfung |
 | [SF-007](#sf-007) | 0 / Fundierung | P0 | Generator-Vertrag und Registry definieren | Zur Prüfung |
 | [SF-008](#sf-008) | 0 / Fundierung | P0 | Abhängigkeitsgraph und Ausführungsplan | Zur Prüfung |
-| [SF-009](#sf-009) | 0 / Fundierung | P0 | BC-Setup-Prüfung und nicht-destruktiver Setup-Diff | Offen |
-| [SF-010](#sf-010) | 0 / Fundierung | P0 | Synthetischer Realismus und Seed-Engine | Offen |
-| [SF-011](#sf-011) | 0 / Fundierung | P0 | Erzeugte Datensätze und Belegketten nachverfolgen | Offen |
-| [SF-012](#sf-012) | 0 / Fundierung | P0 | Job-Queue Dispatcher, Run-/Batch-Tabellen | Offen |
+| [SF-009](#sf-009) | 0 / Fundierung | P0 | BC-Setup-Prüfung und nicht-destruktiver Setup-Diff | Zur Prüfung |
+| [SF-010](#sf-010) | 0 / Fundierung | P0 | Synthetischer Realismus und Seed-Engine | Zur Prüfung |
+| [SF-011](#sf-011) | 0 / Fundierung | P0 | Erzeugte Datensätze und Belegketten nachverfolgen | Zur Prüfung |
+| [SF-012](#sf-012) | 0 / Fundierung | P0 | Job-Queue Dispatcher, Run-/Batch-Tabellen | Zur Prüfung |
 | [SF-013](#sf-013) | 0 / Fundierung | P0 | Batch-Checkpoint, Retry, Pause/Resume, Cancellation | Offen |
 | [SF-014](#sf-014) | 0 / Fundierung | P0 | Monitoring-Datenmodell und Dashboard | Offen |
 | [SF-015](#sf-015) | 0 / Fundierung | P0 | Wizard für Branche, Module, Umfang und Planung | Offen |
@@ -392,7 +392,7 @@
 
 ### SF-009 — BC-Setup-Prüfung und nicht-destruktiver Setup-Diff
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-003,SF-008  
 **Verantwortung / betroffene Module:** SetupManager, Finance  
@@ -403,12 +403,12 @@
 **Soll-Verhalten / technischer Arbeitsauftrag:** Preflight als Read-only, Maßnahmenplan und Freigabe; vollen Leerfirmen-Setup gesondert entscheiden.
 
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Bestehende Einrichtung unverändert; fehlende Pflichtwerte präzise sichtbar und blockierend.
@@ -420,13 +420,17 @@
 
 **Risiken / Entscheidungen:** Zielversions- und Lokalisierungsabhängigkeit, Rechte, Datenvolumen und eventuell unklarer Commit-/Retry-Zustand nachprüfen. Bei Blocker konkrete Frage stellen und `Blockiert` statt mutmaßlich erfolgreich setzen.
 
+**Umsetzung 15.11.2026:** `src/SetupManager/BCSFSetupDiff.Table.al`, `BCSFSetupManager.Codeunit.al`, `BCSFSetupDiffPreview.Page.al`, `BCSFRunPreflight.PageExt.al` und `src/Finance/BCSFFinanceSetupCheck.Codeunit.al`. Lesende Prüfung aktueller Einrichtung und grundlegender effektiver Rechte zu eingefrorenen Zielen; temporäre Befunde mit manuellen Maßnahmen. Keine Apply-/Einrichtungsänderung. Kandidatencheck für ungesperrte Forderungs-/Verbindlichkeits-Buchungskonten. Konkrete Generator-/Steuer-/Dimensions-/Postingbindungen bleiben blockierend; Start-Gate zusätzlich angebunden. Maßnahmen vor manueller Änderung ausdrücklich freigeben, dann neu prüfen.
+
+**Tests / Grenzen:** Vollständiger lokaler Cloud-Build mit CodeCop/UICop gegen vorhandene BC-28.5-/DE-Symbole und Runtime 17 bestanden; Übersetzungsprüfung 481 Einheiten, Inventar-/ID-/Schreibpfadprüfung und Diffkontrolle ausgeführt. Keine AL-Funktions-/Sandbox-/Rechte-/Lasttests; deren Schritt bleibt offen. Keine neuen Testobjekte, kein Deployment. Engine-/Regel-/Schema- und Rechtekompatibilität sowie unbekannte Fachanforderungen: [SETUP_SEED.md](docs/SETUP_SEED.md). Tatsächliche Nachweise und ausstehende Fälle: [TESTS.md](docs/TESTS.md#sf-009sf-010--lokaler-prüfnachweis-15112026). Menschliche Abnahme steht aus.
+
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
 
 ### SF-010 — Synthetischer Realismus und Seed-Engine
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-004,SF-006  
 **Verantwortung / betroffene Module:** DataGeneration, IndustryProfiles  
@@ -437,12 +441,12 @@
 **Soll-Verhalten / technischer Arbeitsauftrag:** Pseudodaten ohne echte Empfänger/Konten; logische Schlüssel unabhängig von Reihenfolge; Profileinstellungen versionieren.
 
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Gleiche Konfiguration erzeugt gleiche Eingangsdaten, verschiedene Seeds plausible Varianten ohne reale PII.
@@ -454,13 +458,17 @@
 
 **Risiken / Entscheidungen:** Zielversions- und Lokalisierungsabhängigkeit, Rechte, Datenvolumen und eventuell unklarer Commit-/Retry-Zustand nachprüfen. Bei Blocker konkrete Frage stellen und `Blockiert` statt mutmaßlich erfolgreich setzen.
 
+**Umsetzung 15.11.2026:** `src/DataGeneration/BCSFSeedEngine.Codeunit.al`, `BCSFRunSyntheticPreview.PageExt.al`, `src/IndustryProfiles/BCSFSyntheticRules.Codeunit.al` und Erweiterung des bestehenden Snapshot Writers. Zustandslose, versionierte Werteableitung mit Seed, Profil, logischem Schlüssel und getrennten Feldstreams; Firmen-/Personen-/Artikelkataloge in DE/EN, Preis-/Datums-/Klassenregeln. Neue Snapshots frieren sämtliche generischen Regelwerte ein; keine Standarddatenanlage oder nachträgliche Änderung alter Snapshots. Vollständige Branchenprofile bleiben SF-023.
+
+**Tests / Grenzen:** Vollständiger lokaler Cloud-Build mit CodeCop/UICop gegen vorhandene BC-28.5-/DE-Symbole und Runtime 17 bestanden; Übersetzungsprüfung 481 Einheiten, Inventar-/ID-/Schreibpfadprüfung und Diffkontrolle ausgeführt. Keine AL-Funktions-/Sandbox-/Rechte-/Lasttests; deren Schritt bleibt offen. Keine neuen Testobjekte, kein Deployment. Engine-/Regel-/Schema- und Rechtekompatibilität sowie unbekannte Fachanforderungen: [SETUP_SEED.md](docs/SETUP_SEED.md). Tatsächliche Nachweise und ausstehende Fälle: [TESTS.md](docs/TESTS.md#sf-009sf-010--lokaler-prüfnachweis-15112026). Menschliche Abnahme steht aus.
+
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
 
 ### SF-011 — Erzeugte Datensätze und Belegketten nachverfolgen
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-005,SF-010  
 **Verantwortung / betroffene Module:** Lifecycle, DataGeneration  
@@ -471,12 +479,12 @@
 **Soll-Verhalten / technischer Arbeitsauftrag:** Registry mit eindeutigen Schlüsseln und datensparsamem Audit; Standard-Posting-Ergebnisbezug prüfen.
 
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Jede erzeugte Einheit eindeutig einem Run zuordenbar; erneute Erstellung wird erkannt.
@@ -488,13 +496,17 @@
 
 **Risiken / Entscheidungen:** Zielversions- und Lokalisierungsabhängigkeit, Rechte, Datenvolumen und eventuell unklarer Commit-/Retry-Zustand nachprüfen. Bei Blocker konkrete Frage stellen und `Blockiert` statt mutmaßlich erfolgreich setzen.
 
+**Umsetzung 15.11.2026:** `src/DataGeneration/BCSFGeneratedRecord.Table.al`, `BCSFRecordRegistry.Codeunit.al`, `BCSFGeneratedRecords.Page.al`, `BCSFRunProvenance.PageExt.al` und `src/Lifecycle/BCSFProvenanceGuard.Codeunit.al`. Unveränderliche logische und physische Herkunft, Batch-/Generatorversion, SystemId plus ursprünglicher RecordId und vorhandene Eltern desselben Runs. Identische Registrierung idempotent, widersprüchliche/mehrfache physische Zuordnung blockiert. Kein Standarddatensatzinsert. Referenzmodell für konkrete Posting-Ergebnisse vorhanden; tatsächliche Postingbeziehungen und Freigaben müssen spätere Fachgeneratoren nachweisen.
+
+**Tests / Grenzen:** Vollständiger Cloud-Build aller 81 AL-Dateien gegen lokale BC-28.5-/DE-/Runtime-17-Symbole mit CodeCop/UICop bestanden; 606 Übersetzungseinheiten, Objekt-/ID-/Symbol-/Schreibpfad-/Scopeprüfungen und Diffkontrolle ausgeführt. Keine AL-Funktions-/Queue-/Sandbox-/Rechte-/Parallelitäts-/Postingtests; keine neuen Testobjekte und kein Deployment. Grenzen und technische Entscheidungen: [EXECUTION_REGISTRY.md](docs/EXECUTION_REGISTRY.md). Tatsächliche Ergebnisse und offene Laufzeitfälle: [TESTS.md](docs/TESTS.md#sf-011sf-012--lokaler-prüfnachweis-15112026). Menschliche Abnahme steht aus.
+
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
 
 ### SF-012 — Job-Queue Dispatcher, Run-/Batch-Tabellen
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-003,SF-005,SF-008,SF-011  
 **Verantwortung / betroffene Module:** BackgroundProcessing  
@@ -505,12 +517,12 @@
 **Soll-Verhalten / technischer Arbeitsauftrag:** Rechte, Scheduling und Abhängigkeiten berücksichtigen; keine unbegrenzten parallelen Worker.
 
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Start, Laufstatus und Einzelbatches sichtbar; Browser kann geschlossen werden.
@@ -521,6 +533,10 @@
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
 
 **Risiken / Entscheidungen:** Zielversions- und Lokalisierungsabhängigkeit, Rechte, Datenvolumen und eventuell unklarer Commit-/Retry-Zustand nachprüfen. Bei Blocker konkrete Frage stellen und `Blockiert` statt mutmaßlich erfolgreich setzen.
+
+**Umsetzung 15.11.2026:** Zwölf Objekte in `src/BackgroundProcessing/`: Batch/Status, separate Run Execution, Dispatcher/Worker/Runner, verpflichtende Validierungen/Fehlerklassifizierung und persistente UI mit frühestem Start/Bestätigung. Plan Writer um wiederverwendbare CheckExecution-Prüfung ergänzt; Header/Snapshot bleiben immutable. Je Job ein Batch, Standard-Kategorie BCSF.SER serialisiert regulär pro Firma, kein automatisches Retry. Dauerhafter Claim vor atomarem Ergebnis-/Herkunfts-/Abschluss-/Nachfolgerteil. Aktuelle echte Generator-/Setupblocker bleiben erhalten. Recovery, Pause/Resume/Cancel und ID 90304 bleiben SF-013.
+
+**Tests / Grenzen:** Vollständiger Cloud-Build aller 81 AL-Dateien gegen lokale BC-28.5-/DE-/Runtime-17-Symbole mit CodeCop/UICop bestanden; 606 Übersetzungseinheiten, Objekt-/ID-/Symbol-/Schreibpfad-/Scopeprüfungen und Diffkontrolle ausgeführt. Keine AL-Funktions-/Queue-/Sandbox-/Rechte-/Parallelitäts-/Postingtests; keine neuen Testobjekte und kein Deployment. Grenzen und technische Entscheidungen: [EXECUTION_REGISTRY.md](docs/EXECUTION_REGISTRY.md). Tatsächliche Ergebnisse und offene Laufzeitfälle: [TESTS.md](docs/TESTS.md#sf-011sf-012--lokaler-prüfnachweis-15112026). Menschliche Abnahme steht aus.
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 

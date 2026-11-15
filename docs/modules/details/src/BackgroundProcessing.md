@@ -1,6 +1,6 @@
 # BackgroundProcessing – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/BackgroundProcessing/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** 12 AL-Objekte: operative Ausführung, Batches, Dispatcher, Worker, Guards und UI; zur Prüfung. Recovery weiterhin geplant. **Pfad:** `src/BackgroundProcessing/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -37,3 +37,8 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 ## Objektplanung SF-002
 
 Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.BackgroundProcessing`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+
+
+## Implementierter Stand SF-011/SF-012 – 15.11.2026
+
+90300 Batch, 90301 Batch Status, 90302 Queue Dispatcher, 90303 Batch Worker, 90305 Run Execution, 90306 Execution Rules, 90307 Batch Runner, 90308 Queue Failure, 90309 Execution List, 90310 Schedule Request, 90311 Batch List und 90312 Run Queue. 90304 bleibt SF-013 vorbehalten. Keine behauptete BC-Laufzeitabnahme; Vertrag, Rechte, Zustände und Testgrenzen: [Herkunft und Queue](../../../EXECUTION_REGISTRY.md), [Tests](../../../TESTS.md). Frühere Planabschnitte bleiben Zielbild.

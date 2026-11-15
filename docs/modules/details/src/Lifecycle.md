@@ -1,6 +1,6 @@
 # Lifecycle – Modulspezifikation
 
-**Status:** Teilweise implementiert, 3 AL-Objekte, Zur Prüfung. **Pfad:** `src/Lifecycle/`. Historische Planungsangaben unten gelten nur für noch nicht implementierte Teile.
+**Status:** Teilweise implementiert, 4 AL-Objekte, Zur Prüfung. **Pfad:** `src/Lifecycle/`. Historische Planungsangaben unten gelten nur für noch nicht implementierte Teile.
 
 ## Fachlicher Auftrag
 
@@ -60,3 +60,8 @@ Reale Dateien:
 Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Sicherheitsgrenzen: [GENERATOR_PLANNING.md](../../../GENERATOR_PLANNING.md). Build/Übersetzung lokal geprüft; Selbstprüfungen nur kompiliert, kein BC-Laufzeittest. Fachgeneratoren und Queue weiterhin geplant.
 
 Neue tatsächliche Codeabhängigkeiten: ModuleRegistry und DependencyManager für verpflichtende Guard-Subscriber; kein ausführbarer Rückverweis aus dem Planer auf Lifecycle.
+
+
+## Implementierter Stand SF-011/SF-012 – 15.11.2026
+
+90379 Provenance Guard zusätzlich zu den drei bisherigen Guards; neue direkte Ereignisabhängigkeit auf DataGeneration. Keine behauptete BC-Laufzeitabnahme; Vertrag, Rechte, Zustände und Testgrenzen: [Herkunft und Queue](../../../EXECUTION_REGISTRY.md), [Tests](../../../TESTS.md). Frühere Planabschnitte bleiben Zielbild.

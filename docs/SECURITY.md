@@ -74,3 +74,13 @@ XLIFF-Dateien, Katalog und Tests enthalten ausschließlich App-Texte/synthetisch
 Persistente Steps nur durch den Plan Writer mit eigener enger Insert-Berechtigung und indirektem Anwender-Insert. Vier verpflichtende Before-Datenbankereignisse prüfen Sandbox/Firma/Entwurf und sperren Modify/Delete/Rename. Zwei weitere Pflicht-Subscriber sichern Vertragsproben und Startprüfung. Vorschauen/Graph/Capabilities sind temporär; Probe-Generatoren erzeugen keine Geschäftsdaten. Aktuelle fehlende echte Generatoren/externe Nachweise verhindern Start. Keine zusätzlichen Standarddatenrechte oder automatischen Postingfreigaben.
 
 Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.
+
+## SF-009/SF-010 – 15.11.2026
+
+Setup-Diff ausschließlich temporär; Standarddaten nur gelesen. ADMIN vergibt zusätzliche Objekt-Ausführung, keine Standardtabellenrechte oder Rechteerhöhung. Fehlende Leserechte/blockierte Voraussetzungen bleiben sichtbar; das vorhandene Start-Gate bleibt geschlossen. Keine automatische Setupänderung oder persistierte Freigabe ohne konkrete Sollwerte. Die Seed-Engine liefert markierte synthetische Eingangswerte mit example.invalid, ohne Telefon-/Bankdaten und ohne Versand. Snapshot-Regeln bleiben unter dem bestehenden Schreibguard. Kein Laufzeitnachweis effektiver Rechte oder Sicherheitsfilter. Vollständige Grenzen: [SETUP_SEED.md](SETUP_SEED.md).
+
+## SF-011/SF-012 – 15.11.2026
+
+Neue eigene Tabellen: Herkunft nur Ri für Anwender und Insert im festen Registry Writer; Ausführung/Batches Rim für Anwender und begrenzte IM/M-Rechte in festen Writern. Keine neuen Standardtabellen-/Posting-/Jobrollenrechte im ADMIN-Set. Standardrollen, Lizenz und Task-Scheduler-Rechte sind separat erforderlich. Neue Pflichtsubscriber prüfen Sandbox/Firma, unveränderliche Identitäten, erlaubte Zustände, Batchbesitz und lückenlose Herkunft. Keine RunTrigger-/GUI-/IsHandled-Sicherheitsausnahme für Persistenz. Worker akzeptiert nur den gebundenen Standardjob und keinen manuellen Vordergrundaufruf.
+
+BCSF.SER verwendet die Standard-Kategoriesemaphore; regulär ein aktiver Queue-Worker pro Firma, ein Job pro Run und ein Batch pro Job. Job-Autoretry ist 0, Recurring=false; PostingApproved bleibt false. Dauerhafter Claim vor Generatorausführung und NeedsReview bei gemeldetem Fehler verhindern blinden Wiederanlauf. Keine Namen/Adressen/rohen Fehlertexte im eigenen Audit, aber minimale RecordId/SystemId-Ergebnisbezüge als CustomerContent. Herkunftsmetadaten beweisen allein keine fachliche Postingbeziehung. Laufzeit-/Rechte-/Parallelitätsnachweise offen. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).

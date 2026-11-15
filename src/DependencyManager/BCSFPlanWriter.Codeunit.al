@@ -54,6 +54,13 @@ codeunit 90204 "BCSF Plan Writer"
 
   /// <summary>Fail-closed start gate. It never queues or executes a run and cannot make a draft ready.</summary>
   procedure CheckStart(RunId: Guid)
+  begin
+    // Readiness only. The dispatcher separately validates the persisted operational state.
+    CheckExecution(RunId);
+  end;
+
+  /// <summary>Rechecks immutable plan bindings and all execution gates; operational status belongs to BackgroundProcessing.</summary>
+  procedure CheckExecution(RunId: Guid)
   var
     Header: Record "BCSF Run Header";
     Step: Record "BCSF Run Step";
@@ -80,7 +87,6 @@ codeunit 90204 "BCSF Plan Writer"
         then
           Error(VersionErr);
       until Step.Next() = 0;
-    Header.TestField(Status, "BCSF Run Status"::Ready);
     OnBeforeRunStart(RunId);
   end;
 

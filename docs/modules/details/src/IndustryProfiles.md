@@ -1,6 +1,6 @@
 # IndustryProfiles – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/IndustryProfiles/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** 1 AL-Objekt: generische versionierte Syntheseregeln; zur Prüfung. Vollständige Branchenprofile weiterhin geplant. **Pfad:** `src/IndustryProfiles/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -37,3 +37,8 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 ## Objektplanung SF-002
 
 Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.IndustryProfiles`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+
+
+## Implementierter Stand SF-009/SF-010 – 15.11.2026
+
+90154 Synthetic Rules; Pflichtsubscriber am Snapshot-Regelereignis. Keine Standarddatenmutation. Vertrag, Rechte, Transaktionsgrenzen und reale Prüfnachweise: [Setup und Seed](../../../SETUP_SEED.md), [Tests](../../../TESTS.md). Frühere Planabschnitte bleiben Zielbild.

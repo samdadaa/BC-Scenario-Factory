@@ -15,7 +15,7 @@ Zuerst **Geschäftsvorfall** und Beziehungen modellieren, danach Werte synthetis
 
 ## Deterministische Erzeugung
 
-`RunId + GeneratorId + LogicalKey + Seed` bestimmen synthetische Eingabewerte; ohne Abhängigkeit von zufälliger Session-/Batch-Reihenfolge. Nummernserien, Zeitstempel, Buchungsergebnisse und von BC vergebene IDs können trotzdem abweichen. Datengeneratoren müssen nachvollziehbare Herkunftsmarker/Registry-Einträge erstellen. Anonymität: keine Mischung mit realen Kontaktdaten, keine erreichbaren E-Mails/Telefonnummern, keine Bankverbindung mit Zahlungsgefahr.
+`GeneratorId + LogicalKey + Seed + Profilcode/-version + Feldstream` bestimmen in Seed-Engine-Version 1 synthetische Eingangswerte; die RunId dient ausschließlich der Herkunft, damit gleiche Konfiguration auch in neuen Läufen reproduzierbar bleibt; ohne Abhängigkeit von zufälliger Session-/Batch-Reihenfolge. Nummernserien, Zeitstempel, Buchungsergebnisse und von BC vergebene IDs können trotzdem abweichen. Datengeneratoren müssen nachvollziehbare Herkunftsmarker/Registry-Einträge erstellen. Anonymität: keine Mischung mit realen Kontaktdaten, keine erreichbaren E-Mails/Telefonnummern, keine Bankverbindung mit Zahlungsgefahr.
 
 ## Abhängigkeits- und Fehlerregeln
 
@@ -37,3 +37,7 @@ Validierungsregeln: Soll/Ist je Entity, eindeutige logische Schlüssel, vorhande
 ## Umgesetzte Konfigurationsbasis SF-005/SF-006
 
 Szenario-GUID/Revision, positive bzw. deaktivierte Entitätsziele, getrennte Mengen-/Modus-/Quotenparameter und Schema-1-JSON-Snapshots sind vorhanden. Momentan nur Planungsdaten, keine Standardstammdaten-/Ledgergenerierung. Der Snapshot bindet aufgelöste Deutsch-/Englisch-Datensprache und Textkatalogversion; spätere Worker müssen beide beibehalten. Technische Feldabdeckung und Grenzen: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).
+
+SF-010 implementiert stateless Integer-/Datumswerte und synthetische Firmen-/Personen-/Artikel-/Preis-DTOs mit erfassten Deutsch-/Englisch-Katalogen und versionierten Regeln. Keine Standarddatensatzanlage; Herkunftsregistry bleibt SF-011. Verteilung, Rundung, Schlüssel- und Versionsgrenzen: [SETUP_SEED.md](SETUP_SEED.md).
+
+SF-011: Herkunft mit Run/Step/logischem Integer-Schlüssel/Artefaktcode, Batch, eingefrorenem Generator, Tabelle/SystemId, ursprünglichem RecordId und Eltern-Eintrags-GUID implementiert. Eindeutige SQL-Schlüssel verhindern widersprüchliche logische und physische Zuordnungen; Standarddaten werden nur referenziert, niemals generisch erstellt. SF-012 bestätigt Batchzählwerte erst nach vollständiger Herkunftsabdeckung und erfolgreicher Generator-Outputvalidierung. Fachliche Postenbeziehungen und globale Qualitätsprüfung bleiben generatorspezifisch bzw. SF-016. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).

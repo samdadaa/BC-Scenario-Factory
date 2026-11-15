@@ -1,6 +1,6 @@
 # DataGeneration – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/DataGeneration/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** 6 AL-Objekte: Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. **Pfad:** `src/DataGeneration/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -37,3 +37,13 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 ## Objektplanung SF-002
 
 Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.DataGeneration`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+
+
+## Implementierter Stand SF-009/SF-010 – 15.11.2026
+
+90250 Seed Engine; 90253 Run Synthetic Preview. Keine Standarddatenmutation. Vertrag, Rechte, Transaktionsgrenzen und reale Prüfnachweise: [Setup und Seed](../../../SETUP_SEED.md), [Tests](../../../TESTS.md). Frühere Planabschnitte bleiben Zielbild.
+
+
+## Implementierter Stand SF-011/SF-012 – 15.11.2026
+
+90251 Generated Record, 90252 Record Registry, 90254 Generated Records und 90255 Run Provenance zusätzlich zur Seed-Basis. Keine behauptete BC-Laufzeitabnahme; Vertrag, Rechte, Zustände und Testgrenzen: [Herkunft und Queue](../../../EXECUTION_REGISTRY.md), [Tests](../../../TESTS.md). Frühere Planabschnitte bleiben Zielbild.

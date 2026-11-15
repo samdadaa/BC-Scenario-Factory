@@ -1,22 +1,22 @@
 # Modulindex – Zielarchitektur
 
-**Aktueller Bestand nach SF-007/SF-008:** 56 AL-Objekte: Core 13, ScenarioManagement 21, ModuleRegistry 10 (mit Interface), DependencyManager 9, Lifecycle 3; übrige 19 Module ohne AL-Code. Registry mit zwei lesenden Vertragsproben und blockierender Laufplan implementiert, zur Prüfung. Fachgeneratoren, Queue und Dashboard bleiben geplant. Build/Übersetzungen lokal geprüft, BC-Laufzeitabnahme offen.
+**Aktueller Bestand nach SF-011/SF-012:** 81 AL-Objekte in zehn Modulen, 14 Module ohne AL-Code. DataGeneration 6, BackgroundProcessing 12, Lifecycle 4; übrige Modulzahlen unverändert. Immutable Herkunftsregistry und serielle Queue-Grundlage zur Prüfung. Echte Fachgeneratoren, Recovery, globale Qualitätsprüfung und Laufzeitabnahme weiterhin ausstehend.
 
 | Modul | Kategorie | Ziel | Status |
 | --- | --- | --- | --- |
 | [Core](details/src/Core.md) | Kern | `src/Core/` | Grundlagen/Sprache/Vertrag: 13 AL-Objekte, zur Prüfung |
 | [ScenarioManagement](details/src/ScenarioManagement.md) | Kern | `src/ScenarioManagement/` | Vorlagen/Ziele/Snapshots/Steps: 21 AL-Objekte, zur Prüfung |
-| [IndustryProfiles](details/src/IndustryProfiles.md) | Kern | `src/IndustryProfiles/` | Geplant, ohne Code |
+| [IndustryProfiles](details/src/IndustryProfiles.md) | Kern | `src/IndustryProfiles/` | 1 AL-Objekt: generische versionierte Syntheseregeln; zur Prüfung. Vollständige Branchenprofile weiterhin geplant. |
 | [ModuleRegistry](details/src/ModuleRegistry.md) | Kern | `src/ModuleRegistry/` | Vertrag/Katalog/Proben: 10 AL-Objekte, zur Prüfung |
 | [DependencyManager](details/src/DependencyManager.md) | Kern | `src/DependencyManager/` | Graph/Plan/Vorschau: 9 AL-Objekte, zur Prüfung |
-| [SetupManager](details/src/SetupManager.md) | Kern | `src/SetupManager/` | Geplant, ohne Code |
-| [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | Geplant, ohne Code |
+| [SetupManager](details/src/SetupManager.md) | Kern | `src/SetupManager/` | 4 AL-Objekte: temporärer Setup-Diff, Manager, Vorschau und Laufkarten-Erweiterung; zur Prüfung. |
+| [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | 6 AL-Objekte: Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. |
 | [ProcessEngine](details/src/ProcessEngine.md) | Kern | `src/ProcessEngine/` | Geplant, ohne Code |
-| [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | Geplant, ohne Code |
+| [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 12 AL-Objekte: operative Ausführung, Batches, Dispatcher, Worker, Guards und UI; zur Prüfung. Recovery weiterhin geplant. |
 | [Validation](details/src/Validation.md) | Kern | `src/Validation/` | Geplant, ohne Code |
 | [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | Geplant, ohne Code |
-| [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Setup-/Szenario-/Planguards: 3 AL-Objekte, zur Prüfung |
-| [Finance](details/src/Finance.md) | Fach | `src/Finance/` | Geplant, ohne Code |
+| [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Teilweise implementiert, 4 AL-Objekte, Zur Prüfung. |
+| [Finance](details/src/Finance.md) | Fach | `src/Finance/` | 1 AL-Objekt: lesender Finanz-Setupcheck; zur Prüfung. Finanzgenerator/Buchungen weiterhin geplant. |
 | [Sales](details/src/Sales.md) | Fach | `src/Sales/` | Geplant, ohne Code |
 | [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | Geplant, ohne Code |
 | [Inventory](details/src/Inventory.md) | Fach | `src/Inventory/` | Geplant, ohne Code |
@@ -36,3 +36,7 @@
 **SF-005/SF-006:** Gegenüber der Foundation 23 neue Objekte. Keine Implementierung weiterer Modulverantwortungen; Quelle und Grenzen: [SCENARIO_CONFIGURATION.md](../SCENARIO_CONFIGURATION.md).
 
 SF-007/SF-008: [Generator- und Planungsvertrag](../GENERATOR_PLANNING.md); alle implementierten Objekte im aktuellen [Objektplan](../OBJECT_PLAN.md).
+
+SF-009/SF-010: [Setup-/Seed-Vertrag](../SETUP_SEED.md); vollständige Objektzuordnung im [Objektplan](../OBJECT_PLAN.md).
+
+SF-011/SF-012: [Herkunft-/Queue-Vertrag](../EXECUTION_REGISTRY.md), [Objektplan](../OBJECT_PLAN.md).

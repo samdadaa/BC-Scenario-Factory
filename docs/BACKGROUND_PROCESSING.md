@@ -49,3 +49,9 @@ Kein 'über Nacht fertig' versprechen: Betriebsunterbrechungen, SaaS-Job-Limits,
 Planung und gespeicherte Steps sind vorhanden; Startprüfung ist ein blockierendes Gate ohne Statuswechsel/Queue-Eintrag. Der spätere Dispatcher/Worker muss CheckStart und die Umgebungs-/Freigabeprüfung erneut anwenden. Kein Checkpoint, Claim, Retry oder Posting-Ergebnisabgleich durch SF-007/SF-008 zugesichert.
 
 Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.
+
+SF-009 ergänzt einen verpflichtenden Setup-Preflight-Subscriber am vorhandenen OnBeforeRunStart-Gate. Der Gate-Aufruf allein erzeugt keine Queue und keine Freigabe; konkrete Generatorbindungen bleiben blockierend. SF-010 liefert die zustandslose Werteableitung für spätere Worker aus versionierten Snapshots. Kein Worker-/Checkpoint-/Retry-Code ergänzt. [SETUP_SEED.md](SETUP_SEED.md).
+
+## Implementierte Grundlage SF-012 – 15.11.2026
+
+Separate Run Execution, unveränderliche Batchbereiche, Dispatcher, Hintergrundworker und atomarer Batch Runner vorhanden. Je Job genau ein Batch, Standard-Kategorie BCSF.SER serialisiert reguläre Worker pro Firma, keine automatische Job-Wiederholung. Claim ist vor fachlicher Ausführung dauerhaft; danach müssen Ergebnis/Herkunft/Validierung/Abschluss/Nachfolgejob zusammen persistieren. Fehler markieren unbestätigte Arbeit als NeedsReview, soweit Standard-Error-Handler und Metadatenguards ausführbar sind. Kein Retry/Resume/Pause/Cancel aus SF-013 vorweggenommen. Aktuell blockieren fehlende echte Generatoren und konkrete Setupnachweise weiterhin den Start. Konkrete Zustände, Transaktionsgrenzen, Scheduler-APIs und Risiken: [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).

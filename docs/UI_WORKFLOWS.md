@@ -34,3 +34,7 @@
 ## Erstes durchgängiges Nutzungsszenario
 
 Berater erstellt 'Großhandel – Demo', wählt Finance+Sales+Purchasing+Inventory, 100 Debitoren, 40 Kreditoren, 120 Artikel, 70 Einkaufs- und 150 Verkaufsaufträge. Entscheidet 'gebuchte Belege', führt Preflight aus und startet über Queue. Dashboard zeigt Schritt für Schritt die Erzeugung, erklärt Blocker und weist nach Abschluss zugehörige Rechnungen/Posten nach. Werte sind Beispiele, keine standardmäßig zugesicherten Mengen.
+
+SF-009/SF-010: Laufkarte → „Einrichtungsvorprüfung anzeigen“ zeigt aktuelle Blocker/Einrichtungsmaßnahmen; „Synthetische Eingangswerte anzeigen“ zeigt ein lesendes Beispiel aus eingefrorenen Regeln. Keine Freigabe-/Start-/Apply-Wirkung. [SETUP_SEED.md](SETUP_SEED.md).
+
+SF-011/SF-012 ergänzen auf der Laufkarte „Ausführungspakete vorbereiten“, „Vorbereitete Ausführung planen“ mit Startdialog/Bestätigung sowie persistente Ausführungs-/Paket-/Ergebnislisten. Erfasster Anfangsstatus und aktueller Ausführungsstatus sind ausdrücklich getrennt. Der Browser kann nach erfolgreichem Queue-Start geschlossen werden; wirkliche Queue-Laufzeitprüfung steht aus und aktuelle fachliche Startblocker bleiben wirksam. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).

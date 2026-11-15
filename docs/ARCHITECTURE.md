@@ -101,3 +101,15 @@ Core löst Automatisch zu Deutsch/Englisch auf; der Snapshot hält Auflösung un
 Realer Datenfluss: eingefrorener Run → Registry/Dependency Planner → temporäre Vorschau oder immutable Run Steps. Registry → Core; DependencyManager → Core/Registry/ScenarioManagement. PageExtension im DependencyManager hält den ausführbaren Modulgraphen azyklisch. Lifecycle bindet verpflichtende Sicherheitsereignisse. Queue/Worker und Fachgeneratoren weiterhin geplant.
 
 Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.
+
+## Umsetzung SF-009/SF-010 – 15.11.2026
+
+Laufkarte → SetupManager → aktuelle Standard-Einrichtungen/Rechte → temporärer Setup-Diff mit manuellen Maßnahmen. Finance trägt über einen verpflichtenden Subscriber die Prüfung von Buchungsgruppen-/Kontenkandidaten bei. SetupManager abonniert das bestehende Start-Gate; erteilte Objekt-/Datenrechte werden nicht erweitert. Konkrete Generatorbindungen bleiben blockierend.
+
+Snapshot Writer → internes Regelereignis → IndustryProfiles-Synthesekatalog → versioniertes Regelobjekt im immutable Payload. DataGeneration liest Engine-/Regelversion, Seed, Profil, Sprache und Datumsbereich ausschließlich aus diesem Payload. Kein ausführbarer Rückverweis ScenarioManagement → IndustryProfiles/DataGeneration. Kein zusätzlicher Commit; keine Standarddatenmutation. Details und historische Kompatibilität: [SETUP_SEED.md](SETUP_SEED.md).
+
+## Umsetzung SF-011/SF-012 – 15.11.2026
+
+Generator → Record Registry → immutable Herkunft mit Standard-Tabellen-ID/SystemId und optionalem vorhandenem Elternartefakt. Lifecycle bindet verpflichtende Datenbankguards, BackgroundProcessing prüft Batchbesitz und Bereich. Eine kanonische Header-Sperre serialisiert die App-Schreibwege pro Run, ohne den Header zu ändern.
+
+Laufkarte → Dispatcher → getrennte Run Execution + immutable Batchplanung → Standard-Job-Queue-Kategorie BCSF.SER → Worker-Claim mit bewusstem Commit → commitfreier Batch Runner → Generator/Validierung/Herkunft → Abschluss und genau ein Nachfolgerjob. Der Headerstatus bleibt erfasster Anfangsstatus; operativer Status gehört BackgroundProcessing. CheckStart/CheckExecution prüfen Plan und Start-Gates, der Dispatcher zusätzlich den operativen Status. Keine neue Rückabhängigkeit ScenarioManagement → BackgroundProcessing. Fehler bleiben ohne Auto-Retry prüfpflichtig, globale Qualitätsabnahme separat. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).

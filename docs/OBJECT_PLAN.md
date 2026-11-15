@@ -191,3 +191,37 @@ Sicherheitsbindung über Datenbank-Subscriber; keine ausführbare ScenarioManage
 ## Implementierter Stand SF-007/SF-008 (11.11.2026)
 
 56 AL-Objekte: Core 13, ScenarioManagement 21, ModuleRegistry 10 einschließlich Interface, DependencyManager 9, Lifecycle 3; 19 Module ohne AL-Code. 93 numerische Planobjekte plus Interface; alle 55 implementierten IDs innerhalb ihrer Modulblöcke. Implementierte Dateien sind direkt unter `src/` nachweisbar; übrige Zeilen bleiben Planung. Run Step 90129 ist jetzt implementiert. Process Coordinator 90275 bleibt ein Planobjekt für die spätere reale Prozessausführung; SF-007 liefert den Vertrag. PageExtension-Dateien verwenden beim ersten tatsächlichen Objekt das von CodeCop verlangte `.PageExt.al` (CONVENTIONS). Registry und Planner: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md).
+
+## Ergänzungen und Umsetzung SF-009/SF-010 – 15.11.2026
+
+Die geplanten IDs 90225/90226 und 90250 sind nun implementiert. Fünf zusätzliche freie Modulwerte sind nach lokaler Belegungsprüfung zugeordnet:
+
+| Modul | Plan-ID | Typ | Objektname | Dateipfad | Ticket |
+| --- | --- | --- | --- | --- | --- |
+| IndustryProfiles | 90154 | Codeunit | `BCSF Synthetic Rules` | `src/IndustryProfiles/BCSFSyntheticRules.Codeunit.al` | SF-010 |
+| SetupManager | 90227 | Page | `BCSF Setup Diff Preview` | `src/SetupManager/BCSFSetupDiffPreview.Page.al` | SF-009 |
+| SetupManager | 90228 | PageExtension | `BCSF Run Preflight` | `src/SetupManager/BCSFRunPreflight.PageExt.al` | SF-009 |
+| DataGeneration | 90253 | PageExtension | `BCSF Run Synthetic Preview` | `src/DataGeneration/BCSFRunSyntheticPreview.PageExt.al` | SF-010 |
+| Finance | 90402 | Codeunit | `BCSF Finance Setup Check` | `src/Finance/BCSFFinanceSetupCheck.Codeunit.al` | SF-009 |
+
+Jetzt 64 implementierte Objekte einschließlich Interface ohne numerische ID. SetupManager darf zusätzlich DependencyManager ausschließlich für dessen Start-Ereignis referenzieren. Finance → SetupManager und IndustryProfiles → ScenarioManagement nutzen vorhandene erlaubte Richtungen; keine neue ausführbare Rückabhängigkeit des Snapshot Writers. Core-Permission-Set bleibt deklarative Ausnahme. Datenfluss, Felder, Defaults und Kompatibilität: [SETUP_SEED.md](SETUP_SEED.md).
+
+## Ergänzungen und Umsetzung SF-011/SF-012 – 15.11.2026
+
+Geplante Objekte 90251/90252 und 90300–90303 sind nun implementiert. 90304 bleibt für Recovery in SF-013 reserviert. Folgende zusätzlich lokal freie Modulwerte werden zugeordnet:
+
+| Modul | Plan-ID | Typ | Objektname | Dateipfad | Ticket |
+| --- | --- | --- | --- | --- | --- |
+| DataGeneration | 90254 | Page | `BCSF Generated Records` | `src/DataGeneration/BCSFGeneratedRecords.Page.al` | SF-011 |
+| DataGeneration | 90255 | PageExtension | `BCSF Run Provenance` | `src/DataGeneration/BCSFRunProvenance.PageExt.al` | SF-011 |
+| Lifecycle | 90379 | Codeunit | `BCSF Provenance Guard` | `src/Lifecycle/BCSFProvenanceGuard.Codeunit.al` | SF-011 |
+| BackgroundProcessing | 90305 | Table | `BCSF Run Execution` | `src/BackgroundProcessing/BCSFRunExecution.Table.al` | SF-012 |
+| BackgroundProcessing | 90306 | Codeunit | `BCSF Execution Rules` | `src/BackgroundProcessing/BCSFExecutionRules.Codeunit.al` | SF-012 |
+| BackgroundProcessing | 90307 | Codeunit | `BCSF Batch Runner` | `src/BackgroundProcessing/BCSFBatchRunner.Codeunit.al` | SF-012 |
+| BackgroundProcessing | 90308 | Codeunit | `BCSF Queue Failure` | `src/BackgroundProcessing/BCSFQueueFailure.Codeunit.al` | SF-012 |
+| BackgroundProcessing | 90309 | Page | `BCSF Execution List` | `src/BackgroundProcessing/BCSFExecutionList.Page.al` | SF-012 |
+| BackgroundProcessing | 90310 | Page | `BCSF Schedule Request` | `src/BackgroundProcessing/BCSFScheduleRequest.Page.al` | SF-012 |
+| BackgroundProcessing | 90311 | Page | `BCSF Batch List` | `src/BackgroundProcessing/BCSFBatchList.Page.al` | SF-012 |
+| BackgroundProcessing | 90312 | PageExtension | `BCSF Run Queue` | `src/BackgroundProcessing/BCSFRunQueue.PageExt.al` | SF-012 |
+
+81 implementierte Objekte einschließlich Interface ohne numerische ID. Lifecycle darf für den Pflichtsubscriber zusätzlich DataGeneration referenzieren. BackgroundProcessing nutzt seine bereits vorgesehenen Abhängigkeiten auf Core, ScenarioManagement, ModuleRegistry, DependencyManager, DataGeneration und Lifecycle; keine Rückabhängigkeit des Snapshotmoduls. Deklaratives Core-Permission-Set weiterhin Ausnahme. Header/Steps/Snapshots unverändert immutable, Ausführungsstatus und Batches in BackgroundProcessing. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).

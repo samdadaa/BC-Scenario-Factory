@@ -86,3 +86,11 @@ Manifest ausschließlich um TranslationFile ergänzt, Identität/Version/Range/D
 56 AL-Objekte in fünf Modulen implementiert; 19 Module ohne AL-Code. Manifest/Launch unverändert; lokale Symbole BC 28.5/DE, Runtime 17. Registry/Planung samt Übersetzung lokal gebaut. Publisher und reale Playground-/Testfirmen-/Rechteprüfung aus SF-001 weiterhin offen.
 
 Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.
+
+## Aktueller Bestand SF-009/SF-010 – 15.11.2026
+
+64 AL-Objekte: Core 13, ScenarioManagement 21, ModuleRegistry 10, DependencyManager 9, Lifecycle 3, SetupManager 4, DataGeneration 2, IndustryProfiles 1, Finance 1. 15 Module weiterhin ohne AL-Code. Finance enthält nur einen lesenden Setupcheck, IndustryProfiles nur generische versionierte Syntheseregeln; keine vollständigen Fachgeneratoren oder Branchenprofile. Manifest/Launch unverändert. Schnittstellen, Defaultwerte, Sicherheits- und Kompatibilitätsgrenzen: [SETUP_SEED.md](SETUP_SEED.md). Kein Deployment oder nachgewiesener BC-Laufzeittest. **Zur Prüfung**.
+
+## Aktueller Bestand SF-011/SF-012 – 15.11.2026
+
+81 AL-Objekte in zehn Modulen, davon 80 numerische IDs und ein Interface: BackgroundProcessing 12, DataGeneration jetzt 6, Lifecycle jetzt 4; alle anderen Modulzahlen wie bei SF-009/SF-010. 14 Module weiterhin ohne AL-Code. Herkunftsregistry, getrennte Ausführungs-/Batchpersistenz und serielle Standard-Job-Queue-Grundlage vorhanden. Keine echten Fachgeneratoren, kein Retry/Resume und kein bestätigter End-to-End-Lauf. Header und Snapshot bleiben immutable. Manifest/Launch unverändert, Build gegen lokale BC-28.5-/DE-/Runtime-17-Symbole. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md), Status **Zur Prüfung**.

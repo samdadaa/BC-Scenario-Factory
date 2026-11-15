@@ -84,3 +84,15 @@ Details, neue IDs und tatsächliche Build-/Übersetzungsnachweise: [OBJECT_PLAN.
 Technische Umsetzung SF-007/SF-008: internes klassisches Interface, statische Enum-Bindungen mit expliziter Fehlerimplementierung statt persistenter frei editierbarer Registry. Zwei lesende Probe-Generatoren zur Vertragsprüfung; ausgeschlossen aus echten Plänen. Kahn-Sortierung und immutable Planversion 1 mit eingefrorener Generatorversion. Externe Setup-/Bestandsvoraussetzungen bleiben ungeprüft und blockierend bis zu ihren Folgetickets. Erste PageExtension verwendet CodeCop-konform `.PageExt.al`. Dies sind Implementierungsentscheidungen innerhalb des Auftrags, keine menschliche Abnahme oder neue Releasefreigabe.
 
 Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Zur Prüfung**, kein Deployment oder BC-Laufzeittest.
+
+## SF-009/SF-010 – technische Entscheidungen zur Prüfung, 15.11.2026
+
+Beide Tickets sind ausdrücklich gemeinsam beauftragt. Read-only-Preflight mit temporären Befunden und manuell zu genehmigenden Maßnahmen; kein automatischer Leerfirmen-/Apply-Vertrag ohne fachliche Sollwerte. Finanzcheck prüft Kandidaten, bestätigt keine unbekannte Generatorbindung.
+
+Reproduzierbarkeit wird gegenüber der frühen DATA_MODEL-Formulierung präzisiert: Lauf-ID dient Herkunft und Audit, nicht der synthetischen Werteableitung. Gleiche fachliche Konfiguration/Seed/Schlüssel liefert auch in getrennten Läufen dieselben Eingangswerte. Generische Klassen-/Preisdefaults sind versionierte technische Beispieldaten, kein bestätigtes Branchenprofil. Neue optionale Snapshotfelder bleiben Schema 1; Seed-Nutzung verlangt sie ausdrücklich, Altsnapshots werden nicht verändert. Offene Branchen-/Setupfragen bleiben Zu prüfen. [SETUP_SEED.md](SETUP_SEED.md).
+
+## SF-011/SF-012 – technische Entscheidungen zur Prüfung, 15.11.2026
+
+Beide Tickets ausdrücklich gemeinsam beauftragt, keine menschliche Abnahme vorausgesetzt. Operative Ausführung getrennt vom immutable Run Header, damit Snapshotvertrag erhalten bleibt. Positive logische Integer-Schlüssel gemäß bestehendem Batchinterface; mehrere Rollen je Einheit, SystemId als stabile physische Identität und vorhandene Elternartefakte für Ketten. Kein generischer Posting-Ergebnisnachweis durch bloße RecordIds.
+
+Ein einmaliger Standard-Job pro Batch, Nachfolger erst bei validiertem Abschluss, gemeinsame Kategorie BCSF.SER. Kein Autoretry und keine Wiederaufnahme vor SF-013. Claim separat dauerhaft, eigentliche Batchtransaktion commitfrei; implizite Fremdcommits benötigen eine spätere konkrete Prüfung. Technische Anfangslimits: 100 Planpakete pro Generatorabruf, 10000 Pakete pro Run und 10 Minuten Jobtimeout, keine Durchsatzgarantie. Batchende führt konservativ zu CompletedWithWarnings bis zum separaten Qualitätsgate. Bestehende echte Generator-/Setupblocker bleiben erhalten. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).
