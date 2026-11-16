@@ -34,7 +34,7 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
         {
           ApplicationArea = All;
           Caption = 'Current Execution Status';
-          ToolTip = 'Shows the persisted execution state. Completed with Warnings means batch execution ended; overall quality validation remains separate.';
+          ToolTip = 'Shows the persisted execution state, including the result of the final validation.';
           Editable = false;
         }
       }

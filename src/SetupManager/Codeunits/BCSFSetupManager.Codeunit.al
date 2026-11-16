@@ -97,6 +97,7 @@ codeunit 90226 "BCSF Setup Manager"
     // Warehouse is only mandatory when explicitly enabled in the captured module selection.
     CheckWarehouse(RunId, TempDiff);
     OnInspectFinance(NeedSales, NeedPurchases, TempDiff);
+    OnInspectFinancePackage(Context, Header."Starting Date", TempDiff);
     // Presence is never evidence that a particular generator's posting combination is valid.
     AddFinding(TempDiff, BindingLbl, true, BindingFindingLbl, BindingActionLbl);
     exit(not HasBlockers(TempDiff));
@@ -307,6 +308,11 @@ codeunit 90226 "BCSF Setup Manager"
 
   [IntegrationEvent(false, false)]
   local procedure OnInspectFinance(NeedSales: Boolean; NeedPurchases: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  begin
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnInspectFinancePackage(Context: JsonObject; EffectiveDate: Date; var TempDiff: Record "BCSF Setup Diff" temporary)
   begin
   end;
 

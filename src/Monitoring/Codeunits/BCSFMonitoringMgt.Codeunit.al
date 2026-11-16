@@ -108,5 +108,5 @@ codeunit 90356 "BCSF Monitoring Mgt"
     NoPlanLbl: Label 'No saved plan';
     BlockedLbl: Label 'Plan blocked / prerequisite unverified';
     ReviewLbl: Label 'Batch review required';
-    BatchCompleteLbl: Label 'Batches confirmed; overall quality pending';
+    BatchCompleteLbl: Label 'Batches confirmed';
 }

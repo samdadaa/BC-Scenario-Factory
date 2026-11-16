@@ -73,6 +73,11 @@ table 90125 "BCSF Scenario"
       Caption = 'Batch Size';
       ToolTip = 'Specifies the requested batch size, capped by the factory limits.';
     }
+    field(13; "Finance Mode"; Enum "BCSF Finance Mode")
+    {
+      Caption = 'Finance Setup';
+      ToolTip = 'Specifies which finance setup the scenario expects. A test package must already be applied in this company.';
+    }
   }
 
   keys

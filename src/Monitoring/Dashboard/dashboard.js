@@ -114,7 +114,7 @@
       append(fact, node("dt", "", text(key)), node("dd", "", value || text("notRecorded")));
       facts.appendChild(fact);
     });
-    append(section, facts, node("p", "sf-quality", text("quality")));
+    append(section, facts, node("p", "sf-quality", run.quality || text("quality")));
     return section;
   }
   function stepPanel() {

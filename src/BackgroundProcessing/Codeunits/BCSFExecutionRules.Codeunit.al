@@ -5,6 +5,7 @@ using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.DependencyManager;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ScenarioManagement;
+using BCScenarioFactory.Validation;
 using System.Environment;
 
 codeunit 90306 "BCSF Execution Rules"
@@ -93,7 +94,8 @@ codeunit 90306 "BCSF Execution Rules"
     Control: Record "BCSF Run Control";
     Writer: Codeunit "BCSF Plan Writer";
     StateManagement: Codeunit "BCSF Run State Mgt";
-    Recovery: Codeunit "BCSF Batch Recovery";
+    Validation: Codeunit "BCSF Validation Manager";
+    Severity: Enum "BCSF Validation Severity";
     Mutable: List of [Integer];
     Valid: Boolean;
   begin
@@ -113,10 +115,10 @@ codeunit 90306 "BCSF Execution Rules"
       "BCSF Run Status"::Preflight: Valid := Rec.Status = "BCSF Run Status"::Ready;
       "BCSF Run Status"::Ready: Valid := Rec.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled, "BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled];
       "BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled: Valid := Rec.Status in ["BCSF Run Status"::Running, "BCSF Run Status"::Failed, "BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled];
-      "BCSF Run Status"::Running: Valid := Rec.Status in ["BCSF Run Status"::Running, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::Failed, "BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled];
+      "BCSF Run Status"::Running: Valid := Rec.Status in ["BCSF Run Status"::Running, "BCSF Run Status"::Completed, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::ValidationFailed, "BCSF Run Status"::Failed, "BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled];
       "BCSF Run Status"::Paused: Valid := Rec.Status in ["BCSF Run Status"::ResumePending, "BCSF Run Status"::Cancelled];
       "BCSF Run Status"::Failed: Valid := Rec.Status in ["BCSF Run Status"::Failed, "BCSF Run Status"::ResumePending, "BCSF Run Status"::Cancelled];
-      "BCSF Run Status"::ResumePending: Valid := Rec.Status in ["BCSF Run Status"::Preflight, "BCSF Run Status"::CompletedWithWarnings];
+      "BCSF Run Status"::ResumePending: Valid := Rec.Status in ["BCSF Run Status"::Preflight, "BCSF Run Status"::Completed, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::ValidationFailed];
       "BCSF Run Status"::Cancelled: Valid := Rec.Status = "BCSF Run Status"::Cancelled;
     end;
     if not Valid then
@@ -135,7 +137,7 @@ codeunit 90306 "BCSF Execution Rules"
       Rec.TestField("Earliest Start", xRec."Earliest Start");
     if not (xRec.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled]) then
       Rec.TestField("Started At", xRec."Started At");
-    if not (Rec.Status in ["BCSF Run Status"::Failed, "BCSF Run Status"::CompletedWithWarnings]) then begin
+    if not (Rec.Status in ["BCSF Run Status"::Failed, "BCSF Run Status"::Completed, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::ValidationFailed]) then begin
       Rec.TestField("Finished At", 0DT);
       if Rec.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled, "BCSF Run Status"::Running] then
         Rec.TestField("Job Queue Entry Id");
@@ -164,17 +166,16 @@ codeunit 90306 "BCSF Execution Rules"
     end;
     if Rec.Status = "BCSF Run Status"::Running then
       Rec.TestField("Started At");
-    if Rec.Status = "BCSF Run Status"::CompletedWithWarnings then begin
+    if Rec.Status in ["BCSF Run Status"::Completed, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::ValidationFailed] then begin
       Rec.TestField("Completed Batches", Rec."Total Batches");
       Rec.TestField("Finished At");
-      if not IsNullGuid(Rec."Job Queue Entry Id") then
+      if not IsNullGuid(Rec."Job Queue Entry Id") or not Validation.GetSummary(Rec."Run Id", Severity) then
         Error(StateErr);
-      Batch.Reset();
-      Batch.SetRange("Run Id", Rec."Run Id");
-      if Batch.FindSet() then
-        repeat
-          Recovery.VerifyCheckpoint(Batch."Batch Id");
-        until Batch.Next() = 0;
+      case Severity of
+        Severity::Passed: Rec.TestField(Status, Rec.Status::Completed);
+        Severity::Warning: Rec.TestField(Status, Rec.Status::CompletedWithWarnings);
+        Severity::Error: Rec.TestField(Status, Rec.Status::ValidationFailed);
+      end;
     end;
   end;
 

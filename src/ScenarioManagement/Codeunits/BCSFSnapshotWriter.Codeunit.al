@@ -33,6 +33,8 @@ codeunit 90144 "BCSF Snapshot Writer"
     Posted: Integer;
     Partial: Integer;
     HasPositiveTarget: Boolean;
+    FinanceYear: Integer;
+    FinanceVersion: Code[20];
   begin
     // All persistent child writes lock this same parent before changing a target or module.
     Scenario.LockTable();
@@ -81,6 +83,12 @@ codeunit 90144 "BCSF Snapshot Writer"
     Payload.Add('companyName', Header."Company Name");
     Payload.Add('environmentName', Header."Environment Name");
     Payload.Add('capturedAt', Format(Header."Created At", 0, 9));
+    OnCaptureFinancePackage(Scenario."Finance Mode", FinanceYear, FinanceVersion);
+    if (Scenario."Finance Mode" <> "BCSF Finance Mode"::Existing) and ((FinanceYear <= 0) or (FinanceVersion = '')) then
+      Error(FinancePackageErr);
+    Payload.Add('financeMode', Scenario."Finance Mode".AsInteger());
+    Payload.Add('financeYear', FinanceYear);
+    Payload.Add('financeVersion', FinanceVersion);
     ScenarioModule.SetRange("Scenario Id", ScenarioId);
     if ScenarioModule.FindSet() then
       repeat
@@ -134,6 +142,12 @@ codeunit 90144 "BCSF Snapshot Writer"
   begin
   end;
 
+  [IntegrationEvent(false, false)]
+  local procedure OnCaptureFinancePackage(Mode: Enum "BCSF Finance Mode"; var Year: Integer; var PackageVersion: Code[20])
+  begin
+  end;
+
   var
+    FinancePackageErr: Label 'The selected finance package could not be captured. Review the applied package before creating a run.';
     EmptyPlanErr: Label 'Enter at least one positive entity target before capturing a run.';
 }

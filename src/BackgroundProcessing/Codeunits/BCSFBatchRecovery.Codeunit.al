@@ -25,7 +25,7 @@ codeunit 90304 "BCSF Batch Recovery"
     Guard.EnsureCanConfigure(CompanyName());
     Execution.ReadIsolation(IsolationLevel::ReadUncommitted);
     Execution.Get(RunId);
-    if Execution.Status in ["BCSF Run Status"::Completed, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::Cancelled] then
+    if Execution.Status in ["BCSF Run Status"::Completed, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::ValidationFailed, "BCSF Run Status"::Cancelled] then
       Error(ReviewErr);
     Control.LockTable();
     if not Control.Get(RunId) then begin
@@ -69,7 +69,7 @@ codeunit 90304 "BCSF Batch Recovery"
       exit(false);
     if not (Control."Pause Requested" or Control."Cancel Requested") then
       exit(false);
-    if Execution.Status in ["BCSF Run Status"::Completed, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::Cancelled] then
+    if Execution.Status in ["BCSF Run Status"::Completed, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::ValidationFailed, "BCSF Run Status"::Cancelled] then
       exit(false);
     Active.SetRange("Run Id", Execution."Run Id");
     Active.SetRange(Status, Active.Status::Running);
@@ -149,6 +149,7 @@ codeunit 90304 "BCSF Batch Recovery"
     Batch: Record "BCSF Batch";
     Dispatcher: Codeunit "BCSF Queue Dispatcher";
     Writer: Codeunit "BCSF Plan Writer";
+    Quality: Codeunit "BCSF Run Quality";
   begin
     LockExecution(RunId, Header, Execution);
     if not (Execution.Status in ["BCSF Run Status"::Paused, "BCSF Run Status"::Failed]) then
@@ -180,8 +181,7 @@ codeunit 90304 "BCSF Batch Recovery"
     Execution.Status := "BCSF Run Status"::ResumePending;
     Execution.Modify(true);
     if Execution."Completed Batches" = Execution."Total Batches" then begin
-      Execution.Status := "BCSF Run Status"::CompletedWithWarnings;
-      Execution."Finished At" := CurrentDateTime();
+      Quality.FinalizeRun(Execution);
       Execution.Modify(true);
       exit;
     end;

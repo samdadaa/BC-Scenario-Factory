@@ -3,6 +3,7 @@ namespace BCScenarioFactory.Monitoring;
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.ScenarioManagement;
+using BCScenarioFactory.Validation;
 using System.Globalization;
 
 codeunit 90365 "BCSF Dashboard Data"
@@ -34,7 +35,7 @@ codeunit 90365 "BCSF Dashboard Data"
     Execution.SetFilter(Status, '%1|%2|%3|%4', "BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled,
       "BCSF Run Status"::Running, "BCSF Run Status"::ResumePending);
     Summary.Add('active', Execution.Count());
-    Execution.SetRange(Status, "BCSF Run Status"::Failed);
+    Execution.SetFilter(Status, '%1|%2', "BCSF Run Status"::Failed, "BCSF Run Status"::ValidationFailed);
     Summary.Add('review', Execution.Count());
     Payload.Add('summary', Summary);
     Header.SetCurrentKey("Created At", "Run Id");
@@ -82,7 +83,9 @@ codeunit 90365 "BCSF Dashboard Data"
   var
     Execution: Record "BCSF Run Execution";
     Control: Record "BCSF Run Control";
+    Validation: Codeunit "BCSF Validation Manager";
   begin
+    Item.Add('quality', Validation.Describe(RunId));
     Item.Add('hasExecution', Execution.Get(RunId));
     Item.Add('statusCode', Execution.Status.AsInteger());
     Item.Add('totalBatches', Execution."Total Batches");
@@ -235,7 +238,7 @@ codeunit 90365 "BCSF Dashboard Data"
     EmptyLbl: Label 'No captured runs yet. Create a scenario to get started.';
     ChooseLbl: Label 'Selected run';
     NoSelectionLbl: Label 'Select a run to view progress and run-specific actions.';
-    QualityLbl: Label 'Overall business validation is pending (SF-016).';
+    QualityLbl: Label 'Final validation is not recorded for this run.';
     PlanGroupLbl: Label 'Plan & inspect';
     ExecuteGroupLbl: Label 'Execute & control';
     ResultGroupLbl: Label 'Results & diagnostics';

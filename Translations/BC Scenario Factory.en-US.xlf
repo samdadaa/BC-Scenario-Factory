@@ -808,8 +808,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control CancelRequest - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1160320011 - Control 2223978306 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
-          <source>Shows the persisted execution state. Completed with Warnings means batch execution ended; overall quality validation remains separate.</source>
-          <target state="translated">Shows the persisted execution state. Completed with Warnings means batch execution ended; overall quality validation remains separate.</target>
+          <source>Shows the persisted execution state, including the result of the final validation.</source>
+          <target state="translated">Shows the persisted execution state, including the result of the final validation.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control ExecutionStatus - Property ToolTip</note>
         </trans-unit>
@@ -3106,8 +3106,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ProgressLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 3855936753" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Overall business validation is pending (SF-016).</source>
-          <target state="translated">Overall business validation is pending (SF-016).</target>
+          <source>Final validation is not recorded for this run.</source>
+          <target state="translated">Final validation is not recorded for this run.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType QualityLbl</note>
         </trans-unit>
@@ -3316,8 +3316,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType WizardLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1006136770 - NamedType 2052790577" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Batches confirmed; overall quality pending</source>
-          <target state="translated">Batches confirmed; overall quality pending</target>
+          <source>Batches confirmed</source>
+          <target state="translated">Batches confirmed</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Monitoring Mgt - NamedType BatchCompleteLbl</note>
         </trans-unit>
@@ -3669,12 +3669,6 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Overview - NamedType NotPreparedLbl</note>
         </trans-unit>
-        <trans-unit id="Page 360117122 - NamedType 3855936753" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Pending global validation (SF-016)</source>
-          <target state="translated">Pending global validation (SF-016)</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Overview - NamedType QualityLbl</note>
-        </trans-unit>
         <trans-unit id="Page 360117122 - Control 3226428128 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Persisted Batches</source>
           <target state="translated">Persisted Batches</target>
@@ -3760,8 +3754,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Overview - Control PauseRequested - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 360117122 - Control 1483341903 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Shows that global business validation is not implemented yet. Batch completion is not overall quality approval.</source>
-          <target state="translated">Shows that global business validation is not implemented yet. Batch completion is not overall quality approval.</target>
+          <source>Shows the recorded result of final validation. Drill down to see individual checks.</source>
+          <target state="translated">Shows the recorded result of final validation. Drill down to see individual checks.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Overview - Control Quality - Property ToolTip</note>
         </trans-unit>

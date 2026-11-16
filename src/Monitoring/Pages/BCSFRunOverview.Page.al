@@ -2,6 +2,7 @@ namespace BCScenarioFactory.Monitoring;
 
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.ScenarioManagement;
+using BCScenarioFactory.Validation;
 using System.Threading;
 
 page 90355 "BCSF Run Overview"
@@ -23,10 +24,17 @@ page 90355 "BCSF Run Overview"
           Caption = 'Current Execution Status';
           ToolTip = 'Shows persisted execution status. An unprepared run has no execution state.';
         }
-        field(Quality; QualityLbl)
+        field(Quality; QualityText)
         {
           Caption = 'Overall Quality';
-          ToolTip = 'Shows that global business validation is not implemented yet. Batch completion is not overall quality approval.';
+          ToolTip = 'Shows the recorded result of final validation. Drill down to see individual checks.';
+          trigger OnDrillDown()
+          var
+            Result: Record "BCSF Validation Result";
+          begin
+            Result.SetRange("Run Id", Rec."Run Id");
+            Page.RunModal(Page::"BCSF Validation Results", Result);
+          end;
         }
         field(PauseRequested; PauseRequested)
         {
@@ -110,7 +118,9 @@ page 90355 "BCSF Run Overview"
     Job: Record "Job Queue Entry";
     Entry: Record "BCSF Run Event";
     EndTime: DateTime;
+    Validation: Codeunit "BCSF Validation Manager";
   begin
+    QualityText := Validation.Describe(Rec."Run Id");
     Clear(EarliestStart);
     Clear(StartedAt);
     Clear(FinishedAt);
@@ -191,7 +201,7 @@ page 90355 "BCSF Run Overview"
     Elapsed: Duration;
     PauseRequested: Boolean;
     CancelRequested: Boolean;
-    QualityLbl: Label 'Pending global validation (SF-016)';
+    QualityText: Text;
     NotPreparedLbl: Label 'Not prepared';
     NoJobLbl: Label 'No current queue reference';
     NoQueueReadLbl: Label 'Queue read permission missing';

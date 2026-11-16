@@ -78,6 +78,7 @@ codeunit 90302 "BCSF Queue Dispatcher"
     Enqueue: Codeunit "Job Queue - Enqueue";
     Writer: Codeunit "BCSF Plan Writer";
     Recovery: Codeunit "BCSF Batch Recovery";
+    Quality: Codeunit "BCSF Run Quality";
   begin
     if Recovery.ApplyBoundary(Execution, CreateGuid()) then
       exit;
@@ -88,9 +89,7 @@ codeunit 90302 "BCSF Queue Dispatcher"
     if not Batch.FindFirst() then begin
       if Execution."Completed Batches" <> Execution."Total Batches" then
         Error(IncompleteErr);
-      Execution.Status := "BCSF Run Status"::CompletedWithWarnings;
-      Execution."Finished At" := CurrentDateTime();
-      Clear(Execution."Job Queue Entry Id");
+      Quality.FinalizeRun(Execution);
       exit;
     end;
     if not IsNullGuid(Batch."Job Queue Entry Id") then

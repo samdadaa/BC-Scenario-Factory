@@ -10,6 +10,7 @@ using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.Monitoring;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.SetupManager;
+using BCScenarioFactory.Validation;
 using System.Environment.Configuration;
 
 permissionset 90105 "BCSF ADMIN"
@@ -111,5 +112,15 @@ permissionset 90105 "BCSF ADMIN"
     page "BCSF Dashboard Host" = X,
     page "BCSF Factory Role Center" = X,
     codeunit "BCSF Dashboard Data" = X,
-    codeunit "BCSF Dashboard Commands" = X;
+    codeunit "BCSF Dashboard Commands" = X,
+    tabledata "BCSF Validation Result" = Ri,
+    table "BCSF Validation Result" = X,
+    page "BCSF Validation Results" = X,
+    codeunit "BCSF Validation Manager" = X,
+    codeunit "BCSF Run Quality" = X,
+    tabledata "BCSF Finance Package" = Ri,
+    table "BCSF Finance Package" = X,
+    codeunit "BCSF Finance Package Mgt" = X,
+    page "BCSF Finance Selection" = X,
+    page "BCSF Finance Preview" = X;
 }

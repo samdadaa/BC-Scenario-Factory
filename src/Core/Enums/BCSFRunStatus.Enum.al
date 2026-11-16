@@ -18,4 +18,5 @@ enum 90102 "BCSF Run Status"
   value(10; CompletedWithWarnings) { Caption = 'Completed with Warnings'; }
   value(11; Failed) { Caption = 'Failed'; }
   value(12; Cancelled) { Caption = 'Cancelled'; }
+  value(13; ValidationFailed) { Caption = 'Validation Failed'; }
 }

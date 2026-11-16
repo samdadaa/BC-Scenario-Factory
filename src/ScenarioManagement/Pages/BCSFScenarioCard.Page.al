@@ -38,6 +38,7 @@ page 90131 "BCSF Scenario Card"
           end;
         }
         field("Batch Size"; Rec."Batch Size") { }
+        field("Finance Mode"; Rec."Finance Mode") { }
       }
       group(LanguagePreview)
       {
