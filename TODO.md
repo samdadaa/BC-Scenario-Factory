@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 15.11.2026 – SF-011/SF-012 mit unveränderlicher Herkunftsregistry und serieller Queue-Grundlage implementiert, Zur Prüfung. 81 AL-Objekte lokal mit CodeCop/UICop gebaut; 606 Texteinheiten übersetzt. Keine BC-Laufzeittests; echte Generator-/Setupbindungen und SF-001-Restfragen bleiben offen.
+**Stand:** 16.11.2026 – SF-013 mit technischen Checkpoints, begrenztem Vor-Claim-Retry und Pause/Resume/Abbruch implementiert, Zur Prüfung. 85 AL-Objekte lokal mit CodeCop/UICop gebaut; 665 Texteinheiten übersetzt. Echte BC-Unterbrechungs-/Posting-/Parallelitätstests und konkrete Generator-/Setupbindungen weiterhin offen.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -29,7 +29,7 @@
 | [SF-010](#sf-010) | 0 / Fundierung | P0 | Synthetischer Realismus und Seed-Engine | Zur Prüfung |
 | [SF-011](#sf-011) | 0 / Fundierung | P0 | Erzeugte Datensätze und Belegketten nachverfolgen | Zur Prüfung |
 | [SF-012](#sf-012) | 0 / Fundierung | P0 | Job-Queue Dispatcher, Run-/Batch-Tabellen | Zur Prüfung |
-| [SF-013](#sf-013) | 0 / Fundierung | P0 | Batch-Checkpoint, Retry, Pause/Resume, Cancellation | Offen |
+| [SF-013](#sf-013) | 0 / Fundierung | P0 | Batch-Checkpoint, Retry, Pause/Resume, Cancellation | Zur Prüfung |
 | [SF-014](#sf-014) | 0 / Fundierung | P0 | Monitoring-Datenmodell und Dashboard | Offen |
 | [SF-015](#sf-015) | 0 / Fundierung | P0 | Wizard für Branche, Module, Umfang und Planung | Offen |
 | [SF-016](#sf-016) | 0 / Fundierung | P0 | Validierungsframework und Abschlussstatus | Offen |
@@ -544,7 +544,7 @@
 
 ### SF-013 — Batch-Checkpoint, Retry, Pause/Resume, Cancellation
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-012  
 **Verantwortung / betroffene Module:** BackgroundProcessing  
@@ -555,12 +555,12 @@
 **Soll-Verhalten / technischer Arbeitsauftrag:** Unterbrechungen während Datenerstellung/Posting simulieren, keinen blinden Wiederholungsversuch nach unklarem Commit.
 
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Fehlgeschlagene Arbeit kann nach Sicherungsprüfung fortgesetzt werden ohne doppelte Datensätze/Postings.
@@ -571,6 +571,10 @@
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
 
 **Risiken / Entscheidungen:** Zielversions- und Lokalisierungsabhängigkeit, Rechte, Datenvolumen und eventuell unklarer Commit-/Retry-Zustand nachprüfen. Bei Blocker konkrete Frage stellen und `Blockiert` statt mutmaßlich erfolgreich setzen.
+
+**Umsetzung 16.11.2026:** Neue Objekte in `src/BackgroundProcessing/`: `BCSFBatchRecovery.Codeunit.al` (90304), `BCSFRunControl.Table.al` (90313), `BCSFBatchCheckpoint.Table.al` (90314), `BCSFRecoveryRules.Codeunit.al` (90315). Bestehende Batch-/Zustands-/Worker-/Runner-/Dispatcher-/UI-Verträge, Core-Statusgraph und deklarative Rechte angepasst. Technische immutable Checkpoints, getrennte dauerhafte Stopanforderung, sichere Paketgrenzen, drei Einplanungen insgesamt, Retry nur für nie übernommene Fehler ohne Ergebnisse. Reconciliation führt keine Erzeugung/Buchung aus; ohne passenden Checkpoint oder nachweislich beendete eindeutige Worker-Sitzung bleibt NeedsReview bestehen. Cancel ist nicht resumierbar; bestätigte Ergebnisse bleiben erhalten.
+
+**Tests / Grenzen:** Vollständiger Cloud-Build aller 85 AL-Dateien mit CodeCop/UICop gegen lokale BC-28.5-/DE-/Runtime-17-Symbole bestanden, 665 Übersetzungseinheiten vollständig, Inventar-/Symbol-/Scope-/Guard-/Paketprüfungen ausgeführt. XERJ bcsf-docs für Ticket-/Vertragssuche genutzt, AL-Definition dort nicht verfügbar und lokal geprüft. Keine echte Unterbrechungs-/Posting-/Queue-/Parallelitätssimulation, keine neuen Testobjekte, kein Deployment; entsprechende Schritte/Abnahme bleiben offen. Bestehende fremde TODO-Whitespace-Zeilen nicht geändert. [RECOVERY.md](docs/RECOVERY.md), [Testnachweise und offene Fault-Matrix](docs/TESTS.md#sf-013--lokaler-prüfnachweis-16112026).
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
@@ -678,35 +682,39 @@
 
 ---
 
-### SF-017 — Finanz-Grundsetup für Handelsprofil
+### ### SF-017 — Finanzsetup und auswertbare Testkontenpläne für SKR03 und SKR04
 
 **Status:** Offen  
 **Priorität:** P1  
-**Abhängigkeiten:** SF-009,SF-010  
-**Verantwortung / betroffene Module:** Finance  
-**Verantwortliche Person:** Zu prüfen
+**Phase:** 1 / MVP  
+**Abhängigkeiten:** SF-009, SF-010  
+**Betroffene Module:** Finance, SetupManager, ScenarioManagement
 
-**Ausgangslage / Problem:** Zulässige Konten/Buchungsgruppen/MwSt./No.Series/Dimensionen/Zahlungsbedingungen in Ziel-Lokalisierung prüfen/ergänzen.
+**Ziel**  
+Die BC Scenario Factory soll eine über den BC-Standard angelegte Sandbox-Testfirma mit einem schlanken **SKR03- oder SKR04-basierten Kontenplan** und der dazu passenden Buchungseinrichtung ausstatten. Der Kontenplan soll nicht nur Einkauf und Verkauf ermöglichen, sondern auch für Sachkontenbuchungen, Funktionstests, Schulungen und Finanzberichte in BC nutzbar sein. Der Nutzer soll dafür weder Sachkonten noch Buchungsgruppen einzeln anlegen müssen.
 
-**Soll-Verhalten / technischer Arbeitsauftrag:** Preflight-Regeln statt pauschaler Einrichtung; konkrete Standard-Objekte versionsgerecht identifizieren.
+**Umfang**
 
-**Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
-- [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [ ] Drei Optionen anbieten: **vorhandene BC-Einrichtung verwenden**, **SKR03-Testkontenplan einrichten** oder **SKR04-Testkontenplan einrichten**. Im ersten Modus wird die vorhandene Einrichtung nur geprüft und verwendet.
+- [ ] Je Kontenrahmen ein eigenes, versioniertes Einrichtungspaket bereitstellen. Bezugsjahr, Paketversion, fachliche Quelle und unterstützten Umfang dokumentieren. Die Pakete als schlanke **Testkontenpläne** kennzeichnen, nicht als vollständige DATEV-Kontenrahmen. Führende Nullen in Kontonummern erhalten.
+- [ ] Die Kontenpläne fachlich gliedern. Für den MVP mindestens Bank, Forderungen, Verbindlichkeiten, Bestand, Vorsteuer, Umsatzsteuer, Eigenkapital, Erlöse, Wareneinsatz und ausgewählte Betriebskosten abdecken. Auch Konten für manuelle Buchblatttests vorsehen, die nicht über Einkaufs- oder Verkaufsbelege bebucht werden.
+- [ ] Sachkonten den passenden Bilanz- und GuV-Kategorien zuordnen. Je Paket eine Bilanz- und eine GuV-Auswertung mit den Standard-Finanzberichten in BC bereitstellen. Die Berichte sollen dieselbe fachliche Auswertung ermöglichen, auch wenn sich die Kontonummern je Rahmen unterscheiden.
+- [ ] Die für das erste Branchenprofil nötigen Debitoren-, Kreditoren-, Lager-, allgemeinen und MwSt.-Buchungsgruppen samt benötigter Buchungsmatrizen und Lagerbuchungseinrichtung passend zum Kontenplan einrichten. Vorhandene Nummernserien, Zahlungsbedingungen und sonstige BC-Grundeinrichtung verwenden, sofern sie passen. Fehlende Voraussetzungen konkret melden.
+- [ ] Debitoren, Kreditoren, Artikel und Belege bleiben BC-Standarddatensätze. Generatoren verwenden die passenden Buchungsgruppen und übernehmen **keine fest codierten SKR-Kontonummern**. Die Zuordnung von Kontenrollen wie Erlös oder Forderung zu konkreten Sachkonten liegt im jeweiligen Finanzpaket.
+- [ ] Vor dem Anwenden in einer Vorschau zeigen, was angelegt oder wiederverwendet wird und welche Konflikte die Einrichtung blockieren. **SF-009 bleibt rein lesend.** Das Anwenden ist eine separate, ausdrückliche Aktion in der freigegebenen Sandbox-Testfirma. Bestehende Konten und Buchungszuordnungen nicht still überschreiben.
+- [ ] Auswahl, Bezugsjahr und Version des angewendeten Finanzpakets im Lauf-Snapshot festhalten. Beim erneuten Anwenden desselben Pakets dürfen keine doppelten Konten, Buchungsgruppen oder Berichtsdefinitionen entstehen.
 
-**Akzeptanzkriterien:**
-- [ ] Finance-Voraussetzungen für Debitoren/Kreditoren/Artikel/Posting validiert; bestehende Werte nicht überschrieben.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
-- [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
+**Akzeptanzkriterien**
 
-**Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
+- [ ] SKR03 und SKR04 lassen sich jeweils in einer separaten, frisch angelegten Sandbox-Testfirma anwenden. Der zweite Aufruf desselben Pakets erzeugt keine Duplikate. Der Modus „Vorhandene BC-Einrichtung verwenden“ ändert keine vorhandenen Einträge.
+- [ ] Je Kontenrahmen sind ein Einkaufsfall, ein Verkaufsfall und eine davon unabhängige Sachkontenbuchung über ein BC-Standardbuchblatt nachgewiesen, etwa eine Betriebsausgabe. Die resultierenden Sachposten landen auf den für das jeweilige Paket erwarteten Konten.
+- [ ] Die gebuchten Beispielwerte erscheinen in Bilanz und GuV in den erwarteten Gruppen. Erwartete Konten, Beträge und Summen sind dokumentiert und mit den Sachposten abgeglichen. Ein Bericht ohne gebuchte Werte gilt nicht als Nachweis.
+- [ ] Inkompatible Konten oder Buchungszuordnungen werden vor dem Anwenden angezeigt. Ein blockierender Konflikt führt nicht zu einem teilweise angewendeten Paket.
+- [ ] Für den Nachweis dürfen manuelle BC-Standardbelege und Standardbuchblätter verwendet werden. **SF-018 bis SF-022 werden nicht vorgezogen.** Die späteren Generatoren sollen dasselbe Finanzsetup wiederverwenden.
+- [ ] Tatsächlich ausgeführte BC-Tests je Paket dokumentieren. Nicht ausgeführte Prüfungen offen ausweisen. Status erst nach menschlicher Abnahme auf `Erledigt` setzen.
 
-**Risiken / Entscheidungen:** Zielversions- und Lokalisierungsabhängigkeit, Rechte, Datenvolumen und eventuell unklarer Commit-/Retry-Zustand nachprüfen. Bei Blocker konkrete Frage stellen und `Blockiert` statt mutmaßlich erfolgreich setzen.
+**Nicht-Ziele**  
+Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DATEV-Export, keine Umstellung einer bereits bebuchten Firma auf einen anderen Kontenrahmen und keine direkten Inserts in gebuchte BC-Posten. Keine Umsetzung von Folgetickets im Rahmen von SF-017.
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 

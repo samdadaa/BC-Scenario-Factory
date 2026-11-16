@@ -35,7 +35,7 @@ codeunit 90107 "BCSF Run State Mgt"
       "BCSF Run Status"::PreflightFailed:
         exit(NewStatus in [CurrentStatus, "BCSF Run Status"::Draft, "BCSF Run Status"::Preflight, "BCSF Run Status"::Cancelled]);
       "BCSF Run Status"::Ready:
-        exit(NewStatus in [CurrentStatus, "BCSF Run Status"::Preflight, "BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled, "BCSF Run Status"::Cancelled]);
+        exit(NewStatus in [CurrentStatus, "BCSF Run Status"::Paused, "BCSF Run Status"::Preflight, "BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled, "BCSF Run Status"::Cancelled]);
       "BCSF Run Status"::Queued,
       "BCSF Run Status"::Scheduled:
         exit(NewStatus in [CurrentStatus, "BCSF Run Status"::Running, "BCSF Run Status"::Paused, "BCSF Run Status"::Failed, "BCSF Run Status"::Cancelled]);
@@ -45,7 +45,7 @@ codeunit 90107 "BCSF Run State Mgt"
       "BCSF Run Status"::Failed:
         exit(NewStatus in [CurrentStatus, "BCSF Run Status"::ResumePending, "BCSF Run Status"::Cancelled]);
       "BCSF Run Status"::ResumePending:
-        exit(NewStatus in [CurrentStatus, "BCSF Run Status"::Preflight, "BCSF Run Status"::Failed, "BCSF Run Status"::Cancelled]);
+        exit(NewStatus in [CurrentStatus, "BCSF Run Status"::Preflight, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::Failed, "BCSF Run Status"::Cancelled]);
       "BCSF Run Status"::Completed,
       "BCSF Run Status"::CompletedWithWarnings,
       "BCSF Run Status"::Cancelled:

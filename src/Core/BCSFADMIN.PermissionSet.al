@@ -89,5 +89,11 @@ permissionset 90105 "BCSF ADMIN"
     codeunit "BCSF Queue Failure" = X,
     page "BCSF Execution List" = X,
     page "BCSF Batch List" = X,
-    page "BCSF Schedule Request" = X;
+    page "BCSF Schedule Request" = X,
+    tabledata "BCSF Run Control" = Rim,
+    tabledata "BCSF Batch Checkpoint" = Ri,
+    table "BCSF Run Control" = X,
+    table "BCSF Batch Checkpoint" = X,
+    codeunit "BCSF Batch Recovery" = X,
+    codeunit "BCSF Recovery Rules" = X;
 }

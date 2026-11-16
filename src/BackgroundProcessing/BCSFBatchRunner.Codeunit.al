@@ -26,6 +26,7 @@ codeunit 90307 "BCSF Batch Runner"
     Contract: Codeunit "BCSF Contract JSON";
     Dispatcher: Codeunit "BCSF Queue Dispatcher";
     Rules: Codeunit "BCSF Execution Rules";
+    Recovery: Codeunit "BCSF Batch Recovery";
     Generator: Interface "BCSF Generator";
     Context: JsonObject;
     Target: JsonObject;
@@ -76,6 +77,7 @@ codeunit 90307 "BCSF Batch Runner"
     Generator.ValidateOutput(Contract.Clone(Context), Contract.Clone(Target), Contract.Clone(BatchJson), Contract.Clone(Result), Findings);
     if Findings.Count() <> 0 then
       Error(ResultErr);
+    Recovery.SaveCheckpoint(Batch, Result);
     Batch.Status := Batch.Status::Completed;
     Batch."Finished At" := CurrentDateTime();
     Batch.Modify(true);

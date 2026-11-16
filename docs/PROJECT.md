@@ -94,3 +94,7 @@ Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Z
 ## Aktueller Bestand SF-011/SF-012 – 15.11.2026
 
 81 AL-Objekte in zehn Modulen, davon 80 numerische IDs und ein Interface: BackgroundProcessing 12, DataGeneration jetzt 6, Lifecycle jetzt 4; alle anderen Modulzahlen wie bei SF-009/SF-010. 14 Module weiterhin ohne AL-Code. Herkunftsregistry, getrennte Ausführungs-/Batchpersistenz und serielle Standard-Job-Queue-Grundlage vorhanden. Keine echten Fachgeneratoren, kein Retry/Resume und kein bestätigter End-to-End-Lauf. Header und Snapshot bleiben immutable. Manifest/Launch unverändert, Build gegen lokale BC-28.5-/DE-/Runtime-17-Symbole. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md), Status **Zur Prüfung**.
+
+## Aktueller Bestand SF-013 – 16.11.2026
+
+85 AL-Objekte (84 numerische IDs und ein Interface) in zehn Modulen; BackgroundProcessing nun 16, übrige Bestände unverändert, 14 Module ohne AL-Code. Neue Objekte 90304 und 90313–90315 für begrenzte Recovery, Steuerung und technische Checkpoints. Manifest/Launch/Runtime/Dependencies unverändert. Checkpoints enthalten keine fachlichen Nutzdaten; keine echte Generator-/Setupbindung oder BC-Laufzeitabnahme ergänzt. [RECOVERY.md](RECOVERY.md), **Zur Prüfung**.

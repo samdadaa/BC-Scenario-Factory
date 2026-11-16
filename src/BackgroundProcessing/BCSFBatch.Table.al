@@ -73,6 +73,36 @@ table 90300 "BCSF Batch"
       Caption = 'Created Records';
       ToolTip = 'Specifies the confirmed number of provenance artifacts.';
     }
+    field(14; "Schedule Attempts"; Integer)
+    {
+      Caption = 'Schedule Attempts';
+      ToolTip = 'Specifies the number of job schedules, limited to three including retries.';
+      DataClassification = SystemMetadata;
+    }
+    field(15; "Previous Job Id"; Guid)
+    {
+      Caption = 'Previous Job Id';
+      ToolTip = 'Specifies the last retired job identity; standard job logs retain earlier attempts.';
+      DataClassification = SystemMetadata;
+    }
+    field(16; "Worker Session Id"; Integer)
+    {
+      Caption = 'Worker Session Id';
+      ToolTip = 'Specifies the technical session that durably claimed this batch.';
+      DataClassification = SystemMetadata;
+    }
+    field(17; "Worker Server Id"; Integer)
+    {
+      Caption = 'Worker Server Id';
+      ToolTip = 'Specifies the service instance of the claiming worker.';
+      DataClassification = SystemMetadata;
+    }
+    field(18; "Worker Session Guid"; Guid)
+    {
+      Caption = 'Worker Session Guid';
+      ToolTip = 'Specifies the unique worker session identity and prevents session number reuse from authorizing recovery.';
+      DataClassification = SystemMetadata;
+    }
   }
   keys
   {

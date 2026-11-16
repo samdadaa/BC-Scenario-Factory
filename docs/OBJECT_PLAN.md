@@ -225,3 +225,15 @@ Geplante Objekte 90251/90252 und 90300–90303 sind nun implementiert. 90304 ble
 | BackgroundProcessing | 90312 | PageExtension | `BCSF Run Queue` | `src/BackgroundProcessing/BCSFRunQueue.PageExt.al` | SF-012 |
 
 81 implementierte Objekte einschließlich Interface ohne numerische ID. Lifecycle darf für den Pflichtsubscriber zusätzlich DataGeneration referenzieren. BackgroundProcessing nutzt seine bereits vorgesehenen Abhängigkeiten auf Core, ScenarioManagement, ModuleRegistry, DependencyManager, DataGeneration und Lifecycle; keine Rückabhängigkeit des Snapshotmoduls. Deklaratives Core-Permission-Set weiterhin Ausnahme. Header/Steps/Snapshots unverändert immutable, Ausführungsstatus und Batches in BackgroundProcessing. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).
+
+## Umsetzung SF-013 – 16.11.2026
+
+Reservierte Codeunit 90304 `BCSF Batch Recovery` unter `src/BackgroundProcessing/BCSFBatchRecovery.Codeunit.al` implementiert. Drei weitere zuvor freie Werte im BackgroundProcessing-Block:
+
+| Modul | Plan-ID | Typ | Objektname | Dateipfad | Ticket |
+| --- | --- | --- | --- | --- | --- |
+| BackgroundProcessing | 90313 | Table | `BCSF Run Control` | `src/BackgroundProcessing/BCSFRunControl.Table.al` | SF-013 |
+| BackgroundProcessing | 90314 | Table | `BCSF Batch Checkpoint` | `src/BackgroundProcessing/BCSFBatchCheckpoint.Table.al` | SF-013 |
+| BackgroundProcessing | 90315 | Codeunit | `BCSF Recovery Rules` | `src/BackgroundProcessing/BCSFRecoveryRules.Codeunit.al` | SF-013 |
+
+85 Objekte einschließlich Interface, 84 numerische IDs. Keine neue Modulrichtung oder App-Abhängigkeit; Core enthält nur die ergänzten erlaubten Statusübergänge und die deklarative Berechtigungserweiterung. Checkpoint-/Control-Felder und neue technische Batchfelder im [Recovery-Vertrag](RECOVERY.md). Keine neuen Testobjekte.

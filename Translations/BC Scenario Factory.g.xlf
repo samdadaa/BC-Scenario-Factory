@@ -88,6 +88,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Node Code - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 589102725 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the last retired job identity; standard job logs retain earlier attempts.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Previous Job Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 589102725 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Previous Job Id</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Previous Job Id - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 2357143668 - Field 3197012497 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the number of confirmed logical units.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -107,6 +117,16 @@
           <source>Run Id</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Run Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 4243408957 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the number of job schedules, limited to three including retries.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Schedule Attempts - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 4243408957 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Schedule Attempts</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Schedule Attempts - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 2357143668 - Field 3014885516 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the serial order across all batches of the run.</source>
@@ -137,6 +157,136 @@
           <source>Status</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Status - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 2026880346 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the service instance of the claiming worker.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Worker Server Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 2026880346 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Worker Server Id</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Worker Server Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 3397476953 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the unique worker session identity and prevents session number reuse from authorizing recovery.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Worker Session Guid - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 3397476953 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Worker Session Guid</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Worker Session Guid - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 1364147695 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the technical session that durably claimed this batch.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Worker Session Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 1364147695 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Worker Session Id</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Worker Session Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Confirmed Batch Checkpoint</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Field 274452355 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the stable batch identity.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Field Batch Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Field 274452355 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Batch Id</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Field Batch Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Field 3682785842 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies when output and provenance were validated in the batch transaction.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Field Confirmed At - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Field 3682785842 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Confirmed At</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Field Confirmed At - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Field 1883447081 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Contains only validated technical result identifiers, counters and language, without business payload.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Field Result Envelope - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Field 1883447081 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Result Envelope</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Field Result Envelope - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Field 3633922808 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the owning captured run.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Field Run Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Field 3633922808 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Run Id</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Field Run Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Field 3911796413 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the immutable result envelope version.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Field Schema Version - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1424257286 - Field 3911796413 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Schema Version</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Field Schema Version - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 365815022 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Run Control Requests</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Control - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 365815022 - Field 2643987298 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies an irreversible request to cancel unstarted work without undoing results.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Control - Field Cancel Requested - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 365815022 - Field 2643987298 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cancel Requested</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Control - Field Cancel Requested - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 365815022 - Field 3925441982 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a durable pause request to stop before the next unclaimed batch.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Control - Field Pause Requested - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 365815022 - Field 3925441982 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Pause Requested</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Control - Field Pause Requested - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 365815022 - Field 280799871 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies when the latest control request was saved.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Control - Field Requested At - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 365815022 - Field 280799871 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Requested At</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Control - Field Requested At - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 365815022 - Field 3633922808 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the owning captured run.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Control - Field Run Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 365815022 - Field 3633922808 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Run Id</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Control - Field Run Id - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 779829649 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Run Execution</source>
@@ -233,6 +383,21 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Run Execution - Field Total Batches - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2211204045 - NamedType 3814383956" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The worker or scheduled task is still active, cannot be cancelled safely, or its inactivity cannot be verified with the current permissions.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Batch Recovery - NamedType BusyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2211204045 - NamedType 2836870124" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This batch has reached the limit of three job schedules. Resolve the cause and create a reviewed new scenario instead of bypassing the retry limit.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Batch Recovery - NamedType LimitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2211204045 - NamedType 690202865" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Recovery requires matching confirmed checkpoints or proof that a failed batch was never claimed. Uncertain work cannot be replayed; review the standard results and job history.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Batch Recovery - NamedType ReviewErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2685479300 - NamedType 2714761632" size-unit="char" translate="yes" xml:space="preserve">
           <source>The generator result is incomplete, inconsistent or already registered. Keep the batch blocked for review instead of retrying it.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -288,15 +453,65 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Queue Dispatcher - NamedType QueuePermissionErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3484784390 - NamedType 1381824369" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Control identities, cancellation requests and confirmed checkpoints cannot be removed or rewritten. Resume only through the guarded recovery actions.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Recovery Rules - NamedType ImmutableErr</note>
+        </trans-unit>
         <trans-unit id="Page 1271682438 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Scenario Factory Batches</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1271682438 - NamedType 1760969356" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Classify this interrupted claim for manual review after proving that its unique worker session has ended? No work will be repeated.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - NamedType InterruptedQst</note>
+        </trans-unit>
         <trans-unit id="Page 1271682438 - NamedType 105361738" size-unit="char" translate="yes" xml:space="preserve">
           <source>This standard job queue entry no longer exists. Review the batch and standard job queue log instead.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - NamedType MissingJobErr</note>
+        </trans-unit>
+        <trans-unit id="Page 1271682438 - NamedType 3780785214" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Revalidate the saved checkpoint and record existing results as complete without executing the generator again?</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - NamedType ReconcileCheckpointQst</note>
+        </trans-unit>
+        <trans-unit id="Page 1271682438 - NamedType 2948412290" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Retry this failed batch only if it was never claimed and all current safety checks pass?</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - NamedType RetryUnclaimedQst</note>
+        </trans-unit>
+        <trans-unit id="Page 1271682438 - Action 853712090 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Marks a running batch as uncertain only after verifying that its unique worker session has ended. Does not authorize retry.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - Action ClassifyInterrupted - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1271682438 - Action 853712090 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review Interrupted Claim</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - Action ClassifyInterrupted - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1271682438 - Action 3759872888 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Confirms an existing validated checkpoint after proving the previous worker is inactive. Never recreates or reposts uncertain work.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - Action ReconcileCheckpoint - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1271682438 - Action 3759872888 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reconcile Confirmed Checkpoint</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - Action ReconcileCheckpoint - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1271682438 - Action 3832682212 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Retries only a failed batch that was never claimed, after safety checks. At most three schedules are allowed.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - Action RetryUnclaimed - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1271682438 - Action 3832682212 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Retry Unclaimed Failure</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - Action RetryUnclaimed - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1271682438 - Action 1180516238 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Opens the standard queue entry if it still exists. Successful one-time jobs may already have been removed by BC.</source>
@@ -338,15 +553,60 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Schedule Request - Control EarliestStart - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1160320011 - NamedType 2241423982" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 651847768">
+          <source>Cancel all unstarted work? Existing results will remain and this cancellation cannot be resumed.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - NamedType CancelExecutionQst</note>
+        </trans-unit>
         <trans-unit id="Page 1160320011 - NamedType 2516069974" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 651847768">
           <source>Not prepared</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - NamedType NotPreparedLbl</note>
         </trans-unit>
+        <trans-unit id="Page 1160320011 - NamedType 205772098" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 651847768">
+          <source>Pause this execution before its next unclaimed batch?</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - NamedType PauseExecutionQst</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - NamedType 3129230615" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 651847768">
+          <source>Resume verified pending work after checking current permissions, prerequisites and confirmed checkpoints?</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - NamedType ResumeExecutionQst</note>
+        </trans-unit>
         <trans-unit id="Page 1160320011 - NamedType 701511565" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 651847768">
           <source>Schedule this prepared execution in the approved sandbox? It will run in the background and may create business data. Posting remains blocked.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - NamedType ScheduleQst</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 1946140285 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Applies saved pause or cancellation requests when no batch is actively running. Does not terminate a worker.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Action ApplyControl - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 1946140285 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Apply Pending Requests</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Action ApplyControl - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 3812359560 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Cancels only unstarted work at a safe boundary. Existing records, postings and uncertain results are retained.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Action CancelExecution - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 3812359560 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Request Cancellation</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Action CancelExecution - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 174051620 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Saves a pause request. A running batch completes before processing stops at a safe boundary.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Action PauseExecution - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 174051620 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Request Pause</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Action PauseExecution - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1160320011 - Action 3108037285 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
           <source>Rechecks the saved plan and all start gates, then atomically saves a serial batch plan. Blockers prevent preparation.</source>
@@ -357,6 +617,16 @@
           <source>Prepare Execution Batches</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Action PrepareBatches - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 2119160373 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Revalidates completed checkpoints and schedules only pending work. Uncertain batches and exhausted retry limits remain blocked.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Action ResumeExecution - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 2119160373 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Resume from Checkpoints</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Action ResumeExecution - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1160320011 - Action 4024223441 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
           <source>Requests an earliest start for prepared work. Rechecks authorization and schedules one background batch at a time with automatic retry disabled.</source>
@@ -393,6 +663,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control ExecutionOverview - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 2279996793 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Shows an irreversible cancellation request. Existing and uncertain results remain available for review.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control CancelRequest - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 2279996793 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Cancel Requested</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control CancelRequest - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1160320011 - Control 2223978306 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
           <source>Shows the persisted execution state. Completed with Warnings means batch execution ended; overall quality validation remains separate.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -403,6 +683,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control ExecutionStatus - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1800966869 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Shows a saved pause request; current execution status changes only at a safe boundary.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control PauseRequest - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1800966869 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Pause Requested</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control PauseRequest - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1160320011 - Change 513339096 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
           <source>Shows the immutable initial status. The current processing status is shown separately under Execution.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -412,6 +702,11 @@
           <source>Captured Initial Status</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Change Status - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 993706416 - EnumValue 4069904181 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cancelled</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Batch Status - EnumValue Cancelled - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 993706416 - EnumValue 3665605423 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Completed</source>

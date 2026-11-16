@@ -1,6 +1,6 @@
 # BC Scenario Factory
 
-**Status: Grundlagen, Szenarien, Planung, Setupprüfung, Seed-Engine, Herkunftsregistry und Queue-Grundlage implementiert (SF-003–SF-012), zur Prüfung; schreibende Fachgeneratoren, Recovery und End-to-End-Abnahme weiterhin ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
+**Status: Grundlagen, Szenarien, Planung, Setupprüfung, Seed-Engine, Herkunftsregistry und Queue-Grundlage implementiert (SF-003–SF-013) einschließlich begrenzter Wiederaufnahme implementiert, zur Prüfung; schreibende Fachgeneratoren und End-to-End-Abnahme weiterhin ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
 
 ## Zielgruppen und Nutzen
 
@@ -80,3 +80,7 @@ Auf der Laufkarte stehen eine lesende Einrichtungsvorprüfung mit Maßnahmenplan
 ## Herkunft und Queue-Grundlage (SF-011/SF-012)
 
 Unveränderliche Herkunftseinträge verbinden logische Einheiten und Belegketten mit tatsächlichen SystemIds. Laufkarte und persistente Listen zeigen einen separaten Ausführungsstatus, Batches und Ergebnisse. Dispatcher und begrenzter Standard-Job-Queue-Worker sind implementiert; vorhandene Generator-/Setupblocker verhindern weiterhin reale Starts. Keine automatische Wiederholung unsicherer Arbeit. Vertrag, Bedienung und Grenzen: [EXECUTION_REGISTRY.md](docs/EXECUTION_REGISTRY.md). **Zur Prüfung**, keine BC-Laufzeitabnahme.
+
+## Checkpoints und Wiederaufnahme (SF-013)
+
+Pausen-/Abbruchanforderungen wirken an sicheren Paketgrenzen. Bestätigte technische Checkpoints sichern vorhandene Ergebnisse. Nur nie übernommene Fehlerpakete dürfen nach erneuten Prüfungen begrenzt wiederholt werden; unklare Arbeit bleibt ohne passenden Checkpoint gesperrt. Steueraktionen auf der Laufkarte und in der Paketliste. [RECOVERY.md](docs/RECOVERY.md), **Zur Prüfung**; Unterbrechungs-/Queue-Laufzeittests offen.

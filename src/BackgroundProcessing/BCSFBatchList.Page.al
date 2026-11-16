@@ -28,6 +28,8 @@ page 90311 "BCSF Batch List"
         field("Processed Units"; Rec."Processed Units") { ApplicationArea = All; }
         field("Created Records"; Rec."Created Records") { ApplicationArea = All; }
         field("Job Queue Entry Id"; Rec."Job Queue Entry Id") { ApplicationArea = All; }
+        field("Schedule Attempts"; Rec."Schedule Attempts") { ApplicationArea = All; }
+        field("Previous Job Id"; Rec."Previous Job Id") { ApplicationArea = All; }
         field("Started At"; Rec."Started At") { ApplicationArea = All; }
         field("Finished At"; Rec."Finished At") { ApplicationArea = All; }
       }
@@ -37,6 +39,54 @@ page 90311 "BCSF Batch List"
   {
     area(Processing)
     {
+      action(ClassifyInterrupted)
+      {
+        ApplicationArea = All;
+        Caption = 'Review Interrupted Claim';
+        ToolTip = 'Marks a running batch as uncertain only after verifying that its unique worker session has ended. Does not authorize retry.';
+        Image = Check;
+        trigger OnAction()
+        var
+          Recovery: Codeunit "BCSF Batch Recovery";
+        begin
+          if not Confirm(InterruptedQst, false) then
+            exit;
+          Recovery.ClassifyInterrupted(Rec."Batch Id");
+          CurrPage.Update(false);
+        end;
+      }
+      action(RetryUnclaimed)
+      {
+        ApplicationArea = All;
+        Caption = 'Retry Unclaimed Failure';
+        ToolTip = 'Retries only a failed batch that was never claimed, after safety checks. At most three schedules are allowed.';
+        Image = Check;
+        trigger OnAction()
+        var
+          Recovery: Codeunit "BCSF Batch Recovery";
+        begin
+          if not Confirm(RetryUnclaimedQst, false) then
+            exit;
+          Recovery.RetryUnclaimed(Rec."Batch Id");
+          CurrPage.Update(false);
+        end;
+      }
+      action(ReconcileCheckpoint)
+      {
+        ApplicationArea = All;
+        Caption = 'Reconcile Confirmed Checkpoint';
+        ToolTip = 'Confirms an existing validated checkpoint after proving the previous worker is inactive. Never recreates or reposts uncertain work.';
+        Image = Check;
+        trigger OnAction()
+        var
+          Recovery: Codeunit "BCSF Batch Recovery";
+        begin
+          if not Confirm(ReconcileCheckpointQst, false) then
+            exit;
+          Recovery.Reconcile(Rec."Batch Id");
+          CurrPage.Update(false);
+        end;
+      }
       action(ViewJob)
       {
         ApplicationArea = All;
@@ -56,5 +106,8 @@ page 90311 "BCSF Batch List"
     }
   }
   var
+    RetryUnclaimedQst: Label 'Retry this failed batch only if it was never claimed and all current safety checks pass?';
+    ReconcileCheckpointQst: Label 'Revalidate the saved checkpoint and record existing results as complete without executing the generator again?';
+    InterruptedQst: Label 'Classify this interrupted claim for manual review after proving that its unique worker session has ended? No work will be repeated.';
     MissingJobErr: Label 'This standard job queue entry no longer exists. Review the batch and standard job queue log instead.';
 }

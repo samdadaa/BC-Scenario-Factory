@@ -65,3 +65,7 @@ Aktueller Projektbestand: keine echte Generatorbindung und keine konkrete extern
 81 AL-Dateien gegen lokale BC-28.5-/Runtime-17-Symbole kompiliert, CodeCop/UICop mit Warnungen als Fehlern. Übersetzungen vollständig in DE/AT/CH/LI/LU und en-US. Konkrete Nachweise, weitere lokale Checks und noch nicht ausgeführte BC-Fälle: [TESTS.md](TESTS.md).
 
 **Zu prüfen:** reale Sandbox-/Testfirma, effektive Standard-Jobrechte, Task Scheduler, parallele Sessions, SystemId-/Rename-/Löschfälle, Fehler zwischen Claim und Abschluss, Standard-Queue-Hooks in der Zielumgebung sowie konkrete Posting-/Output-Verknüpfung und Generatortransaktionen. Keine neue Test-App, kein Deployment und kein BC-Laufzeittest. SF-011/SF-012 bleiben **Zur Prüfung**.
+
+## Fortschreibung SF-013 – 16.11.2026
+
+Die oben als Folgearbeit bezeichnete begrenzte Recovery ist jetzt implementiert: zusätzliche technische Checkpoints, separate Steuerungsanforderungen, drei Einplanungen je Batch, nachgewiesene Sitzungsliveness und guarded Resume/Reconciliation. Frühere Aussagen „Recovery/90304 nicht implementiert“ beschreiben den historischen SF-012-Stand. Kein allgemeines Posting-Replay oder End-to-End-Laufnachweis. Maßgeblicher aktueller Vertrag: [RECOVERY.md](RECOVERY.md).

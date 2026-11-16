@@ -1,6 +1,6 @@
 # Modulindex – Zielarchitektur
 
-**Aktueller Bestand nach SF-011/SF-012:** 81 AL-Objekte in zehn Modulen, 14 Module ohne AL-Code. DataGeneration 6, BackgroundProcessing 12, Lifecycle 4; übrige Modulzahlen unverändert. Immutable Herkunftsregistry und serielle Queue-Grundlage zur Prüfung. Echte Fachgeneratoren, Recovery, globale Qualitätsprüfung und Laufzeitabnahme weiterhin ausstehend.
+**Aktueller Bestand nach SF-013:** 85 AL-Objekte in zehn Modulen, 14 Module ohne AL-Code. BackgroundProcessing 16; übrige Modulzahlen unverändert. Technische Checkpoints und begrenzte Retry-/Pause-/Resume-/Abbruchsteuerung zur Prüfung. Echte Fachgeneratoren, fachliche Reconciliation ohne Checkpoint und BC-Laufzeitabnahme weiterhin ausstehend.
 
 | Modul | Kategorie | Ziel | Status |
 | --- | --- | --- | --- |
@@ -12,7 +12,7 @@
 | [SetupManager](details/src/SetupManager.md) | Kern | `src/SetupManager/` | 4 AL-Objekte: temporärer Setup-Diff, Manager, Vorschau und Laufkarten-Erweiterung; zur Prüfung. |
 | [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | 6 AL-Objekte: Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. |
 | [ProcessEngine](details/src/ProcessEngine.md) | Kern | `src/ProcessEngine/` | Geplant, ohne Code |
-| [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 12 AL-Objekte: operative Ausführung, Batches, Dispatcher, Worker, Guards und UI; zur Prüfung. Recovery weiterhin geplant. |
+| [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 16 AL-Objekte: Ausführung, Queue und begrenzte Recovery mit Checkpoints/Steuerung; zur Prüfung. |
 | [Validation](details/src/Validation.md) | Kern | `src/Validation/` | Geplant, ohne Code |
 | [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | Geplant, ohne Code |
 | [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Teilweise implementiert, 4 AL-Objekte, Zur Prüfung. |
@@ -40,3 +40,5 @@ SF-007/SF-008: [Generator- und Planungsvertrag](../GENERATOR_PLANNING.md); alle 
 SF-009/SF-010: [Setup-/Seed-Vertrag](../SETUP_SEED.md); vollständige Objektzuordnung im [Objektplan](../OBJECT_PLAN.md).
 
 SF-011/SF-012: [Herkunft-/Queue-Vertrag](../EXECUTION_REGISTRY.md), [Objektplan](../OBJECT_PLAN.md).
+
+SF-013: [Recovery-Vertrag](../RECOVERY.md), [Prüfnachweise](../TESTS.md).

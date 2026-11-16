@@ -16,6 +16,20 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
       group(ExecutionOverview)
       {
         Caption = 'Execution';
+        field(PauseRequest; PauseRequestValue)
+        {
+          ApplicationArea = All;
+          Caption = 'Pause Requested';
+          ToolTip = 'Shows a saved pause request; current execution status changes only at a safe boundary.';
+          Editable = false;
+        }
+        field(CancelRequest; CancelRequestValue)
+        {
+          ApplicationArea = All;
+          Caption = 'Cancel Requested';
+          ToolTip = 'Shows an irreversible cancellation request. Existing and uncertain results remain available for review.';
+          Editable = false;
+        }
         field(ExecutionStatus; ExecutionStatus)
         {
           ApplicationArea = All;
@@ -30,6 +44,68 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
   {
     addlast(Processing)
     {
+      action(PauseExecution)
+      {
+        ApplicationArea = All;
+        Caption = 'Request Pause';
+        ToolTip = 'Saves a pause request. A running batch completes before processing stops at a safe boundary.';
+        Image = Action;
+        trigger OnAction()
+        var
+          Recovery: Codeunit "BCSF Batch Recovery";
+        begin
+          if not Confirm(PauseExecutionQst, false) then
+            exit;
+          Recovery.RequestStop(Rec."Run Id", false);
+          CurrPage.Update(false);
+        end;
+      }
+      action(CancelExecution)
+      {
+        ApplicationArea = All;
+        Caption = 'Request Cancellation';
+        ToolTip = 'Cancels only unstarted work at a safe boundary. Existing records, postings and uncertain results are retained.';
+        Image = Action;
+        trigger OnAction()
+        var
+          Recovery: Codeunit "BCSF Batch Recovery";
+        begin
+          if not Confirm(CancelExecutionQst, false) then
+            exit;
+          Recovery.RequestStop(Rec."Run Id", true);
+          CurrPage.Update(false);
+        end;
+      }
+      action(ApplyControl)
+      {
+        ApplicationArea = All;
+        Caption = 'Apply Pending Requests';
+        ToolTip = 'Applies saved pause or cancellation requests when no batch is actively running. Does not terminate a worker.';
+        Image = Action;
+        trigger OnAction()
+        var
+          Recovery: Codeunit "BCSF Batch Recovery";
+        begin
+          Recovery.ApplyRequests(Rec."Run Id");
+          CurrPage.Update(false);
+        end;
+      }
+      action(ResumeExecution)
+      {
+        ApplicationArea = All;
+        Caption = 'Resume from Checkpoints';
+        ToolTip = 'Revalidates completed checkpoints and schedules only pending work. Uncertain batches and exhausted retry limits remain blocked.';
+        Image = Action;
+        trigger OnAction()
+        var
+          Recovery: Codeunit "BCSF Batch Recovery";
+        begin
+          if not Confirm(ResumeExecutionQst, false) then
+            exit;
+          Recovery.ResumeRun(Rec."Run Id");
+          CurrPage.Update(false);
+        end;
+      }
       action(PrepareBatches)
       {
         ApplicationArea = All;
@@ -86,13 +162,25 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
   trigger OnAfterGetCurrRecord()
   var
     Execution: Record "BCSF Run Execution";
+    Control: Record "BCSF Run Control";
   begin
+    PauseRequestValue := false;
+    CancelRequestValue := false;
+    if Control.Get(Rec."Run Id") then begin
+      PauseRequestValue := Control."Pause Requested";
+      CancelRequestValue := Control."Cancel Requested";
+    end;
     ExecutionStatus := NotPreparedLbl;
     if Execution.Get(Rec."Run Id") then
       ExecutionStatus := Format(Execution.Status);
   end;
   var
     ExecutionStatus: Text;
+    PauseRequestValue: Boolean;
+    CancelRequestValue: Boolean;
+    PauseExecutionQst: Label 'Pause this execution before its next unclaimed batch?';
+    CancelExecutionQst: Label 'Cancel all unstarted work? Existing results will remain and this cancellation cannot be resumed.';
+    ResumeExecutionQst: Label 'Resume verified pending work after checking current permissions, prerequisites and confirmed checkpoints?';
     NotPreparedLbl: Label 'Not prepared';
     ScheduleQst: Label 'Schedule this prepared execution in the approved sandbox? It will run in the background and may create business data. Posting remains blocked.';
 }

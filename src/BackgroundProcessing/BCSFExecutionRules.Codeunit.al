@@ -90,8 +90,10 @@ codeunit 90306 "BCSF Execution Rules"
   local procedure ExecutionModify(var Rec: Record "BCSF Run Execution"; var xRec: Record "BCSF Run Execution"; RunTrigger: Boolean)
   var
     Batch: Record "BCSF Batch";
+    Control: Record "BCSF Run Control";
     Writer: Codeunit "BCSF Plan Writer";
     StateManagement: Codeunit "BCSF Run State Mgt";
+    Recovery: Codeunit "BCSF Batch Recovery";
     Mutable: List of [Integer];
     Valid: Boolean;
   begin
@@ -109,9 +111,13 @@ codeunit 90306 "BCSF Execution Rules"
     StateManagement.CheckTransition(xRec.Status, Rec.Status);
     case xRec.Status of
       "BCSF Run Status"::Preflight: Valid := Rec.Status = "BCSF Run Status"::Ready;
-      "BCSF Run Status"::Ready: Valid := Rec.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled];
-      "BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled: Valid := Rec.Status in ["BCSF Run Status"::Running, "BCSF Run Status"::Failed];
-      "BCSF Run Status"::Running: Valid := Rec.Status in ["BCSF Run Status"::Running, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::Failed];
+      "BCSF Run Status"::Ready: Valid := Rec.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled, "BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled];
+      "BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled: Valid := Rec.Status in ["BCSF Run Status"::Running, "BCSF Run Status"::Failed, "BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled];
+      "BCSF Run Status"::Running: Valid := Rec.Status in ["BCSF Run Status"::Running, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::Failed, "BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled];
+      "BCSF Run Status"::Paused: Valid := Rec.Status in ["BCSF Run Status"::ResumePending, "BCSF Run Status"::Cancelled];
+      "BCSF Run Status"::Failed: Valid := Rec.Status in ["BCSF Run Status"::Failed, "BCSF Run Status"::ResumePending, "BCSF Run Status"::Cancelled];
+      "BCSF Run Status"::ResumePending: Valid := Rec.Status in ["BCSF Run Status"::Preflight, "BCSF Run Status"::CompletedWithWarnings];
+      "BCSF Run Status"::Cancelled: Valid := Rec.Status = "BCSF Run Status"::Cancelled;
     end;
     if not Valid then
       Error(StateErr);
@@ -124,7 +130,6 @@ codeunit 90306 "BCSF Execution Rules"
     if Rec.Status = "BCSF Run Status"::Ready then begin
       Writer.CheckExecution(Rec."Run Id");
       CheckPlanCoverage(Rec."Run Id");
-      Rec.TestField("Completed Batches", 0);
     end;
     if xRec.Status <> "BCSF Run Status"::Ready then
       Rec.TestField("Earliest Start", xRec."Earliest Start");
@@ -132,13 +137,30 @@ codeunit 90306 "BCSF Execution Rules"
       Rec.TestField("Started At", xRec."Started At");
     if not (Rec.Status in ["BCSF Run Status"::Failed, "BCSF Run Status"::CompletedWithWarnings]) then begin
       Rec.TestField("Finished At", 0DT);
-      if Rec.Status <> "BCSF Run Status"::Ready then
+      if Rec.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled, "BCSF Run Status"::Running] then
         Rec.TestField("Job Queue Entry Id");
     end;
     if xRec.Status <> "BCSF Run Status"::Preflight then begin
       Rec.TestField("Total Batches", xRec."Total Batches");
       if Rec."Completed Batches" < xRec."Completed Batches" then
         Error(StateErr);
+    end;
+    if Rec.Status in ["BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled] then begin
+      Control.Get(Rec."Run Id");
+      if Rec.Status = "BCSF Run Status"::Cancelled then
+        Control.TestField("Cancel Requested", true)
+      else
+        Control.TestField("Pause Requested", true);
+      Batch.Reset();
+      Batch.SetRange("Run Id", Rec."Run Id");
+      Batch.SetRange(Status, Batch.Status::Running);
+      if not Batch.IsEmpty() or not IsNullGuid(Rec."Job Queue Entry Id") then
+        Error(StateErr);
+    end;
+    if Rec.Status = "BCSF Run Status"::ResumePending then begin
+      Control.Get(Rec."Run Id");
+      Control.TestField("Cancel Requested", false);
+      Control.TestField("Pause Requested", false);
     end;
     if Rec.Status = "BCSF Run Status"::Running then
       Rec.TestField("Started At");
@@ -147,6 +169,12 @@ codeunit 90306 "BCSF Execution Rules"
       Rec.TestField("Finished At");
       if not IsNullGuid(Rec."Job Queue Entry Id") then
         Error(StateErr);
+      Batch.Reset();
+      Batch.SetRange("Run Id", Rec."Run Id");
+      if Batch.FindSet() then
+        repeat
+          Recovery.VerifyCheckpoint(Batch."Batch Id");
+        until Batch.Next() = 0;
     end;
   end;
 
@@ -167,6 +195,11 @@ codeunit 90306 "BCSF Execution Rules"
     Rec.TestField("Batch Id");
     Rec.TestField("Batch Key");
     Rec.TestField(Status, Rec.Status::Pending);
+    Rec.TestField("Schedule Attempts", 0);
+    Rec.TestField("Worker Session Id", 0);
+    Rec.TestField("Worker Server Id", 0);
+    if not IsNullGuid(Rec."Worker Session Guid") or not IsNullGuid(Rec."Previous Job Id") then
+      Error(StateErr);
     Rec.TestField("Processed Units", 0);
     Rec.TestField("Created Records", 0);
     Rec.TestField("Started At", 0DT);
@@ -181,8 +214,8 @@ codeunit 90306 "BCSF Execution Rules"
   [EventSubscriber(ObjectType::Table, Database::"BCSF Batch", 'OnBeforeModifyEvent', '', false, false)]
   local procedure BatchModify(var Rec: Record "BCSF Batch"; var xRec: Record "BCSF Batch"; RunTrigger: Boolean)
   var
+    Recovery: Codeunit "BCSF Batch Recovery";
     Mutable: List of [Integer];
-    Valid: Boolean;
   begin
     if Rec.IsTemporary() then
       exit;
@@ -193,30 +226,13 @@ codeunit 90306 "BCSF Execution Rules"
     Mutable.Add(Rec.FieldNo("Finished At"));
     Mutable.Add(Rec.FieldNo("Processed Units"));
     Mutable.Add(Rec.FieldNo("Created Records"));
+    Mutable.Add(Rec.FieldNo("Schedule Attempts"));
+    Mutable.Add(Rec.FieldNo("Previous Job Id"));
+    Mutable.Add(Rec.FieldNo("Worker Session Id"));
+    Mutable.Add(Rec.FieldNo("Worker Server Id"));
+    Mutable.Add(Rec.FieldNo("Worker Session Guid"));
     CheckImmutable(Rec, xRec, Mutable);
-    case xRec.Status of
-      xRec.Status::Pending: Valid := Rec.Status in [Rec.Status::Pending, Rec.Status::Running, Rec.Status::Failed];
-      xRec.Status::Running: Valid := Rec.Status in [Rec.Status::Completed, Rec.Status::NeedsReview];
-    end;
-    if not Valid then
-      Error(StateErr);
-    if not IsNullGuid(xRec."Job Queue Entry Id") then
-      Rec.TestField("Job Queue Entry Id", xRec."Job Queue Entry Id");
-    if xRec.Status = xRec.Status::Running then
-      Rec.TestField("Started At", xRec."Started At");
-    if Rec.Status <> Rec.Status::Completed then
-      Rec.TestField("Finished At", xRec."Finished At");
-    if Rec.Status = Rec.Status::Running then begin
-      xRec.TestField("Job Queue Entry Id");
-      Rec.TestField("Started At");
-      Rec.TestField("Job Queue Entry Id");
-    end;
-    if Rec.Status = Rec.Status::Completed then begin
-      Rec.TestField("Finished At");
-      CheckCoverage(Rec);
-    end else
-      if (Rec."Processed Units" <> 0) or (Rec."Created Records" <> 0) then
-        Error(StateErr);
+    Recovery.CheckBatchChange(Rec, xRec);
   end;
 
   [EventSubscriber(ObjectType::Table, Database::"BCSF Batch", 'OnBeforeDeleteEvent', '', false, false)]
@@ -251,6 +267,7 @@ codeunit 90306 "BCSF Execution Rules"
   var
     Step: Record "BCSF Run Step";
     Batch: Record "BCSF Batch";
+    Recovery: Codeunit "BCSF Batch Recovery";
     LastKey: Integer;
     SequenceNo: Integer;
   begin
@@ -270,9 +287,14 @@ codeunit 90306 "BCSF Execution Rules"
               Error(CoverageErr);
             SequenceNo += 1;
             if (Batch."Sequence No." <> SequenceNo) or (Batch."First Key" <> LastKey + 1) or
-              (Batch.Status <> Batch.Status::Pending) or not IsNullGuid(Batch."Job Queue Entry Id")
+              not (Batch.Status in [Batch.Status::Pending, Batch.Status::Completed])
             then
               Error(CoverageErr);
+            if Batch.Status = Batch.Status::Completed then
+              Recovery.VerifyCheckpoint(Batch."Batch Id")
+            else
+              if not IsNullGuid(Batch."Job Queue Entry Id") then
+                Error(CoverageErr);
             LastKey := Batch."Last Key";
           until Batch.Next() = 0;
         if LastKey <> Step."Work Units" then

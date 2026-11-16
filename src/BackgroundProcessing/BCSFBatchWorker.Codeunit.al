@@ -3,6 +3,7 @@ namespace BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DependencyManager;
 using BCScenarioFactory.ScenarioManagement;
+using System.Environment;
 using System.Threading;
 
 codeunit 90303 "BCSF Batch Worker"
@@ -18,8 +19,10 @@ codeunit 90303 "BCSF Batch Worker"
     Header: Record "BCSF Run Header";
     Prior: Record "BCSF Batch";
     StoredJob: Record "Job Queue Entry";
+    Active: Record "Active Session";
     Writer: Codeunit "BCSF Plan Writer";
     Runner: Codeunit "BCSF Batch Runner";
+    Recovery: Codeunit "BCSF Batch Recovery";
     Reference: RecordRef;
   begin
     if GuiAllowed() then
@@ -58,9 +61,22 @@ codeunit 90303 "BCSF Batch Worker"
     Prior.SetFilter(Status, '<>%1', Prior.Status::Completed);
     if not Prior.IsEmpty() then
       Error(JobErr);
+    if Recovery.ApplyBoundary(Execution, Rec.ID) then begin
+      Execution.Modify(true);
+      exit;
+    end;
+    if not Active.ReadPermission() then
+      Error(JobErr);
+    Active.SetLoadFields("Server Instance ID", "Session ID", "Session Unique ID");
+    Active.SetRange("Server Instance ID", ServiceInstanceId());
+    Active.SetRange("Session ID", SessionId());
+    Active.FindFirst();
     Writer.CheckExecution(Batch."Run Id");
     Batch.Status := Batch.Status::Running;
     Batch."Started At" := CurrentDateTime();
+    Batch."Worker Session Id" := SessionId();
+    Batch."Worker Server Id" := ServiceInstanceId();
+    Batch."Worker Session Guid" := Active."Session Unique ID";
     Batch.Modify(true);
     Execution.Status := "BCSF Run Status"::Running;
     if Execution."Started At" = 0DT then

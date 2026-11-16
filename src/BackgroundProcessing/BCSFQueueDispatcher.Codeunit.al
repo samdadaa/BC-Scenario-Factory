@@ -77,7 +77,10 @@ codeunit 90302 "BCSF Queue Dispatcher"
     Job: Record "Job Queue Entry";
     Enqueue: Codeunit "Job Queue - Enqueue";
     Writer: Codeunit "BCSF Plan Writer";
+    Recovery: Codeunit "BCSF Batch Recovery";
   begin
+    if Recovery.ApplyBoundary(Execution, CreateGuid()) then
+      exit;
     Writer.CheckExecution(Execution."Run Id");
     Batch.SetCurrentKey("Run Id", "Sequence No.");
     Batch.SetRange("Run Id", Execution."Run Id");
@@ -91,6 +94,8 @@ codeunit 90302 "BCSF Queue Dispatcher"
       exit;
     end;
     if not IsNullGuid(Batch."Job Queue Entry Id") then
+      Error(ExistingErr);
+    if Batch."Schedule Attempts" >= 3 then
       Error(ExistingErr);
     if not Job.WritePermission() then
       Error(QueuePermissionErr);
@@ -110,6 +115,7 @@ codeunit 90302 "BCSF Queue Dispatcher"
     Job.TestField(ID);
     Job.TestField("System Task ID");
     Job.TestField(Status, Job.Status::Ready);
+    Batch."Schedule Attempts" += 1;
     Batch."Job Queue Entry Id" := Job.ID;
     Batch.Modify(true);
     Execution."Job Queue Entry Id" := Job.ID;
