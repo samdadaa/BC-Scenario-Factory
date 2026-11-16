@@ -1,11 +1,11 @@
 # Modulindex – Zielarchitektur
 
-**Aktueller Bestand nach SF-013:** 85 AL-Objekte in zehn Modulen, 14 Module ohne AL-Code. BackgroundProcessing 16; übrige Modulzahlen unverändert. Technische Checkpoints und begrenzte Retry-/Pause-/Resume-/Abbruchsteuerung zur Prüfung. Echte Fachgeneratoren, fachliche Reconciliation ohne Checkpoint und BC-Laufzeitabnahme weiterhin ausstehend.
+**Aktueller Bestand nach SF-014-Präzisierung:** 104 AL-Objekte in elf Modulen; 13 Module ohne AL-Code. Monitoring 18, ScenarioManagement 22, übrige Bestände wie SF-013. JS-Dashboard mit Role-Center/Profil und wiederverwendbarer Part; technische Statushistorie und Wizard zur Prüfung. Echte Fachgeneratoren und BC-Laufzeitabnahme weiterhin offen.
 
 | Modul | Kategorie | Ziel | Status |
 | --- | --- | --- | --- |
 | [Core](details/src/Core.md) | Kern | `src/Core/` | Grundlagen/Sprache/Vertrag: 13 AL-Objekte, zur Prüfung |
-| [ScenarioManagement](details/src/ScenarioManagement.md) | Kern | `src/ScenarioManagement/` | Vorlagen/Ziele/Snapshots/Steps: 21 AL-Objekte, zur Prüfung |
+| [ScenarioManagement](details/src/ScenarioManagement.md) | Kern | `src/ScenarioManagement/` | Vorlagen/Ziele/Snapshots/Steps/Wizard: 22 AL-Objekte, zur Prüfung |
 | [IndustryProfiles](details/src/IndustryProfiles.md) | Kern | `src/IndustryProfiles/` | 1 AL-Objekt: generische versionierte Syntheseregeln; zur Prüfung. Vollständige Branchenprofile weiterhin geplant. |
 | [ModuleRegistry](details/src/ModuleRegistry.md) | Kern | `src/ModuleRegistry/` | Vertrag/Katalog/Proben: 10 AL-Objekte, zur Prüfung |
 | [DependencyManager](details/src/DependencyManager.md) | Kern | `src/DependencyManager/` | Graph/Plan/Vorschau: 9 AL-Objekte, zur Prüfung |
@@ -14,7 +14,7 @@
 | [ProcessEngine](details/src/ProcessEngine.md) | Kern | `src/ProcessEngine/` | Geplant, ohne Code |
 | [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 16 AL-Objekte: Ausführung, Queue und begrenzte Recovery mit Checkpoints/Steuerung; zur Prüfung. |
 | [Validation](details/src/Validation.md) | Kern | `src/Validation/` | Geplant, ohne Code |
-| [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | Geplant, ohne Code |
+| [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | 18 AL-Objekte: JS-Dashboard, Role-Center/Profil, Kennzahlen, Historie und Wizard-Ausführungsintegration, zur Prüfung |
 | [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Teilweise implementiert, 4 AL-Objekte, Zur Prüfung. |
 | [Finance](details/src/Finance.md) | Fach | `src/Finance/` | 1 AL-Objekt: lesender Finanz-Setupcheck; zur Prüfung. Finanzgenerator/Buchungen weiterhin geplant. |
 | [Sales](details/src/Sales.md) | Fach | `src/Sales/` | Geplant, ohne Code |
@@ -42,3 +42,8 @@ SF-009/SF-010: [Setup-/Seed-Vertrag](../SETUP_SEED.md); vollständige Objektzuor
 SF-011/SF-012: [Herkunft-/Queue-Vertrag](../EXECUTION_REGISTRY.md), [Objektplan](../OBJECT_PLAN.md).
 
 SF-013: [Recovery-Vertrag](../RECOVERY.md), [Prüfnachweise](../TESTS.md).
+
+
+## Ablage – SF-002, 16.11.2026
+
+Alle 104 vorhandenen AL-Dateien liegen je Modul in Typordnern gemäß [CONVENTIONS.md](../CONVENTIONS.md). Die Modulpfade der Tabelle bleiben Einstiegspunkte; die konkreten Typordner stehen in den jeweiligen Modulspezifikationen. Keine neuen Objekte oder fachlichen Implementierungen; 13 Module weiterhin ohne AL-Code. Status **Zur Prüfung**.

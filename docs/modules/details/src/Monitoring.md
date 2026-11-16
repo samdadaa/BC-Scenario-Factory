@@ -1,6 +1,6 @@
 # Monitoring – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/Monitoring/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** 18 AL-Objekte implementiert, **Zur Prüfung**. Pfad: `src/Monitoring/`. Historische Planabschnitte gelten für noch nicht umgesetzte Teile.
 
 ## Fachlicher Auftrag
 
@@ -37,3 +37,18 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 ## Objektplanung SF-002
 
 Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.Monitoring`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+
+## SF-014/SF-015 – 16.11.2026
+
+Dashboard, FactBox, temporäre Schrittkennzahlen, technische unveränderliche Statushistorie und Queueprotokoll-Drilldowns. Ausführungsintegration des Wizards als PageExtension; keine Fachgenerierung.
+
+Reale Objekte, gerichtete Abhängigkeiten, Persistenz-/Rechtevertrag, Bedienung und offene Prüfungen: [MONITORING_WIZARD.md](../../../MONITORING_WIZARD.md), [OBJECT_PLAN.md](../../../OBJECT_PLAN.md), [TESTS.md](../../../TESTS.md). Keine BC-Laufzeitabnahme.
+
+## SF-014 – präzisierter JavaScript-Arbeitsplatz
+
+ControlAddIn, wiederverwendbare CardPart, große Hostseite, eigenes Role-Center/Profil und zwei Daten-/Aktionscodeunits ergänzt. Zusätzliche ModuleRegistry-/DataGeneration-Referenzen dienen vorhandener Navigation/Leselogik. Sieben neue AL-Objekte, davon fünf mit numerischer ID. [Aktuelle Bedienung, Ressourcen und Einbau](../../../DASHBOARD_EMBEDDING.md), [Prüfnachweise](../../../TESTS.md). Echte BC-Role-Center-/Iframe-/Dialogabnahme offen.
+
+
+## Ablage – SF-002, 16.11.2026
+
+Vorhandene AL-Objekte liegen unter `src/Monitoring/Codeunits/`, `src/Monitoring/ControlAddIns/`, `src/Monitoring/PageExtensions/`, `src/Monitoring/Pages/`, `src/Monitoring/Profiles/`, `src/Monitoring/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.

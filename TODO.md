@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 16.11.2026 – SF-013 mit technischen Checkpoints, begrenztem Vor-Claim-Retry und Pause/Resume/Abbruch implementiert, Zur Prüfung. 85 AL-Objekte lokal mit CodeCop/UICop gebaut; 665 Texteinheiten übersetzt. Echte BC-Unterbrechungs-/Posting-/Parallelitätstests und konkrete Generator-/Setupbindungen weiterhin offen.
+**Stand:** 16.11.2026 – SF-014 nach Nutzerpräzisierung um JS-ControlAddIn, eigenes Role-Center/Profil, wiederverwendbare Dashboard-Part und zentrale Appnavigation erweitert. SF-014/SF-015 Zur Prüfung. 104 AL-Objekte und 978 Texteinheiten lokal geprüft; echte BC-Laufzeitabnahme und Fachgenerator-/Setupbindungen offen.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -30,8 +30,8 @@
 | [SF-011](#sf-011) | 0 / Fundierung | P0 | Erzeugte Datensätze und Belegketten nachverfolgen | Zur Prüfung |
 | [SF-012](#sf-012) | 0 / Fundierung | P0 | Job-Queue Dispatcher, Run-/Batch-Tabellen | Zur Prüfung |
 | [SF-013](#sf-013) | 0 / Fundierung | P0 | Batch-Checkpoint, Retry, Pause/Resume, Cancellation | Zur Prüfung |
-| [SF-014](#sf-014) | 0 / Fundierung | P0 | Monitoring-Datenmodell und Dashboard | Offen |
-| [SF-015](#sf-015) | 0 / Fundierung | P0 | Wizard für Branche, Module, Umfang und Planung | Offen |
+| [SF-014](#sf-014) | 0 / Fundierung | P0 | Monitoring-Datenmodell und Dashboard | Zur Prüfung |
+| [SF-015](#sf-015) | 0 / Fundierung | P0 | Wizard für Branche, Module, Umfang und Planung | Zur Prüfung |
 | [SF-016](#sf-016) | 0 / Fundierung | P0 | Validierungsframework und Abschlussstatus | Offen |
 | [SF-017](#sf-017) | 1 / MVP | P1 | Finanz-Grundsetup für Handelsprofil | Offen |
 | [SF-018](#sf-018) | 1 / MVP | P1 | Debitoren und Kreditoren als kohärente Stammdaten | Offen |
@@ -120,7 +120,7 @@
 
 ### SF-002 — AL-Struktur, Namenskonventionen und Objektplan finalisieren
 
-**Status:** erledigt
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-001  
 **Verantwortung / betroffene Module:** Core; docs/CONVENTIONS.md  
@@ -155,6 +155,14 @@
 **Risiken / Entscheidungen:** Zielversions- und Lokalisierungsabhängigkeit, Rechte, Datenvolumen und eventuell unklarer Commit-/Retry-Zustand nachprüfen. Bei Blocker konkrete Frage stellen und `Blockiert` statt mutmaßlich erfolgreich setzen.
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+
+
+**Struktur-Nachtrag, Nutzerauftrag vom 16.11.2026 — Zur Prüfung:** Bestehende AL-Dateien je Modul nach Objekttyp unter `src/<Modul>/<Objekttyp>/` einordnen. Betroffen: alle 104 vorhandenen AL-Dateien in elf Modulen, ein Dateiverweis im Dashboard-Prüfskript sowie Strukturkonvention, Objektplan, Modulnachweise und Einstieg-/Projektdokumentation. Vorhandene Nutzeränderungen und Dateiinhalt erhalten; keine Objekt-/ID-/Namespace-/Fachlogikänderung. 13 Module ohne AL-Code behalten ihre Modulmarker, Typordner entstehen bei Bedarf.
+
+**Vorgehen / Testweg:** Vorherige Pfade und SHA-256-Prüfsummen erfassen; Ziele auf Kollision prüfen; Dateien verschieben; Dokumentations-/Skriptverweise nachführen; danach Vollständigkeit, Bytegleichheit, Objektzuordnung, Ressourcenpfade und unveränderte Manifest-/Übersetzungsdateien prüfen. Lokalen Cloud-Build mit CodeCop/UICop sowie bestehende Übersetzungs- und Dashboardprüfungen ausführen, sofern lokal verfügbar. Risiko: veraltete externe Dateiverweise und XERJ-Index. Keine neuen fachlichen Anforderungen; BC-Laufzeitabnahme bleibt separat offen. Tatsächliche Ergebnisse: [TESTS.md](docs/TESTS.md#sf-002--strukturumstellung-16112026).
+
+**Prüfergebnis 16.11.2026:** 104 verschobene AL-Dateien per SHA-256 bytegleich; Manifest/Übersetzungen/Ressourcen und andere Ticketdetails erhalten. Cloud-Build mit CodeCop/UICop Exit 0 (sechs bekannte Informationshinweise, keine Fehler/Warnungen), Übersetzungsprüfung 978 Einheiten PASS, bestehender Dashboard-Browsertest PASS, Diffprüfung ohne Befund. Keine BC-Laufzeitabnahme oder Veröffentlichung. Struktur-Nachtrag **Zur Prüfung**.
+
 
 ---
 
@@ -582,7 +590,7 @@
 
 ### SF-014 — Monitoring-Datenmodell und Dashboard
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-012,SF-013  
 **Verantwortung / betroffene Module:** Monitoring, UI  
@@ -590,20 +598,26 @@
 
 **Ausgangslage / Problem:** Kacheln, Modul-/Entitäts-Soll/Ist, Queue-Status, Zeiten, Drilldowns, Fehlermeldungen und Validierung.
 
-**Soll-Verhalten / technischer Arbeitsauftrag:** Native BC-Pages/FactBoxes/Role-Center-Option prüfen; Anzeigen lesen persistierte Zustände.
+**Soll-Verhalten / technischer Arbeitsauftrag (Nutzerpräzisierung):** JavaScript-ControlAddIn als zentrales Dashboard mit Szenarioanlage, vollständiger relevanter Appnavigation und direkten Runaktionen. Eigenes Role-Center/Profil sowie wiederverwendbare CardPart für zusätzliche erweiterbare Role-Center per PageExtension. Anzeigen lesen persistierte Zustände; vorhandene Guards/Freigaben bleiben maßgeblich.
+
+**Umsetzungsnachweis 16.11.2026:** Native Dashboardliste/FactBox, temporäre Schritt-Soll/Ist-Sicht, unveränderliche technische Statushistorie und gefilterte Standard-Queueprotokolle. Bestätigte Einheiten/Artefakte/ausstehende Gesamtqualität getrennt; kein Start beim Lesen. [Vertrag/Dateien](docs/MONITORING_WIZARD.md), [Objektplan](docs/OBJECT_PLAN.md), [echte lokale Prüfungen und offene BC-Fälle](docs/TESTS.md#sf-014sf-015--lokaler-prüfnachweis-16112026). Vollständiger Cloud-Build mit CodeCop/UICop erfolgreich (97 Objekte, BC-28.5-/DE-Symbole, Runtime 17); 865 Texte DE/EN geprüft. Keine BC-Laufzeit-/UI-/Rechteabnahme und kein Deployment. Nutzerabnahme weiterhin offen.
+
+**Präzisierungsnachweis:** Sieben zusätzliche AL-Objekte mit gebündeltem JS/CSS, eigenes Profil und zentrale Navigation umgesetzt. Nativer Monitor erhalten. Lokaler Chromiumcheck mit synthetischer BC-Brücke erfolgreich; keine echte BC-Iframe-/Role-Center-/Dialog-/Profilprüfung. [Aktueller Vertrag und Einbau](docs/DASHBOARD_EMBEDDING.md), [Prüfnachweise](docs/TESTS.md).
 
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
+- [ ] JS-Arbeitsplatz, Szenarioanlage und relevante Appseiten/-aktionen ohne wiederholte Suche in BC nutzbar; eigenes Profil/Role-Center praktisch geprüft.
+- [ ] Dieselbe CardPart in einem weiteren freigegebenen erweiterbaren Role-Center praktisch geprüft; Einbauweg dokumentiert.
 - [ ] Anwender erkennt Lauf, Step, Batch, Fortschritt, Fehler und noch offene Daten ohne erneuten Start.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
 - [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
@@ -616,7 +630,7 @@
 
 ### SF-015 — Wizard für Branche, Module, Umfang und Planung
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-006,SF-008,SF-009,SF-014  
 **Verantwortung / betroffene Module:** ScenarioManagement, IndustryProfiles, UI  
@@ -626,18 +640,20 @@
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Abhängigkeiten und Buchungsrisiken eindeutig anzeigen; Tooltips/Barrierefreiheit.
 
+**Umsetzungsnachweis 16.11.2026:** Native fünfstufige geführte Vorlagenplanung mit explizitem Snapshot, Plan-/Setupprüfung, Startzeit und ausdrücklicher Freigabe über vorhandene Queue-Gates. Keine Branchenpresets oder Postingfreigabe erfunden; aktuelle Startblocker bleiben bestehen. [Vertrag/Dateien](docs/MONITORING_WIZARD.md), [Objektplan](docs/OBJECT_PLAN.md), [echte lokale Prüfungen und offene BC-Fälle](docs/TESTS.md#sf-014sf-015--lokaler-prüfnachweis-16112026). Vollständiger Cloud-Build mit CodeCop/UICop erfolgreich (97 Objekte, BC-28.5-/DE-Symbole, Runtime 17); 865 Texte DE/EN geprüft. Keine BC-Laufzeit-/UI-/Rechteabnahme und kein Deployment. Nutzerabnahme weiterhin offen.
+
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Ein vollständiges Szenario durch Wizard planbar; keine Job-Ausführung vor gültiger Freigabe.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
 - [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.

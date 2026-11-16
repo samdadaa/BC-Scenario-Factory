@@ -4,7 +4,7 @@
 
 ## Umfang, Voraussetzungen und Prüfweg
 
-Ziel: eindeutige Namen, Ablage, ID-Zuordnung und Verantwortungsgrenzen vor dem ersten AL-Objekt festlegen. Betroffen: dieser Plan, CONVENTIONS, ARCHITECTURE, PROJECT, DECISIONS, TESTS, Modulindex und die 24 Modulspezifikationen sowie README und ausschließlich SF-002 in TODO. Manifest, Launch-Konfiguration und Modulverzeichnisse bleiben unverändert.
+Ziel: eindeutige Namen, Ablage, ID-Zuordnung und Verantwortungsgrenzen vor dem ersten AL-Objekt festlegen. Betroffen: dieser Plan, CONVENTIONS, ARCHITECTURE, PROJECT, DECISIONS, TESTS, Modulindex und die 24 Modulspezifikationen sowie README und ausschließlich SF-002 in TODO. Historischer Umfang vom 11.11.2026: Manifest, Launch-Konfiguration und Modulverzeichnisse blieben unverändert. Seit Nutzerauftrag vom 16.11.2026 folgen alle aktuellen und geplanten Dateipfade der modularen Typablage gemäß [CONVENTIONS.md](CONVENTIONS.md); geplante Pfade erzeugen keine leeren Ordner.
 
 SF-001 bleibt separat offen/blockiert: Publisher, reale BC-Version/Lokalisierung, Testfirma, Rechte und externe ID-Belegung sind nicht geklärt. Diese Punkte verhindern keine lokale Dokumentationsplanung, bleiben aber Voraussetzungen für die jeweilige Implementierung und Sandbox-Verifikation. Standard-BC-API-Namen, Feldschemas und Signaturen werden erst im betreffenden Ticket anhand echter Symbole festgelegt. Keine Kundendaten, BC-Schreiboperationen oder zusätzlichen Laufzeitabhängigkeiten.
 
@@ -28,7 +28,7 @@ Vor jedem neuen Objekt ID und Name gegen diesen Plan, aktuellen Quellcode und ve
 | ProcessEngine | 90275 | 90299 | `BCScenarioFactory.ProcessEngine` | Core, ScenarioManagement, DataGeneration, Lifecycle |
 | BackgroundProcessing | 90300 | 90324 | `BCScenarioFactory.BackgroundProcessing` | Core, ScenarioManagement, ModuleRegistry, DependencyManager, SetupManager, DataGeneration, ProcessEngine, Lifecycle, Validation |
 | Validation | 90325 | 90349 | `BCScenarioFactory.Validation` | Core, ScenarioManagement, DataGeneration |
-| Monitoring | 90350 | 90374 | `BCScenarioFactory.Monitoring` | Core, ScenarioManagement, BackgroundProcessing, Validation |
+| Monitoring | 90350 | 90374 | `BCScenarioFactory.Monitoring` | Core, ScenarioManagement, BackgroundProcessing, Validation, DependencyManager, SetupManager, Lifecycle, ModuleRegistry, DataGeneration |
 | Lifecycle | 90375 | 90399 | `BCScenarioFactory.Lifecycle` | Core, ScenarioManagement, ModuleRegistry, DependencyManager |
 | Finance | 90400 | 90424 | `BCScenarioFactory.Finance` | Core, ScenarioManagement, ModuleRegistry, SetupManager, DataGeneration, ProcessEngine, Lifecycle |
 | Sales | 90425 | 90449 | `BCScenarioFactory.Sales` | Core, ScenarioManagement, ModuleRegistry, SetupManager, DataGeneration, ProcessEngine, Lifecycle |
@@ -49,105 +49,105 @@ Die Tabelle ist der vollständige Plan. Vorhandene Dateien sind im Abschnitt „
 
 | Modul | Plan-ID | Typ | Objektname | Geplanter Dateipfad | Ticket |
 | --- | --- | --- | --- | --- | --- |
-| Core | 90100 | Table | `BCSF Factory Setup` | `src/Core/BCSFFactorySetup.Table.al` | SF-004 |
-| Core | 90101 | Page | `BCSF Factory Setup Card` | `src/Core/BCSFFactorySetupCard.Page.al` | SF-004 |
-| Core | 90102 | Enum | `BCSF Run Status` | `src/Core/BCSFRunStatus.Enum.al` | SF-004 |
-| Core | 90103 | Enum | `BCSF Process Mode` | `src/Core/BCSFProcessMode.Enum.al` | SF-004 |
-| Core | 90104 | Enum | `BCSF Usage Mode` | `src/Core/BCSFUsageMode.Enum.al` | SF-004 |
-| Core | 90105 | PermissionSet | `BCSF ADMIN` | `src/Core/BCSFADMIN.PermissionSet.al` | SF-003 |
-| Core | 90106 | Codeunit | `BCSF Setup Management` | `src/Core/BCSFSetupManagement.Codeunit.al` | SF-004 |
-| Core | 90107 | Codeunit | `BCSF Run State Mgt` | `src/Core/BCSFRunStateMgt.Codeunit.al` | SF-004 |
-| ScenarioManagement | 90125 | Table | `BCSF Scenario` | `src/ScenarioManagement/BCSFScenario.Table.al` | SF-005 |
-| ScenarioManagement | 90126 | Table | `BCSF Scenario Module` | `src/ScenarioManagement/BCSFScenarioModule.Table.al` | SF-005 |
-| ScenarioManagement | 90127 | Table | `BCSF Data Target` | `src/ScenarioManagement/BCSFDataTarget.Table.al` | SF-006 |
-| ScenarioManagement | 90128 | Table | `BCSF Run Header` | `src/ScenarioManagement/BCSFRunHeader.Table.al` | SF-005 |
-| ScenarioManagement | 90129 | Table | `BCSF Run Step` | `src/ScenarioManagement/BCSFRunStep.Table.al` | SF-008 |
-| ScenarioManagement | 90130 | Codeunit | `BCSF Scenario Manager` | `src/ScenarioManagement/BCSFScenarioManager.Codeunit.al` | SF-005 |
-| ScenarioManagement | 90131 | Page | `BCSF Scenario Card` | `src/ScenarioManagement/BCSFScenarioCard.Page.al` | SF-005 |
-| ScenarioManagement | 90132 | Page | `BCSF Scenario Wizard` | `src/ScenarioManagement/BCSFScenarioWizard.Page.al` | SF-015 |
-| ScenarioManagement | 90133 | Page | `BCSF Scenario List` | `src/ScenarioManagement/BCSFScenarioList.Page.al` | SF-005 |
-| ScenarioManagement | 90134 | Table | `BCSF Run Snapshot` | `src/ScenarioManagement/BCSFRunSnapshot.Table.al` | SF-005 |
-| IndustryProfiles | 90150 | Table | `BCSF Industry Profile` | `src/IndustryProfiles/BCSFIndustryProfile.Table.al` | SF-023 |
-| IndustryProfiles | 90151 | Table | `BCSF Profile Rule` | `src/IndustryProfiles/BCSFProfileRule.Table.al` | SF-023 |
-| IndustryProfiles | 90152 | Codeunit | `BCSF Profile Resolver` | `src/IndustryProfiles/BCSFProfileResolver.Codeunit.al` | SF-023 |
-| IndustryProfiles | 90153 | Codeunit | `BCSF Wholesale Profile` | `src/IndustryProfiles/BCSFWholesaleProfile.Codeunit.al` | SF-023 |
-| ModuleRegistry | 90175 | Table | `BCSF Generator Registry` | `src/ModuleRegistry/BCSFGeneratorRegistry.Table.al` | SF-007 |
-| ModuleRegistry | 90176 | Enum | `BCSF Generator Type` | `src/ModuleRegistry/BCSFGeneratorType.Enum.al` | SF-007 |
-| ModuleRegistry | 90177 | Codeunit | `BCSF Generator Registry Mgt` | `src/ModuleRegistry/BCSFGeneratorRegistryMgt.Codeunit.al` | SF-007 |
-| DependencyManager | 90200 | Table | `BCSF Dependency` | `src/DependencyManager/BCSFDependency.Table.al` | SF-008 |
-| DependencyManager | 90201 | Codeunit | `BCSF Dependency Planner` | `src/DependencyManager/BCSFDependencyPlanner.Codeunit.al` | SF-008 |
-| SetupManager | 90225 | Table | `BCSF Setup Diff` | `src/SetupManager/BCSFSetupDiff.Table.al` | SF-009 |
-| SetupManager | 90226 | Codeunit | `BCSF Setup Manager` | `src/SetupManager/BCSFSetupManager.Codeunit.al` | SF-009 |
-| DataGeneration | 90250 | Codeunit | `BCSF Seed Engine` | `src/DataGeneration/BCSFSeedEngine.Codeunit.al` | SF-010 |
-| DataGeneration | 90251 | Table | `BCSF Generated Record` | `src/DataGeneration/BCSFGeneratedRecord.Table.al` | SF-011 |
-| DataGeneration | 90252 | Codeunit | `BCSF Record Registry` | `src/DataGeneration/BCSFRecordRegistry.Codeunit.al` | SF-011 |
-| ProcessEngine | 90275 | Codeunit | `BCSF Process Coordinator` | `src/ProcessEngine/BCSFProcessCoordinator.Codeunit.al` | SF-007 |
-| BackgroundProcessing | 90300 | Table | `BCSF Batch` | `src/BackgroundProcessing/BCSFBatch.Table.al` | SF-012 |
-| BackgroundProcessing | 90301 | Enum | `BCSF Batch Status` | `src/BackgroundProcessing/BCSFBatchStatus.Enum.al` | SF-012 |
-| BackgroundProcessing | 90302 | Codeunit | `BCSF Queue Dispatcher` | `src/BackgroundProcessing/BCSFQueueDispatcher.Codeunit.al` | SF-012 |
-| BackgroundProcessing | 90303 | Codeunit | `BCSF Batch Worker` | `src/BackgroundProcessing/BCSFBatchWorker.Codeunit.al` | SF-012 |
-| BackgroundProcessing | 90304 | Codeunit | `BCSF Batch Recovery` | `src/BackgroundProcessing/BCSFBatchRecovery.Codeunit.al` | SF-013 |
-| Validation | 90325 | Table | `BCSF Validation Result` | `src/Validation/BCSFValidationResult.Table.al` | SF-016 |
-| Validation | 90326 | Codeunit | `BCSF Validation Manager` | `src/Validation/BCSFValidationManager.Codeunit.al` | SF-016 |
-| Monitoring | 90350 | Table | `BCSF Run Event` | `src/Monitoring/BCSFRunEvent.Table.al` | SF-014 |
-| Monitoring | 90351 | Page | `BCSF Factory Dashboard` | `src/Monitoring/BCSFFactoryDashboard.Page.al` | SF-014 |
-| Monitoring | 90352 | Page | `BCSF Run List` | `src/Monitoring/BCSFRunList.Page.al` | SF-014 |
-| Monitoring | 90353 | Page | `BCSF Batch List` | `src/Monitoring/BCSFBatchList.Page.al` | SF-014 |
-| Lifecycle | 90375 | Codeunit | `BCSF Environment Guard` | `src/Lifecycle/BCSFEnvironmentGuard.Codeunit.al` | SF-003 |
-| Lifecycle | 90376 | Codeunit | `BCSF Lifecycle Manager` | `src/Lifecycle/BCSFLifecycleManager.Codeunit.al` | SF-027 |
-| Finance | 90400 | Codeunit | `BCSF Finance Generator` | `src/Finance/BCSFFinanceGenerator.Codeunit.al` | SF-017 |
-| Finance | 90401 | Codeunit | `BCSF Payment Processor` | `src/Finance/BCSFPaymentProcessor.Codeunit.al` | SF-022 |
-| Sales | 90425 | Codeunit | `BCSF Customer Generator` | `src/Sales/BCSFCustomerGenerator.Codeunit.al` | SF-018 |
-| Sales | 90426 | Codeunit | `BCSF Sales Generator` | `src/Sales/BCSFSalesGenerator.Codeunit.al` | SF-021 |
-| Purchasing | 90450 | Codeunit | `BCSF Vendor Generator` | `src/Purchasing/BCSFVendorGenerator.Codeunit.al` | SF-018 |
-| Purchasing | 90451 | Codeunit | `BCSF Purchase Generator` | `src/Purchasing/BCSFPurchaseGenerator.Codeunit.al` | SF-020 |
-| Inventory | 90475 | Codeunit | `BCSF Inventory Generator` | `src/Inventory/BCSFInventoryGenerator.Codeunit.al` | SF-019 |
-| Warehouse | 90500 | Codeunit | `BCSF Warehouse Generator` | `src/Warehouse/BCSFWarehouseGenerator.Codeunit.al` | SF-028 |
-| Manufacturing | 90525 | Codeunit | `BCSF Manufacturing Generator` | `src/Manufacturing/BCSFManufacturingGenerator.Codeunit.al` | SF-029 |
-| Assembly | 90550 | Codeunit | `BCSF Assembly Generator` | `src/Assembly/BCSFAssemblyGenerator.Codeunit.al` | SF-029 |
-| Projects | 90575 | Codeunit | `BCSF Project Generator` | `src/Projects/BCSFProjectGenerator.Codeunit.al` | SF-030 |
-| ServiceManagement | 90600 | Codeunit | `BCSF Service Generator` | `src/ServiceManagement/BCSFServiceGenerator.Codeunit.al` | SF-030 |
-| FixedAssets | 90625 | Codeunit | `BCSF Fixed Asset Generator` | `src/FixedAssets/BCSFFixedAssetGenerator.Codeunit.al` | SF-031 |
-| CRM | 90650 | Codeunit | `BCSF CRM Generator` | `src/CRM/BCSFCRMGenerator.Codeunit.al` | SF-033 |
-| Planning | 90675 | Codeunit | `BCSF Planning Generator` | `src/Planning/BCSFPlanningGenerator.Codeunit.al` | SF-033 |
+| Core | 90100 | Table | `BCSF Factory Setup` | `src/Core/Tables/BCSFFactorySetup.Table.al` | SF-004 |
+| Core | 90101 | Page | `BCSF Factory Setup Card` | `src/Core/Pages/BCSFFactorySetupCard.Page.al` | SF-004 |
+| Core | 90102 | Enum | `BCSF Run Status` | `src/Core/Enums/BCSFRunStatus.Enum.al` | SF-004 |
+| Core | 90103 | Enum | `BCSF Process Mode` | `src/Core/Enums/BCSFProcessMode.Enum.al` | SF-004 |
+| Core | 90104 | Enum | `BCSF Usage Mode` | `src/Core/Enums/BCSFUsageMode.Enum.al` | SF-004 |
+| Core | 90105 | PermissionSet | `BCSF ADMIN` | `src/Core/PermissionSets/BCSFADMIN.PermissionSet.al` | SF-003 |
+| Core | 90106 | Codeunit | `BCSF Setup Management` | `src/Core/Codeunits/BCSFSetupManagement.Codeunit.al` | SF-004 |
+| Core | 90107 | Codeunit | `BCSF Run State Mgt` | `src/Core/Codeunits/BCSFRunStateMgt.Codeunit.al` | SF-004 |
+| ScenarioManagement | 90125 | Table | `BCSF Scenario` | `src/ScenarioManagement/Tables/BCSFScenario.Table.al` | SF-005 |
+| ScenarioManagement | 90126 | Table | `BCSF Scenario Module` | `src/ScenarioManagement/Tables/BCSFScenarioModule.Table.al` | SF-005 |
+| ScenarioManagement | 90127 | Table | `BCSF Data Target` | `src/ScenarioManagement/Tables/BCSFDataTarget.Table.al` | SF-006 |
+| ScenarioManagement | 90128 | Table | `BCSF Run Header` | `src/ScenarioManagement/Tables/BCSFRunHeader.Table.al` | SF-005 |
+| ScenarioManagement | 90129 | Table | `BCSF Run Step` | `src/ScenarioManagement/Tables/BCSFRunStep.Table.al` | SF-008 |
+| ScenarioManagement | 90130 | Codeunit | `BCSF Scenario Manager` | `src/ScenarioManagement/Codeunits/BCSFScenarioManager.Codeunit.al` | SF-005 |
+| ScenarioManagement | 90131 | Page | `BCSF Scenario Card` | `src/ScenarioManagement/Pages/BCSFScenarioCard.Page.al` | SF-005 |
+| ScenarioManagement | 90132 | Page | `BCSF Scenario Wizard` | `src/ScenarioManagement/Pages/BCSFScenarioWizard.Page.al` | SF-015 |
+| ScenarioManagement | 90133 | Page | `BCSF Scenario List` | `src/ScenarioManagement/Pages/BCSFScenarioList.Page.al` | SF-005 |
+| ScenarioManagement | 90134 | Table | `BCSF Run Snapshot` | `src/ScenarioManagement/Tables/BCSFRunSnapshot.Table.al` | SF-005 |
+| IndustryProfiles | 90150 | Table | `BCSF Industry Profile` | `src/IndustryProfiles/Tables/BCSFIndustryProfile.Table.al` | SF-023 |
+| IndustryProfiles | 90151 | Table | `BCSF Profile Rule` | `src/IndustryProfiles/Tables/BCSFProfileRule.Table.al` | SF-023 |
+| IndustryProfiles | 90152 | Codeunit | `BCSF Profile Resolver` | `src/IndustryProfiles/Codeunits/BCSFProfileResolver.Codeunit.al` | SF-023 |
+| IndustryProfiles | 90153 | Codeunit | `BCSF Wholesale Profile` | `src/IndustryProfiles/Codeunits/BCSFWholesaleProfile.Codeunit.al` | SF-023 |
+| ModuleRegistry | 90175 | Table | `BCSF Generator Registry` | `src/ModuleRegistry/Tables/BCSFGeneratorRegistry.Table.al` | SF-007 |
+| ModuleRegistry | 90176 | Enum | `BCSF Generator Type` | `src/ModuleRegistry/Enums/BCSFGeneratorType.Enum.al` | SF-007 |
+| ModuleRegistry | 90177 | Codeunit | `BCSF Generator Registry Mgt` | `src/ModuleRegistry/Codeunits/BCSFGeneratorRegistryMgt.Codeunit.al` | SF-007 |
+| DependencyManager | 90200 | Table | `BCSF Dependency` | `src/DependencyManager/Tables/BCSFDependency.Table.al` | SF-008 |
+| DependencyManager | 90201 | Codeunit | `BCSF Dependency Planner` | `src/DependencyManager/Codeunits/BCSFDependencyPlanner.Codeunit.al` | SF-008 |
+| SetupManager | 90225 | Table | `BCSF Setup Diff` | `src/SetupManager/Tables/BCSFSetupDiff.Table.al` | SF-009 |
+| SetupManager | 90226 | Codeunit | `BCSF Setup Manager` | `src/SetupManager/Codeunits/BCSFSetupManager.Codeunit.al` | SF-009 |
+| DataGeneration | 90250 | Codeunit | `BCSF Seed Engine` | `src/DataGeneration/Codeunits/BCSFSeedEngine.Codeunit.al` | SF-010 |
+| DataGeneration | 90251 | Table | `BCSF Generated Record` | `src/DataGeneration/Tables/BCSFGeneratedRecord.Table.al` | SF-011 |
+| DataGeneration | 90252 | Codeunit | `BCSF Record Registry` | `src/DataGeneration/Codeunits/BCSFRecordRegistry.Codeunit.al` | SF-011 |
+| ProcessEngine | 90275 | Codeunit | `BCSF Process Coordinator` | `src/ProcessEngine/Codeunits/BCSFProcessCoordinator.Codeunit.al` | SF-007 |
+| BackgroundProcessing | 90300 | Table | `BCSF Batch` | `src/BackgroundProcessing/Tables/BCSFBatch.Table.al` | SF-012 |
+| BackgroundProcessing | 90301 | Enum | `BCSF Batch Status` | `src/BackgroundProcessing/Enums/BCSFBatchStatus.Enum.al` | SF-012 |
+| BackgroundProcessing | 90302 | Codeunit | `BCSF Queue Dispatcher` | `src/BackgroundProcessing/Codeunits/BCSFQueueDispatcher.Codeunit.al` | SF-012 |
+| BackgroundProcessing | 90303 | Codeunit | `BCSF Batch Worker` | `src/BackgroundProcessing/Codeunits/BCSFBatchWorker.Codeunit.al` | SF-012 |
+| BackgroundProcessing | 90304 | Codeunit | `BCSF Batch Recovery` | `src/BackgroundProcessing/Codeunits/BCSFBatchRecovery.Codeunit.al` | SF-013 |
+| Validation | 90325 | Table | `BCSF Validation Result` | `src/Validation/Tables/BCSFValidationResult.Table.al` | SF-016 |
+| Validation | 90326 | Codeunit | `BCSF Validation Manager` | `src/Validation/Codeunits/BCSFValidationManager.Codeunit.al` | SF-016 |
+| Monitoring | 90350 | Table | `BCSF Run Event` | `src/Monitoring/Tables/BCSFRunEvent.Table.al` | SF-014 |
+| Monitoring | 90351 | Page | `BCSF Factory Dashboard` | `src/Monitoring/Pages/BCSFFactoryDashboard.Page.al` | SF-014 |
+| Monitoring | 90352 | Page | `BCSF Step Progress` | `src/Monitoring/Pages/BCSFStepProgress.Page.al` | SF-014 |
+| Monitoring | 90353 | Page | `BCSF Run Events` | `src/Monitoring/Pages/BCSFRunEvents.Page.al` | SF-014 |
+| Lifecycle | 90375 | Codeunit | `BCSF Environment Guard` | `src/Lifecycle/Codeunits/BCSFEnvironmentGuard.Codeunit.al` | SF-003 |
+| Lifecycle | 90376 | Codeunit | `BCSF Lifecycle Manager` | `src/Lifecycle/Codeunits/BCSFLifecycleManager.Codeunit.al` | SF-027 |
+| Finance | 90400 | Codeunit | `BCSF Finance Generator` | `src/Finance/Codeunits/BCSFFinanceGenerator.Codeunit.al` | SF-017 |
+| Finance | 90401 | Codeunit | `BCSF Payment Processor` | `src/Finance/Codeunits/BCSFPaymentProcessor.Codeunit.al` | SF-022 |
+| Sales | 90425 | Codeunit | `BCSF Customer Generator` | `src/Sales/Codeunits/BCSFCustomerGenerator.Codeunit.al` | SF-018 |
+| Sales | 90426 | Codeunit | `BCSF Sales Generator` | `src/Sales/Codeunits/BCSFSalesGenerator.Codeunit.al` | SF-021 |
+| Purchasing | 90450 | Codeunit | `BCSF Vendor Generator` | `src/Purchasing/Codeunits/BCSFVendorGenerator.Codeunit.al` | SF-018 |
+| Purchasing | 90451 | Codeunit | `BCSF Purchase Generator` | `src/Purchasing/Codeunits/BCSFPurchaseGenerator.Codeunit.al` | SF-020 |
+| Inventory | 90475 | Codeunit | `BCSF Inventory Generator` | `src/Inventory/Codeunits/BCSFInventoryGenerator.Codeunit.al` | SF-019 |
+| Warehouse | 90500 | Codeunit | `BCSF Warehouse Generator` | `src/Warehouse/Codeunits/BCSFWarehouseGenerator.Codeunit.al` | SF-028 |
+| Manufacturing | 90525 | Codeunit | `BCSF Manufacturing Generator` | `src/Manufacturing/Codeunits/BCSFManufacturingGenerator.Codeunit.al` | SF-029 |
+| Assembly | 90550 | Codeunit | `BCSF Assembly Generator` | `src/Assembly/Codeunits/BCSFAssemblyGenerator.Codeunit.al` | SF-029 |
+| Projects | 90575 | Codeunit | `BCSF Project Generator` | `src/Projects/Codeunits/BCSFProjectGenerator.Codeunit.al` | SF-030 |
+| ServiceManagement | 90600 | Codeunit | `BCSF Service Generator` | `src/ServiceManagement/Codeunits/BCSFServiceGenerator.Codeunit.al` | SF-030 |
+| FixedAssets | 90625 | Codeunit | `BCSF Fixed Asset Generator` | `src/FixedAssets/Codeunits/BCSFFixedAssetGenerator.Codeunit.al` | SF-031 |
+| CRM | 90650 | Codeunit | `BCSF CRM Generator` | `src/CRM/Codeunits/BCSFCRMGenerator.Codeunit.al` | SF-033 |
+| Planning | 90675 | Codeunit | `BCSF Planning Generator` | `src/Planning/Codeunits/BCSFPlanningGenerator.Codeunit.al` | SF-033 |
 
-| Core | 90108 | Enum | `BCSF Data Language` | `src/Core/BCSFDataLanguage.Enum.al` | SF-005 |
-| Core | 90109 | Codeunit | `BCSF Language Mgt` | `src/Core/BCSFLanguageMgt.Codeunit.al` | SF-005 |
-| Lifecycle | 90377 | Codeunit | `BCSF Scenario Guard` | `src/Lifecycle/BCSFScenarioGuard.Codeunit.al` | SF-005 |
-| ScenarioManagement | 90137 | Page | `BCSF Data Targets` | `src/ScenarioManagement/BCSFDataTargets.Page.al` | SF-006 |
-| ScenarioManagement | 90135 | Enum | `BCSF Entity Type` | `src/ScenarioManagement/BCSFEntityType.Enum.al` | SF-006 |
-| ScenarioManagement | 90141 | Page | `BCSF Frozen Modules` | `src/ScenarioManagement/BCSFFrozenModules.Page.al` | SF-005 |
-| ScenarioManagement | 90140 | Page | `BCSF Frozen Targets` | `src/ScenarioManagement/BCSFFrozenTargets.Page.al` | SF-005 |
-| ScenarioManagement | 90146 | Enum | `BCSF Module Type` | `src/ScenarioManagement/BCSFModuleType.Enum.al` | SF-006 |
-| ScenarioManagement | 90142 | Enum | `BCSF Quantity Preset` | `src/ScenarioManagement/BCSFQuantityPreset.Enum.al` | SF-006 |
-| ScenarioManagement | 90139 | Page | `BCSF Run Card` | `src/ScenarioManagement/BCSFRunCard.Page.al` | SF-005 |
-| ScenarioManagement | 90138 | Page | `BCSF Run List` | `src/ScenarioManagement/BCSFRunList.Page.al` | SF-005 |
-| ScenarioManagement | 90145 | Codeunit | `BCSF Scenario DB Events` | `src/ScenarioManagement/BCSFScenarioDBEvents.Codeunit.al` | SF-005 |
-| ScenarioManagement | 90136 | Page | `BCSF Scenario Modules` | `src/ScenarioManagement/BCSFScenarioModules.Page.al` | SF-005 |
-| ScenarioManagement | 90143 | Codeunit | `BCSF Scenario Policy` | `src/ScenarioManagement/BCSFScenarioPolicy.Codeunit.al` | SF-006 |
-| ScenarioManagement | 90144 | Codeunit | `BCSF Snapshot Writer` | `src/ScenarioManagement/BCSFSnapshotWriter.Codeunit.al` | SF-005 |
+| Core | 90108 | Enum | `BCSF Data Language` | `src/Core/Enums/BCSFDataLanguage.Enum.al` | SF-005 |
+| Core | 90109 | Codeunit | `BCSF Language Mgt` | `src/Core/Codeunits/BCSFLanguageMgt.Codeunit.al` | SF-005 |
+| Lifecycle | 90377 | Codeunit | `BCSF Scenario Guard` | `src/Lifecycle/Codeunits/BCSFScenarioGuard.Codeunit.al` | SF-005 |
+| ScenarioManagement | 90137 | Page | `BCSF Data Targets` | `src/ScenarioManagement/Pages/BCSFDataTargets.Page.al` | SF-006 |
+| ScenarioManagement | 90135 | Enum | `BCSF Entity Type` | `src/ScenarioManagement/Enums/BCSFEntityType.Enum.al` | SF-006 |
+| ScenarioManagement | 90141 | Page | `BCSF Frozen Modules` | `src/ScenarioManagement/Pages/BCSFFrozenModules.Page.al` | SF-005 |
+| ScenarioManagement | 90140 | Page | `BCSF Frozen Targets` | `src/ScenarioManagement/Pages/BCSFFrozenTargets.Page.al` | SF-005 |
+| ScenarioManagement | 90146 | Enum | `BCSF Module Type` | `src/ScenarioManagement/Enums/BCSFModuleType.Enum.al` | SF-006 |
+| ScenarioManagement | 90142 | Enum | `BCSF Quantity Preset` | `src/ScenarioManagement/Enums/BCSFQuantityPreset.Enum.al` | SF-006 |
+| ScenarioManagement | 90139 | Page | `BCSF Run Card` | `src/ScenarioManagement/Pages/BCSFRunCard.Page.al` | SF-005 |
+| ScenarioManagement | 90138 | Page | `BCSF Run List` | `src/ScenarioManagement/Pages/BCSFRunList.Page.al` | SF-005 |
+| ScenarioManagement | 90145 | Codeunit | `BCSF Scenario DB Events` | `src/ScenarioManagement/Codeunits/BCSFScenarioDBEvents.Codeunit.al` | SF-005 |
+| ScenarioManagement | 90136 | Page | `BCSF Scenario Modules` | `src/ScenarioManagement/Pages/BCSFScenarioModules.Page.al` | SF-005 |
+| ScenarioManagement | 90143 | Codeunit | `BCSF Scenario Policy` | `src/ScenarioManagement/Codeunits/BCSFScenarioPolicy.Codeunit.al` | SF-006 |
+| ScenarioManagement | 90144 | Codeunit | `BCSF Snapshot Writer` | `src/ScenarioManagement/Codeunits/BCSFSnapshotWriter.Codeunit.al` | SF-005 |
 
-| Core | 90111 | Codeunit | `BCSF Contract JSON` | `src/Core/BCSFContractJSON.Codeunit.al` | SF-007 |
-| Core | 90112 | Enum | `BCSF Dependency Kind` | `src/Core/BCSFDependencyKind.Enum.al` | SF-007 |
-| Core | 90110 | Enum | `BCSF Plan Issue` | `src/Core/BCSFPlanIssue.Enum.al` | SF-007 |
-| DependencyManager | 90207 | Codeunit | `BCSF Graph Self Check` | `src/DependencyManager/BCSFGraphSelfCheck.Codeunit.al` | SF-008 |
-| DependencyManager | 90202 | Codeunit | `BCSF Graph Sorter` | `src/DependencyManager/BCSFGraphSorter.Codeunit.al` | SF-008 |
-| DependencyManager | 90203 | Table | `BCSF Plan Node` | `src/DependencyManager/BCSFPlanNode.Table.al` | SF-008 |
-| DependencyManager | 90205 | Page | `BCSF Plan Preview` | `src/DependencyManager/BCSFPlanPreview.Page.al` | SF-008 |
-| DependencyManager | 90204 | Codeunit | `BCSF Plan Writer` | `src/DependencyManager/BCSFPlanWriter.Codeunit.al` | SF-008 |
-| DependencyManager | 90208 | PageExtension | `BCSF Run Planning` | `src/DependencyManager/BCSFRunPlanning.PageExt.al` | SF-008 |
-| DependencyManager | 90206 | Page | `BCSF Saved Run Steps` | `src/DependencyManager/BCSFSavedRunSteps.Page.al` | SF-008 |
-| Lifecycle | 90378 | Codeunit | `BCSF Planning Guard` | `src/Lifecycle/BCSFPlanningGuard.Codeunit.al` | SF-008 |
-| ModuleRegistry | 90181 | Codeunit | `BCSF Contract Self Check` | `src/ModuleRegistry/BCSFContractSelfCheck.Codeunit.al` | SF-007 |
-| ModuleRegistry | 90178 | Codeunit | `BCSF Customer Probe` | `src/ModuleRegistry/BCSFCustomerProbe.Codeunit.al` | SF-007 |
-| ModuleRegistry | 90182 | Page | `BCSF Generator Catalog` | `src/ModuleRegistry/BCSFGeneratorCatalog.Page.al` | SF-007 |
-| ModuleRegistry | 90180 | Codeunit | `BCSF Missing Generator` | `src/ModuleRegistry/BCSFMissingGenerator.Codeunit.al` | SF-007 |
-| ModuleRegistry | 90183 | Codeunit | `BCSF Probe Support` | `src/ModuleRegistry/BCSFProbeSupport.Codeunit.al` | SF-007 |
-| ModuleRegistry | 90179 | Codeunit | `BCSF Vendor Probe` | `src/ModuleRegistry/BCSFVendorProbe.Codeunit.al` | SF-007 |
+| Core | 90111 | Codeunit | `BCSF Contract JSON` | `src/Core/Codeunits/BCSFContractJSON.Codeunit.al` | SF-007 |
+| Core | 90112 | Enum | `BCSF Dependency Kind` | `src/Core/Enums/BCSFDependencyKind.Enum.al` | SF-007 |
+| Core | 90110 | Enum | `BCSF Plan Issue` | `src/Core/Enums/BCSFPlanIssue.Enum.al` | SF-007 |
+| DependencyManager | 90207 | Codeunit | `BCSF Graph Self Check` | `src/DependencyManager/Codeunits/BCSFGraphSelfCheck.Codeunit.al` | SF-008 |
+| DependencyManager | 90202 | Codeunit | `BCSF Graph Sorter` | `src/DependencyManager/Codeunits/BCSFGraphSorter.Codeunit.al` | SF-008 |
+| DependencyManager | 90203 | Table | `BCSF Plan Node` | `src/DependencyManager/Tables/BCSFPlanNode.Table.al` | SF-008 |
+| DependencyManager | 90205 | Page | `BCSF Plan Preview` | `src/DependencyManager/Pages/BCSFPlanPreview.Page.al` | SF-008 |
+| DependencyManager | 90204 | Codeunit | `BCSF Plan Writer` | `src/DependencyManager/Codeunits/BCSFPlanWriter.Codeunit.al` | SF-008 |
+| DependencyManager | 90208 | PageExtension | `BCSF Run Planning` | `src/DependencyManager/PageExtensions/BCSFRunPlanning.PageExt.al` | SF-008 |
+| DependencyManager | 90206 | Page | `BCSF Saved Run Steps` | `src/DependencyManager/Pages/BCSFSavedRunSteps.Page.al` | SF-008 |
+| Lifecycle | 90378 | Codeunit | `BCSF Planning Guard` | `src/Lifecycle/Codeunits/BCSFPlanningGuard.Codeunit.al` | SF-008 |
+| ModuleRegistry | 90181 | Codeunit | `BCSF Contract Self Check` | `src/ModuleRegistry/Codeunits/BCSFContractSelfCheck.Codeunit.al` | SF-007 |
+| ModuleRegistry | 90178 | Codeunit | `BCSF Customer Probe` | `src/ModuleRegistry/Codeunits/BCSFCustomerProbe.Codeunit.al` | SF-007 |
+| ModuleRegistry | 90182 | Page | `BCSF Generator Catalog` | `src/ModuleRegistry/Pages/BCSFGeneratorCatalog.Page.al` | SF-007 |
+| ModuleRegistry | 90180 | Codeunit | `BCSF Missing Generator` | `src/ModuleRegistry/Codeunits/BCSFMissingGenerator.Codeunit.al` | SF-007 |
+| ModuleRegistry | 90183 | Codeunit | `BCSF Probe Support` | `src/ModuleRegistry/Codeunits/BCSFProbeSupport.Codeunit.al` | SF-007 |
+| ModuleRegistry | 90179 | Codeunit | `BCSF Vendor Probe` | `src/ModuleRegistry/Codeunits/BCSFVendorProbe.Codeunit.al` | SF-007 |
 
 ## Verträge und Aufrufgrenzen
 
-- `BCSF Generator` ist das implementierte interne Interface in `BCScenarioFactory.ModuleRegistry`, Dateipfad `src/ModuleRegistry/BCSFGenerator.Interface.al`, ohne deklarierte numerische ID. Das Interface verwendet gemeinsame Core-Typen; Registry/Core referenzieren keine konkreten Fachgeneratoren. Fachmodule implementieren und registrieren ihre Fähigkeiten. Enum-basierte Auflösung und Methodensignaturen sind in SF-007 umgesetzt, öffentliche Fremdanbieter-Verträge zu SF-034.
+- `BCSF Generator` ist das implementierte interne Interface in `BCScenarioFactory.ModuleRegistry`, Dateipfad `src/ModuleRegistry/Interfaces/BCSFGenerator.Interface.al`, ohne deklarierte numerische ID. Das Interface verwendet gemeinsame Core-Typen; Registry/Core referenzieren keine konkreten Fachgeneratoren. Fachmodule implementieren und registrieren ihre Fähigkeiten. Enum-basierte Auflösung und Methodensignaturen sind in SF-007 umgesetzt, öffentliche Fremdanbieter-Verträge zu SF-034.
 - Core enthält ausschließlich Basistypen und globale Einstellungen. Laufkonfiguration, Run Header, Run Step und Snapshot gehören ScenarioManagement; Core referenziert weder ScenarioManagement noch Lifecycle. Der Environment Guard gehört Lifecycle und wird an jedem mutierenden Einstieg einschließlich Worker aufgerufen.
 - ScenarioManagement hält Vorlagen/Snapshots und Modul-/Entitätsauswahl. IndustryProfiles löst Regeln darauf auf; Profile enthalten keine kopierte Generatorlogik. ModuleRegistry verwaltet Fähigkeiten, DependencyManager plant fachliche Reihenfolgen, SetupManager erstellt lesende Diffs und setzt nur freigegebene Änderungen um.
 - DataGeneration hält deterministische Werte und Datensatzherkunft. ProcessEngine koordiniert Dokument-/Postingmodi; konkrete geprüfte BC-Standardaufrufe verbleiben bei den Fachgeneratoren. Kein Direktinsert in Standardledger.
@@ -198,11 +198,11 @@ Die geplanten IDs 90225/90226 und 90250 sind nun implementiert. Fünf zusätzlic
 
 | Modul | Plan-ID | Typ | Objektname | Dateipfad | Ticket |
 | --- | --- | --- | --- | --- | --- |
-| IndustryProfiles | 90154 | Codeunit | `BCSF Synthetic Rules` | `src/IndustryProfiles/BCSFSyntheticRules.Codeunit.al` | SF-010 |
-| SetupManager | 90227 | Page | `BCSF Setup Diff Preview` | `src/SetupManager/BCSFSetupDiffPreview.Page.al` | SF-009 |
-| SetupManager | 90228 | PageExtension | `BCSF Run Preflight` | `src/SetupManager/BCSFRunPreflight.PageExt.al` | SF-009 |
-| DataGeneration | 90253 | PageExtension | `BCSF Run Synthetic Preview` | `src/DataGeneration/BCSFRunSyntheticPreview.PageExt.al` | SF-010 |
-| Finance | 90402 | Codeunit | `BCSF Finance Setup Check` | `src/Finance/BCSFFinanceSetupCheck.Codeunit.al` | SF-009 |
+| IndustryProfiles | 90154 | Codeunit | `BCSF Synthetic Rules` | `src/IndustryProfiles/Codeunits/BCSFSyntheticRules.Codeunit.al` | SF-010 |
+| SetupManager | 90227 | Page | `BCSF Setup Diff Preview` | `src/SetupManager/Pages/BCSFSetupDiffPreview.Page.al` | SF-009 |
+| SetupManager | 90228 | PageExtension | `BCSF Run Preflight` | `src/SetupManager/PageExtensions/BCSFRunPreflight.PageExt.al` | SF-009 |
+| DataGeneration | 90253 | PageExtension | `BCSF Run Synthetic Preview` | `src/DataGeneration/PageExtensions/BCSFRunSyntheticPreview.PageExt.al` | SF-010 |
+| Finance | 90402 | Codeunit | `BCSF Finance Setup Check` | `src/Finance/Codeunits/BCSFFinanceSetupCheck.Codeunit.al` | SF-009 |
 
 Jetzt 64 implementierte Objekte einschließlich Interface ohne numerische ID. SetupManager darf zusätzlich DependencyManager ausschließlich für dessen Start-Ereignis referenzieren. Finance → SetupManager und IndustryProfiles → ScenarioManagement nutzen vorhandene erlaubte Richtungen; keine neue ausführbare Rückabhängigkeit des Snapshot Writers. Core-Permission-Set bleibt deklarative Ausnahme. Datenfluss, Felder, Defaults und Kompatibilität: [SETUP_SEED.md](SETUP_SEED.md).
 
@@ -212,28 +212,61 @@ Geplante Objekte 90251/90252 und 90300–90303 sind nun implementiert. 90304 ble
 
 | Modul | Plan-ID | Typ | Objektname | Dateipfad | Ticket |
 | --- | --- | --- | --- | --- | --- |
-| DataGeneration | 90254 | Page | `BCSF Generated Records` | `src/DataGeneration/BCSFGeneratedRecords.Page.al` | SF-011 |
-| DataGeneration | 90255 | PageExtension | `BCSF Run Provenance` | `src/DataGeneration/BCSFRunProvenance.PageExt.al` | SF-011 |
-| Lifecycle | 90379 | Codeunit | `BCSF Provenance Guard` | `src/Lifecycle/BCSFProvenanceGuard.Codeunit.al` | SF-011 |
-| BackgroundProcessing | 90305 | Table | `BCSF Run Execution` | `src/BackgroundProcessing/BCSFRunExecution.Table.al` | SF-012 |
-| BackgroundProcessing | 90306 | Codeunit | `BCSF Execution Rules` | `src/BackgroundProcessing/BCSFExecutionRules.Codeunit.al` | SF-012 |
-| BackgroundProcessing | 90307 | Codeunit | `BCSF Batch Runner` | `src/BackgroundProcessing/BCSFBatchRunner.Codeunit.al` | SF-012 |
-| BackgroundProcessing | 90308 | Codeunit | `BCSF Queue Failure` | `src/BackgroundProcessing/BCSFQueueFailure.Codeunit.al` | SF-012 |
-| BackgroundProcessing | 90309 | Page | `BCSF Execution List` | `src/BackgroundProcessing/BCSFExecutionList.Page.al` | SF-012 |
-| BackgroundProcessing | 90310 | Page | `BCSF Schedule Request` | `src/BackgroundProcessing/BCSFScheduleRequest.Page.al` | SF-012 |
-| BackgroundProcessing | 90311 | Page | `BCSF Batch List` | `src/BackgroundProcessing/BCSFBatchList.Page.al` | SF-012 |
-| BackgroundProcessing | 90312 | PageExtension | `BCSF Run Queue` | `src/BackgroundProcessing/BCSFRunQueue.PageExt.al` | SF-012 |
+| DataGeneration | 90254 | Page | `BCSF Generated Records` | `src/DataGeneration/Pages/BCSFGeneratedRecords.Page.al` | SF-011 |
+| DataGeneration | 90255 | PageExtension | `BCSF Run Provenance` | `src/DataGeneration/PageExtensions/BCSFRunProvenance.PageExt.al` | SF-011 |
+| Lifecycle | 90379 | Codeunit | `BCSF Provenance Guard` | `src/Lifecycle/Codeunits/BCSFProvenanceGuard.Codeunit.al` | SF-011 |
+| BackgroundProcessing | 90305 | Table | `BCSF Run Execution` | `src/BackgroundProcessing/Tables/BCSFRunExecution.Table.al` | SF-012 |
+| BackgroundProcessing | 90306 | Codeunit | `BCSF Execution Rules` | `src/BackgroundProcessing/Codeunits/BCSFExecutionRules.Codeunit.al` | SF-012 |
+| BackgroundProcessing | 90307 | Codeunit | `BCSF Batch Runner` | `src/BackgroundProcessing/Codeunits/BCSFBatchRunner.Codeunit.al` | SF-012 |
+| BackgroundProcessing | 90308 | Codeunit | `BCSF Queue Failure` | `src/BackgroundProcessing/Codeunits/BCSFQueueFailure.Codeunit.al` | SF-012 |
+| BackgroundProcessing | 90309 | Page | `BCSF Execution List` | `src/BackgroundProcessing/Pages/BCSFExecutionList.Page.al` | SF-012 |
+| BackgroundProcessing | 90310 | Page | `BCSF Schedule Request` | `src/BackgroundProcessing/Pages/BCSFScheduleRequest.Page.al` | SF-012 |
+| BackgroundProcessing | 90311 | Page | `BCSF Batch List` | `src/BackgroundProcessing/Pages/BCSFBatchList.Page.al` | SF-012 |
+| BackgroundProcessing | 90312 | PageExtension | `BCSF Run Queue` | `src/BackgroundProcessing/PageExtensions/BCSFRunQueue.PageExt.al` | SF-012 |
 
 81 implementierte Objekte einschließlich Interface ohne numerische ID. Lifecycle darf für den Pflichtsubscriber zusätzlich DataGeneration referenzieren. BackgroundProcessing nutzt seine bereits vorgesehenen Abhängigkeiten auf Core, ScenarioManagement, ModuleRegistry, DependencyManager, DataGeneration und Lifecycle; keine Rückabhängigkeit des Snapshotmoduls. Deklaratives Core-Permission-Set weiterhin Ausnahme. Header/Steps/Snapshots unverändert immutable, Ausführungsstatus und Batches in BackgroundProcessing. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).
 
 ## Umsetzung SF-013 – 16.11.2026
 
-Reservierte Codeunit 90304 `BCSF Batch Recovery` unter `src/BackgroundProcessing/BCSFBatchRecovery.Codeunit.al` implementiert. Drei weitere zuvor freie Werte im BackgroundProcessing-Block:
+Reservierte Codeunit 90304 `BCSF Batch Recovery` unter `src/BackgroundProcessing/Codeunits/BCSFBatchRecovery.Codeunit.al` implementiert. Drei weitere zuvor freie Werte im BackgroundProcessing-Block:
 
 | Modul | Plan-ID | Typ | Objektname | Dateipfad | Ticket |
 | --- | --- | --- | --- | --- | --- |
-| BackgroundProcessing | 90313 | Table | `BCSF Run Control` | `src/BackgroundProcessing/BCSFRunControl.Table.al` | SF-013 |
-| BackgroundProcessing | 90314 | Table | `BCSF Batch Checkpoint` | `src/BackgroundProcessing/BCSFBatchCheckpoint.Table.al` | SF-013 |
-| BackgroundProcessing | 90315 | Codeunit | `BCSF Recovery Rules` | `src/BackgroundProcessing/BCSFRecoveryRules.Codeunit.al` | SF-013 |
+| BackgroundProcessing | 90313 | Table | `BCSF Run Control` | `src/BackgroundProcessing/Tables/BCSFRunControl.Table.al` | SF-013 |
+| BackgroundProcessing | 90314 | Table | `BCSF Batch Checkpoint` | `src/BackgroundProcessing/Tables/BCSFBatchCheckpoint.Table.al` | SF-013 |
+| BackgroundProcessing | 90315 | Codeunit | `BCSF Recovery Rules` | `src/BackgroundProcessing/Codeunits/BCSFRecoveryRules.Codeunit.al` | SF-013 |
 
 85 Objekte einschließlich Interface, 84 numerische IDs. Keine neue Modulrichtung oder App-Abhängigkeit; Core enthält nur die ergänzten erlaubten Statusübergänge und die deklarative Berechtigungserweiterung. Checkpoint-/Control-Felder und neue technische Batchfelder im [Recovery-Vertrag](RECOVERY.md). Keine neuen Testobjekte.
+
+## Umsetzung SF-014/SF-015 – 16.11.2026
+
+97 reale AL-Objekte (96 numerische IDs plus Interface), elf Module mit AL-Code.
+Reserviert geplante 90350/90351 und Wizard 90132 jetzt implementiert. Die bislang **nicht implementierten** Monitoring-Planwerte 90352/90353 erhalten die Namen Step Progress/Run Events, weil Run List und Batch List bereits in ScenarioManagement/BackgroundProcessing existieren. Keine vorhandene Datei/Objekt umbenannt oder verschoben.
+
+| Modul | Plan-ID | Typ | Objektname | Dateipfad | Ticket |
+| --- | --- | --- | --- | --- | --- |
+| Monitoring | 90354 | Table (Temporary) | `BCSF Step Metric` | `src/Monitoring/Tables/BCSFStepMetric.Table.al` | SF-014 |
+| Monitoring | 90355 | Page | `BCSF Run Overview` | `src/Monitoring/Pages/BCSFRunOverview.Page.al` | SF-014 |
+| Monitoring | 90356 | Codeunit | `BCSF Monitoring Mgt` | `src/Monitoring/Codeunits/BCSFMonitoringMgt.Codeunit.al` | SF-014 |
+| Monitoring | 90357 | Codeunit | `BCSF Run Event Writer` | `src/Monitoring/Codeunits/BCSFRunEventWriter.Codeunit.al` | SF-014 |
+| Monitoring | 90358 | PageExtension | `BCSF Run Monitoring` | `src/Monitoring/PageExtensions/BCSFRunMonitoring.PageExt.al` | SF-014 |
+| Monitoring | 90359 | PageExtension | `BCSF Wizard Execution` | `src/Monitoring/PageExtensions/BCSFWizardExecution.PageExt.al` | SF-015 |
+| Monitoring | 90360 | PageExtension | `BCSF Batch Diagnostics` | `src/Monitoring/PageExtensions/BCSFBatchDiagnostics.PageExt.al` | SF-014 |
+
+Zusätzliche Werte vor Nutzung lokal frei; bestehende Modulblöcke unverändert. Monitoring erhält gerichtete Lesereferenzen auf DependencyManager/SetupManager und den Lifecycle-Guard; keine ausführbare Rückrichtung. Core-Permission-Set weiterhin rein deklarative Ausnahme. Wizard bleibt von diesen Modulen unabhängig. Vertrag, Felder, Rechte, Messgrenzen und Transaktionen: [MONITORING_WIZARD.md](MONITORING_WIZARD.md). Beide Tickets zur Prüfung, keine BC-Laufzeitabnahme.
+
+## SF-014 – JavaScript-Arbeitsplatz und Role-Center nach Nutzerpräzisierung
+
+Zusätzlich sieben reale Objekte; jetzt 104 AL-Objekte, davon 101 mit numerischer ID sowie Interface, ControlAddIn und Profil ohne numerische ID. Monitoring jetzt 18 Dateien/Objekte. Neue Werte 90362–90366 vor Verwendung lokal unbesetzt; 90361 bleibt Modulreserve. Keine Verschiebung oder Umbenennung vorhandener Objekte. Die bisherige Dashboardseite 90351 erhält lediglich die präzisierte Caption Scenario Factory Run Monitor; das neue JS-Dashboard ist separat.
+
+| Modul | Plan-ID | Typ | Objektname | Dateipfad | Ticket |
+| --- | --- | --- | --- | --- | --- |
+| Monitoring | — | ControlAddIn | `BCSF Dashboard` | `src/Monitoring/ControlAddIns/BCSFDashboard.ControlAddIn.al` | SF-014 |
+| Monitoring | 90362 | Page (CardPart) | `BCSF Dashboard Part` | `src/Monitoring/Pages/BCSFDashboardPart.Page.al` | SF-014 |
+| Monitoring | 90363 | Page (Card) | `BCSF Dashboard Host` | `src/Monitoring/Pages/BCSFDashboardHost.Page.al` | SF-014 |
+| Monitoring | 90364 | Page (RoleCenter) | `BCSF Factory Role Center` | `src/Monitoring/Pages/BCSFFactoryRoleCenter.Page.al` | SF-014 |
+| Monitoring | 90365 | Codeunit | `BCSF Dashboard Data` | `src/Monitoring/Codeunits/BCSFDashboardData.Codeunit.al` | SF-014 |
+| Monitoring | 90366 | Codeunit | `BCSF Dashboard Commands` | `src/Monitoring/Codeunits/BCSFDashboardCommands.Codeunit.al` | SF-014 |
+| Monitoring | — | Profile | `BCSF Scenario Factory` | `src/Monitoring/Profiles/BCSFScenarioFactory.Profile.al` | SF-014 |
+
+Monitoring referenziert zusätzlich die vorhandenen UI-/Lesetypen aus ModuleRegistry/DataGeneration; keine Rückreferenz dieser Module. Run Header 90128 erhält ausschließlich den Leseschlüssel CreatedOrder (Created At, Run Id) für die begrenzte neueste Laufprojektion, keine neuen Felder/Schreibwege. JS/CSS/Startup sind gebündelte App-Ressourcen, keine weiteren AL-Objekte oder externen Abhängigkeiten. Profil wird nicht automatisch zugewiesen. Reproduzierbarer lokaler Browsercheck unter `scripts/check_dashboard.mjs`, keine neue AL-Test-Codeunit. [Aktueller Vertrag und Einbauweg](DASHBOARD_EMBEDDING.md).

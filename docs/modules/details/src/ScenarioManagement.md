@@ -1,6 +1,6 @@
 # ScenarioManagement – Modulspezifikation
 
-**Status:** Teilweise implementiert, 21 AL-Objekte, Zur Prüfung. **Pfad:** `src/ScenarioManagement/`. Historische Planungsangaben unten gelten nur für noch nicht implementierte Teile.
+**Status:** 22 AL-Objekte implementiert, **Zur Prüfung**. Pfad: `src/ScenarioManagement/`. Historische Planabschnitte gelten für noch nicht umgesetzte Teile.
 
 ## Fachlicher Auftrag
 
@@ -72,3 +72,16 @@ Reale Dateien:
 - `BCSFSnapshotWriter.Codeunit.al`
 
 Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Sicherheitsgrenzen: [GENERATOR_PLANNING.md](../../../GENERATOR_PLANNING.md). Build/Übersetzung lokal geprüft; Selbstprüfungen nur kompiliert, kein BC-Laufzeittest. Fachgeneratoren und Queue weiterhin geplant.
+
+## SF-014/SF-015 – 16.11.2026
+
+Zusätzlich Page 90132 BCSF Scenario Wizard: fünf geführte Konfigurationsschritte, expliziter Snapshot und danach gesperrte Konfiguration. Bestehende Vorlagenliste/-karte um Assistentennavigation ergänzt. Plan/Preflight/Start über Monitoring-PageExtension, keine direkte Modulrückreferenz.
+
+Reale Objekte, gerichtete Abhängigkeiten, Persistenz-/Rechtevertrag, Bedienung und offene Prüfungen: [MONITORING_WIZARD.md](../../../MONITORING_WIZARD.md), [OBJECT_PLAN.md](../../../OBJECT_PLAN.md), [TESTS.md](../../../TESTS.md). Keine BC-Laufzeitabnahme.
+
+SF-014-Nutzerpräzisierung: Run Header ausschließlich um den Leseschlüssel CreatedOrder (Created At, Run Id) für die begrenzte neueste Dashboardlaufwahl ergänzt. Keine neuen Headerfelder oder mutierenden Snapshot-/Laufpfade. [JS-Arbeitsplatz](../../../DASHBOARD_EMBEDDING.md).
+
+
+## Ablage – SF-002, 16.11.2026
+
+Vorhandene AL-Objekte liegen unter `src/ScenarioManagement/Codeunits/`, `src/ScenarioManagement/Enums/`, `src/ScenarioManagement/Pages/`, `src/ScenarioManagement/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.

@@ -1,6 +1,6 @@
 # Bedienkonzept, Seiten und Dashboard
 
-**Status:** Wizard/Dashboard bleiben Entwurf. Setup-Card sowie Vorlagenliste/-karte, Modul-/Zielunterseiten und immutable Laufansicht sind seit SF-004–SF-006 vorhanden. Wizard, Dashboard und Queue-Abläufe bleiben Entwurf. Implementierte Bedienung und Sprachauswahl: [SCENARIO_CONFIGURATION.md](SCENARIO_CONFIGURATION.md).
+**Status:** JavaScript-Dashboard mit eigenem Role-Center und wiederverwendbarer CardPart sowie fünfstufiger Wizard implementiert, **Zur Prüfung**. Fachgeneratoren und echte BC-Laufzeitabnahme ausstehend. Details: [MONITORING_WIZARD.md](MONITORING_WIZARD.md).
 
 ## Navigation (sechs Bereiche)
 
@@ -40,3 +40,11 @@ SF-009/SF-010: Laufkarte → „Einrichtungsvorprüfung anzeigen“ zeigt aktuel
 SF-011/SF-012 ergänzen auf der Laufkarte „Ausführungspakete vorbereiten“, „Vorbereitete Ausführung planen“ mit Startdialog/Bestätigung sowie persistente Ausführungs-/Paket-/Ergebnislisten. Erfasster Anfangsstatus und aktueller Ausführungsstatus sind ausdrücklich getrennt. Der Browser kann nach erfolgreichem Queue-Start geschlossen werden; wirkliche Queue-Laufzeitprüfung steht aus und aktuelle fachliche Startblocker bleiben wirksam. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).
 
 SF-013: Laufkarte mit „Pause anfordern“, „Abbruch anfordern“, „Ausstehende Anforderungen anwenden“ und „Ab Checkpoints fortsetzen“, dazu sichtbare Anforderungsflags getrennt vom aktuellen Status. Paketliste mit Einplanungszähler/Voraufgabe, „Nicht übernommenes Fehlerpaket wiederholen“, „Unterbrochene Übernahme prüfen“ und „Bestätigten Checkpoint abgleichen“. Bestätigungen erläutern Grenzen; Abbruch nimmt keine Ergebnisse zurück, Reconciliation ist kein erneuter Generatorlauf. [RECOVERY.md](RECOVERY.md).
+
+## Implementiert SF-014/SF-015 – 16.11.2026
+
+BC-Suche → Scenario Factory Dashboard; Run auswählen, FactBox lesen, Schrittfortschritt/Pakete/Statushistorie/Standardprotokolle öffnen. Keine Ausführung beim Öffnen. Vorlagenliste → Neues Szenario mit Assistent bzw. Mit Assistent planen → fünf Schritte → explizit erfassen → Plan und Setup prüfen → Prüfplan speichern → frühesten Start und Sandboxfreigabe wählen → bestätigen. Start bleibt bei aktuellen Generator-/Setupblockern gesperrt. Schließen bewahrt gespeicherte Vorlagen und erfasste Läufe. Gesamtqualität ausdrücklich ausstehend bis SF-016. [Vertrag und Grenzen](MONITORING_WIZARD.md), **Zur Prüfung**.
+
+## Aktueller zentraler Einstieg – 16.11.2026
+
+Nach separat freizugebender Installation Profil BC Scenario Factory wählen → JS-Dashboard im App-Role-Center. Neues Szenario startet die explizite Vorlagenanlage mit Wizard. Acht Navigationseinstiege und 19 Runaktionen stehen direkt bereit. Bestehende Laufkarten-/Wizardlinks öffnen denselben JS-Arbeitsplatz als große Hostseite mit Runkontext. Weitere erweiterbare Role-Center erhalten dieselbe CardPart per PageExtension; Personalisierung allein kann keinen bislang nicht deklarierten Part einfügen. [Vertrag, Einbau und Grenzen](DASHBOARD_EMBEDDING.md). Status **Zur Prüfung**, echte BC-Abnahme offen.

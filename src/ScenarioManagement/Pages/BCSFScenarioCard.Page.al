@@ -95,6 +95,19 @@ page 90131 "BCSF Scenario Card"
   {
     area(Processing)
     {
+      action(GuidedPlanning)
+      {
+        ApplicationArea = All;
+        Caption = 'Plan with Wizard';
+        ToolTip = 'Opens five guided steps on this saved template. Edits persist; closing does not schedule execution.';
+        Image = Planning;
+        trigger OnAction()
+        begin
+          CurrPage.SaveRecord();
+          Page.Run(Page::"BCSF Scenario Wizard", Rec);
+        end;
+      }
+
       action(CopyScenario)
       {
         ApplicationArea = All;

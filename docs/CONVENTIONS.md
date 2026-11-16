@@ -1,6 +1,6 @@
 # AL-Konventionen — BC Scenario Factory
 
-> SF-002, 11.11.2026: Projektkonventionen zur Prüfung. SF-003/SF-004 implementieren inzwischen die ersten neun AL-Objekte. Die folgenden Regeln konkretisieren den beauftragten Objektplan; vorhandene Dateien werden nicht umstrukturiert.
+> SF-002, 11.11.2026: Projektkonventionen zur Prüfung. SF-003/SF-004 implementieren inzwischen die ersten neun AL-Objekte. Die folgenden Regeln konkretisieren den beauftragten Objektplan; der ausdrücklich beauftragte Strukturwechsel vom 16.11.2026 ist in Abschnitt 2 festgehalten.
 
 ## 1. Namen und Dateien
 
@@ -16,16 +16,24 @@
 
 ## 2. Ordnerprofile
 
-**Projektentscheidung vom 10.11.2026:** Für BC Scenario Factory gilt `src/<Modul>/` **ohne vorab angelegte Typ-Unterordner**. Neue AL-Dateien im jeweiligen Modul direkt ablegen; weitere fachliche Unterordner nur bei echter Komplexität und nach Ticketfreigabe. Kein `src/<Modul>/Tables|Pages|Codeunits`-Zwang. Bestehende AL-Dateien weiterhin nie ohne Auftrag verschieben.
+**Projektentscheidung vom 16.11.2026 (SF-002):** Der Nutzer beauftragt die Einordnung bestehender AL-Dateien nach Objekttyp innerhalb jedes Moduls. Dies ersetzt die flache Modulablage vom 10.11.2026. Verbindlich ist `src/<Modul>/<Objekttyp>/<ObjectName>.<ObjectType>.al`; Modulgrenzen und Namespaces bleiben erhalten.
 
+| AL-Objekttyp / Dateisuffix | Ordner |
+| --- | --- |
+| Table / `.Table.al` | `Tables` |
+| Page / `.Page.al` | `Pages` |
+| PageExtension / `.PageExt.al` | `PageExtensions` |
+| Codeunit / `.Codeunit.al` | `Codeunits` |
+| Enum / `.Enum.al` | `Enums` |
+| PermissionSet / `.PermissionSet.al` | `PermissionSets` |
+| Interface / `.Interface.al` | `Interfaces` |
+| ControlAddIn / `.ControlAddIn.al` | `ControlAddIns` |
+| Profile / `.Profile.al` | `Profiles` |
 
-| Profil | Aufbau | Entscheidung |
-| --- | --- | --- |
-| Standard | `src/Tables`, `src/Pages`, `src/Codeunits` usw. | AL-Agentura-MVP; behalten, wenn ausgewählt |
-| Modular | `src/<Modul>/Tables`, `src/<Modul>/Codeunits` usw. | Modularisierung nach bestätigten Modulen |
-| Feature-first | `src/<Fachbereich>/<Feature>` mit AL-Objekttypen nach Bedarf | AL-Guidelines-orientierte Alternative, **nicht automatisch von AL Agentura umsetzen** |
+Beispiel: `src/Core/Tables/BCSFFactorySetup.Table.al`. Typordner nur bei vorhandenen Objekten anlegen; geplante Dateipfade erzeugen keine leeren Verzeichnisse. Weitere Objekttypen bei ihrem ersten beauftragten Einsatz konsistent benennen. Eigene Dashboardressourcen bleiben gemeinsam unter `src/Monitoring/Dashboard/`; ControlAddIn-Pfade sind projektwurzelrelativ.
 
-Nicht bei jedem Ticket neue Struktur erfinden. Keine Bestandsdatei ohne Nutzerfreigabe verschieben.
+Die AL Guidelines empfehlen fachliche Gruppierung; die zusätzliche Typunterteilung innerhalb der bestehenden Module ist die ausdrückliche Projektentscheidung des Nutzers. Kein allgemeiner Zwang zu Typordnern wird daraus abgeleitet. Bestandsdateien außerhalb dieses Strukturauftrags weiterhin nur mit ausdrücklichem Auftrag verschieben.
+
 
 ## 3. Formatierung
 
@@ -92,3 +100,9 @@ SF-009/SF-010: SetupManager darf das Start-Ereignis aus DependencyManager abonni
 SF-011/SF-012: Run Header/Snapshot und gespeicherte Stepkonfiguration bleiben immutable; operativer Status wird separat in BackgroundProcessing gespeichert. App-Batchpläne sind nach Vorbereitung unveränderlich. Statusänderungen nur über feste Writer mit indirekten Anwenderrechten und verpflichtenden DB-Validierungen, auch ohne Tabellentrigger. Registry-Artefakte verwenden positive logische Integer-Schlüssel und stabile Rollen; niemals Hashwerte oder RecordId allein als Ergebnisidentität behandeln. Expliziter Claim-Commit gehört ausschließlich zum Worker; fachlicher Batchteil ist commitfrei und enthält Herkunft/Abschluss/Nachfolgeplanung. Details: [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).
 
 SF-013: bestätigte technische Checkpoints sind immutable und versioniert (Schema 1, exakt acht technische Ergebnisfelder). Claim-Sitzung wird mit Dienstinstanz und eindeutiger Session-GUID gebunden, nicht aus einem Timeout abgeleitet. Steuerungsanforderung hat einen expliziten eigenen Commit vor dem Elternlock; fachliche Batch-/Recoverytransaktionen bleiben commitfrei. Cancel ist dauerhaft, Retry nur vor bewiesener Nichtübernahme und maximal drei Einplanungen. Keine generischen Force-/Rollback-/Replay-Flags. [RECOVERY.md](RECOVERY.md).
+
+## SF-014/SF-015 – 16.11.2026
+
+Monitoring darf beim Öffnen oder Aktualisieren keine Ausführung starten. Ausdrückliche Bedienaktionen im JavaScript-Dashboard delegieren nach serverseitiger Bestätigung an bestehende geprüfte AL-Workflows. Fortschritt aus Completed-Batches je Step; Artefakte, logische Einheiten und globale Qualitätsfreigabe getrennt benennen. Statushistorie nur technische Metadaten aus derselben Übergangstransaktion, keine Fehlertexte kopieren. UI-Integration über PageExtension im abhängigen Monitoring-Modul erhält die gerichtete Modulstruktur. Geführte Vorlagenbearbeitung nutzt bestehende Policies/Unterseiten; Erfassung trennt editierbare Vorlage und festen Review-Run. [Vertrag und Grenzen](MONITORING_WIZARD.md), **Zur Prüfung**.
+
+JavaScript-Dashboard: alle UI-Texte als AL/XLIFF-Vertrag liefern; DOM über textContent aufbauen, keine HTML-Fragmente aus Daten. Nur gebündelte eigene Ressourcen, asynchrone Aufrufe serialisieren und Fehler sichtbar rückmelden. Wiederverwendung über öffentliche CardPart, keine kopierten Dashboardimplementierungen je Role-Center. [Einbauvertrag](DASHBOARD_EMBEDDING.md).

@@ -20,7 +20,7 @@ Diese Dateien machen ein **AL-/Business-Central-Projekt für externe Coding-Agen
 
 1. Workspace öffnen und AL Language Extension prüfen. Bei neuem Projekt kontrollieren, dass `app.json` tatsächlich existiert und mit der vorgesehenen BC-Version kompatibel ist. Ohne valide Konfiguration ist nicht garantiert, dass kompiliert werden kann.
 2. `docs/PROJECT.md` um verifizierte Informationen ergänzen; unklare Angaben als **Zu prüfen** stehen lassen.
-3. Gewünschtes Strukturprofil verstehen: Typ-Ordner (`src/Tables`) oder modular (`src/<Modul>/Tables`). Bestehende Dateien nicht automatisch verschieben.
+3. Gewähltes modulares Strukturprofil verwenden: `src/<Modul>/<Objekttyp>/`, z. B. `src/Core/Tables/`. Zuordnung siehe `docs/CONVENTIONS.md`; weitere Bestandsverschiebungen benötigen einen Auftrag.
 4. `docs/CONVENTIONS.md` mit vorhandenen Präfixen, ID-Ranges und Namensregeln abgleichen.
 5. `TODO.md` öffnen, genau **ein** konkretes Ticket auswählen und ausdrücklich beauftragen.
 6. Nach Agentenarbeit Diff, echte Testergebnisse, unbekannte Punkte und Ticketstatus überprüfen.
@@ -57,7 +57,7 @@ Zuerst AGENT_INITIALIZATION.md, docs/modules/DISCOVERY.md und docs/GAPS.md lesen
 ## Projektbezogener Einstieg (10.11.2026)
 
 - Das Projekt ist **ein Entwurf ohne AL-Code**. Die Modulordner dienen als Struktur; `docs/modules/` enthält Spezifikationen, keine Bestandsnachweise.
-- Struktur: `src/<Modul>/` direkt; sämtliche leeren Objekt-Unterordner wurden auf Nutzerwunsch entfernt.
+- Struktur seit Nutzerauftrag vom 16.11.2026: `src/<Modul>/<Objekttyp>/`; nur belegte Typordner anlegen. Module ohne AL-Code behalten `.gitkeep`.
 - Beginne mit `TODO.md` (ID-/Publisher-/Sandbox-Entscheidung zuerst). **Keine neuen AL-Objekte oder Tests vor Auswahl und ausdrücklicher Freigabe eines Tickets.**
 - Relevante zusätzliche Dokumente: `docs/REQUIREMENTS.md`, `docs/SCENARIOS.md`, `docs/DATA_MODEL.md`, `docs/BACKGROUND_PROCESSING.md`, `docs/UI_WORKFLOWS.md`, `docs/DECISIONS.md`.
 - XERJ wird ausschließlich lokal für Codex erprobt und nicht mit BC verbunden.

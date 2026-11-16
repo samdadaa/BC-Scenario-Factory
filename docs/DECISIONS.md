@@ -7,7 +7,7 @@
 | ADR-01 | Bestätigt | Produktziel | Branchenabhängige, fachlich echte, synthetische Demo-/Schulungs-/Test-/Performance-Daten statt gleichförmiger Massendatensätze |
 | ADR-02 | Bestätigt | Auswahl | Branche, Module, Datenmengen, Buchungs-/Prozessmodus konfigurierbar |
 | ADR-03 | Bestätigt | Background | Generierung über Aufgabenwarteschlange mit Dashboard, Fortschritt und Kontrolle auch ohne aktive Browser-Sitzung |
-| ADR-04 | Bestätigt | Struktur | `src/<Modul>/` ohne leere Typ-Unterordner; Dokumentation & AGENTS-Regeln erhalten |
+| ADR-04 | Bestätigt, aktualisiert 16.11.2026 | Struktur | Nutzer beauftragt `src/<Modul>/<Objekttyp>/`: vorhandene AL-Dateien in passende Typordner verschieben; Typordner nur bei vorhandenem Code. Ersetzt die flache Modulablage vom 10.11.2026; IDs/Namespaces und fachliche Modulgrenzen erhalten |
 | ADR-05 | Bestätigt | XERJ | XERJ nur lokal mit Codex nutzen/testen, **keine BC-Integration** |
 | ADR-06 | Vorschlag | Branchenstart | Großhandel als erstes Profil, Finance/Sales/Purchasing/Inventory als MVP-Fachmodule |
 | ADR-07 | Vorschlag | SDK | Generator-Interface + Registry + Dependency Graph; tatsächliche AL-Signatur zu prüfen |
@@ -102,3 +102,11 @@ Ein einmaliger Standard-Job pro Batch, Nachfolger erst bei validiertem Abschluss
 Eigenständiger Auftrag nur SF-013. Run Control getrennt von langen Parent-/Batchlocks; UI-Steuerungsauftrag explizit dauerhaft, Anwendung an sicheren Grenzen. Drei Einplanungen pro Batch einschließlich Erstversuch und Wiederaufnahme; historische bereits zugeordnete erste Jobs werden bei Stilllegung einmal mitgezählt. Bestehende Completed-Batches ohne neuen Checkpoint werden nicht rückwirkend freigegeben.
 
 Ungeclaimtes Failed kann nach Sicherungsprüfung neu geplant werden; Running/NeedsReview wird ohne vorhandenen bestätigten Checkpoint nie replayt. Session-GUID plus Session-/Instanznummer und effektive Sichtbarkeit statt Timeout. Abbruch lässt bestehende/unklare Ergebnisse bestehen und ist nicht resumierbar. Technischer Checkpointvertrag ergänzt den atomaren Batchabschluss; fachliche Posting-Reconciliation ohne Checkpoint bleibt konkret zu prüfen. [RECOVERY.md](RECOVERY.md).
+
+## SF-014/SF-015 – technische Entscheidungen zur Prüfung – 16.11.2026
+
+Beide Tickets ausdrücklich gemeinsam beauftragt. Native suchbare Dashboardliste mit FactBox statt neuem Role Center; vorhandene Listen wiederverwenden. Zwei unimplementierte Monitoring-Plannamen wegen inzwischen existierender Run-/Batchlisten präzisiert, keine Bestandsumbenennung. Temporäre Stepkennzahlen, technische append-only Statushistorie über verpflichtende DB-Subscriber ohne eigenen Commit. Profilcode/-version frei als Planungsmetadaten, keine erfundenen Branchenpresets. Wizard speichert Vorlagen beim Navigieren und sperrt nach explizitem Snapshot; Schließen ist kein Verwerfen. Posting bleibt im bestehenden Vertrag gesperrt. Dies ist Implementierungsentwurf innerhalb des Auftrags, keine menschliche Abnahme. [Vertrag und Grenzen](MONITORING_WIZARD.md), **Zur Prüfung**.
+
+## SF-014 – bestätigte Nutzerpräzisierung – 16.11.2026
+
+Der Nutzer verlangt ausdrücklich JavaScript-ControlAddIn statt ausschließlich nativer Dashboarddarstellung, eigenes App-Role-Center und zentrale Navigation einschließlich Szenariodefinition. Umgesetzt als wiederverwendbare öffentliche CardPart plus Host/Role-Center/Profil; frühere native Liste als Detailmonitor erhalten. Erweiterbare zusätzliche Role-Center benötigen jeweils eine PageExtension. Keine automatische Profilzuweisung oder ungefragte globale Änderung bestehender Rollen. Dies ergänzt das beauftragte SF-014, keine Umsetzung weiterer Tickets. [Vertrag, Einbau und Grenzen](DASHBOARD_EMBEDDING.md). Status **Zur Prüfung**, echte BC-Abnahme offen.

@@ -7,6 +7,7 @@ using BCScenarioFactory.Finance;
 using BCScenarioFactory.IndustryProfiles;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ModuleRegistry;
+using BCScenarioFactory.Monitoring;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.SetupManager;
 using System.Environment.Configuration;
@@ -95,5 +96,20 @@ permissionset 90105 "BCSF ADMIN"
     table "BCSF Run Control" = X,
     table "BCSF Batch Checkpoint" = X,
     codeunit "BCSF Batch Recovery" = X,
-    codeunit "BCSF Recovery Rules" = X;
+    codeunit "BCSF Recovery Rules" = X,
+    tabledata "BCSF Run Event" = Ri,
+    table "BCSF Run Event" = X,
+    table "BCSF Step Metric" = X,
+    codeunit "BCSF Run Event Writer" = X,
+    codeunit "BCSF Monitoring Mgt" = X,
+    page "BCSF Factory Dashboard" = X,
+    page "BCSF Run Overview" = X,
+    page "BCSF Step Progress" = X,
+    page "BCSF Run Events" = X,
+    page "BCSF Scenario Wizard" = X,
+    page "BCSF Dashboard Part" = X,
+    page "BCSF Dashboard Host" = X,
+    page "BCSF Factory Role Center" = X,
+    codeunit "BCSF Dashboard Data" = X,
+    codeunit "BCSF Dashboard Commands" = X;
 }

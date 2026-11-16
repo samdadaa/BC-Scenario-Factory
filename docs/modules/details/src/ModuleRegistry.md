@@ -55,3 +55,8 @@ Reale Dateien:
 - `BCSFVendorProbe.Codeunit.al`
 
 Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Sicherheitsgrenzen: [GENERATOR_PLANNING.md](../../../GENERATOR_PLANNING.md). Build/Übersetzung lokal geprüft; Selbstprüfungen nur kompiliert, kein BC-Laufzeittest. Fachgeneratoren und Queue weiterhin geplant.
+
+
+## Ablage – SF-002, 16.11.2026
+
+Vorhandene AL-Objekte liegen unter `src/ModuleRegistry/Codeunits/`, `src/ModuleRegistry/Enums/`, `src/ModuleRegistry/Interfaces/`, `src/ModuleRegistry/Pages/`, `src/ModuleRegistry/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.

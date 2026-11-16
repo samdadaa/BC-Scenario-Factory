@@ -1,6 +1,6 @@
 # BC Scenario Factory
 
-**Status: Grundlagen, Szenarien, Planung, Setupprüfung, Seed-Engine, Herkunftsregistry und Queue-Grundlage implementiert (SF-003–SF-013) einschließlich begrenzter Wiederaufnahme implementiert, zur Prüfung; schreibende Fachgeneratoren und End-to-End-Abnahme weiterhin ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
+**Status: Grundlagen, Szenarien, Planung, Setupprüfung, Seed-Engine, Herkunftsregistry und Queue-Grundlage implementiert (SF-003–SF-015) einschließlich begrenzter Wiederaufnahme implementiert, zur Prüfung; schreibende Fachgeneratoren und End-to-End-Abnahme weiterhin ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
 
 ## Zielgruppen und Nutzen
 
@@ -42,7 +42,7 @@
 
 ## Struktur
 
-`src/<Modul>/` enthält genau einen Modulordner, **ohne** vorgefertigte Objekt-Unterordner. AL-Objekte dürfen später direkt im Modul liegen oder nur bei echtem Bedarf in fachliche Featureordner gruppiert werden; vor einer Änderung die Konventionen lesen. `docs/modules/` beschreibt alle 24 geplanten Module.
+Seit dem Nutzerauftrag vom 16.11.2026 gilt `src/<Modul>/<Objekttyp>/`, beispielsweise `src/Core/Tables/` und `src/Core/Codeunits/`. AL-Dateien liegen in `Tables`, `Pages`, `PageExtensions`, `Codeunits`, `Enums`, `PermissionSets`, `Interfaces`, `ControlAddIns` oder `Profiles`, jeweils nur für vorhandene Objekte. Die 13 Module ohne AL-Code behalten vorerst ihren Modulmarker. Dashboard-JavaScript und -CSS bleiben unter `src/Monitoring/Dashboard/`. [Konventionen](docs/CONVENTIONS.md) und [Modulindex](docs/modules/INDEX.md) beschreiben die Zuordnung.
 
 ## Dokumente
 
@@ -84,3 +84,11 @@ Unveränderliche Herkunftseinträge verbinden logische Einheiten und Belegketten
 ## Checkpoints und Wiederaufnahme (SF-013)
 
 Pausen-/Abbruchanforderungen wirken an sicheren Paketgrenzen. Bestätigte technische Checkpoints sichern vorhandene Ergebnisse. Nur nie übernommene Fehlerpakete dürfen nach erneuten Prüfungen begrenzt wiederholt werden; unklare Arbeit bleibt ohne passenden Checkpoint gesperrt. Steueraktionen auf der Laufkarte und in der Paketliste. [RECOVERY.md](docs/RECOVERY.md), **Zur Prüfung**; Unterbrechungs-/Queue-Laufzeittests offen.
+
+## Dashboard und geführte Planung (SF-014/SF-015)
+
+„Scenario Factory Dashboard“ zeigt gespeicherte Ausführung, bestätigte Pakete, offene Ziele je Schritt, Zeitpunkte und Statushistorie mit Queue-Protokollzugriff. Gesamtqualität bleibt bis SF-016 offen. „Neues Szenario mit Assistent“ bzw. „Mit Assistent planen“ führt durch fünf Schritte bis zur expliziten Erfassung, Vorprüfung und terminierten Freigabe. Bestehende Generator-/Setupblocker bleiben wirksam; keine Branchenpresets oder Postingfreigabe vorgetäuscht. [Bedienung und Grenzen](docs/MONITORING_WIZARD.md), **Zur Prüfung**; BC-Laufzeitabnahme offen.
+
+## Zentraler JavaScript-Arbeitsplatz und App-Rolle
+
+Das Profil **BC Scenario Factory** öffnet das eigene App-Role-Center mit JavaScript-Dashboard. Szenarien lassen sich dort direkt anlegen; Vorlagen, Läufe, Planung/Vorprüfung, Ausführung, Pakete/Wiederaufnahme, Herkunft, Generatorkatalog und Einrichtung sind zentral erreichbar. Die gleiche **BCSF Dashboard Part** kann per PageExtension in weitere erweiterbare Role-Center eingebaut werden. [Bedienung und Einbau](docs/DASHBOARD_EMBEDDING.md). 104 AL-Objekte und 978 Texte lokal geprüft, Status **Zur Prüfung**; tatsächliche BC-Role-Center-/Profil-/Dialogabnahme offen.

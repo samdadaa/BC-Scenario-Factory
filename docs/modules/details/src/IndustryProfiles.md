@@ -42,3 +42,12 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Implementierter Stand SF-009/SF-010 – 15.11.2026
 
 90154 Synthetic Rules; Pflichtsubscriber am Snapshot-Regelereignis. Keine Standarddatenmutation. Vertrag, Rechte, Transaktionsgrenzen und reale Prüfnachweise: [Setup und Seed](../../../SETUP_SEED.md), [Tests](../../../TESTS.md). Frühere Planabschnitte bleiben Zielbild.
+
+## Abgrenzung SF-015
+
+Der Wizard erfasst beabsichtigten Profilcode und Version, wendet aber kein vollständiges Branchenpreset an. Dieses Modul bleibt unverändert bei einer Codeunit für generische Syntheseregeln; Branchenprofile weiterhin geplant. [Wizardvertrag](../../../MONITORING_WIZARD.md).
+
+
+## Ablage – SF-002, 16.11.2026
+
+Vorhandene AL-Objekte liegen unter `src/IndustryProfiles/Codeunits/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.

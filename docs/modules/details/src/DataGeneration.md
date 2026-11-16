@@ -47,3 +47,8 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Implementierter Stand SF-011/SF-012 – 15.11.2026
 
 90251 Generated Record, 90252 Record Registry, 90254 Generated Records und 90255 Run Provenance zusätzlich zur Seed-Basis. Keine behauptete BC-Laufzeitabnahme; Vertrag, Rechte, Zustände und Testgrenzen: [Herkunft und Queue](../../../EXECUTION_REGISTRY.md), [Tests](../../../TESTS.md). Frühere Planabschnitte bleiben Zielbild.
+
+
+## Ablage – SF-002, 16.11.2026
+
+Vorhandene AL-Objekte liegen unter `src/DataGeneration/Codeunits/`, `src/DataGeneration/PageExtensions/`, `src/DataGeneration/Pages/`, `src/DataGeneration/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.

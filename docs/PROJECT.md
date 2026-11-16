@@ -98,3 +98,16 @@ Vertrag und Grenzen: [GENERATOR_PLANNING.md](GENERATOR_PLANNING.md). Status: **Z
 ## Aktueller Bestand SF-013 – 16.11.2026
 
 85 AL-Objekte (84 numerische IDs und ein Interface) in zehn Modulen; BackgroundProcessing nun 16, übrige Bestände unverändert, 14 Module ohne AL-Code. Neue Objekte 90304 und 90313–90315 für begrenzte Recovery, Steuerung und technische Checkpoints. Manifest/Launch/Runtime/Dependencies unverändert. Checkpoints enthalten keine fachlichen Nutzdaten; keine echte Generator-/Setupbindung oder BC-Laufzeitabnahme ergänzt. [RECOVERY.md](RECOVERY.md), **Zur Prüfung**.
+
+## Aktueller Bestand SF-014/SF-015 – 16.11.2026
+
+97 AL-Objekte (96 numerische IDs plus Interface) in elf Modulen. Monitoring 11, ScenarioManagement 22, übrige Modulzahlen wie SF-013; 13 Module ohne AL-Code. Native Dashboard-/Schritt-/Statushistorienansicht und geführte fünfstufige Planung mit bestehendem Start-Gate. Profilkennungen bleiben Planungsmetadaten; keine echten Generatoren/Branchenpresets/globalen Validierungsregeln ergänzt. Manifest/Launch unverändert. Lokale Paketierung ersetzt keine Sandboxabnahme. [Vertrag und Grenzen](MONITORING_WIZARD.md), **Zur Prüfung**.
+
+## SF-014 – präzisierter JavaScript-Arbeitsplatz – 16.11.2026
+
+Jetzt 104 AL-Objekte (101 numerisch sowie Interface, ControlAddIn und Profil ohne numerische ID). Monitoring 18, alle anderen Modulzahlen wie zuvor. Neues eigenes Role-Center/Profil, wiederverwendbare Dashboard-CardPart und Host, Daten-/Aktionsservice sowie gebündelte JS/CSS-Ressourcen. Run Header ausschließlich um Leseschlüssel ergänzt. Manifest, Runtime und App-Dependencies unverändert. [Vertrag, Einbau und Grenzen](DASHBOARD_EMBEDDING.md). Status **Zur Prüfung**, echte BC-Abnahme offen.
+
+
+## SF-002 – Strukturumstellung (16.11.2026)
+
+104 vorhandene AL-Dateien in elf Modulen nach Objekttyp unter `src/<Modul>/<Objekttyp>/` eingeordnet; 13 Module ohne AL-Code bleiben mit Modulmarker erhalten. Dateinamen, Dateiinhalt, Objektidentitäten, Namespaces und Manifest werden erhalten. Bestehende offene Nutzeränderungen sind Teil des Ausgangsbestands. Konventionen, Objektpfade und Dashboard-Prüfskript folgen der neuen Ablage. Prüfungen und Grenzen: [TESTS.md](TESTS.md#sf-002--strukturumstellung-16112026). Status **Zur Prüfung**.

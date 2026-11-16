@@ -117,3 +117,16 @@ Laufkarte → Dispatcher → getrennte Run Execution + immutable Batchplanung �
 ## Umsetzung SF-013 – 16.11.2026
 
 UI → separater dauerhafter Run-Control-Auftrag → Prüfung vor Claim/nächster Einplanung. Laufende Fachtransaktion bleibt bestehen; kein Session-Kill. Runner → unveränderlicher technischer Checkpoint → Batchabschluss in derselben Transaktion. Recovery → aktuelle Rechte/Versionen/Identitäten/Outputvalidierung → nur Pending-Arbeit, mit festen Batchidentitäten und höchstens drei Einplanungen. Vor Claim fehlgeschlagenes Paket separat wiederholbar; übernommene unklare Arbeit benötigt vorhandenen Checkpoint und nachweislich beendete Worker-Sitzung. Keine ExecuteBatch-/Generator.Resume-Aufrufe im Recovery-Code. [RECOVERY.md](RECOVERY.md).
+
+## Umsetzung SF-014/SF-015 – 16.11.2026
+
+Dashboard/FactBox → persistente Run-/Execution-/Batchstände, temporäre Schrittprojektion aus gespeichertem Plan bzw. eingefrorenen Zielen. Execution-/Batch-Datenbankereignisse → Monitoring-Writer → append-only Statushistorie in derselben Transaktion, ohne zusätzlichen Commit. Kein Monitoring-Aufruf aus BackgroundProcessing. Wizard → bestehende Scenario-Konfiguration → expliziter Snapshot; Monitoring-PageExtension verbindet Planner/Preflight/Dispatcher über die eingefrorene Run-ID. Keine neue Rückabhängigkeit des Szenariomoduls. Zusätzliche gerichtete Monitoring-Lese-/Guardreferenzen im Objektplan. [Vertrag und Grenzen](MONITORING_WIZARD.md), **Zur Prüfung**.
+
+## SF-014 – JS-Dashboard, Role-Center und Einbettung – 16.11.2026
+
+Role-Center 90364/Host 90363 → wiederverwendbare CardPart 90362 → ControlAddIn Ready/Command ↔ AL-Datenservice 90365 bzw. feste Aktionsliste 90366. JS erhält begrenzte lesende Projektionen und AL/XLIFF-Texte. Alle Mutationen über ausdrückliche AL-Aktionen, bestehende Guards/Writer/Dispatcher/Recovery. Keine dynamischen Objekt-IDs/Clientfreigaben. Weitere Role-Center nutzen dieselbe öffentliche Part per konkreter PageExtension. [Vertrag, Einbau und Grenzen](DASHBOARD_EMBEDDING.md). Status **Zur Prüfung**, echte BC-Abnahme offen.
+
+
+## Modulablage – SF-002, 16.11.2026
+
+Die physische Ablage folgt `src/<Modul>/<Objekttyp>/`; Geschäftsverantwortungen, Namespaces, Abhängigkeiten und Transaktionsgrenzen bleiben erhalten. Typordner gemäß [CONVENTIONS.md](CONVENTIONS.md) werden für vorhandene Objekte angelegt. Die gebündelten Dashboardressourcen verbleiben unter `src/Monitoring/Dashboard/`; AL-Ressourcenpfade sind projektwurzelrelativ.

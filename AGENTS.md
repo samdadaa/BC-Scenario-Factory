@@ -84,7 +84,7 @@ Diese Anweisungen sind **eigenständig formulierte, projektsichere Ableitungen**
 - Vier Stufen: Setup+Stammdaten; plus ungebuchte Dokumente; plus gebuchte Posten via BC-Standardbuchung; plus optionale Folgeprozesse. Keine direkten Standard-Ledger-Inserts.
 - Queue-Läufe mit Batches, sicheren Checkpoints, Wiederaufnahme und Dashboard; keine Doppelbuchungen nach unsicherem Retry.
 - **Nur Sandbox/Testbetrieb** für schreibende Generierung. Sicherheitsprüfung auch in Hintergrund-Code. Keine Zusage, dass alle Läufe über Nacht fertig werden.
-- `src/<Modul>/` ist gewählte Struktur **ohne leere Objektunterordner**; neue Ordner bei Bedarf aufgabenbezogen, keine stillen Bestandsverschiebungen.
+- Seit ausdrücklichem Nutzerauftrag vom 16.11.2026 gilt `src/<Modul>/<Objekttyp>/`, z. B. `Tables`, `Pages`, `PageExtensions`, `Codeunits`; vollständige Zuordnung in `docs/CONVENTIONS.md`. Typordner nur für vorhandene Objekte anlegen; keine stillen Bestandsverschiebungen außerhalb eines beauftragten Strukturwechsels.
 - **XERJ nur lokal als Codex-Wissenswerkzeug**, niemals BC-Laufzeitintegration oder SDK-Abhängigkeit, solange kein neuer Nutzerauftrag dies ändert.
 - Alle 24 Module im Index sind **geplant und leer**. Module, Objekte, Laufzeiten und Tests niemals als existent/erfolgreich ausgeben, bevor nachgewiesen.
 - Bei Entwurfs-/Dokumentationsaufträgen darf die ausdrücklich beauftragte Dokumentationsänderung erfolgen. Für Implementierung weiterhin genau ein gewähltes Ticket.

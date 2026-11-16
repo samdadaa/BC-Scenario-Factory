@@ -42,3 +42,8 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Implementierter Stand SF-009/SF-010 – 15.11.2026
 
 90225 Setup Diff; 90226 Setup Manager; 90227 Setup Diff Preview; 90228 Run Preflight. Keine Standarddatenmutation. Vertrag, Rechte, Transaktionsgrenzen und reale Prüfnachweise: [Setup und Seed](../../../SETUP_SEED.md), [Tests](../../../TESTS.md). Frühere Planabschnitte bleiben Zielbild.
+
+
+## Ablage – SF-002, 16.11.2026
+
+Vorhandene AL-Objekte liegen unter `src/SetupManager/Codeunits/`, `src/SetupManager/PageExtensions/`, `src/SetupManager/Pages/`, `src/SetupManager/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.

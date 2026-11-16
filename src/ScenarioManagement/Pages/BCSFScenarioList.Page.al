@@ -31,6 +31,34 @@ page 90133 "BCSF Scenario List"
   {
     area(Processing)
     {
+      action(NewGuidedScenario)
+      {
+        ApplicationArea = All;
+        Caption = 'New Guided Scenario';
+        ToolTip = 'Creates a template explicitly and opens guided planning. Saved edits remain when the wizard closes.';
+        Image = New;
+        trigger OnAction()
+        var
+          Scenario: Record "BCSF Scenario";
+          Manager: Codeunit "BCSF Scenario Manager";
+        begin
+          Scenario.Get(Manager.CreateScenario());
+          Page.Run(Page::"BCSF Scenario Wizard", Scenario);
+        end;
+      }
+      action(GuidedPlanning)
+      {
+        ApplicationArea = All;
+        Caption = 'Plan with Wizard';
+        ToolTip = 'Opens five guided steps on this saved template. Edits persist; closing does not schedule execution.';
+        Image = Planning;
+        trigger OnAction()
+        begin
+          CurrPage.SaveRecord();
+          Page.Run(Page::"BCSF Scenario Wizard", Rec);
+        end;
+      }
+
       action(CreateScenario)
       {
         ApplicationArea = All;

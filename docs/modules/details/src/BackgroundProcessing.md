@@ -47,3 +47,8 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## SF-013 – 16.11.2026
 
 90304 Batch Recovery, 90313 Run Control, 90314 Batch Checkpoint, 90315 Recovery Rules implementiert. Vorhandene Worker-/Runner-/Zustands-/UI-Verträge erweitert; Standardbuchungen und generischer unsicherer Replay bleiben gesperrt. [Recovery-Vertrag](../../../RECOVERY.md), [Testnachweise](../../../TESTS.md).
+
+
+## Ablage – SF-002, 16.11.2026
+
+Vorhandene AL-Objekte liegen unter `src/BackgroundProcessing/Codeunits/`, `src/BackgroundProcessing/Enums/`, `src/BackgroundProcessing/PageExtensions/`, `src/BackgroundProcessing/Pages/`, `src/BackgroundProcessing/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.

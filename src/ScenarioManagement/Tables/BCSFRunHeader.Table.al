@@ -108,5 +108,6 @@ table 90128 "BCSF Run Header"
   keys
   {
     key(PK; "Run Id") { Clustered = true; }
+    key(CreatedOrder; "Created At", "Run Id") { }
   }
 }

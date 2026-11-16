@@ -88,3 +88,11 @@ BCSF.SER verwendet die Standard-Kategoriesemaphore; regulär ein aktiver Queue-W
 ## SF-013 – 16.11.2026
 
 Kontrollanforderung und Checkpoint besitzen acht neue verpflichtende Datenbanksubscriber. Keine Standardtabellenrechte ergänzt; Active-Session-Metadaten müssen mit effektiven Standardrechten lesbar sein. Kein Session-Kill, keine arbeitsfreigebende Lease-Zeitgrenze, keine Wiederholung aufgrund fehlender Registry allein. Retryzähler/Jobbindung/Workeridentität sind an zulässige Übergänge gebunden. Checkpoints enthalten nur eingefrorene technische Identifikatoren, Sprache und bestätigte Zähler. Cancelanforderungen und Checkpoints sind nicht lösch- oder überschreibbar; Reconciliation führt keine fachliche Erstellung/Buchung aus. [RECOVERY.md](RECOVERY.md), echte Rechte-/Parallelitätsprüfung offen.
+
+## SF-014/SF-015 – 16.11.2026
+
+Monitoring-Lesen ohne Mutation oder automatische Wiederholung. Statusereignisse enthalten ausschließlich technische Metadaten und bestätigte Zähler; keine Fehlernutzdaten oder Benutzerkennungen. Vier verpflichtende Insert-/Modify-/Delete-/Rename-Prüfsubscriber, Ri im ADMIN-Set und I ausschließlich im festen Event-Writer; unveränderte Standardrechte. Historie und Übergang teilen die Transaktion. Wizardfreigabe gilt für den erfassten Run und führt durch bestehende aktuelle Start-Gates; keine Setup-/Postingfreigabe oder neuer Commit. Echte Rechte-/Security-Filter-/Produktions-/UI-Prüfung offen. [Vertrag und Grenzen](MONITORING_WIZARD.md), **Zur Prüfung**.
+
+## SF-014 – JavaScript-Bedienoberfläche – 16.11.2026
+
+Eigene gebündelte Ressourcen ohne externe Requests/Dependencies, kein innerHTML/eval/Clientstorage. Clientkommando wird über feste AL-Liste geprüft, Run-GUID begrenzt/geparst und aktuell per Get aufgelöst. Keine neuen erhöhten Codeunit- oder Standardtabellenrechte. Schreib-/Startaktionen verlangen die vorhandenen Guards sowie serverseitige Bestätigung; JS kann keine Postingfreigabe/Seiten-ID/Firma liefern. Neue Profilrolle ist keine Berechtigungsrolle und wird nicht automatisch zugewiesen. Keine automatischen Schreib-/Startaktionen beim Öffnen/Aktualisieren. [Vertrag, Einbau und Grenzen](DASHBOARD_EMBEDDING.md). Status **Zur Prüfung**, echte BC-Abnahme offen.
