@@ -57,3 +57,8 @@ Vorhandene AL-Objekte liegen unter `src/Monitoring/Codeunits/`, `src/Monitoring/
 ## SF-014 – Scrollen und deutsche Anzeige, 17.11.2026
 
 Dashboardcontainer scrollt innerhalb begrenzter Iframehöhe; Scrollposition bleibt beim Refresh erhalten. Bekannte englische Dashboardlabels erhalten bei deutscher BC-Sitzung eine generierte XLIFF-Fallbackübersetzung. Keine neuen AL-Objekte, Datenmutationen oder Rechte. [Vertrag](../../../DASHBOARD_EMBEDDING.md), [Prüfungen](../../../TESTS.md#sf-014--scroll--und-sprachkorrektur-17112026). **Zur Prüfung**.
+
+
+## SF-016/SF-017 – 18.11.2026
+
+Gespeicherte Summary statt pauschaler Qualitätsauskunft; rungefilterte Ergebnisliste. Variablenreihenfolge im zugehörigen Overview-Trigger für CodeCop korrigiert. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.

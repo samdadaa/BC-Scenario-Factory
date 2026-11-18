@@ -1,6 +1,6 @@
 # Validation – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/Validation/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** 4 AL-Objekte implementiert, zur Prüfung. **Pfad:** `src/Validation/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -36,9 +36,14 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 
 ## Objektplanung SF-002
 
-Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.Validation`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.Validation`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; dieser historische Planabschnitt wird durch den aktuellen Implementierungsstand unten ergänzt. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
 
 
 ## Ablage – SF-002, 16.11.2026
 
-Weiterhin kein AL-Code; der Modulmarker bleibt erhalten. Typordner entstehen erst mit vorhandenen Objekten. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+Die aktuellen AL-Objekte liegen in Codeunits/Enums/Pages/Tables; der Modulmarker bleibt erhalten. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-016/SF-017 – 18.11.2026
+
+90325 Validation Result, 90326 Validation Manager, 90327 Validation Severity, 90328 Validation Results. Append-only Prüfbefunde, Summary und Pflichtkennzeichen. Lifecycle-Guard als zusätzliche direkte Abhängigkeit; Ausführungsprüfung per Eventsubscriber aus BackgroundProcessing. Keine eigene Rückabhängigkeit. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.

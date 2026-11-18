@@ -48,3 +48,10 @@ BC-Suche → Scenario Factory Dashboard; Run auswählen, FactBox lesen, Schrittf
 ## Aktueller zentraler Einstieg – 16.11.2026
 
 Nach separat freizugebender Installation Profil BC Scenario Factory wählen → JS-Dashboard im App-Role-Center. Neues Szenario startet die explizite Vorlagenanlage mit Wizard. Acht Navigationseinstiege und 19 Runaktionen stehen direkt bereit. Bestehende Laufkarten-/Wizardlinks öffnen denselben JS-Arbeitsplatz als große Hostseite mit Runkontext. Weitere erweiterbare Role-Center erhalten dieselbe CardPart per PageExtension; Personalisierung allein kann keinen bislang nicht deklarierten Part einfügen. [Vertrag, Einbau und Grenzen](DASHBOARD_EMBEDDING.md). Status **Zur Prüfung**, echte BC-Abnahme offen.
+
+
+## SF-016/SF-017 – 18.11.2026
+
+Die Laufübersicht zeigt die gespeicherte Qualität; deren Drilldown öffnet rungefilterte Befunde mit Pflichtkennzeichen und Soll-/Istzahlen. Ohne Summary „Nicht validiert“. Pflichtfehler verhindern Completed, Warnungen bleiben sichtbar.
+
+Factory-Einrichtung → „Finanzeinrichtung prüfen“ → Modus auswählen → Vorschau → ausschließlich bei freier Vorschau „Testpaket anwenden“ bestätigen. Im Szenario oder im Wizard-Schritt 4 denselben Finanzmodus wählen; erfasster Modus/Jahr/Version auf der Laufkarte lesbar. Apply erzeugt keine Firma/Belege/Jobs. [Bedienvertrag und Standardbuchungs-Abnahme](VALIDATION_FINANCE.md).

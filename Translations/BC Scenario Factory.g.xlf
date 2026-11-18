@@ -5318,6 +5318,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Severity - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Codeunit 542040904 - NamedType 482549047" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Validation results must be valid, append-only evidence for the current run.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Validation Manager - NamedType InvalidResultErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 542040904 - NamedType 2303702599" size-unit="char" translate="yes" xml:space="preserve">
           <source>Not validated</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -5327,6 +5332,16 @@
           <source>Validation Results</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Validation Results - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3428178703 - Control 427449747 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether a failure blocks successful completion. Optional checks can issue warnings only.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Validation Results - Control MandatoryCheck - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3428178703 - Control 427449747 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Mandatory Check</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Validation Results - Control MandatoryCheck - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3567110872 - EnumValue 2248886284 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error</source>

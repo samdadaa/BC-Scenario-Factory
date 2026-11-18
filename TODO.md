@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 16.11.2026 – SF-014 nach Nutzerpräzisierung um JS-ControlAddIn, eigenes Role-Center/Profil, wiederverwendbare Dashboard-Part und zentrale Appnavigation erweitert. SF-014/SF-015 Zur Prüfung. 104 AL-Objekte und 978 Texteinheiten lokal geprüft; echte BC-Laufzeitabnahme und Fachgenerator-/Setupbindungen offen.
+**Stand:** 18.11.2026 – SF-016/SF-017 zur Prüfung: Qualitätsabschluss und SKR03-/SKR04-Testpakete, 116 AL-Dateien und 1.071 Texteinheiten lokal geprüft. Echte BC-Buchungs-/Berichts-/Berechtigungsabnahme und Fachgeneratoren weiterhin offen.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -32,8 +32,8 @@
 | [SF-013](#sf-013) | 0 / Fundierung | P0 | Batch-Checkpoint, Retry, Pause/Resume, Cancellation | Zur Prüfung |
 | [SF-014](#sf-014) | 0 / Fundierung | P0 | Monitoring-Datenmodell und Dashboard | Zur Prüfung |
 | [SF-015](#sf-015) | 0 / Fundierung | P0 | Wizard für Branche, Module, Umfang und Planung | Zur Prüfung |
-| [SF-016](#sf-016) | 0 / Fundierung | P0 | Validierungsframework und Abschlussstatus | Offen |
-| [SF-017](#sf-017) | 1 / MVP | P1 | Finanz-Grundsetup für Handelsprofil | Offen |
+| [SF-016](#sf-016) | 0 / Fundierung | P0 | Validierungsframework und Abschlussstatus | Zur Prüfung |
+| [SF-017](#sf-017) | 1 / MVP | P1 | Finanz-Grundsetup für Handelsprofil | Zur Prüfung |
 | [SF-018](#sf-018) | 1 / MVP | P1 | Debitoren und Kreditoren als kohärente Stammdaten | Offen |
 | [SF-019](#sf-019) | 1 / MVP | P1 | Artikel, Kategorien, Varianten und Lagerbasics | Offen |
 | [SF-020](#sf-020) | 1 / MVP | P1 | Einkaufsprozess: Bestellung bis gebuchte Rechnung | Offen |
@@ -670,7 +670,7 @@
 
 ### SF-016 — Validierungsframework und Abschlussstatus
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-007,SF-011,SF-012  
 **Verantwortung / betroffene Module:** Validation  
@@ -680,18 +680,20 @@
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Pflichtprüfungen von optionalen unterscheiden; Completed nur bei validierter Arbeit.
 
+**Checklistenstand:** `[x]` kennzeichnet umgesetzte bzw. lokal nachgewiesene Arbeit. Offene BC-Laufzeittests und menschliche Abnahme bleiben `[ ]`; Status weiterhin `Zur Prüfung`.
+
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
-- [ ] Fehlende Posten und Mismatches verhindern falsche Erfolgsmeldung.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Fehlende Posten und Mismatches verhindern falsche Erfolgsmeldung. **Implementiert; BC-Laufzeitnachweis noch offen.**
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
 - [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
@@ -700,11 +702,14 @@
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
+
+**Umsetzung 18.11.2026:** Vorhandene Ansätze vervollständigt und abgesichert; [Umsetzung und konkrete BC-Abnahmefälle](docs/VALIDATION_FINANCE.md), [tatsächliche lokale Prüfungen](docs/TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). Sandbox-/Buchungs-/Berechtigungsnachweise und menschliche Abnahme stehen aus. Keine Folgetickets umgesetzt.
+
 ---
 
-### ### SF-017 — Finanzsetup und auswertbare Testkontenpläne für SKR03 und SKR04
+### SF-017 — Finanzsetup und auswertbare Testkontenpläne für SKR03 und SKR04
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P1  
 **Phase:** 1 / MVP  
 **Abhängigkeiten:** SF-009, SF-010  
@@ -713,30 +718,36 @@
 **Ziel**  
 Die BC Scenario Factory soll eine über den BC-Standard angelegte Sandbox-Testfirma mit einem schlanken **SKR03- oder SKR04-basierten Kontenplan** und der dazu passenden Buchungseinrichtung ausstatten. Der Kontenplan soll nicht nur Einkauf und Verkauf ermöglichen, sondern auch für Sachkontenbuchungen, Funktionstests, Schulungen und Finanzberichte in BC nutzbar sein. Der Nutzer soll dafür weder Sachkonten noch Buchungsgruppen einzeln anlegen müssen.
 
+**Checklistenstand:** Umfangspunkte sind im Code umgesetzt; ihre Kennzeichnung ist keine Bestätigung ausgeführter BC-Tests. Sandbox-Anwendung, Wiederholung, Buchungen und Berichtssummen müssen noch nachgewiesen werden. Status weiterhin `Zur Prüfung`.
+
 **Umfang**
 
-- [ ] Drei Optionen anbieten: **vorhandene BC-Einrichtung verwenden**, **SKR03-Testkontenplan einrichten** oder **SKR04-Testkontenplan einrichten**. Im ersten Modus wird die vorhandene Einrichtung nur geprüft und verwendet.
-- [ ] Je Kontenrahmen ein eigenes, versioniertes Einrichtungspaket bereitstellen. Bezugsjahr, Paketversion, fachliche Quelle und unterstützten Umfang dokumentieren. Die Pakete als schlanke **Testkontenpläne** kennzeichnen, nicht als vollständige DATEV-Kontenrahmen. Führende Nullen in Kontonummern erhalten.
-- [ ] Die Kontenpläne fachlich gliedern. Für den MVP mindestens Bank, Forderungen, Verbindlichkeiten, Bestand, Vorsteuer, Umsatzsteuer, Eigenkapital, Erlöse, Wareneinsatz und ausgewählte Betriebskosten abdecken. Auch Konten für manuelle Buchblatttests vorsehen, die nicht über Einkaufs- oder Verkaufsbelege bebucht werden.
-- [ ] Sachkonten den passenden Bilanz- und GuV-Kategorien zuordnen. Je Paket eine Bilanz- und eine GuV-Auswertung mit den Standard-Finanzberichten in BC bereitstellen. Die Berichte sollen dieselbe fachliche Auswertung ermöglichen, auch wenn sich die Kontonummern je Rahmen unterscheiden.
-- [ ] Die für das erste Branchenprofil nötigen Debitoren-, Kreditoren-, Lager-, allgemeinen und MwSt.-Buchungsgruppen samt benötigter Buchungsmatrizen und Lagerbuchungseinrichtung passend zum Kontenplan einrichten. Vorhandene Nummernserien, Zahlungsbedingungen und sonstige BC-Grundeinrichtung verwenden, sofern sie passen. Fehlende Voraussetzungen konkret melden.
-- [ ] Debitoren, Kreditoren, Artikel und Belege bleiben BC-Standarddatensätze. Generatoren verwenden die passenden Buchungsgruppen und übernehmen **keine fest codierten SKR-Kontonummern**. Die Zuordnung von Kontenrollen wie Erlös oder Forderung zu konkreten Sachkonten liegt im jeweiligen Finanzpaket.
-- [ ] Vor dem Anwenden in einer Vorschau zeigen, was angelegt oder wiederverwendet wird und welche Konflikte die Einrichtung blockieren. **SF-009 bleibt rein lesend.** Das Anwenden ist eine separate, ausdrückliche Aktion in der freigegebenen Sandbox-Testfirma. Bestehende Konten und Buchungszuordnungen nicht still überschreiben.
-- [ ] Auswahl, Bezugsjahr und Version des angewendeten Finanzpakets im Lauf-Snapshot festhalten. Beim erneuten Anwenden desselben Pakets dürfen keine doppelten Konten, Buchungsgruppen oder Berichtsdefinitionen entstehen.
+- [x] Drei Optionen anbieten: **vorhandene BC-Einrichtung verwenden**, **SKR03-Testkontenplan einrichten** oder **SKR04-Testkontenplan einrichten**. Im ersten Modus wird die vorhandene Einrichtung nur geprüft und verwendet.
+- [x] Je Kontenrahmen ein eigenes, versioniertes Einrichtungspaket bereitstellen. Bezugsjahr, Paketversion, fachliche Quelle und unterstützten Umfang dokumentieren. Die Pakete als schlanke **Testkontenpläne** kennzeichnen, nicht als vollständige DATEV-Kontenrahmen. Führende Nullen in Kontonummern erhalten.
+- [x] Die Kontenpläne fachlich gliedern. Für den MVP mindestens Bank, Forderungen, Verbindlichkeiten, Bestand, Vorsteuer, Umsatzsteuer, Eigenkapital, Erlöse, Wareneinsatz und ausgewählte Betriebskosten abdecken. Auch Konten für manuelle Buchblatttests vorsehen, die nicht über Einkaufs- oder Verkaufsbelege bebucht werden.
+- [x] Sachkonten den passenden Bilanz- und GuV-Kategorien zuordnen. Je Paket eine Bilanz- und eine GuV-Auswertung mit den Standard-Finanzberichten in BC bereitstellen. Die Berichte sollen dieselbe fachliche Auswertung ermöglichen, auch wenn sich die Kontonummern je Rahmen unterscheiden.
+- [x] Die für das erste Branchenprofil nötigen Debitoren-, Kreditoren-, Lager-, allgemeinen und MwSt.-Buchungsgruppen samt benötigter Buchungsmatrizen und Lagerbuchungseinrichtung passend zum Kontenplan einrichten. Vorhandene Nummernserien, Zahlungsbedingungen und sonstige BC-Grundeinrichtung verwenden, sofern sie passen. Fehlende Voraussetzungen konkret melden.
+- [x] Kontenrollen sind im jeweiligen Finanzpaket konkreten Sachkonten zugeordnet; `GetTestPostingGroup` stellt den passenden Buchungsgruppencode bereit. Debitoren, Kreditoren, Artikel und Belege bleiben BC-Standarddatensätze.
+- [ ] Die späteren Fachgeneratoren verwenden diese Buchungsgruppen ohne fest codierte SKR-Kontonummern. **Integration erst mit SF-018 bis SF-022; diese Tickets bleiben außerhalb des aktuellen Auftrags.**
+- [x] Vor dem Anwenden in einer Vorschau zeigen, was angelegt oder wiederverwendet wird und welche Konflikte die Einrichtung blockieren. **SF-009 bleibt rein lesend.** Das Anwenden ist eine separate, ausdrückliche Aktion in der freigegebenen Sandbox-Testfirma. Bestehende Konten und Buchungszuordnungen nicht still überschreiben.
+- [x] Auswahl, Bezugsjahr und Version des angewendeten Finanzpakets im Lauf-Snapshot festhalten. Beim erneuten Anwenden desselben Pakets dürfen keine doppelten Konten, Buchungsgruppen oder Berichtsdefinitionen entstehen.
 
 **Akzeptanzkriterien**
 
 - [ ] SKR03 und SKR04 lassen sich jeweils in einer separaten, frisch angelegten Sandbox-Testfirma anwenden. Der zweite Aufruf desselben Pakets erzeugt keine Duplikate. Der Modus „Vorhandene BC-Einrichtung verwenden“ ändert keine vorhandenen Einträge.
 - [ ] Je Kontenrahmen sind ein Einkaufsfall, ein Verkaufsfall und eine davon unabhängige Sachkontenbuchung über ein BC-Standardbuchblatt nachgewiesen, etwa eine Betriebsausgabe. Die resultierenden Sachposten landen auf den für das jeweilige Paket erwarteten Konten.
 - [ ] Die gebuchten Beispielwerte erscheinen in Bilanz und GuV in den erwarteten Gruppen. Erwartete Konten, Beträge und Summen sind dokumentiert und mit den Sachposten abgeglichen. Ein Bericht ohne gebuchte Werte gilt nicht als Nachweis.
-- [ ] Inkompatible Konten oder Buchungszuordnungen werden vor dem Anwenden angezeigt. Ein blockierender Konflikt führt nicht zu einem teilweise angewendeten Paket.
-- [ ] Für den Nachweis dürfen manuelle BC-Standardbelege und Standardbuchblätter verwendet werden. **SF-018 bis SF-022 werden nicht vorgezogen.** Die späteren Generatoren sollen dasselbe Finanzsetup wiederverwenden.
+- [x] Inkompatible Konten oder Buchungszuordnungen werden vor dem Anwenden angezeigt. Ein blockierender Konflikt führt nicht zu einem teilweise angewendeten Paket. **Konfliktprüfung und commitfreier Apply implementiert; BC-Konflikt-/Rollbacktest noch offen.**
+- [x] Der dokumentierte Abnahmeplan verwendet manuelle BC-Standardbelege und Standardbuchblätter. **SF-018 bis SF-022 wurden nicht vorgezogen.** Die Wiederverwendung durch spätere Generatoren ist als Schnittstellenvertrag beschrieben; deren Integration bleibt offen.
 - [ ] Tatsächlich ausgeführte BC-Tests je Paket dokumentieren. Nicht ausgeführte Prüfungen offen ausweisen. Status erst nach menschlicher Abnahme auf `Erledigt` setzen.
 
 **Nicht-Ziele**  
 Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DATEV-Export, keine Umstellung einer bereits bebuchten Firma auf einen anderen Kontenrahmen und keine direkten Inserts in gebuchte BC-Posten. Keine Umsetzung von Folgetickets im Rahmen von SF-017.
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+
+
+**Umsetzung 18.11.2026:** Vorhandene Ansätze vervollständigt und abgesichert; [Umsetzung und konkrete BC-Abnahmefälle](docs/VALIDATION_FINANCE.md), [tatsächliche lokale Prüfungen](docs/TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). Sandbox-/Buchungs-/Berechtigungsnachweise und menschliche Abnahme stehen aus. Keine Folgetickets umgesetzt.
 
 ---
 

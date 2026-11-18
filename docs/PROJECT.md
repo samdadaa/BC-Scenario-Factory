@@ -116,3 +116,10 @@ Jetzt 104 AL-Objekte (101 numerisch sowie Interface, ControlAddIn und Profil ohn
 ## SF-014 – Dashboardkorrektur 17.11.2026
 
 Eigener höhenbegrenzter Scrollbereich und aus dem vorhandenen deutschen XLIFF-Master erzeugte Fallback-Ressource für Dashboardlabels ergänzt. BC-Sitzungssprache und Zahlenregion bleiben getrennt. Browserregression einschließlich 500px/Iframe/DE bestanden; reine Kompilierung erfolgreich, strenger Gesamtbuild durch 23 bereits im Ausgangsbestand vorhandene Analyzerbefunde blockiert. Kein Deployment. [Vertrag](DASHBOARD_EMBEDDING.md), [Prüfungen](TESTS.md#sf-014--scroll--und-sprachkorrektur-17112026). **Zur Prüfung**.
+
+
+## Aktueller Bestand SF-016/SF-017 – 18.11.2026
+
+116 vorhandene AL-Dateien in zwölf Modulen, davon 113 numerische IDs und Interface/ControlAddIn/Profil. Core 14, ScenarioManagement 22, IndustryProfiles 1, ModuleRegistry 10, DependencyManager 9, SetupManager 4, DataGeneration 6, BackgroundProcessing 17, Validation 4, Monitoring 18, Lifecycle 4, Finance 7. Zwölf Module ohne AL-Code. Der Ausgangscode enthielt bereits die zwölf zusätzlichen Objekte; deren Sicherheits-/Qualitätslücken und Analyzerbefunde wurden im aktuellen Auftrag bearbeitet, ohne Objektverschiebung oder neue IDs.
+
+Pflichtabschluss, append-only Befunde und versionierte SKR03-/SKR04-Testeinrichtung einschließlich Standard-Finanzberichten implementiert. Manifest/Launch/AGENTS unverändert; Runtime 17, Dependencies []. Lokaler strenger Build und Übersetzungs-/Dashboardprüfung ersetzen keine Sandbox-/Buchungsabnahme. [Vertrag und BC-Prüfplan](VALIDATION_FINANCE.md). **Zur Prüfung**.

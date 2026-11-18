@@ -96,3 +96,10 @@ Monitoring-Lesen ohne Mutation oder automatische Wiederholung. Statusereignisse 
 ## SF-014 – JavaScript-Bedienoberfläche – 16.11.2026
 
 Eigene gebündelte Ressourcen ohne externe Requests/Dependencies, kein innerHTML/eval/Clientstorage. Clientkommando wird über feste AL-Liste geprüft, Run-GUID begrenzt/geparst und aktuell per Get aufgelöst. Keine neuen erhöhten Codeunit- oder Standardtabellenrechte. Schreib-/Startaktionen verlangen die vorhandenen Guards sowie serverseitige Bestätigung; JS kann keine Postingfreigabe/Seiten-ID/Firma liefern. Neue Profilrolle ist keine Berechtigungsrolle und wird nicht automatisch zugewiesen. Keine automatischen Schreib-/Startaktionen beim Öffnen/Aktualisieren. [Vertrag, Einbau und Grenzen](DASHBOARD_EMBEDDING.md). Status **Zur Prüfung**, echte BC-Abnahme offen.
+
+
+## SF-016/SF-017 – 18.11.2026
+
+Validation Result und Finance Package jeweils mit vier verpflichtenden Before-DB-Subscribern: Sandbox-/Firmenbindung vor Insert, Modify/Delete/Rename gesperrt, auch ohne Tabellentrigger. Validation prüft vollständige und aktuelle Pflichtnachweise; Summary kann ohne alle abgeschlossenen Batches und deren Befunde nicht eingefügt werden. Paketvermerk erst nach vollständiger konsistenter Einrichtung. Vorhandene Ri-Anwenderrechte und enges I im jeweiligen Writer erhalten; keine zusätzlichen Standardrechte.
+
+Apply bleibt ausdrücklich bestätigte Aktion mit CommitBehavior::Error, erneuter Konfliktprüfung und ausschließlich Inserts fehlender Standard-Einrichtungen. Geprüfte Standard-Insert-Trigger können reguläre BC-Nebenwirkungen wie Dimensionspflege auslösen; keine direkten Standardposten-Inserts. SecurityFiltering::Disallowed für Paket-/Konten-/Matrix-/Berichtsvergleich sowie Foundation-/Nummernseriennachweise. Bestehende Einrichtung wird durch Existing nicht verändert. Produktion, Paketwechsel und initiale Anwendung in bebuchter Firma blockiert. [Vertrag und offene Rechte-/Parallelitätsfälle](VALIDATION_FINANCE.md). Keine Sandbox- oder Security-Filter-Laufzeitabnahme behauptet.

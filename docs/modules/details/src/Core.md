@@ -73,3 +73,8 @@ Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Si
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/Core/Codeunits/`, `src/Core/Enums/`, `src/Core/Pages/`, `src/Core/PermissionSets/`, `src/Core/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-016/SF-017 – 18.11.2026
+
+Vorhandenes Enum 90113 Finance Mode mit Existing/SKR03/SKR04 im Inventar erfasst; ValidationFailed bleibt Endzustand 13. Keine neue App-Abhängigkeit. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.

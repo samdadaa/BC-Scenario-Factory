@@ -135,3 +135,10 @@ Die physische Ablage folgt `src/<Modul>/<Objekttyp>/`; Geschäftsverantwortungen
 ## SF-014 – Darstellungskorrektur 17.11.2026
 
 ControlAddIn bindet zusätzlich die eigene generierte Ressource `Monitoring/Dashboard/translations.js`. Sie ergänzt bekannte englische UI-Labels bei deutscher BC-Sitzung aus dem vorhandenen XLIFF-Master, ohne Backend-/Daten-/Transaktionsänderung. Der äußere Dashboardcontainer scrollt innerhalb der Iframehöhe. [Vertrag](DASHBOARD_EMBEDDING.md).
+
+
+## SF-016/SF-017 – Qualitätsabschluss und Finanzsetup, 18.11.2026
+
+Dispatcher/Recovery → Run Quality → Checkpoint/Generator.ValidateOutput/Herkunft und tatsächliche Postenbeziehungen → Validation Manager → immutable Befunde und Summary → geprüfter Ausführungs-Endstatus. Pflichtsubscriber aus BackgroundProcessing prüft jeden Befund und die Summary; Validation referenziert BackgroundProcessing nicht. Validation verwendet Lifecycle für Sandbox-/Firmenprüfung. Monitoring liest Summary und bietet die gefilterte Ergebnisliste.
+
+Finance Selection → rein lesende temporäre Preview → ausdrückliche Bestätigung → commitfreier Finance Package Mgt → neue Standard-Einrichtungsdatensätze und zuletzt immutable Paketvermerk. Konflikte unter Schreibsperre erneut prüfen; keine Standard-Ledger-Inserts, keine erhöhten Standardrechte. Snapshot Writer publiziert Paket-Capture-Ereignis; Finance liefert die vorhandene Paketidentität, SetupManager fragt deren aktuelle Konsistenz ab. Kein automatisches Apply im Preflight oder Hintergrundlauf. [Vertrag, Umfang und Grenzen](VALIDATION_FINANCE.md), **Zur Prüfung**.

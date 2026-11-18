@@ -111,3 +111,8 @@ JavaScript-Dashboard: alle UI-Texte als AL/XLIFF-Vertrag liefern; DOM über text
 ## SF-014 – Dashboardressourcen 17.11.2026
 
 Nach Änderungen deutscher Dashboard-/Monitoringlabels `python3 scripts/build_dashboard_translations.py` ausführen; die erzeugte `translations.js` gemeinsam mit dem ControlAddIn paketieren. `--check` prüft Frische. Bestehende XLIFF- und Browserprüfungen bleiben erforderlich. UI-Sprache ausschließlich aus dem BC-Payload, Formatregion getrennt; keine Übersetzung gespeicherter Benutzerdaten im Frontend.
+
+
+## SF-016/SF-017 – 18.11.2026
+
+Validation-Befunde und Finanzpaketidentität sind append-only; feste interne Writer, Ri für Anwender, keine Standardtabellenrechte erhöhen. Pflichtbefunde und optionale WARN-* strikt trennen. Abschluss nur mit vollständigem Summary. Finanz-Kontonummern einschließlich führender Null ausschließlich als Code[20] im Finance-Paket; spätere Generatoren verwenden Paketgruppen statt SKR-Konstanten. Bestehende Vierer-Einrückung im Finance-Paketmanager erhalten, kein Formatierungsrefactoring. [Vertrag](VALIDATION_FINANCE.md).

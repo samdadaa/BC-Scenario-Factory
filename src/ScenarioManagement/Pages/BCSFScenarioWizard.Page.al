@@ -76,6 +76,7 @@ page 90132 "BCSF Scenario Wizard"
         Visible = StepNo = 4;
         Editable = not Captured;
         field("Process Mode"; Rec."Process Mode") { }
+        field("Finance Mode"; Rec."Finance Mode") { }
         field(PostingNotice; PostingNoticeLbl)
         {
           Caption = 'Posting and Follow-up Risks';

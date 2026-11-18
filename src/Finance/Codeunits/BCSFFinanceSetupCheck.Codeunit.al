@@ -10,6 +10,11 @@ codeunit 90402 "BCSF Finance Setup Check"
   Access = Internal;
 
   [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Setup Manager", 'OnInspectFinance', '', false, false)]
+  local procedure InspectFinance(NeedSales: Boolean; NeedPurchases: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  begin
+    Inspect(NeedSales, NeedPurchases, TempDiff);
+  end;
+
   procedure Inspect(NeedSales: Boolean; NeedPurchases: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
   var
     CustomerGroup: Record "Customer Posting Group";

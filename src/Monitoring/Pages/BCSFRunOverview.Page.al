@@ -117,8 +117,8 @@ page 90355 "BCSF Run Overview"
     Control: Record "BCSF Run Control";
     Job: Record "Job Queue Entry";
     Entry: Record "BCSF Run Event";
-    EndTime: DateTime;
     Validation: Codeunit "BCSF Validation Manager";
+    EndTime: DateTime;
   begin
     QualityText := Validation.Describe(Rec."Run Id");
     Clear(EarliestStart);

@@ -91,6 +91,8 @@ codeunit 90143 "BCSF Scenario Policy"
       "BCSF Usage Mode"::Functional, "BCSF Usage Mode"::Performance])
     then
       Error(ModeErr);
+    if not (Scenario."Finance Mode" in ["BCSF Finance Mode"::Existing, "BCSF Finance Mode"::SKR03, "BCSF Finance Mode"::SKR04]) then
+      Error(ModeErr);
     LanguageManagement.ResolveDataLanguage(Scenario."Data Language");
     if (Scenario."Starting Date" = 0D) or (Scenario."Ending Date" < Scenario."Starting Date") then
       Error(DateErr);

@@ -52,3 +52,8 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/BackgroundProcessing/Codeunits/`, `src/BackgroundProcessing/Enums/`, `src/BackgroundProcessing/PageExtensions/`, `src/BackgroundProcessing/Pages/`, `src/BackgroundProcessing/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-016/SF-017 – 18.11.2026
+
+Vorhandene Codeunit 90317 Run Quality: aktuelle Pflichtprüfungen, optionale Warnungen und abgeschlossene Summary im vorhandenen Dispatcher-/Recovery-Abschluss. Endstatus nur gemäß Summary. Keine neue Queue-/Retryfreigabe. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.

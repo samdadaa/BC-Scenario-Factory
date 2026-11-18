@@ -5866,6 +5866,570 @@
         <note from="Developer" annotates="general" priority="2" />
         <note from="Xliff Generator" annotates="general" priority="3">Profile BCSF Scenario Factory - Property ProfileDescription</note>
       </trans-unit>
+      <trans-unit id="Codeunit 249071356 - NamedType 3400374086" size-unit="char" translate="yes" xml:space="preserve">
+        <source>The saved batch counts do not match the prepared run.</source>
+        <target state="translated">Die gespeicherten Paketzähler stimmen nicht mit dem vorbereiteten Lauf überein.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Run Quality - NamedType BatchCountErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 249071356 - NamedType 1083241827" size-unit="char" translate="yes" xml:space="preserve">
+        <source>An optional check returned an invalid or repeated warning code.</source>
+        <target state="translated">Eine optionale Prüfung hat einen ungültigen oder wiederholten Warncode geliefert.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Run Quality - NamedType OptionalContractErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 249071356 - NamedType 1038020042" size-unit="char" translate="yes" xml:space="preserve">
+        <source>A posted invoice or credit memo is missing its registered general ledger or partner ledger evidence.</source>
+        <target state="translated">Zu einer gebuchten Rechnung oder Gutschrift fehlen passende registrierte Sach- oder Personenposten.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Run Quality - NamedType PostingEvidenceErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 249071356 - NamedType 3721669323" size-unit="char" translate="yes" xml:space="preserve">
+        <source>A generated result references a missing or invalid parent.</source>
+        <target state="translated">Ein erzeugtes Ergebnis verweist auf ein fehlendes oder ungültiges übergeordnetes Ergebnis.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Run Quality - NamedType RelationshipErr</note>
+      </trans-unit>
+      <trans-unit id="Enum 2356368625 - EnumValue 4204912349 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Use existing BC setup</source>
+        <target state="translated">Vorhandene BC-Einrichtung verwenden</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Finance Mode - EnumValue Existing - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Enum 2356368625 - EnumValue 1600057235 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>SKR03 test chart</source>
+        <target state="translated">SKR03-Testkontenplan</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Finance Mode - EnumValue SKR03 - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Enum 2356368625 - EnumValue 962360618 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>SKR04 test chart</source>
+        <target state="translated">SKR04-Testkontenplan</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Finance Mode - EnumValue SKR04 - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Enum 1471477675 - EnumValue 897472228 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Validation Failed</source>
+        <target state="translated">Validierung fehlgeschlagen</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Run Status - EnumValue ValidationFailed - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 1214641082 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Applied Finance Package</source>
+        <target state="translated">Angewendetes Finanzpaket</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Finance Package - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 1214641082 - Field 3058008933 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Finance Package</source>
+        <target state="translated">Finanzpaket</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Finance Package - Field Mode - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 1214641082 - Field 1663593181 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Primary Key</source>
+        <target state="translated">Primärschlüssel</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Finance Package - Field Primary Key - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 1214641082 - Field 3178927048 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Reference Year</source>
+        <target state="translated">Bezugsjahr</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Finance Package - Field Reference Year - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 1214641082 - Field 237762718 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Version</source>
+        <target state="translated">Version</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Finance Package - Field Version - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 4291717659" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Test Inventory Accrual</source>
+        <target state="translated">Test-Lagerabgrenzung</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType AccrualLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 1245862610" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Actual Amount</source>
+        <target state="translated">Istbetrag</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType AmountLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 3008959068" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Create only when you explicitly apply the reviewed package.</source>
+        <target state="translated">Nur beim ausdrücklichen Anwenden des geprüften Pakets anlegen.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ApplyActionLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 1188555835" size-unit="char" translate="yes" xml:space="preserve">
+        <source>The finance package cannot be applied. Reopen the preview and resolve the blocking findings.</source>
+        <target state="translated">Das Finanzpaket kann nicht angewendet werden. Öffnen Sie die Vorschau erneut und beheben Sie die blockierenden Befunde.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ApplyBlockedErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 810739243" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Total Assets</source>
+        <target state="translated">Summe Aktiva</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType AssetsLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 965223736" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Scenario Factory Test Balance Sheet</source>
+        <target state="translated">Scenario Factory Testbilanz</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType BalanceLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 308753192" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Bank</source>
+        <target state="translated">Bank</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType BankLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 4087415185" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Setup changed since review. %1 has a conflict in field %2. No package changes were kept.</source>
+        <target state="translated">Die Einrichtung wurde seit der Prüfung geändert. %1 hat einen Konflikt im Feld %2. Es wurden keine Paketänderungen gespeichert.</target>
+        <note from="Developer" annotates="general" priority="2">%1 = record, %2 = field caption</note>
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ChangedErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 650235816" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Existing record conflicts in field %1.</source>
+        <target state="translated">Der vorhandene Datensatz weicht im Feld %1 ab.</target>
+        <note from="Developer" annotates="general" priority="2">%1 = field caption</note>
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ConflictLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 2699561107" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Merchandise Cost and Stock Change</source>
+        <target state="translated">Wareneinsatz und Bestandsveränderung</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType CostLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 3952724154" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Create missing record</source>
+        <target state="translated">Fehlenden Datensatz anlegen</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType CreateLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 2354661943" size-unit="char" translate="yes" xml:space="preserve">
+        <source>A different chart or package version is already recorded in this company.</source>
+        <target state="translated">In dieser Firma ist bereits ein anderer Kontenplan oder eine andere Paketversion erfasst.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType DifferentPackageLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 762447449" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Share Capital</source>
+        <target state="translated">Gezeichnetes Kapital</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType EquityLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 3594324102" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Other Operating Expense</source>
+        <target state="translated">Sonstige betriebliche Aufwendungen</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ExpenseLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 2036440423" size-unit="char" translate="yes" xml:space="preserve">
+        <source>The report definition contains additional rows or columns outside the package.</source>
+        <target state="translated">Die Berichtsdefinition enthält zusätzliche Zeilen oder Spalten außerhalb des Pakets.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ExtraLinesLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 3474705795" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Scenario Factory Test Income Statement</source>
+        <target state="translated">Scenario Factory Test-GuV</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType IncomeLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 2884604841" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Input VAT 19%</source>
+        <target state="translated">Vorsteuer 19 %</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType InputVATLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 2687753814" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Test Inventory Interim</source>
+        <target state="translated">Test-Interimslagerkonto</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType InterimStockLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 1620872259" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Total Liabilities and Equity</source>
+        <target state="translated">Summe Passiva und Eigenkapital</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType LiabEquityLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 4077254727" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Required standard setup is missing, not visible or not usable on the selected date.</source>
+        <target state="translated">Erforderliche Standardeinrichtung fehlt, ist nicht sichtbar oder am gewählten Datum nicht verwendbar.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType MissingFoundationLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 1859247759" size-unit="char" translate="yes" xml:space="preserve">
+        <source>No change</source>
+        <target state="translated">Keine Änderung</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType NoChangeLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 2144627911" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Apply the selected finance test package in this company before capturing the run.</source>
+        <target state="translated">Wenden Sie das gewählte Finanztestpaket in dieser Firma an, bevor Sie den Lauf erfassen.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType NotAppliedErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 3726774622" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Office Supplies</source>
+        <target state="translated">Bürobedarf</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType OfficeLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 3387379098" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Output VAT 19%</source>
+        <target state="translated">Umsatzsteuer 19 %</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType OutputVATLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 665111636" size-unit="char" translate="yes" xml:space="preserve">
+        <source>%1 / reference year %2 / package version %3</source>
+        <target state="translated">%1 / Bezugsjahr %2 / Paketversion %3</target>
+        <note from="Developer" annotates="general" priority="2">%1 = package name, %2 = reference year, %3 = package version</note>
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType PackageLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 316050564" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Trade Payables</source>
+        <target state="translated">Verbindlichkeiten aus Lieferungen und Leistungen</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType PayableLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 2009142491" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Required standard read or write permission is missing.</source>
+        <target state="translated">Die erforderliche Lese- oder Schreibberechtigung für Standarddaten fehlt.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType PermissionLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 784978952" size-unit="char" translate="yes" xml:space="preserve">
+        <source>The company already has G/L entries. Initial installation or creation of missing package records is blocked.</source>
+        <target state="translated">Die Firma enthält bereits Sachposten. Erstinstallation oder Ergänzung fehlender Paketdatensätze ist gesperrt.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType PostedCompanyLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 1531064536" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Result (credit balance is negative)</source>
+        <target state="translated">Ergebnis (Habensaldo ist negativ)</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ProfitLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 1471092654" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Merchandise Purchases 19%</source>
+        <target state="translated">Wareneingang 19 %</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType PurchasesLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 3433486274" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Trade Receivables</source>
+        <target state="translated">Forderungen aus Lieferungen und Leistungen</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ReceivableLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 129197026" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Review the standard BC setup or permissions before applying. No existing setup will be overwritten.</source>
+        <target state="translated">Prüfen Sie vor dem Anwenden die BC-Standardeinrichtung und Berechtigungen. Vorhandene Einrichtung wird nicht überschrieben.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ResolveLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 2052233330" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Reuse existing record</source>
+        <target state="translated">Vorhandenen Datensatz verwenden</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ReuseLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 3096777198" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Domestic Sales 19%</source>
+        <target state="translated">Inlandserlöse 19 %</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType SalesLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 1895768393" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Based on DATEV standard charts 2026 (SKR03 article 11174, SKR04 article 11175).</source>
+        <target state="translated">Auf Basis der DATEV-Standardkontenrahmen 2026 (SKR03 Artikel 11174, SKR04 Artikel 11175).</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType SourceLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 3461262446" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Merchandise Inventory</source>
+        <target state="translated">Warenbestand</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType StockLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 2907800333" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Scenario Factory domestic 19% test setup</source>
+        <target state="translated">Scenario Factory Inland-Testeinrichtung 19 %</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType TestGroupLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2902468460 - NamedType 3864731164" size-unit="char" translate="yes" xml:space="preserve">
+        <source>For sandbox trade tests only. This is not a complete DATEV chart or statutory report.</source>
+        <target state="translated">Nur für Handelstests in der Sandbox. Kein vollständiger DATEV-Kontenrahmen oder gesetzlicher Abschluss.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType TestOnlyLbl</note>
+      </trans-unit>
+      <trans-unit id="Page 1163718602 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Finance Setup Preview</source>
+        <target state="translated">Vorschau Finanzeinrichtung</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Finance Preview - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Page 1163718602 - NamedType 3764383116" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Apply %1 in the current company %2? Existing records will not be overwritten.</source>
+        <target state="translated">%1 in der aktuellen Firma %2 anwenden? Vorhandene Datensätze werden nicht überschrieben.</target>
+        <note from="Developer" annotates="general" priority="2">%1 = package, %2 = company</note>
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Finance Preview - NamedType ConfirmLbl</note>
+      </trans-unit>
+      <trans-unit id="Page 1163718602 - Action 283151850 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Applies the reviewed package in the current approved sandbox company after confirmation and a fresh conflict check.</source>
+        <target state="translated">Wendet das geprüfte Paket nach Bestätigung und erneuter Konfliktprüfung in der freigegebenen Sandbox-Firma an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Finance Preview - Action ApplyFinancePackage - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Page 1163718602 - Action 283151850 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Apply Test Package</source>
+        <target state="translated">Testpaket anwenden</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Finance Preview - Action ApplyFinancePackage - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Page 254170160 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Select Finance Setup</source>
+        <target state="translated">Finanzeinrichtung auswählen</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Finance Selection - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Page 254170160 - Control 895645405 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Selects existing setup or a versioned test chart for the current test company.</source>
+        <target state="translated">Wählt vorhandene Einrichtung oder einen versionierten Testkontenplan für die aktuelle Testfirma.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Finance Selection - Control FinanceMode - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Page 254170160 - Control 895645405 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Finance Setup</source>
+        <target state="translated">Finanzeinrichtung</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Finance Selection - Control FinanceMode - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Page 1896398021 - Action 829089055 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1896398021">
+        <source>Reviews existing finance setup or previews a test chart and its posting setup before any changes.</source>
+        <target state="translated">Prüft die vorhandene Finanzeinrichtung oder zeigt einen Testkontenplan samt Buchungseinrichtung vor Änderungen an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Finance Setup - Action PreviewFinanceSetup - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Page 1896398021 - Action 829089055 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1896398021">
+        <source>Preview Finance Setup</source>
+        <target state="translated">Finanzeinrichtung prüfen</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Finance Setup - Action PreviewFinanceSetup - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Page 1160320011 - Control 4154419203 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+        <source>Shows the finance setup mode in the immutable run snapshot.</source>
+        <target state="translated">Zeigt den Finanzmodus im unveränderlichen Lauf-Snapshot.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Finance - Control FrozenFinanceMode - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Page 1160320011 - Control 4154419203 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+        <source>Captured Finance Setup</source>
+        <target state="translated">Erfasste Finanzeinrichtung</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Finance - Control FrozenFinanceMode - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Page 1160320011 - Control 945264076 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+        <source>Shows the version of the applied finance package at capture.</source>
+        <target state="translated">Zeigt die Version des bei der Erfassung angewendeten Finanzpakets.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Finance - Control FrozenFinanceVersion - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Page 1160320011 - Control 945264076 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+        <source>Finance Package Version</source>
+        <target state="translated">Finanzpaketversion</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Finance - Control FrozenFinanceVersion - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Page 1160320011 - Control 567720095 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+        <source>Shows the captured test chart reference year. It is empty for existing BC setup.</source>
+        <target state="translated">Zeigt das erfasste Bezugsjahr des Testkontenplans. Bei vorhandener BC-Einrichtung bleibt es leer.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Finance - Control FrozenFinanceYear - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Page 1160320011 - Control 567720095 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+        <source>Finance Reference Year</source>
+        <target state="translated">Finanzbezugsjahr</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Finance - Control FrozenFinanceYear - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 3309155589 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies which finance setup the scenario expects. A test package must already be applied in this company.</source>
+        <target state="translated">Gibt die vom Szenario erwartete Finanzeinrichtung an. Ein Testpaket muss in dieser Firma bereits angewendet sein.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Finance Mode - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 3309155589 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Finance Setup</source>
+        <target state="translated">Finanzeinrichtung</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Finance Mode - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 1543854089 - NamedType 2853132817" size-unit="char" translate="yes" xml:space="preserve">
+        <source>The selected finance package could not be captured. Review the applied package before creating a run.</source>
+        <target state="translated">Das gewählte Finanzpaket konnte nicht erfasst werden. Prüfen Sie das angewendete Paket vor der Lauferstellung.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Snapshot Writer - NamedType FinancePackageErr</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Validation Result</source>
+        <target state="translated">Validierungsergebnis</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 274452355 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the validated batch. An empty ID identifies the run summary.</source>
+        <target state="translated">Gibt das geprüfte Paket an. Eine leere ID kennzeichnet das Gesamtergebnis des Laufs.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Batch Id - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 274452355 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Batch Id</source>
+        <target state="translated">Paket-ID</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Batch Id - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 2487665750 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies when the check was recorded.</source>
+        <target state="translated">Gibt den Zeitpunkt der protokollierten Prüfung an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Checked At - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 2487665750 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Checked At</source>
+        <target state="translated">Geprüft am</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Checked At - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 903138701 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the expected logical units for this batch.</source>
+        <target state="translated">Gibt die erwarteten logischen Einheiten für dieses Paket an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Expected Units - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 903138701 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Expected Units</source>
+        <target state="translated">Erwartete Einheiten</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Expected Units - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 1760569903 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the planned step associated with the check.</source>
+        <target state="translated">Gibt den zur Prüfung gehörenden geplanten Schritt an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Node Code - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 1760569903 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Node Code</source>
+        <target state="translated">Schrittcode</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Node Code - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 2681083862 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the recorded logical units before this check.</source>
+        <target state="translated">Gibt die vor dieser Prüfung erfassten logischen Einheiten an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Reported Units - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 2681083862 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Reported Units</source>
+        <target state="translated">Gemeldete Einheiten</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Reported Units - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 3990251341 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the stable technical validation rule.</source>
+        <target state="translated">Gibt die stabile technische Prüfregel an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Rule Code - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 3990251341 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Rule Code</source>
+        <target state="translated">Regelcode</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Rule Code - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 3633922808 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the captured run.</source>
+        <target state="translated">Gibt den erfassten Lauf an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Run Id - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 3633922808 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Run Id</source>
+        <target state="translated">Lauf-ID</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Run Id - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 3618771765 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies whether the check passed, issued a warning or failed.</source>
+        <target state="translated">Gibt an, ob die Prüfung bestanden wurde, eine Warnung ergab oder fehlschlug.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Severity - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 189333730 - Field 3618771765 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Severity</source>
+        <target state="translated">Schweregrad</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Validation Result - Field Severity - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 542040904 - NamedType 482549047" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Validation results must be valid, append-only evidence for the current run.</source>
+        <target state="translated">Validierungsergebnisse müssen gültige, unveränderlich angehängte Nachweise für den aktuellen Lauf sein.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Validation Manager - NamedType InvalidResultErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 542040904 - NamedType 2303702599" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Not validated</source>
+        <target state="translated">Nicht validiert</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Validation Manager - NamedType NotValidatedLbl</note>
+      </trans-unit>
+      <trans-unit id="Page 3428178703 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Validation Results</source>
+        <target state="translated">Validierungsergebnisse</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Validation Results - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Page 3428178703 - Control 427449747 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies whether a failure blocks successful completion. Optional checks can issue warnings only.</source>
+        <target state="translated">Gibt an, ob ein Fehler den erfolgreichen Abschluss blockiert. Optionale Prüfungen können nur Warnungen ausgeben.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Validation Results - Control MandatoryCheck - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Page 3428178703 - Control 427449747 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Mandatory Check</source>
+        <target state="translated">Pflichtprüfung</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Validation Results - Control MandatoryCheck - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Enum 3567110872 - EnumValue 2248886284 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Error</source>
+        <target state="translated">Fehler</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Validation Severity - EnumValue Error - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Enum 3567110872 - EnumValue 1353916356 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Passed</source>
+        <target state="translated">Bestanden</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Validation Severity - EnumValue Passed - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Enum 3567110872 - EnumValue 3955473374 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Warning</source>
+        <target state="translated">Warnung</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Validation Severity - EnumValue Warning - Property Caption</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

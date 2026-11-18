@@ -47,3 +47,8 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/SetupManager/Codeunits/`, `src/SetupManager/PageExtensions/`, `src/SetupManager/Pages/`, `src/SetupManager/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-016/SF-017 – 18.11.2026
+
+Bestehender Paket-Inspektionsvertrag wird durch Finance implementiert; sämtliche SetupManager-Prüfungen bleiben lesend. Keine Standarddatenmutation durch SF-009. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.

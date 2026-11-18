@@ -85,3 +85,8 @@ SF-014-Nutzerpräzisierung: Run Header ausschließlich um den Leseschlüssel Cre
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/ScenarioManagement/Codeunits/`, `src/ScenarioManagement/Enums/`, `src/ScenarioManagement/Pages/`, `src/ScenarioManagement/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-016/SF-017 – 18.11.2026
+
+Finanzmodus in Vorlage/Wizard; unbekannte Enumwerte gesperrt. Snapshot übernimmt Modus/Jahr/Version über bestehendes Finance-Capture-Ereignis. Historische Snapshots unverändert. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.

@@ -110,3 +110,10 @@ Beide Tickets ausdrücklich gemeinsam beauftragt. Native suchbare Dashboardliste
 ## SF-014 – bestätigte Nutzerpräzisierung – 16.11.2026
 
 Der Nutzer verlangt ausdrücklich JavaScript-ControlAddIn statt ausschließlich nativer Dashboarddarstellung, eigenes App-Role-Center und zentrale Navigation einschließlich Szenariodefinition. Umgesetzt als wiederverwendbare öffentliche CardPart plus Host/Role-Center/Profil; frühere native Liste als Detailmonitor erhalten. Erweiterbare zusätzliche Role-Center benötigen jeweils eine PageExtension. Keine automatische Profilzuweisung oder ungefragte globale Änderung bestehender Rollen. Dies ergänzt das beauftragte SF-014, keine Umsetzung weiterer Tickets. [Vertrag, Einbau und Grenzen](DASHBOARD_EMBEDDING.md). Status **Zur Prüfung**, echte BC-Abnahme offen.
+
+
+## SF-016/SF-017 – Umsetzung zur Prüfung, 18.11.2026
+
+Beide Tickets ausdrücklich gemeinsam beauftragt; keine Vorziehung SF-018–SF-022. Vorhandene und noch nicht dokumentierte Implementierungsansätze werden vervollständigt. Qualitätsbefunde immutable mit Pflichtsummary; Generator-ValidateOutput erneut am Runabschluss. Konkrete Partner-/Sachpostenbeziehungen statt bloßer Tabellenanwesenheit für Rechnungen/Gutschriften.
+
+Finanzpakete sind begrenzte SKR03-/SKR04-Testkontenpläne 2026/1.0.0 mit eigenständiger Rollen-/Berichtsanordnung; Inland 19 %, keine vollständigen DATEV-Rahmen oder gesetzliche Abschlüsse. Apply explizit, commitfrei, ohne vorhandene Datensätze zu ändern. Firmeninitialisierung und Grundlagen bleiben BC-Standardaufgabe, keine Umsetzung einer automatischen Leerfirmenanlage. Die tatsächliche fachliche Buchungs-/Berichtsabnahme je Paket bleibt **Zu prüfen**, nicht durch einen leeren Bericht oder lokalen Build ersetzbar. [Vertrag und erwartete Beispielbeträge](VALIDATION_FINANCE.md).

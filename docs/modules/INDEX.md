@@ -1,10 +1,10 @@
 # Modulindex – Zielarchitektur
 
-**Aktueller Bestand nach SF-014-Präzisierung:** 104 AL-Objekte in elf Modulen; 13 Module ohne AL-Code. Monitoring 18, ScenarioManagement 22, übrige Bestände wie SF-013. JS-Dashboard mit Role-Center/Profil und wiederverwendbarer Part; technische Statushistorie und Wizard zur Prüfung. Echte Fachgeneratoren und BC-Laufzeitabnahme weiterhin offen.
+**Aktueller Bestand SF-016/SF-017, 18.11.2026:** 116 AL-Dateien in zwölf Modulen; zwölf Module ohne AL-Code. Qualitätsabschluss und SKR03-/SKR04-Testpakete zur Prüfung; keine echten Fachgeneratoren oder BC-Laufzeitabnahme. [Vertrag](../VALIDATION_FINANCE.md).
 
 | Modul | Kategorie | Ziel | Status |
 | --- | --- | --- | --- |
-| [Core](details/src/Core.md) | Kern | `src/Core/` | Grundlagen/Sprache/Vertrag: 13 AL-Objekte, zur Prüfung |
+| [Core](details/src/Core.md) | Kern | `src/Core/` | Grundlagen/Sprache/Vertrag/Finanzmodus: 14 AL-Objekte, zur Prüfung |
 | [ScenarioManagement](details/src/ScenarioManagement.md) | Kern | `src/ScenarioManagement/` | Vorlagen/Ziele/Snapshots/Steps/Wizard: 22 AL-Objekte, zur Prüfung |
 | [IndustryProfiles](details/src/IndustryProfiles.md) | Kern | `src/IndustryProfiles/` | 1 AL-Objekt: generische versionierte Syntheseregeln; zur Prüfung. Vollständige Branchenprofile weiterhin geplant. |
 | [ModuleRegistry](details/src/ModuleRegistry.md) | Kern | `src/ModuleRegistry/` | Vertrag/Katalog/Proben: 10 AL-Objekte, zur Prüfung |
@@ -12,11 +12,11 @@
 | [SetupManager](details/src/SetupManager.md) | Kern | `src/SetupManager/` | 4 AL-Objekte: temporärer Setup-Diff, Manager, Vorschau und Laufkarten-Erweiterung; zur Prüfung. |
 | [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | 6 AL-Objekte: Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. |
 | [ProcessEngine](details/src/ProcessEngine.md) | Kern | `src/ProcessEngine/` | Geplant, ohne Code |
-| [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 16 AL-Objekte: Ausführung, Queue und begrenzte Recovery mit Checkpoints/Steuerung; zur Prüfung. |
-| [Validation](details/src/Validation.md) | Kern | `src/Validation/` | Geplant, ohne Code |
+| [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 17 AL-Objekte: Qualitätsabschluss, Ausführung, Queue und begrenzte Recovery mit Checkpoints/Steuerung; zur Prüfung. |
+| [Validation](details/src/Validation.md) | Kern | `src/Validation/` | 4 AL-Objekte: immutable Qualitätsbefunde, Manager, Severity und Ergebnisliste; zur Prüfung |
 | [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | 18 AL-Objekte: JS-Dashboard, Role-Center/Profil, Kennzahlen, Historie und Wizard-Ausführungsintegration, zur Prüfung |
 | [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Teilweise implementiert, 4 AL-Objekte, Zur Prüfung. |
-| [Finance](details/src/Finance.md) | Fach | `src/Finance/` | 1 AL-Objekt: lesender Finanz-Setupcheck; zur Prüfung. Finanzgenerator/Buchungen weiterhin geplant. |
+| [Finance](details/src/Finance.md) | Fach | `src/Finance/` | 7 AL-Objekte: lesender Finanzcheck, versionierter Paketmanager/Paketvermerk, Auswahl/Vorschau und zwei PageExtensions; zur Prüfung. Keine Fachbuchungsgeneratoren. |
 | [Sales](details/src/Sales.md) | Fach | `src/Sales/` | Geplant, ohne Code |
 | [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | Geplant, ohne Code |
 | [Inventory](details/src/Inventory.md) | Fach | `src/Inventory/` | Geplant, ohne Code |

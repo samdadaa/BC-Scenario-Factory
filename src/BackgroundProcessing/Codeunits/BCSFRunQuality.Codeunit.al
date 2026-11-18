@@ -3,6 +3,7 @@ namespace BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Validation;
+using Microsoft.Finance.GeneralLedger.Journal;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Purchases.History;
 using Microsoft.Purchases.Payables;
@@ -53,7 +54,7 @@ codeunit 90317 "BCSF Run Quality"
             Severity := Severity::Warning;
         end;
       until Batch.Next() = 0;
-    Validation.RecordCheck(Execution."Run Id", NoBatch, '', 'RUN', Severity, 0, 0);
+    Validation.RecordCheck(Execution."Run Id", NoBatch, '', 'RUN', Severity, Execution."Total Batches", Execution."Total Batches");
     case Severity of
       Severity::Passed: Execution.Status := Execution.Status::Completed;
       Severity::Warning: Execution.Status := Execution.Status::CompletedWithWarnings;
@@ -74,12 +75,6 @@ codeunit 90317 "BCSF Run Quality"
     Rules: Codeunit "BCSF Execution Rules";
     Contract: Codeunit "BCSF Contract JSON";
     Result: JsonObject;
-    LogicalKey: Integer;
-    SalesPosted: Boolean;
-    PurchasePosted: Boolean;
-    HasGL: Boolean;
-    HasCustomerLedger: Boolean;
-    HasVendorLedger: Boolean;
   begin
     Batch.TestField(Status, Batch.Status::Completed);
     Rules.CheckCoverage(Batch);
@@ -92,22 +87,7 @@ codeunit 90317 "BCSF Run Quality"
     Entry.SetRange("Batch Id", Batch."Batch Id");
     if Entry.FindSet() then
       repeat
-        if Entry."Logical Key" <> LogicalKey then begin
-          CheckPostingEvidence(SalesPosted, PurchasePosted, HasGL, HasCustomerLedger, HasVendorLedger);
-          LogicalKey := Entry."Logical Key";
-          SalesPosted := false;
-          PurchasePosted := false;
-          HasGL := false;
-          HasCustomerLedger := false;
-          HasVendorLedger := false;
-        end;
-        case Entry."Table Id" of
-          Database::"Sales Invoice Header", Database::"Sales Cr.Memo Header": SalesPosted := true;
-          Database::"Purch. Inv. Header", Database::"Purch. Cr. Memo Hdr.": PurchasePosted := true;
-          Database::"G/L Entry": HasGL := true;
-          Database::"Cust. Ledger Entry": HasCustomerLedger := true;
-          Database::"Vendor Ledger Entry": HasVendorLedger := true;
-        end;
+        CheckPostedDocument(Entry);
         if not IsNullGuid(Entry."Parent Entry Id") then begin
           Parent.SetRange("Entry Id", Entry."Parent Entry Id");
           if not Parent.FindFirst() then
@@ -117,13 +97,176 @@ codeunit 90317 "BCSF Run Quality"
             Error(RelationshipErr);
         end;
       until Entry.Next() = 0;
-    CheckPostingEvidence(SalesPosted, PurchasePosted, HasGL, HasCustomerLedger, HasVendorLedger);
   end;
 
-  local procedure CheckPostingEvidence(SalesPosted: Boolean; PurchasePosted: Boolean; HasGL: Boolean; HasCustomerLedger: Boolean; HasVendorLedger: Boolean)
+  local procedure CheckPostedDocument(Entry: Record "BCSF Generated Record")
+  var
+    SalesInvoice: Record "Sales Invoice Header";
+    SalesCredit: Record "Sales Cr.Memo Header";
+    PurchaseInvoice: Record "Purch. Inv. Header";
+    PurchaseCredit: Record "Purch. Cr. Memo Hdr.";
   begin
-    if (SalesPosted and not (HasGL and HasCustomerLedger)) or (PurchasePosted and not (HasGL and HasVendorLedger)) then
+    case Entry."Table Id" of
+      Database::"Sales Invoice Header":
+        begin
+          SalesInvoice.GetBySystemId(Entry."Record SystemId");
+          SalesInvoice.CalcFields("Amount Including VAT");
+          CheckCustomerPosting(Entry, SalesInvoice."Cust. Ledger Entry No.", SalesInvoice."No.",
+            SalesInvoice."Bill-to Customer No.", SalesInvoice."Posting Date", SalesInvoice."Amount Including VAT", "Gen. Journal Document Type"::Invoice);
+        end;
+      Database::"Sales Cr.Memo Header":
+        begin
+          SalesCredit.GetBySystemId(Entry."Record SystemId");
+          SalesCredit.CalcFields("Amount Including VAT");
+          CheckCustomerPosting(Entry, SalesCredit."Cust. Ledger Entry No.", SalesCredit."No.",
+            SalesCredit."Bill-to Customer No.", SalesCredit."Posting Date", -SalesCredit."Amount Including VAT", "Gen. Journal Document Type"::"Credit Memo");
+        end;
+      Database::"Purch. Inv. Header":
+        begin
+          PurchaseInvoice.GetBySystemId(Entry."Record SystemId");
+          PurchaseInvoice.CalcFields("Amount Including VAT");
+          CheckVendorPosting(Entry, PurchaseInvoice."Vendor Ledger Entry No.", PurchaseInvoice."No.",
+            PurchaseInvoice."Pay-to Vendor No.", PurchaseInvoice."Posting Date", -PurchaseInvoice."Amount Including VAT", "Gen. Journal Document Type"::Invoice);
+        end;
+      Database::"Purch. Cr. Memo Hdr.":
+        begin
+          PurchaseCredit.GetBySystemId(Entry."Record SystemId");
+          PurchaseCredit.CalcFields("Amount Including VAT");
+          CheckVendorPosting(Entry, PurchaseCredit."Vendor Ledger Entry No.", PurchaseCredit."No.",
+            PurchaseCredit."Pay-to Vendor No.", PurchaseCredit."Posting Date", PurchaseCredit."Amount Including VAT", "Gen. Journal Document Type"::"Credit Memo");
+        end;
+    end;
+  end;
+
+  local procedure CheckCustomerPosting(Entry: Record "BCSF Generated Record"; LedgerNo: Integer; DocumentNo: Code[20]; PartnerNo: Code[20]; PostingDate: Date; Amount: Decimal; DocumentType: Enum "Gen. Journal Document Type")
+  var
+    Ledger: Record "Cust. Ledger Entry";
+  begin
+    Ledger.SecurityFiltering(SecurityFilter::Disallowed);
+    Ledger.Get(LedgerNo);
+    Ledger.TestField("Document No.", DocumentNo);
+    Ledger.TestField("Customer No.", PartnerNo);
+    Ledger.TestField("Document Type", DocumentType);
+    Ledger.TestField("Posting Date", PostingDate);
+    Ledger.CalcFields("Original Amount");
+    Ledger.TestField("Original Amount", Amount);
+    CheckRegisteredIdentity(Entry, Database::"Cust. Ledger Entry", Ledger.SystemId);
+    CheckGLPosting(Entry, Ledger."Transaction No.", DocumentNo, PostingDate, DocumentType);
+  end;
+
+  local procedure CheckVendorPosting(Entry: Record "BCSF Generated Record"; LedgerNo: Integer; DocumentNo: Code[20]; PartnerNo: Code[20]; PostingDate: Date; Amount: Decimal; DocumentType: Enum "Gen. Journal Document Type")
+  var
+    Ledger: Record "Vendor Ledger Entry";
+  begin
+    Ledger.SecurityFiltering(SecurityFilter::Disallowed);
+    Ledger.Get(LedgerNo);
+    Ledger.TestField("Document No.", DocumentNo);
+    Ledger.TestField("Vendor No.", PartnerNo);
+    Ledger.TestField("Document Type", DocumentType);
+    Ledger.TestField("Posting Date", PostingDate);
+    Ledger.CalcFields("Original Amount");
+    Ledger.TestField("Original Amount", Amount);
+    CheckRegisteredIdentity(Entry, Database::"Vendor Ledger Entry", Ledger.SystemId);
+    CheckGLPosting(Entry, Ledger."Transaction No.", DocumentNo, PostingDate, DocumentType);
+  end;
+
+  local procedure CheckGLPosting(Entry: Record "BCSF Generated Record"; TransactionNo: Integer; DocumentNo: Code[20]; PostingDate: Date; DocumentType: Enum "Gen. Journal Document Type")
+  var
+    Ledger: Record "G/L Entry";
+    Balance: Decimal;
+  begin
+    if TransactionNo <= 0 then
       Error(PostingEvidenceErr);
+    Ledger.SecurityFiltering(SecurityFilter::Disallowed);
+    Ledger.SetCurrentKey("Transaction No.");
+    Ledger.SetRange("Transaction No.", TransactionNo);
+    Ledger.SetRange("Document No.", DocumentNo);
+    Ledger.SetRange("Document Type", DocumentType);
+    Ledger.SetRange("Posting Date", PostingDate);
+    Balance := 0;
+    if not Ledger.FindSet() then
+      Error(PostingEvidenceErr);
+    repeat
+      CheckRegisteredIdentity(Entry, Database::"G/L Entry", Ledger.SystemId);
+      Balance += Ledger.Amount;
+    until Ledger.Next() = 0;
+    if Balance <> 0 then
+      Error(PostingEvidenceErr);
+  end;
+
+  local procedure CheckRegisteredIdentity(Entry: Record "BCSF Generated Record"; TableId: Integer; RecordSystemId: Guid)
+  var
+    Evidence: Record "BCSF Generated Record";
+  begin
+    Evidence.SetCurrentKey("Table Id", "Record SystemId");
+    Evidence.SetRange("Table Id", TableId);
+    Evidence.SetRange("Record SystemId", RecordSystemId);
+    if not Evidence.FindFirst() then
+      Error(PostingEvidenceErr);
+    Evidence.TestField("Run Id", Entry."Run Id");
+    Evidence.TestField("Node Code", Entry."Node Code");
+    Evidence.TestField("Logical Key", Entry."Logical Key");
+    Evidence.TestField("Batch Id", Entry."Batch Id");
+  end;
+
+  [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Validation Manager", 'OnCheckResult', '', false, false)]
+  local procedure CheckResult(Result: Record "BCSF Validation Result")
+  var
+    Execution: Record "BCSF Run Execution";
+    Batch: Record "BCSF Batch";
+    Finding: Record "BCSF Validation Result";
+    Severity: Enum "BCSF Validation Severity";
+    RequiredCount: Integer;
+  begin
+    Execution.Get(Result."Run Id");
+    if not (Execution.Status in [Execution.Status::Running, Execution.Status::ResumePending]) then
+      Error(BatchCountErr);
+    if not IsNullGuid(Result."Batch Id") then begin
+      Batch.Get(Result."Batch Id");
+      Batch.TestField("Run Id", Result."Run Id");
+      Batch.TestField("Node Code", Result."Node Code");
+      Batch.TestField(Status, Batch.Status::Completed);
+      if Result."Rule Code" = 'REQUIRED-OUTPUT' then begin
+        Result.TestField("Expected Units", Batch."Last Key" - Batch."First Key" + 1);
+        Result.TestField("Reported Units", Batch."Processed Units");
+        if Result.Severity = Result.Severity::Warning then
+          Error(BatchCountErr);
+        if Result.Severity = Result.Severity::Passed then
+          CheckRequiredOutput(Batch);
+      end else begin
+        Result.TestField(Severity, Result.Severity::Warning);
+        if (CopyStr(Result."Rule Code", 1, 5) <> 'WARN-') and (Result."Rule Code" <> 'OPTIONAL-CHECK-FAILED') then
+          Error(OptionalContractErr);
+        Finding.Get(Result."Run Id", Result."Batch Id", 'REQUIRED-OUTPUT');
+        Finding.TestField(Severity, Finding.Severity::Passed);
+      end;
+      exit;
+    end;
+    Result.TestField("Rule Code", 'RUN');
+    Result.TestField("Node Code", '');
+    Severity := Severity::Passed;
+    RequiredCount := 0;
+    Batch.SetRange("Run Id", Result."Run Id");
+    if (Batch.Count() <> Execution."Total Batches") or (Execution."Total Batches" <= 0) then
+      Error(BatchCountErr);
+    if Batch.FindSet() then
+      repeat
+        Batch.TestField(Status, Batch.Status::Completed);
+        Finding.Get(Result."Run Id", Batch."Batch Id", 'REQUIRED-OUTPUT');
+        RequiredCount += 1;
+      until Batch.Next() = 0;
+    Finding.SetRange("Run Id", Result."Run Id");
+    if Finding.FindSet() then
+      repeat
+        if Finding.Severity = Finding.Severity::Error then
+          Severity := Severity::Error
+        else
+          if (Finding.Severity = Finding.Severity::Warning) and (Severity <> Severity::Error) then
+            Severity := Severity::Warning;
+      until Finding.Next() = 0;
+    Result.TestField(Severity, Severity);
+    Result.TestField("Expected Units", RequiredCount);
+    Result.TestField("Reported Units", RequiredCount);
   end;
 
   [TryFunction]

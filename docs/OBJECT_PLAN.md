@@ -27,7 +27,7 @@ Vor jedem neuen Objekt ID und Name gegen diesen Plan, aktuellen Quellcode und ve
 | DataGeneration | 90250 | 90274 | `BCScenarioFactory.DataGeneration` | Core, ScenarioManagement |
 | ProcessEngine | 90275 | 90299 | `BCScenarioFactory.ProcessEngine` | Core, ScenarioManagement, DataGeneration, Lifecycle |
 | BackgroundProcessing | 90300 | 90324 | `BCScenarioFactory.BackgroundProcessing` | Core, ScenarioManagement, ModuleRegistry, DependencyManager, SetupManager, DataGeneration, ProcessEngine, Lifecycle, Validation |
-| Validation | 90325 | 90349 | `BCScenarioFactory.Validation` | Core, ScenarioManagement, DataGeneration |
+| Validation | 90325 | 90349 | `BCScenarioFactory.Validation` | Core, ScenarioManagement, DataGeneration, Lifecycle |
 | Monitoring | 90350 | 90374 | `BCScenarioFactory.Monitoring` | Core, ScenarioManagement, BackgroundProcessing, Validation, DependencyManager, SetupManager, Lifecycle, ModuleRegistry, DataGeneration |
 | Lifecycle | 90375 | 90399 | `BCScenarioFactory.Lifecycle` | Core, ScenarioManagement, ModuleRegistry, DependencyManager |
 | Finance | 90400 | 90424 | `BCScenarioFactory.Finance` | Core, ScenarioManagement, ModuleRegistry, SetupManager, DataGeneration, ProcessEngine, Lifecycle |
@@ -95,7 +95,7 @@ Die Tabelle ist der vollständige Plan. Vorhandene Dateien sind im Abschnitt „
 | Monitoring | 90353 | Page | `BCSF Run Events` | `src/Monitoring/Pages/BCSFRunEvents.Page.al` | SF-014 |
 | Lifecycle | 90375 | Codeunit | `BCSF Environment Guard` | `src/Lifecycle/Codeunits/BCSFEnvironmentGuard.Codeunit.al` | SF-003 |
 | Lifecycle | 90376 | Codeunit | `BCSF Lifecycle Manager` | `src/Lifecycle/Codeunits/BCSFLifecycleManager.Codeunit.al` | SF-027 |
-| Finance | 90400 | Codeunit | `BCSF Finance Generator` | `src/Finance/Codeunits/BCSFFinanceGenerator.Codeunit.al` | SF-017 |
+| Finance | 90400 | Codeunit | `BCSF Finance Package Mgt` | `src/Finance/Codeunits/BCSFFinancePackageMgt.Codeunit.al` | SF-017 |
 | Finance | 90401 | Codeunit | `BCSF Payment Processor` | `src/Finance/Codeunits/BCSFPaymentProcessor.Codeunit.al` | SF-022 |
 | Sales | 90425 | Codeunit | `BCSF Customer Generator` | `src/Sales/Codeunits/BCSFCustomerGenerator.Codeunit.al` | SF-018 |
 | Sales | 90426 | Codeunit | `BCSF Sales Generator` | `src/Sales/Codeunits/BCSFSalesGenerator.Codeunit.al` | SF-021 |
@@ -270,3 +270,22 @@ Zusätzlich sieben reale Objekte; jetzt 104 AL-Objekte, davon 101 mit numerische
 | Monitoring | — | Profile | `BCSF Scenario Factory` | `src/Monitoring/Profiles/BCSFScenarioFactory.Profile.al` | SF-014 |
 
 Monitoring referenziert zusätzlich die vorhandenen UI-/Lesetypen aus ModuleRegistry/DataGeneration; keine Rückreferenz dieser Module. Run Header 90128 erhält ausschließlich den Leseschlüssel CreatedOrder (Created At, Run Id) für die begrenzte neueste Laufprojektion, keine neuen Felder/Schreibwege. JS/CSS/Startup sind gebündelte App-Ressourcen, keine weiteren AL-Objekte oder externen Abhängigkeiten. Profil wird nicht automatisch zugewiesen. Reproduzierbarer lokaler Browsercheck unter `scripts/check_dashboard.mjs`, keine neue AL-Test-Codeunit. [Aktueller Vertrag und Einbauweg](DASHBOARD_EMBEDDING.md).
+
+
+## SF-016/SF-017 – nachgewiesener Bestand 18.11.2026
+
+116 AL-Dateien in zwölf Modulen (113 numerische IDs sowie Interface, ControlAddIn und Profil). Die folgenden bereits im Ausgangscode vorhandenen Objekte sind nun im Plan erfasst; 90400 bezeichnet den vorhandenen Paketmanager, keine Objektumbenennung.
+
+| Modul | ID | Typ | Objekt | Datei | Ticket |
+| --- | --- | --- | --- | --- | --- |
+| BackgroundProcessing | 90317 | codeunit | `BCSF Run Quality` | `src/BackgroundProcessing/Codeunits/BCSFRunQuality.Codeunit.al` | SF-016 |
+| Core | 90113 | enum | `BCSF Finance Mode` | `src/Core/Enums/BCSFFinanceMode.Enum.al` | SF-017 |
+| Finance | 90406 | pageextension | `BCSF Finance Setup` | `src/Finance/PageExtensions/BCSFFinanceSetup.PageExt.al` | SF-017 |
+| Finance | 90407 | pageextension | `BCSF Run Finance` | `src/Finance/PageExtensions/BCSFRunFinance.PageExt.al` | SF-017 |
+| Finance | 90405 | page | `BCSF Finance Preview` | `src/Finance/Pages/BCSFFinancePreview.Page.al` | SF-017 |
+| Finance | 90404 | page | `BCSF Finance Selection` | `src/Finance/Pages/BCSFFinanceSelection.Page.al` | SF-017 |
+| Finance | 90403 | table | `BCSF Finance Package` | `src/Finance/Tables/BCSFFinancePackage.Table.al` | SF-017 |
+| Validation | 90327 | enum | `BCSF Validation Severity` | `src/Validation/Enums/BCSFValidationSeverity.Enum.al` | SF-016 |
+| Validation | 90328 | page | `BCSF Validation Results` | `src/Validation/Pages/BCSFValidationResults.Page.al` | SF-016 |
+
+Validation → Lifecycle für den bestehenden Sandbox-/Firmen-Guard. BackgroundProcessing → Validation einschließlich Pflichtsubscriber OnCheckResult; keine Rückreferenz im Validation-Modul. Finance → ScenarioManagement/SetupManager/Lifecycle wie vorgesehen; Core-Permission-Set bleibt deklarative Ausnahme. Keine neuen Runtime-/App-Dependencies. [Vertrag](VALIDATION_FINANCE.md).

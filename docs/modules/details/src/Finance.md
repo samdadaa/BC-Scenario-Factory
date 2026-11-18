@@ -1,6 +1,6 @@
 # Finance – Modulspezifikation
 
-**Status:** 1 AL-Objekt: lesender Finanz-Setupcheck; zur Prüfung. Finanzgenerator/Buchungen weiterhin geplant. **Pfad:** `src/Finance/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** MVP / P1.
+**Status:** 7 AL-Objekte implementiert, zur Prüfung. **Pfad:** `src/Finance/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -36,7 +36,7 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 
 ## Objektplanung SF-002
 
-Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.Finance`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.Finance`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; dieser historische Planabschnitt wird durch den aktuellen Implementierungsstand unten ergänzt. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
 
 
 ## Implementierter Stand SF-009/SF-010 – 15.11.2026
@@ -47,3 +47,8 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/Finance/Codeunits/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-016/SF-017 – 18.11.2026
+
+90400 Finance Package Mgt, 90402 Finance Setup Check, 90403 Finance Package, 90404 Finance Selection, 90405 Finance Preview, 90406 Finance Setup, 90407 Run Finance. Versionierte Testpakete, Standardberichte, Vorschau/Apply und Snapshotbindung. Kein Finanzbuchungs-/Zahlungsgenerator. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.

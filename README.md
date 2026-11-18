@@ -1,6 +1,6 @@
 # BC Scenario Factory
 
-**Status: Grundlagen, Szenarien, Planung, Setupprüfung, Seed-Engine, Herkunftsregistry und Queue-Grundlage implementiert (SF-003–SF-015) einschließlich begrenzter Wiederaufnahme implementiert, zur Prüfung; schreibende Fachgeneratoren und End-to-End-Abnahme weiterhin ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
+**Status: Grundlagen bis Qualitätsabschluss und Finanztestpaketen (SF-003–SF-017) implementiert, zur Prüfung; Fachgeneratoren und BC-End-to-End-Abnahme ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
 
 ## Zielgruppen und Nutzen
 
@@ -87,8 +87,15 @@ Pausen-/Abbruchanforderungen wirken an sicheren Paketgrenzen. Bestätigte techni
 
 ## Dashboard und geführte Planung (SF-014/SF-015)
 
-„Scenario Factory Dashboard“ zeigt gespeicherte Ausführung, bestätigte Pakete, offene Ziele je Schritt, Zeitpunkte und Statushistorie mit Queue-Protokollzugriff. Gesamtqualität bleibt bis SF-016 offen. „Neues Szenario mit Assistent“ bzw. „Mit Assistent planen“ führt durch fünf Schritte bis zur expliziten Erfassung, Vorprüfung und terminierten Freigabe. Bestehende Generator-/Setupblocker bleiben wirksam; keine Branchenpresets oder Postingfreigabe vorgetäuscht. [Bedienung und Grenzen](docs/MONITORING_WIZARD.md), **Zur Prüfung**; BC-Laufzeitabnahme offen.
+„Scenario Factory Dashboard“ zeigt gespeicherte Ausführung, bestätigte Pakete, offene Ziele je Schritt, Zeitpunkte und Statushistorie mit Queue-Protokollzugriff. Gesamtqualität wird durch SF-016 nach vollständiger Pflichtprüfung ermittelt. „Neues Szenario mit Assistent“ bzw. „Mit Assistent planen“ führt durch fünf Schritte bis zur expliziten Erfassung, Vorprüfung und terminierten Freigabe. Bestehende Generator-/Setupblocker bleiben wirksam; keine Branchenpresets oder Postingfreigabe vorgetäuscht. [Bedienung und Grenzen](docs/MONITORING_WIZARD.md), **Zur Prüfung**; BC-Laufzeitabnahme offen.
 
 ## Zentraler JavaScript-Arbeitsplatz und App-Rolle
 
 Das Profil **BC Scenario Factory** öffnet das eigene App-Role-Center mit JavaScript-Dashboard. Szenarien lassen sich dort direkt anlegen; Vorlagen, Läufe, Planung/Vorprüfung, Ausführung, Pakete/Wiederaufnahme, Herkunft, Generatorkatalog und Einrichtung sind zentral erreichbar. Die gleiche **BCSF Dashboard Part** kann per PageExtension in weitere erweiterbare Role-Center eingebaut werden. [Bedienung und Einbau](docs/DASHBOARD_EMBEDDING.md). 104 AL-Objekte und 978 Texte lokal geprüft, Status **Zur Prüfung**; tatsächliche BC-Role-Center-/Profil-/Dialogabnahme offen.
+
+
+## Qualitätsabschluss und Finanztestpakete (SF-016/SF-017)
+
+Pflichtprüfungen gleichen Mengen, Herkunft, Generatorergebnisse sowie registrierte Rechnungen/Gutschriften mit tatsächlichen Posten ab. Nur erfolgreiche Pflichtprüfungen erlauben Completed; optionale Befunde führen zu Warnungen. Befunde sind unveränderlich und in der Laufübersicht erreichbar.
+
+In der Factory-Einrichtung „Finanzeinrichtung prüfen“ öffnen: vorhandene Einrichtung lesend prüfen oder SKR03-/SKR04-Testpaket 2026/1.0.0 nach Vorschau ausdrücklich anwenden. Die Pakete enthalten 14 Konten, Buchungsgruppen/-matrizen und je Bilanz/GuV; keine vollständigen DATEV-Kontenrahmen. Finanzmodus anschließend auf Szenario/Wizard wählen; Jahr und Version werden eingefroren. [Bedienung, Grenzen und Buchungsbeispiel](docs/VALIDATION_FINANCE.md). 116 AL-Dateien und 1.071 Texte lokal geprüft; tatsächliche BC-Buchungs-/Berichtsabnahme offen. **Zur Prüfung**.

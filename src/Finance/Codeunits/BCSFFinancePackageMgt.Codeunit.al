@@ -29,6 +29,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
     var
         SetupManager: Codeunit "BCSF Setup Manager";
     begin
+        if not (Mode in [Mode::Existing, Mode::SKR03, Mode::SKR04]) then
+            Error(ApplyBlockedErr);
         TempDiff.Reset();
         TempDiff.DeleteAll();
         Inspect(Mode, WorkDate(), false, TempDiff);
@@ -93,6 +95,9 @@ codeunit 90400 "BCSF Finance Package Mgt"
         end;
         if not Write then
             SetupManager.AddFinding(TempDiff, StrSubstNo(PackageLbl, Format(Mode), 2026, VersionTok), false, SourceLbl, TestOnlyLbl);
+        Package.SecurityFiltering(SecurityFilter::Disallowed);
+        Inventory.SecurityFiltering(SecurityFilter::Disallowed);
+        Location.SecurityFiltering(SecurityFilter::Disallowed);
         Ledger.SecurityFiltering(SecurityFilter::Disallowed);
         if not Ledger.ReadPermission() or not Package.ReadPermission() then begin
             if Write then
@@ -187,8 +192,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure AddAccount(Mode: Enum "BCSF Finance Mode"; var Nos: Dictionary of [Code[20], Code[20]]; RoleCode: Code[20]; SKR03No: Code[20]; SKR04No: Code[20]; AccountName: Text[100]; Category: Enum "G/L Account Category"; Direct: Boolean; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "G/L Account";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         if Mode = Mode::SKR03 then
@@ -224,8 +229,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure VATBusiness(GroupCode: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "VAT Business Posting Group";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Code" := GroupCode;
@@ -236,8 +241,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure VATProduct(GroupCode: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "VAT Product Posting Group";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Code" := GroupCode;
@@ -248,8 +253,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure GenBusiness(GroupCode: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Gen. Business Posting Group";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Code" := GroupCode;
@@ -264,8 +269,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure GenProduct(GroupCode: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Gen. Product Posting Group";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Code" := GroupCode;
@@ -280,8 +285,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure InventoryGroup(GroupCode: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Inventory Posting Group";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Code" := GroupCode;
@@ -292,8 +297,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure CustomerGroup(GroupCode: Code[20]; AccountNo: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Customer Posting Group";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Code" := GroupCode;
@@ -309,8 +314,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure VendorGroup(GroupCode: Code[20]; AccountNo: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Vendor Posting Group";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Code" := GroupCode;
@@ -326,8 +331,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure VATMatrix(GroupCode: Code[20]; PurchaseVATNo: Code[20]; SalesVATNo: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "VAT Posting Setup";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."VAT Bus. Posting Group" := GroupCode;
@@ -359,8 +364,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure GenMatrix(BusinessCode: Code[20]; ProductCode: Code[20]; SalesNo: Code[20]; PurchasesNo: Code[20]; CostNo: Code[20]; AccrualNo: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "General Posting Setup";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Gen. Bus. Posting Group" := BusinessCode;
@@ -405,8 +410,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure InventoryMatrix(LocationCode: Code[10]; GroupCode: Code[20]; StockNo: Code[20]; InterimNo: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Inventory Posting Setup";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Location Code" := LocationCode;
@@ -425,8 +430,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure RowHeader(ReportCode: Code[10]; Title: Text[80]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Acc. Schedule Name";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected.Name := ReportCode;
@@ -440,8 +445,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure ColumnHeader(ColumnCode: Code[10]; Title: Text[80]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Column Layout Name";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected.Name := ColumnCode;
@@ -454,8 +459,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure ColumnLine(ColumnCode: Code[10]; BalanceSheet: Boolean; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Column Layout";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Column Layout Name" := ColumnCode;
@@ -483,8 +488,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure Report(ReportCode: Code[10]; ColumnCode: Code[10]; Title: Text[80]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Financial Report";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected.Name := ReportCode;
@@ -507,8 +512,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure ReportLine(ReportCode: Code[10]; LineNo: Integer; RowNo: Code[10]; Title: Text[100]; Totaling: Text[250]; FormulaLine: Boolean; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
-        MatchFields: List of [Integer];
         Expected: Record "Acc. Schedule Line";
+        MatchFields: List of [Integer];
     begin
         Expected.Init();
         Expected."Schedule Name" := ReportCode;
@@ -605,11 +610,11 @@ codeunit 90400 "BCSF Finance Package Mgt"
 
     local procedure NeedsInsert(ExpectedRow: Variant; MatchFields: List of [Integer]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary): Boolean
     var
+        SetupManager: Codeunit "BCSF Setup Manager";
         Expected: RecordRef;
         Actual: RecordRef;
         ExpectedField: FieldRef;
         ActualField: FieldRef;
-        SetupManager: Codeunit "BCSF Setup Manager";
         FieldNo: Integer;
         Requirement: Text;
         KeyHint: Text;
@@ -672,6 +677,13 @@ codeunit 90400 "BCSF Finance Package Mgt"
         Journal: Record "Gen. Journal Template";
         Location: Record Location;
     begin
+        GL.SecurityFiltering(SecurityFilter::Disallowed);
+        Sales.SecurityFiltering(SecurityFilter::Disallowed);
+        Purchases.SecurityFiltering(SecurityFilter::Disallowed);
+        Inventory.SecurityFiltering(SecurityFilter::Disallowed);
+        PaymentTerms.SecurityFiltering(SecurityFilter::Disallowed);
+        Journal.SecurityFiltering(SecurityFilter::Disallowed);
+        Location.SecurityFiltering(SecurityFilter::Disallowed);
         if GL.ReadPermission() and GL.Get() then
             CheckPresence(GL.TableCaption() + ' / ' + GL.FieldCaption("Amount Rounding Precision"),
               (GL."Amount Rounding Precision" > 0) and
@@ -719,6 +731,9 @@ codeunit 90400 "BCSF Finance Package Mgt"
         Valid: Boolean;
         LatestDate: Date;
     begin
+        Series.SecurityFiltering(SecurityFilter::Disallowed);
+        Line.SecurityFiltering(SecurityFilter::Disallowed);
+        LatestDate := 0D;
         if Series.ReadPermission() and Line.ReadPermission() then
             if Series.Get(SeriesCode) then begin
                 if Series."Default Nos." then begin
@@ -784,11 +799,11 @@ codeunit 90400 "BCSF Finance Package Mgt"
     local procedure CheckSnapshotFinance(Context: JsonObject; EffectiveDate: Date; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
         Package: Record "BCSF Finance Package";
-        Mode: Enum "BCSF Finance Mode";
+        TempPackageDiff: Record "BCSF Setup Diff" temporary;
         SetupManager: Codeunit "BCSF Setup Manager";
         Contract: Codeunit "BCSF Contract JSON";
+        Mode: Enum "BCSF Finance Mode";
         Token: JsonToken;
-        PackageDiff: Record "BCSF Setup Diff" temporary;
     begin
         if not Context.Get('financeMode', Token) then
             exit;
@@ -805,12 +820,54 @@ codeunit 90400 "BCSF Finance Package Mgt"
             SetupManager.AddFinding(TempDiff, Format(Mode), true, DifferentPackageLbl, ResolveLbl);
             exit;
         end;
-        Inspect(Mode, EffectiveDate, false, PackageDiff);
-        if PackageDiff.FindSet() then
+        Inspect(Mode, EffectiveDate, false, TempPackageDiff);
+        if TempPackageDiff.FindSet() then
             repeat
-                if PackageDiff.Blocked or (PackageDiff.Finding = CreateLbl) then
-                    SetupManager.AddFinding(TempDiff, PackageDiff.Requirement, true, PackageDiff.Finding, PackageDiff.Action);
-            until PackageDiff.Next() = 0;
+                if TempPackageDiff.Blocked or (TempPackageDiff.Finding = CreateLbl) then
+                    SetupManager.AddFinding(TempDiff, TempPackageDiff.Requirement, true, TempPackageDiff.Finding, TempPackageDiff.Action);
+            until TempPackageDiff.Next() = 0;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"BCSF Finance Package", 'OnBeforeInsertEvent', '', false, false)]
+    local procedure CheckPackageInsert(var Rec: Record "BCSF Finance Package"; RunTrigger: Boolean)
+    var
+        TempDiff: Record "BCSF Setup Diff" temporary;
+        Guard: Codeunit "BCSF Environment Guard";
+    begin
+        if Rec.IsTemporary() then
+            exit;
+        Guard.EnsureCanConfigure(Rec.CurrentCompany());
+        Rec.TestField("Primary Key", PackageKeyTok);
+        Rec.TestField("Reference Year", 2026);
+        Rec.TestField(Version, VersionTok);
+        if not (Rec.Mode in [Rec.Mode::SKR03, Rec.Mode::SKR04]) then
+            Error(ApplyBlockedErr);
+        if not Preview(Rec.Mode, TempDiff) then
+            Error(ApplyBlockedErr);
+        TempDiff.SetRange(Finding, CreateLbl);
+        if not TempDiff.IsEmpty() then
+            Error(ApplyBlockedErr);
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"BCSF Finance Package", 'OnBeforeModifyEvent', '', false, false)]
+    local procedure CheckPackageModify(var Rec: Record "BCSF Finance Package"; var xRec: Record "BCSF Finance Package"; RunTrigger: Boolean)
+    begin
+        if not Rec.IsTemporary() then
+            Error(ApplyBlockedErr);
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"BCSF Finance Package", 'OnBeforeDeleteEvent', '', false, false)]
+    local procedure CheckPackageDelete(var Rec: Record "BCSF Finance Package"; RunTrigger: Boolean)
+    begin
+        if not Rec.IsTemporary() then
+            Error(ApplyBlockedErr);
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"BCSF Finance Package", 'OnBeforeRenameEvent', '', false, false)]
+    local procedure CheckPackageRename(var Rec: Record "BCSF Finance Package"; var xRec: Record "BCSF Finance Package"; RunTrigger: Boolean)
+    begin
+        if not Rec.IsTemporary() then
+            Error(ApplyBlockedErr);
     end;
 
     var
