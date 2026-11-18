@@ -26,6 +26,32 @@ codeunit 90143 "BCSF Scenario Policy"
     Error(EntityErr);
   end;
 
+  procedure GetEntityName(Code: Code[30]): Text
+  var
+    Entity: Enum "BCSF Entity Type";
+    Ordinal: Integer;
+  begin
+    foreach Ordinal in Entity.Ordinals() do begin
+      Entity := "BCSF Entity Type".FromInteger(Ordinal);
+      if GetEntityCode(Entity) = Code then
+        exit(Format(Entity));
+    end;
+    exit(Code);
+  end;
+
+  procedure GetModuleName(Code: Code[30]): Text
+  var
+    Module: Enum "BCSF Module Type";
+    Ordinal: Integer;
+  begin
+    foreach Ordinal in Module.Ordinals() do begin
+      Module := "BCSF Module Type".FromInteger(Ordinal);
+      if GetModuleCode(Module) = Code then
+        exit(Format(Module));
+    end;
+    exit(Code);
+  end;
+
   procedure GetEntityCode(Value: Enum "BCSF Entity Type"): Code[30]
   begin
     case Value of

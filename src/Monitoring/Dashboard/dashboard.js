@@ -108,7 +108,7 @@
     const heading = node("div");
     append(heading, node("div", "sf-section-label", text("choose")), node("h2", "", run.description));
     append(head, heading, node("span", "sf-status", localized(run.status)));
-    append(section, head, node("div", "sf-run-meta", [run.profile, run.processMode, run.id].join(" · ")));
+    append(section, head, node("div", "sf-run-meta", [run.profile, localized(run.processMode)].join(" · ")));
     const flags = node("div", "sf-flags");
     if (run.pauseRequested) flags.appendChild(node("span", "sf-flag", text("pauseRequested")));
     if (run.cancelRequested) flags.appendChild(node("span", "sf-flag sf-warning", text("cancelRequested")));
@@ -119,7 +119,7 @@
       append(fact, node("dt", "", text(key)), node("dd", "", value || text("notRecorded")));
       facts.appendChild(fact);
     });
-    append(section, facts, node("p", "sf-quality", run.quality || text("quality")));
+    append(section, facts, node("p", "sf-quality", localized(run.quality) || text("quality")));
     return section;
   }
   function stepPanel() {
@@ -141,7 +141,7 @@
     model.steps.forEach(step => {
       const row = node("tr");
       const identity = node("td");
-      append(identity, node("strong", "", step.entity), node("span", "sf-cell-sub", step.module));
+      append(identity, node("strong", "", localized(step.entity)), node("span", "sf-cell-sub", localized(step.module)));
       row.appendChild(identity);
       [step.external ? null : step.target, step.external ? null : step.confirmed, step.external ? null : step.remaining, step.external ? null : step.artifacts].forEach(value => row.appendChild(node("td", "sf-number", value === null ? "—" : number(value))));
       const status = node("td", "sf-step-state");
@@ -150,7 +150,7 @@
         const progress = node("progress", "sf-progress");
         progress.max = 100;
         progress.value = Math.max(0, Math.min(100, step.percent));
-        progress.setAttribute("aria-label", step.entity + " · " + text("confirmed"));
+        progress.setAttribute("aria-label", localized(step.entity) + " · " + text("confirmed"));
         progress.textContent = number(step.percent) + "%";
         status.appendChild(progress);
       }
@@ -163,20 +163,39 @@
   }
   function actionPanel() {
     const section = node("section", "sf-action-groups");
+    const run = model.selected;
+    let primary = "run";
+    if ([11, 13].includes(run.statusCode)) primary = "primaryErrors";
+    else if ([4, 5, 6, 8].includes(run.statusCode)) primary = "primaryProgress";
+    else if ([9, 10].includes(run.statusCode)) primary = "primaryResults";
+    else if (run.canStart && (!run.hasExecution || run.statusCode === 3)) primary = "primaryStart";
+    section.appendChild(button(primary, "sf-button sf-primary", primary === "run" ? "run" : "primary", run.id));
+    const diagnostics = node("details", "sf-diagnostics");
+    diagnostics.appendChild(node("summary", "sf-section-label", text("diagnostics")));
     Object.entries(groups).forEach(([key, commands]) => {
       const group = node("div", "sf-action-group");
       append(group, node("h3", "", text(key)));
       const actions = node("div", "sf-buttons");
-      commands.forEach(command => actions.appendChild(button(command, command === "cancel" ? "sf-button sf-danger" : "sf-button", command, model.selected.id)));
+      commands.forEach(command => {
+        const status = model.selected.statusCode;
+        const hasExecution = model.selected.hasExecution;
+        const meaningful = command === "prepare" ? !hasExecution :
+          command === "schedule" ? hasExecution && status === 3 :
+          ["pause", "cancel", "apply"].includes(command) ? hasExecution && [3, 4, 5, 6].includes(status) :
+          command === "resume" ? hasExecution && (status === 7 || model.selected.canResume) : true;
+        if (meaningful) actions.appendChild(button(command, command === "cancel" ? "sf-button sf-danger" : "sf-button", command, model.selected.id));
+      });
       group.appendChild(actions);
-      section.appendChild(group);
+      diagnostics.appendChild(group);
     });
+    section.appendChild(diagnostics);
     return section;
   }
   function render() {
     if (!root || !model) return;
     const focused = document.activeElement && document.activeElement.dataset.action;
     const scrollTop = root.scrollTop;
+    const diagnosticsOpen = root.querySelector(".sf-diagnostics")?.open || false;
     root.replaceChildren();
     root.className = "sf-dashboard";
     root.setAttribute("aria-label", text("title"));
@@ -202,6 +221,8 @@
     feedback.setAttribute("aria-live", "polite");
     append(footer, feedback, node("span", "sf-help", text("updated") + " " + model.readAt));
     append(root, hero, shell, footer);
+    const diagnostics = root.querySelector(".sf-diagnostics");
+    if (diagnostics) diagnostics.open = diagnosticsOpen;
     setBusy(busy);
     if (focused) {
       const target = Array.from(root.querySelectorAll("button[data-action]")).find(element => element.dataset.action === focused);

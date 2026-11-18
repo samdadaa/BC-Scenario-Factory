@@ -8,6 +8,7 @@ page 90133 "BCSF Scenario List"
   Caption = 'Scenario Factory Scenarios';
   PageType = List;
   SourceTable = "BCSF Scenario";
+  SourceTableView = where(Archived = const(false));
   UsageCategory = Lists;
   CardPageId = "BCSF Scenario Card";
   InsertAllowed = false;
@@ -19,7 +20,17 @@ page 90133 "BCSF Scenario List"
     {
       repeater(Scenarios)
       {
-        field(Description; Rec.Description) { }
+        field(Description; DisplayName)
+        {
+          Caption = 'Description';
+          ToolTip = 'Shows the template name in the session language when it is an unchanged built-in name.';
+        }
+        field(Availability; Availability)
+        {
+          Caption = 'Availability';
+          ToolTip = 'Only partner master data has executable generators. Other templates support planning only.';
+        }
+        field(Archived; Rec.Archived) { }
         field(Revision; Rec.Revision) { }
         field("Profile Code"; Rec."Profile Code") { }
         field("Process Mode"; Rec."Process Mode") { }
@@ -31,6 +42,56 @@ page 90133 "BCSF Scenario List"
   {
     area(Processing)
     {
+      action(RemoveTemplates)
+      {
+        ApplicationArea = All;
+        Caption = 'Delete Selected Templates';
+        ToolTip = 'Deletes unused selected templates and archives templates with captured runs after showing the counts and confirming.';
+        Image = Delete;
+        trigger OnAction()
+        var
+          Selection: Record "BCSF Scenario";
+          Manager: Codeunit "BCSF Scenario Manager";
+        begin
+          CurrPage.SetSelectionFilter(Selection);
+          Manager.RemoveSelection(Selection);
+          CurrPage.Update(false);
+        end;
+      }
+      action(ShowArchived)
+      {
+        ApplicationArea = All;
+        Caption = 'Show or Hide Archived Templates';
+        ToolTip = 'Includes or hides archived templates. This does not resume jobs or restore removed starters.';
+        Image = Filter;
+        trigger OnAction()
+        begin
+          IncludeArchived := not IncludeArchived;
+          Rec.FilterGroup(2);
+          if IncludeArchived then
+            Rec.SetRange(Archived)
+          else
+            Rec.SetRange(Archived, false);
+          Rec.FilterGroup(0);
+          CurrPage.Update(false);
+        end;
+      }
+      action(RestoreTemplates)
+      {
+        ApplicationArea = All;
+        Caption = 'Restore Selected Templates';
+        ToolTip = 'Makes selected archived templates available for new runs after confirmation.';
+        Image = Restore;
+        trigger OnAction()
+        var
+          Selection: Record "BCSF Scenario";
+          Manager: Codeunit "BCSF Scenario Manager";
+        begin
+          CurrPage.SetSelectionFilter(Selection);
+          Manager.RestoreSelection(Selection);
+          CurrPage.Update(false);
+        end;
+      }
       action(NewGuidedScenario)
       {
         ApplicationArea = All;
@@ -97,7 +158,24 @@ page 90133 "BCSF Scenario List"
         ToolTip = 'Opens the captured configuration history.';
         Image = History;
         RunObject = page "BCSF Run List";
+        RunPageLink = "Scenario Id" = field("Scenario Id");
       }
     }
   }
+  trigger OnAfterGetRecord()
+  var
+    Manager: Codeunit "BCSF Scenario Manager";
+  begin
+    DisplayName := Manager.GetDisplayName(Rec);
+    if Manager.IsPartnerTemplate(Rec) then
+      Availability := PartnerLbl
+    else
+      Availability := PlanningLbl;
+  end;
+  var
+    DisplayName: Text;
+    Availability: Text;
+    IncludeArchived: Boolean;
+    PartnerLbl: Label 'Partner Master Data';
+    PlanningLbl: Label 'Planning Only';
 }

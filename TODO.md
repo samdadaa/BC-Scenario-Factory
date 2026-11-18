@@ -1410,3 +1410,18 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Akzeptanz:** Nachweisbarer fachlicher Sollzustand, keine Regression  
 **Testprotokoll:** BC-Version, Umgebung, Inputs, Erwartung, tatsächliches Ergebnis, bekannte Grenzen  
 **Freigabe:** [ ] Menschlich bestätigt.
+
+
+### SF-037 — Reparatur Vorlage → Start → Ergebnis (Nutzerauftrag 18.11.2026)
+
+**Status:** Zur Prüfung
+
+**Ausgangslage:** Playground-Partnerlauf 5/5 mit zwei Paketen fehlgeschlagen; frühester vollständiger Queuefehler fehlt. Aktueller Workspace einschließlich lokaler Starter-/Transfer-/Ready-/Identitätsfixes ist die Arbeitsgrundlage.
+
+**Ziel / Scope:** Bestehenden Partnerpfad und Zustandsverträge prüfen; Vorlagen laden, übertragen, lokalisieren, löschen/archivieren; Bedienung und Fehler-/Ergebnisnavigation vereinfachen. Keine neuen Fachgeneratoren, keine Laufdatenlöschung, kein Replay unsicherer Pakete, kein Deployment/ForceSync/Commit/Push.
+
+**Vorgehen / Abhängigkeiten:** SF-005–SF-018 und vorhandene Starterimplementierung prüfen; Standard-Queuequellen aus lokalen Symbolen mit Worker/Runner/Fehlerhandler abgleichen. Gespeicherte Vorzustände, technische Historie, parent-lock bei Snapshot/Entfernung, feste Starter-IDs und vollständige Übersetzungskette prüfen. Neue ID 90148 für firmenbezogene Entfernt-Vermerke im freien ScenarioManagement-Block; additive Tabelle/Feldänderung, keine Migration historischer Snapshots.
+
+**Akzeptanz:** Nutzervorgaben dieses Auftrags einschließlich 5/5, 12/7, negativer Setupfall, Sammeltransfer zwischen zwei Testfirmen, DE/EN und wiederholtes Laden nach Löschen/Archivieren. Lokale Builds sind keine BC-Abnahme.
+
+**Tests / Risiken / offene Anforderungen:** [Aktueller Prüfnachweis](docs/TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026) und [vereinfachte Testanleitung](docs/review/TESTANLEITUNG.md). Ursprüngliche CUSTOMER-Ursache ohne frühesten vollständigen Standardfehler oder freigegebene Reproduktion weiterhin **Zu prüfen**. Sandbox-/Queue-/Rechte-/Parallelitäts-/Installations-/Transferabnahme offen. Keine menschliche Abnahme behauptet.

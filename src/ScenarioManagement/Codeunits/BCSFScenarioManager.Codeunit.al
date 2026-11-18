@@ -5,6 +5,99 @@ using BCScenarioFactory.Core;
 codeunit 90130 "BCSF Scenario Manager"
 {
   Access = Internal;
+  Permissions = tabledata "BCSF Scenario" = D;
+
+  procedure GetDisplayName(Scenario: Record "BCSF Scenario"): Text
+  var
+    Name: Text;
+  begin
+    Name := Scenario.Description;
+    OnGetDisplayName(Scenario, Name);
+    exit(Name);
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnGetDisplayName(Scenario: Record "BCSF Scenario"; var Name: Text)
+  begin
+  end;
+
+  procedure IsPartnerTemplate(Scenario: Record "BCSF Scenario"): Boolean
+  var
+    Target: Record "BCSF Data Target";
+    HasTarget: Boolean;
+  begin
+    if Scenario.Archived or (Scenario."Process Mode" <> "BCSF Process Mode"::SetupAndMasterData) then
+      exit(false);
+    Target.SetRange("Scenario Id", Scenario."Scenario Id");
+    Target.SetFilter(Quantity, '>0');
+    if Target.FindSet() then
+      repeat
+        HasTarget := true;
+        if not (Target.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]) or
+          (Target."Process Mode" <> "BCSF Process Mode"::SetupAndMasterData) then
+          exit(false);
+      until Target.Next() = 0;
+    exit(HasTarget);
+  end;
+
+  procedure RemoveSelection(var Selection: Record "BCSF Scenario")
+  var
+    Header: Record "BCSF Run Header";
+    RemoveCount: Integer;
+    ArchiveCount: Integer;
+  begin
+    Header.SecurityFiltering(SecurityFilter::Disallowed);
+    if Selection.FindSet() then
+      repeat
+        Header.SetRange("Scenario Id", Selection."Scenario Id");
+        if Header.IsEmpty() then
+          RemoveCount += 1
+        else
+          ArchiveCount += 1;
+      until Selection.Next() = 0;
+    if RemoveCount + ArchiveCount = 0 then
+      exit;
+    if not Confirm(RemoveQst, false, RemoveCount, ArchiveCount) then
+      exit;
+    RemoveConfirmed(Selection);
+  end;
+
+  [CommitBehavior(CommitBehavior::Error)]
+  local procedure RemoveConfirmed(var Selection: Record "BCSF Scenario")
+  var
+    Scenario: Record "BCSF Scenario";
+    Header: Record "BCSF Run Header";
+  begin
+    Scenario.LockTable();
+    Header.SecurityFiltering(SecurityFilter::Disallowed);
+    if Selection.FindSet() then
+      repeat
+        Scenario.Get(Selection."Scenario Id");
+        Header.SetRange("Scenario Id", Scenario."Scenario Id");
+        // Snapshot creation holds this same parent lock; never delete a concurrently used template.
+        if Header.IsEmpty() then
+          Scenario.Delete(true)
+        else begin
+          Scenario.Archived := true;
+          Scenario.Modify(true);
+        end;
+      until Selection.Next() = 0;
+  end;
+
+  procedure RestoreSelection(var Selection: Record "BCSF Scenario")
+  var
+    Scenario: Record "BCSF Scenario";
+  begin
+    if not Confirm(RestoreQst, false) then
+      exit;
+    Scenario.LockTable();
+    if Selection.FindSet() then
+      repeat
+        Scenario.Get(Selection."Scenario Id");
+        Scenario.Archived := false;
+        Scenario.Modify(true);
+      until Selection.Next() = 0;
+  end;
 
   procedure CreateScenario(): Guid
   var
@@ -42,6 +135,7 @@ codeunit 90130 "BCSF Scenario Manager"
     Copy.Init();
     Copy.TransferFields(Source, false);
     Copy."Scenario Id" := CreateGuid();
+    Copy.Archived := false;
     Copy.Description := CopyStr(StrSubstNo(CopyScenarioLbl, Source.Description), 1, MaxStrLen(Copy.Description));
     Copy.Insert(true);
     SourceModule.SetRange("Scenario Id", SourceId);
@@ -192,6 +286,8 @@ codeunit 90130 "BCSF Scenario Manager"
   end;
 
   var
+    RemoveQst: Label 'Delete %1 unused templates and archive %2 templates with captured runs? Used templates cannot be deleted because their run history must remain. Active jobs and results are retained. The classification is checked again before changing data.', Comment = '%1 = unused count, %2 = used count';
+    RestoreQst: Label 'Restore the selected archived templates for new runs?';
     NewScenarioLbl: Label 'New Scenario';
     CopyScenarioLbl: Label 'Copy of %1', Comment = '%1 = source scenario description';
     TemporaryErr: Label 'Frozen configuration can only be loaded into temporary display records.';

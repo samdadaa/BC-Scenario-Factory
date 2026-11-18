@@ -108,3 +108,10 @@ Zwei echte Stammdatengeneratoren verwenden die vorhandene Queue, Seed-Engine und
 ## Startvorlagen, Schnellstart und Szenariopakete
 
 In der freigegebenen Playground-Sandbox werden bei Installation/Upgrade Startvorlagen angelegt. Für reine Partner-Vorlagen gibt es einen bestätigten Schnellstart mit optionaler Minimal-Testeinrichtung. Die Szenarienliste unterstützt außerdem gemeinsamen JSON-Export der Auswahl und gemeinsamen Import in einen anderen Testmandanten. Beleg- und Folgeprozess-Vorlagen bleiben Planung. [Bedienung, Grenzen und Tests](docs/STARTER_TEMPLATES.md).
+
+
+## Aktueller Normalpfad (SF-037)
+
+**Scenario-Factory-Szenarien → Startvorlagen laden → Partner-Vorlage wählen → Partnerszenario ausführen → bestätigen → Ergebnisse öffnen.** Queue, Plan und Checkpoints werden intern bedient. Die Laufkarte zeigt den aktuellen Ausführungsstatus, bestätigte Pakete, Abschlussprüfung und genau diesem Lauf zugeordnete Partner. Bei Fehlern führt **Fehler anzeigen** zum ursprünglichen Standardprotokoll bzw. zum fehlenden Nachweis. Technische Aktionen liegen unter **Diagnose**.
+
+Startvorlagen werden ausschließlich über die UI geladen, nicht beim Publishing. Unveränderte Standardnamen wechseln mit der Sitzungssprache; eigene Namen bleiben erhalten. Ausgewählte unbenutzte Vorlagen können gelöscht, verwendete archiviert werden. Erneutes Laden holt absichtlich entfernte/archivierte Starter nicht zurück. [Aktuelle Testanleitung](docs/review/TESTANLEITUNG.md), [echte lokale Prüfungen und offene Sandboxfälle](docs/TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). Status **Zur Prüfung**.

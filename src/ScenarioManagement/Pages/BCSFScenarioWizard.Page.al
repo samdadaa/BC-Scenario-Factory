@@ -17,7 +17,15 @@ page 90132 "BCSF Scenario Wizard"
         Caption = '1. Industry and Purpose';
         Visible = StepNo = 1;
         Editable = not Captured;
-        field(Description; Rec.Description) { }
+        field(Description; DisplayName)
+        {
+          Caption = 'Description';
+          ToolTip = 'Shows the localized default name. Editing saves a custom name for this template.';
+          trigger OnValidate()
+          begin
+            Rec.Validate(Description, CopyStr(DisplayName, 1, MaxStrLen(Rec.Description)));
+          end;
+        }
         field("Profile Code"; Rec."Profile Code") { }
         field("Profile Version"; Rec."Profile Version") { }
         field("Usage Mode"; Rec."Usage Mode") { }
@@ -230,4 +238,12 @@ page 90132 "BCSF Scenario Wizard"
     PostingNoticeLbl: Label 'Posted movements and follow-up processes require separate authorization and valid standard posting setup. The current worker does not approve posting. Selecting a mode never authorizes posting or changes setup.';
     ReviewNoticeLbl: Label 'Capture the template, review the dependency plan and current setup preflight, then request scheduling explicitly. Blockers prevent preparation and start. After capture, changes require a new wizard/run. Closing retains saved configuration.';
     CaptureFirstErr: Label 'Capture a run in the final wizard step before reviewing or scheduling it.';
+  trigger OnAfterGetRecord()
+  var
+    Manager: Codeunit "BCSF Scenario Manager";
+  begin
+    DisplayName := Manager.GetDisplayName(Rec);
+  end;
+  var
+    DisplayName: Text;
 }

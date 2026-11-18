@@ -2,9 +2,9 @@
 
 ## Benutzung
 
-1. Geänderte Dateien über den Projektstand aus `BC Scenario Factory(4).zip` legen. Die alte beigelegte `.app` nicht verwenden. Erst mit den Symbolen der eigenen Sandbox bauen; siehe unten für Übersetzungen.
-2. Version **1.0.1.0** mit unveränderter App-ID veröffentlichen und in der freigegebenen SaaS-Sandbox **Playground** installieren/aktualisieren. Starter-Install-/Upgrade legt pro freigegebenem Mandanten nur App-Einrichtung und Vorlagen an. Dabei werden keine Standarddaten oder Läufe angelegt und die Generierung wird nicht automatisch freigeschaltet.
-3. **Scenario-Factory-Szenarien** öffnen. Für einen nach der App-Installation angelegten Mandanten gegebenenfalls einmal **Startvorlagen laden** benutzen. Wiederholung und Upgrade füllen fehlende fixe Vorlagen-IDs nach, überschreiben aber weder eigene noch geänderte Vorlagen. Ein kopiertes Setup, das auf einen anderen Mandanten oder eine andere Umgebung zeigt, wird bei der automatischen Anlage übersprungen. Es wird nicht still umgebunden.
+1. Den aktuellen Workspace verwenden, einschließlich lokaler Fixes. Vollständig gegen die Symbole der Ziel-Sandbox bauen; keine ältere Archivversion zurückkopieren.
+2. Das vollständige neue `.app` in der freigegebenen Sandbox installieren/aktualisieren. **Install-/Upgrade-Trigger legen keine Vorlagen oder Standarddaten an.** Die optionale Vorlagenanlage gehört ausschließlich zum autorisierten UI-Einstieg und kann Publishing dadurch nicht wieder blockieren.
+3. **Scenario-Factory-Szenarien → Startvorlagen laden** einmal ausführen. Wiederholtes Laden ergänzt nur fehlende, nicht absichtlich entfernte feste Vorlagen-IDs. Vorhandene Namen/Einstellungen und archivierte Vorlagen bleiben erhalten.
 4. Z. B. **Groß- und Einzelhandel – Demo** wählen und **Partnerszenario ausführen** bestätigen. Der Schnellstart friert die gewählte Revision ein, prüft Plan und Einrichtung, bereitet Pakete vor und plant den Lauf. Die native Laufkarte zeigt das Ergebnis. Erwartet sind im Standard 12 Debitoren und 7 Kreditoren. Anzahl und Paketgröße sind bei der Erstellung auf vorhandene App-Limits begrenzt. Die Dauer hängt von der Standard-Queue ab.
 5. Autokonfiguration ist **nur für Partnerstammdaten** mit den reservierten Demo-Referenzen vorgesehen. Sie ergänzt fehlende Daten in einem unbebuchten Sandbox-Testmandanten, legt nötigenfalls einfache Nummernserien, Zahlbedingungen, zwei Test-Sachkonten und Partnerbuchungsgruppen an. Fehlende BC-Grundzeilen werden minimal angelegt. Die beiden Nummernserienfelder im Verkaufs-/Einkaufssetup werden nur befüllt, wenn sie fehlen oder leer sind. Bestehende Werte, Marketing-Integration und ein bestehendes SKR-Paket werden nicht umgestellt. Konflikte, nicht nutzbare bestehende Standardserien, Rechte- oder Drittanbieterprobleme blockieren weiterhin den Start. Es werden keine Buchungen freigegeben. Der Bestätigungsdialog weist darauf hin, dass der App-Schalter für Testgenerierung aktiviert wird.
 6. Eigene Vorlagen mit passenden Gruppen oder angewendeten SKR-Paketen verwenden weiterhin den vorhandenen BC-Setup-/Preflightpfad. Sie werden vom Schnellstart nicht auf Demo-Gruppen umgestellt.
@@ -26,13 +26,13 @@ Die 24 Planungsfälle nutzen die schon im Modell ausdrückbaren Artikel-/Einkauf
 
 ## Build und Übersetzungen
 
-Ein vollständiger AL-Build erzeugt die XLIFF-IDs. Danach im Projektstamm `python3 Translations/sync_starter_translations.py` ausführen (setzt das im Ausgangsprojekt vorhandene `sync_sf_translations.py` voraus), `python3 scripts/check_translations.py` prüfen und erneut vollständig bauen. Die deutsche Übersetzungszuordnung ist mitgeliefert. Keine geratenen XLIFF-IDs und keine Änderung bestehender Übersetzungseinheiten ohne Compiler. Benennungen bereits angelegter Vorlagen werden bei Sprachwechsel nicht überschrieben.
+Ein vollständiger AL-Build erzeugt die XLIFF-IDs. Danach im Projektstamm `python3 Translations/sync_starter_translations.py` ausführen (setzt das im Ausgangsprojekt vorhandene `sync_sf_translations.py` voraus), `python3 scripts/check_translations.py` prüfen und erneut vollständig bauen. Die deutsche Übersetzungszuordnung ist mitgeliefert. Keine geratenen XLIFF-IDs und keine Änderung bestehender Übersetzungseinheiten ohne Compiler. Unveränderte mitgelieferte Namen werden anhand fester Vorlagen-ID und bekanntem Standardnamen zur Anzeige lokalisiert, auch bei bereits gespeicherten englischen Vorlagen. Eigene/importierte/umbenannte Vorlagen und historische Snapshots werden nicht umgeschrieben.
 
 ## Prüfpunkte in BC
 
 | ID | Test | Erwartung |
 | --- | --- | --- |
-| ST01 | Installation in einer frischen Playground-Testfirma; erneutes Laden/Upgrade | 56 Presets, App-Setup vorhanden. Keine Sachkonten, Partner, Gruppen oder Jobs allein durch Installieren. Wiederholung ohne Duplikate, bestehende Änderungen erhalten. |
+| ST01 | Installation/Upgrade, danach Startvorlagen laden und wiederholen | Installation schreibt keine Vorlagen. UI-Laden erzeugt zunächst 56 Vorlagen, ohne Standarddaten/Läufe/Jobs; Wiederholung ohne Duplikate. |
 | ST02 | Frische Playground-Testfirma, Demo starten | Bestätigung, ggf. fehlende Minimalwerte ergänzt, 12/7 Standardpartner nach Queue-Abschluss. Lauf, Herkunft und Prüfstatus sichtbar. Keine Sachposten. |
 | ST03 | Einen reservierten Demo-Code inkompatibel belegen; bestehenden Mandanten mit Sachposten verwenden | Abbruch mit Ursache; keine stillen Teiländerungen, keine Freigabe, kein Job. Anderweitige Business-Central-Trigger gesondert verifizieren. |
 | ST04 | Zwei eigene Vorlagen mit unterschiedlichen Modulen/Mengen und Profilen markieren und exportieren. In anderer Firma gemeinsam importieren. | Zwei vollständige Kopien mit neuen GUIDs. Keine importierten Jobs oder Standarddaten; Quell- und Zielvorlagen sind unabhängig. |
@@ -40,6 +40,18 @@ Ein vollständiger AL-Build erzeugt die XLIFF-IDs. Danach im Projektstamm `pytho
 | ST06 | Planungsvorlage für Buchungen öffnen; außerhalb Playground die Installation und Bedienung prüfen | Kein Schnellstart, keine automatische Standarddatenänderung und keine produktive Generierung. |
 | ST07 | EN/DE-Build und Publish, Rollen-/Berechtigungstest | Aktionen lokalisiert, Standardrechte nicht von BCSF ADMIN angehoben. Stört ein analysierter Standardtrigger, Fehler und BC-Version dokumentieren. |
 
-**Prüfstatus:** Zur Prüfung. Kein AL-Compiler im Bearbeitungsworkspace, kein Deployment und keine BC-Laufzeitabnahme. Die neuen Roundtrip-/Installations-/Schnellstartfälle sind manuelle Abnahmefälle.
+**Prüfstatus:** Zur Prüfung. Aktuelle tatsächlich ausgeführte lokale Prüfungen und nicht ausgeführte BC-Fälle stehen in [TESTS.md](TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). Ein lokaler Build belegt keine erfolgreiche Sandboxausführung.
 
-Lokale Quellprüfungen: 125 eindeutige numerische IDs, 56 gültige feste Vorlagen-GUIDs, JSON-Feldabgleich für alle 25 Portabilitätsfelder sowie getrennte Modul-/Zielarrays. Bestehender XLIFF-Bestand geprüft; 42 neue Quelltexte abgedeckt, Synchronisierung in einer isolierten Fixture mit simulierten IDs geprüft. IDs dieser Fixture sind nicht Teil der Lieferung. XERJ stand in diesem Workspace nicht zur Verfügung.
+## Namen, Archiv und Entfernen
+
+Unveränderte Startnamen erscheinen in der Sitzungssprache. Eine Bearbeitung auf Karte/Assistent speichert einen eigenen Namen; Öffnen und Sprachwechsel schreiben nichts. Die feste ID allein genügt nicht zum Umbenennen: Der gespeicherte Name muss zusätzlich einem bekannten Standardnamen entsprechen.
+
+**Ausgewählte Vorlagen löschen** zeigt die Zahl unbenutzter und verwendeter Vorlagen vor der Bestätigung. Unbenutzte werden unter derselben Elternsperre wie die Snapshotanlage nochmals geprüft und mit Zielen/Modulen gelöscht. Verwendete werden archiviert. Die Backendregel gilt auch bei `Delete(false)`. Laufdaten, Checkpoints, Herkunft und BC-Standarddatensätze werden nicht gelöscht. Archivieren stoppt keine Jobs.
+
+**Archivierte Vorlagen ein-/ausblenden** erhält den Zugang zur Vorlage und ihren Läufen. Neue Snapshots aus archivierten Vorlagen sind serverseitig gesperrt. **Ausgewählte Vorlagen wiederherstellen** macht archivierte wieder auswählbar. Entfernte IDs bleiben firmenbezogen in Tabelle 90148 vermerkt. Nur **Entfernte Startvorlagen wiederherstellen** stellt entfernte/archivierte Standardvorlagen nach ausdrücklicher Bestätigung wieder her; eigenes Umbenennen wird nicht zurückgesetzt.
+
+## Fehler und Ergebnisse
+
+Normalpfad: **Vorlage wählen → Partnerszenario ausführen → bestätigen → Laufkarte → Ergebnisse öffnen**. Die Laufkarte zeigt aktuellen Status, Paketzähler, Abschlussprüfung und erzeugte Debitoren/Kreditoren. Mengen öffnen ausschließlich die für diesen Lauf registrierten stabilen Partneridentitäten. Jede Herkunftszeile kann die genaue Partnerkarte öffnen.
+
+**Fehler anzeigen** öffnet den frühesten verfügbaren fehlgeschlagenen Standard-Queueeintrag dieses Laufs, einschließlich früherer Jobbindungen aus der Historie. Registrierte Standardfehlerdetails und Aufrufliste bleiben im Standardprotokoll; keine Kopie in das eigene Audit. Ohne Protokoll wird der fehlende Nachweis konkret benannt und die betroffene Paketliste geöffnet. Unsichere übernommene Arbeit bleibt gesperrt; Diagnose ist keine Retryfreigabe.

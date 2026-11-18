@@ -133,6 +133,7 @@ def sync():
         raise SystemExit("Build the AL project first so the compiler emits the new SF-016 and SF-017 IDs. No translation files were changed.")
     master = ET.parse(ROOT / f"{NAME}.de-DE.xlf")
     original = {u.attrib["id"]: u for u in master.iter(Q("trans-unit"))}
+    original_order = {uid: position for position, uid in enumerate(original)}
     german = {}
     missing = set()
     placeholders = re.compile(r"%[1-9]\d*")
@@ -162,7 +163,20 @@ def sync():
             target = ET.Element(Q("target"), {"state": "translated"})
             target.text = source(u) if culture == "en-US" else german[u.attrib["id"]]
             u.insert(1, target)
+        if culture != "en-US":
+            group = tree.find(f".//{Q('group')}")
+            # Keep the maintained master's order to avoid unrelated compiler-order churn.
+            generated_order = {u.get("id"): i for i, u in enumerate(group)}
+            group[:] = sorted(group, key=lambda u: original_order.get(u.get("id"), len(original_order) + generated_order[u.get("id")]))
         ET.indent(tree, space="  ")
+        if culture != "en-US":
+            group = tree.find(f".//{Q('group')}")
+            def content(unit):
+                return unit.attrib, [(c.tag, c.attrib, c.text) for c in unit]
+            for position, unit in enumerate(group):
+                old = original.get(unit.get("id"))
+                if old is not None and content(old) == content(unit):
+                    group[position] = deepcopy(old)
         tree.write(ROOT / f"{NAME}.{culture}.xlf", xml_declaration=True, encoding="utf-8")
     print(f"{len(units)} compiler IDs synchronized across {len(CULTURES)} target languages.")
 

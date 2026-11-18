@@ -62,3 +62,8 @@ Dashboardcontainer scrollt innerhalb begrenzter Iframehöhe; Scrollposition blei
 ## SF-016/SF-017 – 18.11.2026
 
 Gespeicherte Summary statt pauschaler Qualitätsauskunft; rungefilterte Ergebnisliste. Variablenreihenfolge im zugehörigen Overview-Trigger für CodeCop korrigiert. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.
+
+
+## SF-037 – Reparaturauftrag 18.11.2026
+
+Zustandsabhängige Hauptaktionen, Diagnosebereich, ursprünglicher Standardfehler mit Paketbezug/sicherem Folgeschritt, exakte Partnernavigation und vollständige persistierte Zustandshistorie ohne xRec-Vergleich. JS-Dynamik lokalisiert. [Aktueller Vertrag](../../../STARTER_TEMPLATES.md), [echte lokale Prüfungen und offene BC-Abnahme](../../../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**.

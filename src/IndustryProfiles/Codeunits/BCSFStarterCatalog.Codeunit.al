@@ -7,6 +7,7 @@ using System.Environment;
 codeunit 90155 "BCSF Starter Catalog"
 {
     Access = Internal;
+    Permissions = tabledata "BCSF Removed Template" = D;
 
     procedure IsStarterSandbox(): Boolean
     var
@@ -110,14 +111,15 @@ codeunit 90155 "BCSF Starter Catalog"
     local procedure SeedOne(Industry: Integer; VariantNo: Integer; Profile: Code[20]; Name: Text; Purpose: Text; Usage: Enum "BCSF Usage Mode"; Scope: Enum "BCSF Process Mode"; Consumer: Integer; Customers: Integer; Vendors: Integer; Setup: Record "BCSF Factory Setup")
     var
         Scenario: Record "BCSF Scenario";
+        Removed: Record "BCSF Removed Template";
         ScenarioId: Guid;
-        StableId: Text;
         Qty: Integer;
         Share: Decimal;
     begin
-        StableId := StrSubstNo('{bc5f2026-0001-4a01-8101-0000000000%1%2}', Industry, VariantNo);
-        Evaluate(ScenarioId, StableId);
+        ScenarioId := GetStarterId(Industry, VariantNo);
         Scenario.LockTable();
+        if Removed.Get(ScenarioId) then
+            exit;
         if Scenario.Get(ScenarioId) then
             exit;
         Customers := MinValue(Customers, Setup."Maximum Records per Entity");
@@ -201,6 +203,89 @@ codeunit 90155 "BCSF Starter Catalog"
         Target.Insert(true);
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Scenario Manager", 'OnGetDisplayName', '', false, false)]
+    local procedure LocalizeStarter(Scenario: Record "BCSF Scenario"; var Name: Text)
+    var
+        Industry: Integer;
+        VariantNo: Integer;
+        Id: Guid;
+    begin
+        for Industry := 1 to 8 do
+            for VariantNo := 1 to 7 do begin
+                Id := GetStarterId(Industry, VariantNo);
+                if Id = Scenario."Scenario Id" then
+                    if (Scenario.Description = DefaultName(Industry, VariantNo, 1)) or
+                       (Scenario.Description = DefaultName(Industry, VariantNo, 2)) then begin
+                        Name := DefaultName(Industry, VariantNo, 0);
+                        exit;
+                    end;
+            end;
+    end;
+
+    procedure RestoreStarters()
+    var
+        Removed: Record "BCSF Removed Template";
+        Scenario: Record "BCSF Scenario";
+        Industry: Integer;
+        VariantNo: Integer;
+        Id: Guid;
+    begin
+        if not Confirm(RestoreQst, false) then
+            exit;
+        Scenario.LockTable();
+        for Industry := 1 to 8 do
+            for VariantNo := 1 to 7 do begin
+                Id := GetStarterId(Industry, VariantNo);
+                if Removed.Get(Id) then
+                    Removed.Delete(true);
+                if Scenario.Get(Id) then
+                    if Scenario.Archived then begin
+                        Scenario.Archived := false;
+                        Scenario.Modify(true);
+                    end;
+            end;
+        Seed();
+    end;
+
+    local procedure DefaultName(Industry: Integer; VariantNo: Integer; LanguageVersion: Integer): Text
+    var
+        Name: Text;
+        Purpose: Text;
+    begin
+        case Industry of
+            1: Name := GeneralLbl;
+            2: Name := TradeLbl;
+            3: Name := EcommerceLbl;
+            4: Name := DistributionLbl;
+            5: Name := ManufacturingLbl;
+            6: Name := ConsultingLbl;
+            7: Name := ConstructionLbl;
+            8: Name := ServiceLbl;
+        end;
+        case VariantNo of
+            1: Purpose := DemoLbl;
+            2: Purpose := TrainingLbl;
+            3: Purpose := FunctionalLbl;
+            4: Purpose := PerformanceLbl;
+            5: Purpose := DocumentsLbl;
+            6: Purpose := PostedLbl;
+            7: Purpose := FollowUpLbl;
+        end;
+        case LanguageVersion of
+            1: exit(SelectStr(Industry, EnglishIndustriesTok) + ' - ' + SelectStr(VariantNo, EnglishPurposesTok));
+            2: exit(SelectStr(Industry, GermanIndustriesTok) + ' – ' + SelectStr(VariantNo, GermanPurposesTok));
+        end;
+        exit(StrSubstNo(TitleLbl, Name, Purpose));
+    end;
+
+    local procedure GetStarterId(Industry: Integer; VariantNo: Integer): Guid
+    var
+        Id: Guid;
+    begin
+        Evaluate(Id, '{bc5f2026-0001-4a01-8101-' + PadStr('', 10, '0') + Format(Industry, 0, 9) + Format(VariantNo, 0, 9) + '}');
+        exit(Id);
+    end;
+
     local procedure MinValue(Left: Integer; Right: Integer): Integer
     begin
         if Left < Right then
@@ -209,6 +294,11 @@ codeunit 90155 "BCSF Starter Catalog"
     end;
 
     var
+        RestoreQst: Label 'Restore all removed or archived built-in starter templates? Custom names are retained.';
+        EnglishIndustriesTok: Label 'General Business,Wholesale and Retail,E-Commerce,Distribution and Logistics,Manufacturing,Services and Consulting,Construction and Projects,Service and Maintenance', Locked = true;
+        EnglishPurposesTok: Label 'Demo Partners,Training Partners,Functional Partner Test,Partner Volume Test,Planning Only: Open Documents,Planning Only: Posted Movements,Planning Only: Follow-Up Processes', Locked = true;
+        GermanIndustriesTok: Label 'Allgemeines Unternehmen,Groß- und Einzelhandel,E-Commerce,Distribution und Logistik,Fertigung,Dienstleistung und Beratung,Bau- und Projektgeschäft,Service und Wartung', Locked = true;
+        GermanPurposesTok: Label 'Demo: Debitoren und Kreditoren,Schulung: Debitoren und Kreditoren,Funktionstest: Debitoren und Kreditoren,Lasttest-Vorlage: Debitoren und Kreditoren,Nur Planung: Offene Belege,Nur Planung: Gebuchte Bewegungen,Nur Planung: Folgeprozesse', Locked = true;
         SandboxErr: Label 'Load starter scenarios only in an approved sandbox.';
         TitleLbl: Label '%1 - %2', Comment = '%1 = industry, %2 = scenario type';
         GeneralLbl: Label 'General Business';

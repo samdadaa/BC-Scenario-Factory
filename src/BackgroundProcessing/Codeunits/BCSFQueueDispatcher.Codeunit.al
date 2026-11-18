@@ -106,6 +106,7 @@ codeunit 90302 "BCSF Queue Dispatcher"
     Job."Object ID to Run" := Codeunit::"BCSF Batch Worker";
     Job."Record ID to Process" := Batch.RecordId();
     Job.Description := QueueDescriptionLbl;
+    Job."User Language ID" := GlobalLanguage();
     Job."Earliest Start Date/Time" := Execution."Earliest Start";
     Job."Job Queue Category Code" := 'BCSF.SER';
     Job."Maximum No. of Attempts to Run" := 0;

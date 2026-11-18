@@ -45,6 +45,7 @@ codeunit 90303 "BCSF Batch Worker"
     Execution.TestField("Job Queue Entry Id", Rec.ID);
     if not (Execution.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled, "BCSF Run Status"::Running]) then
       Error(JobErr);
+    StoredJob.SecurityFiltering(SecurityFilter::Disallowed);
     StoredJob.Get(Rec.ID);
     StoredJob.TestField(Status, StoredJob.Status::"In Process");
     StoredJob.TestField("Object Type to Run", StoredJob."Object Type to Run"::Codeunit);
@@ -52,6 +53,8 @@ codeunit 90303 "BCSF Batch Worker"
     StoredJob.TestField("Job Queue Category Code", 'BCSF.SER');
     StoredJob.TestField("Maximum No. of Attempts to Run", 0);
     StoredJob.TestField("Recurring Job", false);
+    StoredJob.TestField("User Session ID", SessionId());
+    StoredJob.TestField("User Service Instance ID", ServiceInstanceId());
     if StoredJob."Record ID to Process" <> Batch.RecordId() then
       Error(JobErr);
     if Execution."Earliest Start" > CurrentDateTime() then
@@ -65,6 +68,7 @@ codeunit 90303 "BCSF Batch Worker"
       Execution.Modify(true);
       exit;
     end;
+    Active.SecurityFiltering(SecurityFilter::Disallowed);
     if not Active.ReadPermission() then
       Error(JobErr);
     Active.SetLoadFields("Server Instance ID", "Session ID", "Session Unique ID");

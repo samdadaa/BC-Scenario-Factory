@@ -122,3 +122,8 @@ Validation-Befunde und Finanzpaketidentität sind append-only; feste interne Wri
 ## SF-018 – 18.11.2026
 
 Echte Generatorbindungen per EnumExtension im jeweiligen Fachmodul; gemeinsame Registry importiert keine konkrete Implementierung. Snapshot-Partnervertrag separat mit Version 1, vorhandenen Seed-/Katalogvertrag nicht umdefinieren. Standardnummern über No. Series API und Standard-Validate/Insert(true); Contact-Text vor Insert wie im [Partnervertrag](PARTNER_GENERATION.md) begründet zuweisen. Kein eigener Generatorcommit und kein fachlicher Resume bei unsicherer Arbeit. Standardkontakte sind abgeleitete Nebenwirkungen, primäre Ergebniszähler bleiben Customer/Vendor.
+
+
+## SF-037 – Vorlagen und Zustand
+
+Bei Modify-Prüfungen gespeicherten Vorzustand unter passender Sperre lesen; xRec nicht als Nachweis verwenden. Statushistorie enthält auch persistierte Job-/Zähleränderungen. Lokalisierte Standardvorlagennamen sind Anzeigewerte über feste ID plus bekannte Standardbeschreibung, keine Datenmigration. Neuer Remove-Vermerk 90148 ist firmenbezogen und Lifecycle-geschützt. Neue Partner-Snapshots aus archivierten Vorlagen sind gesperrt. Normaler Seed darf Entfernt-Vermerke nicht entfernen.

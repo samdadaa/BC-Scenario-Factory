@@ -79,7 +79,7 @@ codeunit 90317 "BCSF Run Quality"
     Batch.TestField(Status, Batch.Status::Completed);
     Rules.CheckCoverage(Batch);
     Checkpoint.Get(Batch."Batch Id");
-    Result := Checkpoint.ReadResult();
+    Result := Checkpoint.ReadStoredResult();
     Batch.TestField("Processed Units", Contract.GetInteger(Result, 'processedUnits'));
     Batch.TestField("Created Records", Contract.GetInteger(Result, 'createdRecords'));
     Recovery.CheckCheckpoint(Checkpoint);

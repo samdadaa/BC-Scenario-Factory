@@ -7,7 +7,7 @@ pageextension 90253 "BCSF Run Synthetic Preview" extends "BCSF Run Card"
 {
   actions
   {
-    addlast(Processing)
+    addlast(Diagnostics)
     {
       action(SyntheticPreview)
       {

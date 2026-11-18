@@ -70,3 +70,8 @@ Neue tatsächliche Codeabhängigkeiten: ModuleRegistry und DependencyManager fü
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/Lifecycle/Codeunits/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-037 – Reparaturauftrag 18.11.2026
+
+Vier verpflichtende Datenbanksubscriber schützen den neuen firmenbezogenen Remove-Vermerk auch ohne RunTrigger. Bestehende Sandbox-/Firmen-/Standarddatengrenzen erhalten. [Aktueller Vertrag](../../../STARTER_TEMPLATES.md), [echte lokale Prüfungen und offene BC-Abnahme](../../../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**.

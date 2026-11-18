@@ -48,7 +48,7 @@ codeunit 90366 "BCSF Dashboard Commands"
       'catalog': Page.Run(Page::"BCSF Generator Catalog");
       'setup': Page.Run(Page::"BCSF Factory Setup Card");
       'run', 'scenario', 'wizard', 'progress', 'plan', 'savePlan', 'readiness', 'preflight', 'synthetic',
-      'prepare', 'schedule', 'pause', 'cancel', 'apply', 'resume', 'batches', 'history', 'records', 'queue':
+      'prepare', 'schedule', 'pause', 'cancel', 'apply', 'resume', 'batches', 'history', 'records', 'queue', 'primary':
         begin
           Header.Get(ParseRunId(RunIdText));
           ExecuteRunAction(ActionCode, Header);
@@ -66,6 +66,8 @@ codeunit 90366 "BCSF Dashboard Commands"
     Generated: Record "BCSF Generated Record";
     Job: Record "Job Queue Entry";
     Execution: Record "BCSF Run Execution";
+    Monitor: Codeunit "BCSF Monitoring Mgt";
+    QuickRun: Codeunit "BCSF Quick Scenario Run";
     Writer: Codeunit "BCSF Plan Writer";
     Dispatcher: Codeunit "BCSF Queue Dispatcher";
     Recovery: Codeunit "BCSF Batch Recovery";
@@ -75,6 +77,39 @@ codeunit 90366 "BCSF Dashboard Commands"
     ScheduleRequest: Page "BCSF Schedule Request";
   begin
     case ActionCode of
+      'primary':
+        begin
+          if Execution.Get(Header."Run Id") then
+            case Execution.Status of
+              Execution.Status::Failed, Execution.Status::ValidationFailed:
+                begin
+                  Monitor.ShowFailure(Header."Run Id");
+                  exit;
+                end;
+              Execution.Status::Completed, Execution.Status::CompletedWithWarnings:
+                begin
+                  Generated.SetRange("Run Id", Header."Run Id");
+                  Page.Run(Page::"BCSF Generated Records", Generated);
+                  exit;
+                end;
+              Execution.Status::Queued, Execution.Status::Scheduled, Execution.Status::Running, Execution.Status::ResumePending:
+                begin
+                  ProgressPage.SetRunId(Header."Run Id");
+                  ProgressPage.Run();
+                  exit;
+                end;
+              Execution.Status::Ready:
+                begin
+                  QuickRun.StartCaptured(Header."Run Id");
+                  exit;
+                end;
+              else begin
+                Page.Run(Page::"BCSF Run Card", Header);
+                exit;
+              end;
+            end;
+          QuickRun.StartCaptured(Header."Run Id");
+        end;
       'run': Page.Run(Page::"BCSF Run Card", Header);
       'scenario', 'wizard':
         begin

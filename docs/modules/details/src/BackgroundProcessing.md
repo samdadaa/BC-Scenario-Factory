@@ -62,3 +62,8 @@ Vorhandene Codeunit 90317 Run Quality: aktuelle Pflichtprüfungen, optionale War
 ## SF-018 – 18.11.2026
 
 Zusätzlicher Pflichtsubscriber am Partner-Batchereignis prüft tatsächliche Sandbox/Firma, Generationserlaubnis, gespeicherte Batchbereiche, Standardjob, Worker-/Server-ID und Session-GUID. Kein neuer Commit oder Replayvertrag. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.
+
+
+## SF-037 – Reparaturauftrag 18.11.2026
+
+Vorhandene gespeicherte Vorzustands-/Ready-/Identitätsfixes erhalten. Standardjob-Sitzungsprüfung und Runner-Claim-Sitzungsprüfung ergänzt; Originalprotokoll aus Paket zugänglich. Kein neuer Retry-/Commitpfad. [Aktueller Vertrag](../../../STARTER_TEMPLATES.md), [echte lokale Prüfungen und offene BC-Abnahme](../../../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**.

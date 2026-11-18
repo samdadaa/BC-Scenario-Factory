@@ -128,3 +128,8 @@ Pflichtabschluss, append-only Befunde und versionierte SKR03-/SKR04-Testeinricht
 ## Aktueller Bestand SF-018 – 18.11.2026
 
 121 AL-Dateien in 14 Modulen: neu zwei Sales-, zwei Purchasing-Objekte und eine gemeinsame DataGeneration-Codeunit (dort jetzt 7). 118 eindeutige numerische IDs; zehn Module ohne AL-Code. Echte Customer-/Vendor-Mastergeneratoren samt konkreter Partnerkonfiguration, Snapshotbindung und Queue-/Herkunfts-/Abschlussintegration. Keine Artikel-/Dokument-/Postinggeneratoren ergänzt. Manifest/Launch unverändert, lokale Symbole BC 28.5/DE, Runtime 17. [Vertrag und offene BC-Abnahme](PARTNER_GENERATION.md). **Zur Prüfung**.
+
+
+## Aktueller Reparaturauftrag SF-037 – 18.11.2026
+
+Grundlage ist der aktuelle Workspace einschließlich bereits vorhandener Starter-, Schnellstart-, Transfer- und Zustandsfixes. App-ID/Version 1.0.1.0, Application 28.0, Runtime 17 und Dependencies [] bleiben erhalten. Gegen die vorhandenen BC-28.5-/DE-Symbole gebaut; keine Aussage über den tatsächlich installierten Playground-Paketstand. Additive Scenario.Archived und Tabelle 90148 für entfernte Vorlagen. Aktueller Bestand und lokale Nachweise: [TESTS.md](TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). Native BC-/Installations-/Queue-/Transferabnahme offen; keine menschliche Abnahme.

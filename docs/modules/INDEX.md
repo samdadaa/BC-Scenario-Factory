@@ -52,3 +52,8 @@ Alle 104 vorhandenen AL-Dateien liegen je Modul in Typordnern gemäß [CONVENTIO
 ## SF-014 – Dashboardkorrektur 17.11.2026
 
 Eigener Scrollbereich und generierte deutsche UI-Fallback-Ressource im bestehenden Monitoring-Dashboard ergänzt; keine neuen AL-Objekte. [Vertrag](../DASHBOARD_EMBEDDING.md), [Prüfnachweis](../TESTS.md#sf-014--scroll--und-sprachkorrektur-17112026). **Zur Prüfung**.
+
+
+## SF-037 – Partner-Normalpfad, 18.11.2026
+
+Aktueller Bestand: 129 AL-Dateien in 14 Modulen, zehn Module ohne AL-Code. ScenarioManagement jetzt 24 Objekte einschließlich Transfer und neuem Entfernt-Vermerk 90148, IndustryProfiles 4 einschließlich Starterkatalog/Install/Upgrade, Monitoring 20 einschließlich Quick Run und Szenarioaktionen, Finance 8 einschließlich Demo Partner Setup. Andere Modulbestände unverändert. Starterobjekte waren vor diesem Auftrag bereits im Workspace; nur 90148 ist in diesem Auftrag neu. [Vertrag](../STARTER_TEMPLATES.md), [tatsächliche Prüfungen](../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**, keine BC-Laufzeitabnahme.

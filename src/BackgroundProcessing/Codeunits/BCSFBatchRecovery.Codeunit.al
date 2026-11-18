@@ -237,7 +237,7 @@ codeunit 90304 "BCSF Batch Recovery"
       Error(BusyErr);
     VerifyCheckpoint(BatchId);
     Checkpoint.Get(BatchId);
-    Result := Checkpoint.ReadResult();
+    Result := Checkpoint.ReadStoredResult();
     Batch."Processed Units" := Contract.GetInteger(Result, 'processedUnits');
     Batch."Created Records" := Contract.GetInteger(Result, 'createdRecords');
     Batch.Status := Batch.Status::Completed;
@@ -279,6 +279,8 @@ codeunit 90304 "BCSF Batch Recovery"
     Checkpoint: Record "BCSF Batch Checkpoint";
   begin
     Checkpoint.Get(BatchId);
+    // This is a stored checkpoint; the insert-time validator must keep its unsaved BLOB.
+    Checkpoint.CalcFields("Result Envelope");
     CheckCheckpoint(Checkpoint);
   end;
 

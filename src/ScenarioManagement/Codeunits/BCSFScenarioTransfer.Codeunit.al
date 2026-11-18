@@ -1,6 +1,12 @@
 namespace BCScenarioFactory.ScenarioManagement;
 
 using BCScenarioFactory.Core;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Finance.VAT.Setup;
+using Microsoft.Foundation.Address;
+using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Purchases.Vendor;
+using Microsoft.Sales.Customer;
 using System.Utilities;
 
 codeunit 90147 "BCSF Scenario Transfer"
@@ -49,6 +55,7 @@ codeunit 90147 "BCSF Scenario Transfer"
     Root: JsonObject;
     Scenarios: JsonArray;
     Input: InStream;
+    MissingReferences: Text;
   begin
     if not UploadIntoStream(FilterLbl, Input) then
       exit;
@@ -60,12 +67,14 @@ codeunit 90147 "BCSF Scenario Transfer"
       Error(CountErr);
     if not Confirm(ImportQst, false, Scenarios.Count()) then
       exit;
-    ImportConfirmed(Scenarios);
+    ImportConfirmed(Scenarios, MissingReferences);
     Message(ImportedLbl, Scenarios.Count());
+    if MissingReferences <> '' then
+      Message(MissingReferencesLbl, MissingReferences);
   end;
 
   [CommitBehavior(CommitBehavior::Error)]
-  local procedure ImportConfirmed(Scenarios: JsonArray)
+  local procedure ImportConfirmed(Scenarios: JsonArray; var MissingReferences: Text)
   var
     Scenario: Record "BCSF Scenario";
     SetupMgt: Codeunit "BCSF Setup Management";
@@ -74,7 +83,7 @@ codeunit 90147 "BCSF Scenario Transfer"
     Scenario.LockTable();
     SetupMgt.InitializeSetup();
     foreach Item in Scenarios do
-      ReadScenario(Item.AsObject());
+      MissingReferences += ReadScenario(Item.AsObject());
   end;
 
   local procedure ReadPackage(var Upload: InStream): JsonObject
@@ -160,7 +169,7 @@ codeunit 90147 "BCSF Scenario Transfer"
     exit(Item);
   end;
 
-  local procedure ReadScenario(Item: JsonObject)
+  local procedure ReadScenario(Item: JsonObject): Text
   var
     Scenario: Record "BCSF Scenario";
     ScenarioModule: Record "BCSF Scenario Module";
@@ -173,9 +182,9 @@ codeunit 90147 "BCSF Scenario Transfer"
   begin
     Scenario.Init();
     Scenario."Scenario Id" := CreateGuid();
-    Scenario.Description := ReadText(Item, 'description', MaxStrLen(Scenario.Description));
-    Scenario."Profile Code" := ReadText(Item, 'profileCode', MaxStrLen(Scenario."Profile Code"));
-    Scenario."Profile Version" := ReadText(Item, 'profileVersion', MaxStrLen(Scenario."Profile Version"));
+    Scenario.Description := CopyStr(ReadText(Item, 'description', MaxStrLen(Scenario.Description)), 1, MaxStrLen(Scenario.Description));
+    Scenario."Profile Code" := CopyStr(ReadText(Item, 'profileCode', MaxStrLen(Scenario."Profile Code")), 1, MaxStrLen(Scenario."Profile Code"));
+    Scenario."Profile Version" := CopyStr(ReadText(Item, 'profileVersion', MaxStrLen(Scenario."Profile Version")), 1, MaxStrLen(Scenario."Profile Version"));
     Scenario."Usage Mode" := "BCSF Usage Mode".FromInteger(Contract.GetInteger(Item, 'usageMode'));
     Scenario."Process Mode" := "BCSF Process Mode".FromInteger(Contract.GetInteger(Item, 'processMode'));
     Scenario.Seed := Contract.GetInteger(Item, 'seed');
@@ -184,15 +193,15 @@ codeunit 90147 "BCSF Scenario Transfer"
     Scenario."Data Language" := "BCSF Data Language".FromInteger(Contract.GetInteger(Item, 'dataLanguage'));
     Scenario."Batch Size" := Contract.GetInteger(Item, 'batchSize');
     Scenario."Finance Mode" := "BCSF Finance Mode".FromInteger(Contract.GetInteger(Item, 'financeMode'));
-    Scenario."Partner Country Code" := ReadText(Item, 'countryCode', MaxStrLen(Scenario."Partner Country Code"));
-    Scenario."Customer Posting Group" := ReadText(Item, 'customerPostingGroup', MaxStrLen(Scenario."Customer Posting Group"));
-    Scenario."Vendor Posting Group" := ReadText(Item, 'vendorPostingGroup', MaxStrLen(Scenario."Vendor Posting Group"));
-    Scenario."Gen. Bus. Posting Group" := ReadText(Item, 'genBusPostingGroup', MaxStrLen(Scenario."Gen. Bus. Posting Group"));
-    Scenario."VAT Bus. Posting Group" := ReadText(Item, 'vatBusPostingGroup', MaxStrLen(Scenario."VAT Bus. Posting Group"));
-    Scenario."Cash Terms Code" := ReadText(Item, 'cashTerms', MaxStrLen(Scenario."Cash Terms Code"));
-    Scenario."Small Terms Code" := ReadText(Item, 'smallTerms', MaxStrLen(Scenario."Small Terms Code"));
-    Scenario."Medium Terms Code" := ReadText(Item, 'mediumTerms', MaxStrLen(Scenario."Medium Terms Code"));
-    Scenario."Large Terms Code" := ReadText(Item, 'largeTerms', MaxStrLen(Scenario."Large Terms Code"));
+    Scenario."Partner Country Code" := CopyStr(ReadText(Item, 'countryCode', MaxStrLen(Scenario."Partner Country Code")), 1, MaxStrLen(Scenario."Partner Country Code"));
+    Scenario."Customer Posting Group" := CopyStr(ReadText(Item, 'customerPostingGroup', MaxStrLen(Scenario."Customer Posting Group")), 1, MaxStrLen(Scenario."Customer Posting Group"));
+    Scenario."Vendor Posting Group" := CopyStr(ReadText(Item, 'vendorPostingGroup', MaxStrLen(Scenario."Vendor Posting Group")), 1, MaxStrLen(Scenario."Vendor Posting Group"));
+    Scenario."Gen. Bus. Posting Group" := CopyStr(ReadText(Item, 'genBusPostingGroup', MaxStrLen(Scenario."Gen. Bus. Posting Group")), 1, MaxStrLen(Scenario."Gen. Bus. Posting Group"));
+    Scenario."VAT Bus. Posting Group" := CopyStr(ReadText(Item, 'vatBusPostingGroup', MaxStrLen(Scenario."VAT Bus. Posting Group")), 1, MaxStrLen(Scenario."VAT Bus. Posting Group"));
+    Scenario."Cash Terms Code" := CopyStr(ReadText(Item, 'cashTerms', MaxStrLen(Scenario."Cash Terms Code")), 1, MaxStrLen(Scenario."Cash Terms Code"));
+    Scenario."Small Terms Code" := CopyStr(ReadText(Item, 'smallTerms', MaxStrLen(Scenario."Small Terms Code")), 1, MaxStrLen(Scenario."Small Terms Code"));
+    Scenario."Medium Terms Code" := CopyStr(ReadText(Item, 'mediumTerms', MaxStrLen(Scenario."Medium Terms Code")), 1, MaxStrLen(Scenario."Medium Terms Code"));
+    Scenario."Large Terms Code" := CopyStr(ReadText(Item, 'largeTerms', MaxStrLen(Scenario."Large Terms Code")), 1, MaxStrLen(Scenario."Large Terms Code"));
     Scenario."B2C Percent" := Contract.GetInteger(Item, 'b2cPercent');
     Scenario."Small Credit Limit" := ReadDecimal(Item, 'smallCreditLimit');
     Scenario."Medium Credit Limit" := ReadDecimal(Item, 'mediumCreditLimit');
@@ -221,6 +230,43 @@ codeunit 90147 "BCSF Scenario Transfer"
       Target."Partial Percent" := ReadDecimal(Child, 'partialPercent');
       Target.Insert(true);
     end;
+    exit(DescribeMissingReferences(Scenario));
+  end;
+
+  local procedure DescribeMissingReferences(Scenario: Record "BCSF Scenario"): Text
+  var
+    Country: Record "Country/Region";
+    CustomerGroup: Record "Customer Posting Group";
+    VendorGroup: Record "Vendor Posting Group";
+    GeneralGroup: Record "Gen. Business Posting Group";
+    VATGroup: Record "VAT Business Posting Group";
+    Terms: Record "Payment Terms";
+    Missing: Text;
+    TermCode: Code[10];
+    TermCodes: List of [Code[10]];
+  begin
+    if not Country.Get(Scenario."Partner Country Code") then
+      Missing += StrSubstNo(ReferenceLbl, Country.TableCaption(), Scenario."Partner Country Code");
+    if Scenario."Finance Mode" = "BCSF Finance Mode"::Existing then begin
+      if not CustomerGroup.Get(Scenario."Customer Posting Group") then
+        Missing += StrSubstNo(ReferenceLbl, CustomerGroup.TableCaption(), Scenario."Customer Posting Group");
+      if not VendorGroup.Get(Scenario."Vendor Posting Group") then
+        Missing += StrSubstNo(ReferenceLbl, VendorGroup.TableCaption(), Scenario."Vendor Posting Group");
+      if not GeneralGroup.Get(Scenario."Gen. Bus. Posting Group") then
+        Missing += StrSubstNo(ReferenceLbl, GeneralGroup.TableCaption(), Scenario."Gen. Bus. Posting Group");
+      if not VATGroup.Get(Scenario."VAT Bus. Posting Group") then
+        Missing += StrSubstNo(ReferenceLbl, VATGroup.TableCaption(), Scenario."VAT Bus. Posting Group");
+    end;
+    TermCodes.Add(Scenario."Cash Terms Code");
+    TermCodes.Add(Scenario."Small Terms Code");
+    TermCodes.Add(Scenario."Medium Terms Code");
+    TermCodes.Add(Scenario."Large Terms Code");
+    foreach TermCode in TermCodes do
+      if not Terms.Get(TermCode) then
+        Missing += StrSubstNo(ReferenceLbl, Terms.TableCaption(), TermCode);
+    if Missing <> '' then
+      exit(Scenario.Description + ': ' + Missing + '\');
+    exit('');
   end;
 
   local procedure ReadArray(Item: JsonObject; FieldName: Text; Maximum: Integer): JsonArray
@@ -274,6 +320,8 @@ codeunit 90147 "BCSF Scenario Transfer"
   end;
 
   var
+    MissingReferencesLbl: Label 'Missing reference codes in this company: %1. Review these template settings before starting. Imported templates have not started any runs.', Comment = '%1 = templates and missing table/code references';
+    ReferenceLbl: Label '%1 [%2]; ', Comment = '%1 = reference table, %2 = missing code';
     FormatTok: Label 'BCSF-SCENARIOS', Locked = true;
     FileNameTok: Label 'BCSF-Scenarios.json', Locked = true;
     FilterLbl: Label 'Scenario bundles (*.json)|*.json';

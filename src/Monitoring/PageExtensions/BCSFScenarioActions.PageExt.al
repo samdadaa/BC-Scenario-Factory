@@ -8,6 +8,10 @@ pageextension 90368 "BCSF Scenario Actions" extends "BCSF Scenario List"
 {
   actions
   {
+    addfirst(Promoted)
+    {
+      actionref(RunPartnerPromoted; RunPartnerScenario) { }
+    }
     addfirst(Processing)
     {
       action(RunPartnerScenario)
@@ -20,8 +24,8 @@ pageextension 90368 "BCSF Scenario Actions" extends "BCSF Scenario List"
 
         trigger OnAction()
         var
-          QuickRun: Codeunit "BCSF Quick Scenario Run";
           Header: Record "BCSF Run Header";
+          QuickRun: Codeunit "BCSF Quick Scenario Run";
           RunId: Guid;
         begin
           RunId := QuickRun.RunScenario(Rec);
@@ -43,6 +47,20 @@ pageextension 90368 "BCSF Scenario Actions" extends "BCSF Scenario List"
           Catalog: Codeunit "BCSF Starter Catalog";
         begin
           Catalog.Seed();
+          CurrPage.Update(false);
+        end;
+      }
+      action(RestoreStarterScenarios)
+      {
+        ApplicationArea = All;
+        Caption = 'Restore Removed Starter Templates';
+        ToolTip = 'Explicitly restores removed and archived built-in starters without resetting custom names.';
+        Image = Restore;
+        trigger OnAction()
+        var
+          Catalog: Codeunit "BCSF Starter Catalog";
+        begin
+          Catalog.RestoreStarters();
           CurrPage.Update(false);
         end;
       }
@@ -80,8 +98,10 @@ pageextension 90368 "BCSF Scenario Actions" extends "BCSF Scenario List"
     }
   }
   trigger OnAfterGetCurrRecord()
+  var
+    Manager: Codeunit "BCSF Scenario Manager";
   begin
-    CanRunPartnerScenario := not IsNullGuid(Rec."Scenario Id") and (Rec."Process Mode" = "BCSF Process Mode"::SetupAndMasterData);
+    CanRunPartnerScenario := not IsNullGuid(Rec."Scenario Id") and Manager.IsPartnerTemplate(Rec);
   end;
 
   var

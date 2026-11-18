@@ -95,3 +95,8 @@ Finanzmodus in Vorlage/Wizard; unbekannte Enumwerte gesperrt. Snapshot übernimm
 ## SF-018 – 18.11.2026
 
 Vierzehn zusätzliche optionale Partnerfelder auf bestehender Vorlage, sichtbar auf Karte/Wizard; DB-Policy prüft B2C-/Limitgrenzen, bestehende Sicherheits-/Revisionsevents gelten unverändert. Neues optionales partnerSetup-Objekt im Snapshot Schema 1. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.
+
+
+## SF-037 – Reparaturauftrag 18.11.2026
+
+Archivflag, Remove-Vermerk 90148, neue Snapshot-Sperre für Archive, erneute Löschprüfung unter Elternsperre, Kindkaskade ohne Laufdatenlöschung, Namensanzeige-Ereignis und konkreter Import-Referenzbericht. [Aktueller Vertrag](../../../STARTER_TEMPLATES.md), [echte lokale Prüfungen und offene BC-Abnahme](../../../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**.

@@ -39,6 +39,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     // All persistent child writes lock this same parent before changing a target or module.
     Scenario.LockTable();
     Scenario.Get(ScenarioId);
+    Scenario.TestField(Archived, false);
     FactorySetup.LockTable();
     SetupManagement.GetSetup(FactorySetup);
     Policy.ValidateScenario(Scenario);

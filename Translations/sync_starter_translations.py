@@ -51,10 +51,281 @@ DE = {
     'Imports multiple scenarios from a JSON file as new copies without starting any runs.': 'Importiert mehrere Szenarien aus einer JSON-Datei als neue Kopien, ohne Läufe zu starten.',
 }
 
+# Repair workflow texts; IDs always come from a fresh compiler catalogue.
+DE.update({
+ 'The checkpoint result for batch %1 is empty or invalid JSON. Review the original queue error and saved results; do not repeat claimed work automatically.': 'Das Checkpoint-Ergebnis für Paket %1 ist leer oder enthält ungültiges JSON. Prüfen Sie den ursprünglichen Warteschlangenfehler und die gespeicherten Ergebnisse. Übernommene Arbeit nicht automatisch wiederholen.',
+
+ 'Affected Batch': 'Betroffenes Paket',
+ 'Opens the batch associated with the original queue error or the first unconfirmed failure.': 'Öffnet das Paket zum ursprünglichen Warteschlangenfehler oder zum ersten unbestätigten Fehler.',
+ 'The batch failed before claim. Read the original error, correct setup or permissions, then use Diagnostics, Batches, Retry Unclaimed Failure. The server checks that no work was claimed or recorded.': 'Das Paket ist vor der Übernahme fehlgeschlagen. Lesen Sie den ursprünglichen Fehler und korrigieren Sie Einrichtung oder Rechte. Verwenden Sie danach Diagnose, Pakete, Nicht übernommenes Fehlerpaket wiederholen. Der Server prüft, dass keine Arbeit übernommen oder registriert wurde.',
+ 'Open Show Errors to inspect the failed final validation. Existing results are retained; do not repeat generation to repair an unverified result.': 'Öffnen Sie „Fehler anzeigen“, um die fehlgeschlagene Abschlussprüfung zu prüfen. Vorhandene Ergebnisse bleiben erhalten. Wiederholen Sie die Erzeugung nicht zur Korrektur eines ungeprüften Ergebnisses.',
+
+ 'Entity': 'Entität',
+ 'Module': 'Modul',
+ 'Shows the entity name in the session language.': 'Zeigt den Entitätsnamen in der Sitzungssprache.',
+ 'Shows the module name in the session language.': 'Zeigt den Modulnamen in der Sitzungssprache.',
+'%1 [%2]; ': '%1 [%2]; ',
+ '%1 of %2': '%1 von %2',
+ 'Archived': 'Archiviert',
+ 'Availability': 'Verfügbarkeit',
+ 'Checks, prepares and starts this captured partner run with one confirmation.': 'Prüft und startet diesen erfassten Partnerlauf nach '
+                                                                                 'einer Bestätigung einschließlich Paketvorbereitung.',
+ 'Confirmed Batches': 'Bestätigte Pakete',
+ 'Current Execution Status': 'Aktueller Ausführungsstatus',
+ 'Delete %1 unused templates and archive %2 templates with captured runs? Used templates cannot be deleted because their run history must remain. Active jobs and results are retained. The classification is checked again before changing data.': '%1 '
+                                                                                                                                                                                                                                                    'unbenutzte '
+                                                                                                                                                                                                                                                    'Vorlagen '
+                                                                                                                                                                                                                                                    'löschen '
+                                                                                                                                                                                                                                                    'und '
+                                                                                                                                                                                                                                                    '%2 '
+                                                                                                                                                                                                                                                    'Vorlagen '
+                                                                                                                                                                                                                                                    'mit '
+                                                                                                                                                                                                                                                    'erfassten '
+                                                                                                                                                                                                                                                    'Läufen '
+                                                                                                                                                                                                                                                    'archivieren? '
+                                                                                                                                                                                                                                                    'Verwendete '
+                                                                                                                                                                                                                                                    'Vorlagen '
+                                                                                                                                                                                                                                                    'sind '
+                                                                                                                                                                                                                                                    'wegen '
+                                                                                                                                                                                                                                                    'ihrer '
+                                                                                                                                                                                                                                                    'Laufhistorie '
+                                                                                                                                                                                                                                                    'nicht '
+                                                                                                                                                                                                                                                    'löschbar. '
+                                                                                                                                                                                                                                                    'Laufende '
+                                                                                                                                                                                                                                                    'Jobs '
+                                                                                                                                                                                                                                                    'und '
+                                                                                                                                                                                                                                                    'Ergebnisse '
+                                                                                                                                                                                                                                                    'bleiben '
+                                                                                                                                                                                                                                                    'erhalten. '
+                                                                                                                                                                                                                                                    'Die '
+                                                                                                                                                                                                                                                    'Zuordnung '
+                                                                                                                                                                                                                                                    'wird '
+                                                                                                                                                                                                                                                    'vor '
+                                                                                                                                                                                                                                                    'der '
+                                                                                                                                                                                                                                                    'Änderung '
+                                                                                                                                                                                                                                                    'erneut '
+                                                                                                                                                                                                                                                    'geprüft.',
+ 'Delete Selected Templates': 'Ausgewählte Vorlagen löschen',
+ 'Deletes unused selected templates and archives templates with captured runs after showing the counts and confirming.': 'Zeigt die '
+                                                                                                                         'Anzahlen und '
+                                                                                                                         'löscht nach '
+                                                                                                                         'Bestätigung '
+                                                                                                                         'unbenutzte '
+                                                                                                                         'ausgewählte '
+                                                                                                                         'Vorlagen. '
+                                                                                                                         'Vorlagen mit '
+                                                                                                                         'erfassten Läufen '
+                                                                                                                         'werden '
+                                                                                                                         'archiviert.',
+ 'Description': 'Beschreibung',
+ 'Diagnostics': 'Diagnose',
+ 'Execution Diagnostics': 'Ausführungsdiagnose',
+ 'Explains the safe next action without authorizing an automatic retry.': 'Erläutert den sicheren nächsten Schritt, ohne eine automatische '
+                                                                          'Wiederholung freizugeben.',
+ 'Explicitly restores removed and archived built-in starters without resetting custom names.': 'Stellt entfernte und archivierte '
+                                                                                               'Startvorlagen ausdrücklich wieder her. '
+                                                                                               'Eigene Namen bleiben erhalten.',
+ 'Final Validation': 'Abschlussprüfung',
+ 'Generated Customers': 'Erzeugte Debitoren',
+ 'Generated Vendors': 'Erzeugte Kreditoren',
+ 'Historical Initial Status': 'Historischer Anfangsstatus',
+ 'Includes or hides archived templates. This does not resume jobs or restore removed starters.': 'Blendet archivierte Vorlagen ein oder '
+                                                                                                 'aus. Setzt keine Jobs fort und stellt '
+                                                                                                 'keine entfernten Startvorlagen wieder '
+                                                                                                 'her.',
+ 'Makes selected archived templates available for new runs after confirmation.': 'Gibt die ausgewählten archivierten Vorlagen nach '
+                                                                                 'Bestätigung wieder für neue Läufe frei.',
+ 'Missing reference codes in this company: %1. Review these template settings before starting. Imported templates have not started any runs.': 'Fehlende '
+                                                                                                                                               'Referenzcodes '
+                                                                                                                                               'in '
+                                                                                                                                               'diesem '
+                                                                                                                                               'Mandanten: '
+                                                                                                                                               '%1. '
+                                                                                                                                               'Prüfen '
+                                                                                                                                               'Sie '
+                                                                                                                                               'diese '
+                                                                                                                                               'Vorlageneinstellungen '
+                                                                                                                                               'vor '
+                                                                                                                                               'dem '
+                                                                                                                                               'Start. '
+                                                                                                                                               'Durch '
+                                                                                                                                               'den '
+                                                                                                                                               'Import '
+                                                                                                                                               'wurden '
+                                                                                                                                               'keine '
+                                                                                                                                               'Läufe '
+                                                                                                                                               'gestartet.',
+ 'Next Step': 'Nächster Schritt',
+ 'Not started': 'Noch nicht gestartet',
+ 'Only partner master data has executable generators. Other templates support planning only.': 'Ausführbare Generatoren gibt es nur für '
+                                                                                               'Debitoren- und Kreditorenstammdaten. '
+                                                                                               'Andere Vorlagen dienen nur der Planung.',
+ 'Open Generated Partner': 'Erzeugten Partner öffnen',
+ 'Open Results': 'Ergebnisse öffnen',
+ 'Open Show Errors and review the affected batch. Claimed work must not be repeated without a verified checkpoint. Recovery actions are under Diagnostics.': 'Öffnen '
+                                                                                                                                                             'Sie '
+                                                                                                                                                             '„Fehler '
+                                                                                                                                                             'anzeigen“ '
+                                                                                                                                                             'und '
+                                                                                                                                                             'prüfen '
+                                                                                                                                                             'Sie '
+                                                                                                                                                             'das '
+                                                                                                                                                             'betroffene '
+                                                                                                                                                             'Paket. '
+                                                                                                                                                             'Übernommene '
+                                                                                                                                                             'Arbeit '
+                                                                                                                                                             'darf '
+                                                                                                                                                             'ohne '
+                                                                                                                                                             'geprüften '
+                                                                                                                                                             'Checkpoint '
+                                                                                                                                                             'nicht '
+                                                                                                                                                             'wiederholt '
+                                                                                                                                                             'werden. '
+                                                                                                                                                             'Aktionen '
+                                                                                                                                                             'zur '
+                                                                                                                                                             'Wiederaufnahme '
+                                                                                                                                                             'finden '
+                                                                                                                                                             'Sie '
+                                                                                                                                                             'unter '
+                                                                                                                                                             '„Diagnose“.',
+ 'Opens only customers whose stable identities were recorded for this run.': 'Öffnet nur die Debitoren, deren stabile Identitäten diesem '
+                                                                             'Lauf zugeordnet sind.',
+ 'Opens only vendors whose stable identities were recorded for this run.': 'Öffnet nur die Kreditoren, deren stabile Identitäten diesem '
+                                                                           'Lauf zugeordnet sind.',
+ 'Opens the earliest failed standard log for this batch job, including registered error details and the call stack.': 'Öffnet das früheste '
+                                                                                                                      'fehlerhafte '
+                                                                                                                      'Standardprotokoll '
+                                                                                                                      'dieses Paketjobs '
+                                                                                                                      'einschließlich '
+                                                                                                                      'registrierter '
+                                                                                                                      'Fehlerdetails und '
+                                                                                                                      'Aufrufliste.',
+ 'Opens the exact customer or vendor by its recorded stable identity.': 'Öffnet den genauen Debitor oder Kreditor anhand seiner '
+                                                                        'gespeicherten stabilen Identität.',
+ 'Opens the provenance of records created by this run. Each partner result opens its exact standard record.': 'Öffnet die '
+                                                                                                              'Ergebniszuordnungen dieses '
+                                                                                                              'Laufs. Jeder Partnereintrag '
+                                                                                                              'öffnet den genauen '
+                                                                                                              'Standarddatensatz.',
+ "Opens this run's original queue error or failed validation, with the affected batch retained for safe review.": 'Öffnet den '
+                                                                                                                  'ursprünglichen '
+                                                                                                                  'Warteschlangenfehler '
+                                                                                                                  'oder die '
+                                                                                                                  'fehlgeschlagene Prüfung '
+                                                                                                                  'dieses Laufs. Das '
+                                                                                                                  'betroffene Paket bleibt '
+                                                                                                                  'zur sicheren Prüfung '
+                                                                                                                  'erhalten.',
+ 'Original Queue Error': 'Ursprünglicher Warteschlangenfehler',
+ 'Partner Master Data': 'Debitoren- und Kreditorenstammdaten',
+ 'Planning Only': 'Nur Planung',
+ 'Progress and Results': 'Fortschritt und Ergebnisse',
+ 'Refreshes the run and opens its confirmed step progress.': 'Aktualisiert den Lauf und öffnet den bestätigten Schrittfortschritt.',
+ 'Removed Scenario Template': 'Entfernte Szenariovorlage',
+ 'Removed template identities cannot be changed. Restore starter templates explicitly.': 'Identitäten entfernter Vorlagen können nicht '
+                                                                                         'geändert werden. Stellen Sie Startvorlagen '
+                                                                                         'ausdrücklich wieder her.',
+ 'Restore Removed Starter Templates': 'Entfernte Startvorlagen wiederherstellen',
+ 'Restore Selected Templates': 'Ausgewählte Vorlagen wiederherstellen',
+ 'Restore all removed or archived built-in starter templates? Custom names are retained.': 'Alle entfernten oder archivierten '
+                                                                                           'Startvorlagen wiederherstellen? Eigene Namen '
+                                                                                           'bleiben erhalten.',
+ 'Restore the selected archived templates for new runs?': 'Die ausgewählten archivierten Vorlagen wieder für neue Läufe freigeben?',
+ 'Scenario ID': 'Szenario-ID',
+ 'Show Errors': 'Fehler anzeigen',
+ 'Show Original Queue Error': 'Ursprünglichen Warteschlangenfehler anzeigen',
+ 'Show or Hide Archived Templates': 'Archivierte Vorlagen ein-/ausblenden',
+ 'Shows confirmed completed batches compared with all prepared batches.': 'Zeigt die bestätigten abgeschlossenen Pakete im Vergleich zu '
+                                                                          'allen vorbereiteten Paketen.',
+ 'Shows the current background execution state. Refresh this page to read the latest persisted progress.': 'Zeigt den aktuellen Status der '
+                                                                                                           'Hintergrundausführung. '
+                                                                                                           'Aktualisieren Sie die Seite '
+                                                                                                           'für den neuesten gespeicherten '
+                                                                                                           'Fortschritt.',
+ 'Shows the earliest available failed queue message. Use Show Errors for its full registered details and call stack.': 'Zeigt die früheste '
+                                                                                                                       'verfügbare '
+                                                                                                                       'Warteschlangenfehlermeldung. '
+                                                                                                                       '„Fehler anzeigen“ '
+                                                                                                                       'öffnet die '
+                                                                                                                       'vollständigen '
+                                                                                                                       'registrierten '
+                                                                                                                       'Details und die '
+                                                                                                                       'Aufrufliste.',
+ 'Shows the localized default name. Editing saves a custom name for this template.': 'Zeigt den übersetzten Standardnamen. Eine '
+                                                                                     'Bearbeitung speichert einen eigenen Namen für diese '
+                                                                                     'Vorlage.',
+ 'Shows the saved final validation result for this run.': 'Zeigt das gespeicherte Ergebnis der Abschlussprüfung dieses Laufs.',
+ 'Shows the template name in the session language when it is an unchanged built-in name.': 'Zeigt unveränderte mitgelieferte Vorlagennamen '
+                                                                                           'in der Sitzungssprache.',
+ 'Specifies that this template is hidden for new runs. Historical runs and active jobs are retained.': 'Gibt an, dass diese Vorlage für '
+                                                                                                       'neue Läufe ausgeblendet ist. '
+                                                                                                       'Historische Läufe und laufende '
+                                                                                                       'Jobs bleiben erhalten.',
+ 'Start': 'Starten',
+ 'Start this captured partner run after rechecking its setup and permissions? Test generation will be enabled. Existing or uncertain batches are not repeated.': 'Diesen '
+                                                                                                                                                                 'erfassten '
+                                                                                                                                                                 'Partnerlauf '
+                                                                                                                                                                 'nach '
+                                                                                                                                                                 'erneuter '
+                                                                                                                                                                 'Prüfung '
+                                                                                                                                                                 'von '
+                                                                                                                                                                 'Einrichtung '
+                                                                                                                                                                 'und '
+                                                                                                                                                                 'Rechten '
+                                                                                                                                                                 'starten? '
+                                                                                                                                                                 'Die '
+                                                                                                                                                                 'Testdatenerzeugung '
+                                                                                                                                                                 'wird '
+                                                                                                                                                                 'aktiviert. '
+                                                                                                                                                                 'Vorhandene '
+                                                                                                                                                                 'oder '
+                                                                                                                                                                 'unsichere '
+                                                                                                                                                                 'Pakete '
+                                                                                                                                                                 'werden '
+                                                                                                                                                                 'nicht '
+                                                                                                                                                                 'wiederholt.',
+ 'Technical Details': 'Technische Details',
+ 'The original queue error is not available. Review the affected batch and obtain the earliest failed standard job queue log, including its full error and call stack. Do not repeat claimed work without a verified checkpoint.': 'Der '
+                                                                                                                                                                                                                                   'ursprüngliche '
+                                                                                                                                                                                                                                   'Warteschlangenfehler '
+                                                                                                                                                                                                                                   'ist '
+                                                                                                                                                                                                                                   'nicht '
+                                                                                                                                                                                                                                   'verfügbar. '
+                                                                                                                                                                                                                                   'Prüfen '
+                                                                                                                                                                                                                                   'Sie '
+                                                                                                                                                                                                                                   'das '
+                                                                                                                                                                                                                                   'betroffene '
+                                                                                                                                                                                                                                   'Paket '
+                                                                                                                                                                                                                                   'und '
+                                                                                                                                                                                                                                   'beschaffen '
+                                                                                                                                                                                                                                   'Sie '
+                                                                                                                                                                                                                                   'das '
+                                                                                                                                                                                                                                   'früheste '
+                                                                                                                                                                                                                                   'fehlerhafte '
+                                                                                                                                                                                                                                   'Standardprotokoll '
+                                                                                                                                                                                                                                   'einschließlich '
+                                                                                                                                                                                                                                   'vollständigem '
+                                                                                                                                                                                                                                   'Fehlertext '
+                                                                                                                                                                                                                                   'und '
+                                                                                                                                                                                                                                   'Aufrufliste. '
+                                                                                                                                                                                                                                   'Übernommene '
+                                                                                                                                                                                                                                   'Arbeit '
+                                                                                                                                                                                                                                   'ohne '
+                                                                                                                                                                                                                                   'geprüften '
+                                                                                                                                                                                                                                   'Checkpoint '
+                                                                                                                                                                                                                                   'nicht '
+                                                                                                                                                                                                                                   'wiederholen.',
+ 'This run has no visible generated partners of the selected type. Review its result provenance.': 'Für diesen Lauf sind keine erzeugten '
+                                                                                                   'Partner des gewählten Typs sichtbar. '
+                                                                                                   'Prüfen Sie die Ergebniszuordnungen.',
+ 'This template has captured runs. Archive it instead of deleting its history.': 'Diese Vorlage hat erfasste Läufe. Archivieren Sie die '
+                                                                                 'Vorlage, damit die Historie erhalten bleibt.',
+ 'View Progress': 'Fortschritt ansehen'})
+
 if __name__ == '__main__':
     generated = ET.parse(base.ROOT / f'{base.NAME}.g.xlf')
     sources = {base.source(u) for u in generated.iter(base.Q('trans-unit'))}
-    if not DE.keys() <= sources:
-        raise SystemExit('Build the current AL sources first. The generated XLIFF does not yet contain all starter-template strings. No files were changed.')
+    if 'Run Partner Scenario' not in sources:
+        raise SystemExit('Build the current AL sources first. Starter-template compiler IDs are missing. No files were changed.')
     base.DE.update(DE)
     base.sync()

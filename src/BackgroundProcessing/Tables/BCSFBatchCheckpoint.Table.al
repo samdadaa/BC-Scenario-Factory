@@ -27,16 +27,28 @@ table 90314 "BCSF Batch Checkpoint"
     "Result Envelope".CreateOutStream(Output, TextEncoding::UTF8);
     Result.WriteTo(Serialized);
     Output.WriteText(Serialized);
+    Clear(Output);
   end;
+  /// <summary>Loads the persisted envelope after Get. HasValue does not replace loading a BLOB.</summary>
+  procedure ReadStoredResult(): JsonObject
+  begin
+    CalcFields("Result Envelope");
+    exit(ReadResult());
+  end;
+
+  /// <summary>Reads the current in-memory envelope, including the value checked before Insert.</summary>
   procedure ReadResult(): JsonObject
   var
     Input: InStream;
     Result: JsonObject;
   begin
     if not "Result Envelope".HasValue() then
-      CalcFields("Result Envelope");
+      Error(InvalidEnvelopeErr, "Batch Id");
     "Result Envelope".CreateInStream(Input, TextEncoding::UTF8);
-    Result.ReadFrom(Input);
+    if not Result.ReadFrom(Input) then
+      Error(InvalidEnvelopeErr, "Batch Id");
     exit(Result);
   end;
+  var
+    InvalidEnvelopeErr: Label 'The checkpoint result for batch %1 is empty or invalid JSON. Review the original queue error and saved results; do not repeat claimed work automatically.', Comment = '%1 = batch identity';
 }

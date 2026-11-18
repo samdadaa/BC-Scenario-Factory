@@ -8,14 +8,15 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
   {
     modify(Status)
     {
-      Caption = 'Captured Initial Status';
+      Caption = 'Historical Initial Status';
+      Importance = Additional;
       ToolTip = 'Shows the immutable initial status. The current processing status is shown separately under Execution.';
     }
     addlast(Content)
     {
       group(ExecutionOverview)
       {
-        Caption = 'Execution';
+        Caption = 'Execution Diagnostics';
         field(PauseRequest; PauseRequestValue)
         {
           ApplicationArea = All;
@@ -30,23 +31,18 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
           ToolTip = 'Shows an irreversible cancellation request. Existing and uncertain results remain available for review.';
           Editable = false;
         }
-        field(ExecutionStatus; ExecutionStatus)
-        {
-          ApplicationArea = All;
-          Caption = 'Current Execution Status';
-          ToolTip = 'Shows the persisted execution state, including the result of the final validation.';
-          Editable = false;
-        }
+
       }
     }
   }
   actions
   {
-    addlast(Processing)
+    addlast(Diagnostics)
     {
       action(PauseExecution)
       {
         ApplicationArea = All;
+        Visible = CanStop;
         Caption = 'Request Pause';
         ToolTip = 'Saves a pause request. A running batch completes before processing stops at a safe boundary.';
         Image = Action;
@@ -63,6 +59,7 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
       action(CancelExecution)
       {
         ApplicationArea = All;
+        Visible = CanStop;
         Caption = 'Request Cancellation';
         ToolTip = 'Cancels only unstarted work at a safe boundary. Existing records, postings and uncertain results are retained.';
         Image = Action;
@@ -79,6 +76,7 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
       action(ApplyControl)
       {
         ApplicationArea = All;
+        Visible = CanStop;
         Caption = 'Apply Pending Requests';
         ToolTip = 'Applies saved pause or cancellation requests when no batch is actively running. Does not terminate a worker.';
         Image = Action;
@@ -93,6 +91,7 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
       action(ResumeExecution)
       {
         ApplicationArea = All;
+        Visible = CanResume;
         Caption = 'Resume from Checkpoints';
         ToolTip = 'Revalidates completed checkpoints and schedules only pending work. Uncertain batches and exhausted retry limits remain blocked.';
         Image = Action;
@@ -109,6 +108,7 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
       action(PrepareBatches)
       {
         ApplicationArea = All;
+        Visible = CanPrepare;
         Caption = 'Prepare Execution Batches';
         ToolTip = 'Rechecks the saved plan and all start gates, then atomically saves a serial batch plan. Blockers prevent preparation.';
         Image = Planning;
@@ -123,6 +123,7 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
       action(ScheduleExecution)
       {
         ApplicationArea = All;
+        Visible = CanSchedule;
         Caption = 'Schedule Prepared Execution';
         ToolTip = 'Requests an earliest start for prepared work. Rechecks authorization and schedules one background batch at a time with automatic retry disabled.';
         Image = Task;
@@ -163,6 +164,7 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
   var
     Execution: Record "BCSF Run Execution";
     Control: Record "BCSF Run Control";
+    Batch: Record "BCSF Batch";
   begin
     PauseRequestValue := false;
     CancelRequestValue := false;
@@ -171,11 +173,24 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
       CancelRequestValue := Control."Cancel Requested";
     end;
     ExecutionStatus := NotPreparedLbl;
-    if Execution.Get(Rec."Run Id") then
+    CanPrepare := not Execution.Get(Rec."Run Id");
+    CanSchedule := not CanPrepare and (Execution.Status = Execution.Status::Ready);
+    CanStop := not CanPrepare and (Execution.Status in [Execution.Status::Ready, Execution.Status::Queued, Execution.Status::Scheduled, Execution.Status::Running]);
+    CanResume := not CanPrepare and (Execution.Status = Execution.Status::Paused);
+    if not CanPrepare and (Execution.Status = Execution.Status::Failed) then begin
+      Batch.SetRange("Run Id", Rec."Run Id");
+      Batch.SetFilter(Status, '%1|%2|%3', Batch.Status::Failed, Batch.Status::NeedsReview, Batch.Status::Running);
+      CanResume := Batch.IsEmpty();
+    end;
+    if not CanPrepare then
       ExecutionStatus := Format(Execution.Status);
   end;
   var
     ExecutionStatus: Text;
+    CanPrepare: Boolean;
+    CanSchedule: Boolean;
+    CanStop: Boolean;
+    CanResume: Boolean;
     PauseRequestValue: Boolean;
     CancelRequestValue: Boolean;
     PauseExecutionQst: Label 'Pause this execution before its next unclaimed batch?';

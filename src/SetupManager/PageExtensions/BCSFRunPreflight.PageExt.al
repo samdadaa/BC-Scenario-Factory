@@ -6,7 +6,7 @@ pageextension 90228 "BCSF Run Preflight" extends "BCSF Run Card"
 {
   actions
   {
-    addlast(Processing)
+    addlast(Diagnostics)
     {
       action(SetupPreflight)
       {

@@ -19,7 +19,7 @@ codeunit 90106 "BCSF Setup Management"
         FactorySetup."Primary Key" := FactorySetup.GetSetupKey();
         FactorySetup."Generation Enabled" := false;
         FactorySetup."Posting Enabled" := false;
-        FactorySetup."Allowed Environment Name" := Environment.GetEnvironmentName();
+        FactorySetup."Allowed Environment Name" := CopyStr(Environment.GetEnvironmentName(), 1, MaxStrLen(FactorySetup."Allowed Environment Name"));
         FactorySetup."Allowed Company Name" := CopyStr(CompanyName(), 1, MaxStrLen(FactorySetup."Allowed Company Name"));
         FactorySetup.Insert(true);
     end;

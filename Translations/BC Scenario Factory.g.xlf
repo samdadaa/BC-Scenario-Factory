@@ -193,6 +193,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 1424257286 - NamedType 869009470" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The checkpoint result for batch %1 is empty or invalid JSON. Review the original queue error and saved results; do not repeat claimed work automatically.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = batch identity</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch Checkpoint - NamedType InvalidEnvelopeErr</note>
+        </trans-unit>
         <trans-unit id="Table 1424257286 - Field 274452355 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the stable batch identity.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -513,6 +518,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - Action ClassifyInterrupted - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1271682438 - Action 2908422019 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens the earliest failed standard log for this batch job, including registered error details and the call stack.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - Action OriginalError - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1271682438 - Action 2908422019 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Show Original Queue Error</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Batch List - Action OriginalError - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1271682438 - Action 3759872888 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Confirms an existing validated checkpoint after proving the previous worker is inactive. Never recreates or reposts uncertain work.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -679,7 +694,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Action ViewExecution - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1160320011 - Control 2561825483 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
-          <source>Execution</source>
+          <source>Execution Diagnostics</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control ExecutionOverview - Property Caption</note>
         </trans-unit>
@@ -692,16 +707,6 @@
           <source>Cancel Requested</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control CancelRequest - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 1160320011 - Control 2223978306 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
-          <source>Shows the persisted execution state, including the result of the final validation.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control ExecutionStatus - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 1160320011 - Control 2223978306 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
-          <source>Current Execution Status</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Control ExecutionStatus - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1160320011 - Control 1800966869 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
           <source>Shows a saved pause request; current execution status changes only at a safe boundary.</source>
@@ -719,7 +724,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Change Status - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 1160320011 - Change 513339096 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
-          <source>Captured Initial Status</source>
+          <source>Historical Initial Status</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Queue - Change Status - Property Caption</note>
         </trans-unit>
@@ -1407,6 +1412,16 @@
           <source>Check Result Identity</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Action CheckIdentity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2002769295 - Action 2826429286 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens the exact customer or vendor by its recorded stable identity.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Action OpenPartner - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2002769295 - Action 2826429286 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Open Generated Partner</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Action OpenPartner - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1160320011 - Action 2717230552 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
           <source>Shows the immutable result identities and parent relationships recorded for this run.</source>
@@ -2193,6 +2208,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PostedLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1955077898" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Restore all removed or archived built-in starter templates? Custom names are retained.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType RestoreQst</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 381116628" size-unit="char" translate="yes" xml:space="preserve">
           <source>Load starter scenarios only in an approved sandbox.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -2287,6 +2307,11 @@
           <source>Provenance entries cannot be changed, deleted or renamed. Investigate the existing result before any retry.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Provenance Guard - NamedType ImmutableErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3158979561 - NamedType 3934323487" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Removed template identities cannot be changed. Restore starter templates explicitly.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Guard - NamedType RemovedImmutableErr</note>
         </trans-unit>
         <trans-unit id="Table 1702486462 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Generator Catalog</source>
@@ -2938,6 +2963,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ConfirmedLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 565568802" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Diagnostics</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType DiagnosticsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 2602988357" size-unit="char" translate="yes" xml:space="preserve">
           <source>Earliest start</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3062,6 +3092,26 @@
           <source>Prepare batches</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PrepareLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 727886591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Show Errors</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PrimaryErrorsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3247883101" size-unit="char" translate="yes" xml:space="preserve">
+          <source>View Progress</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PrimaryProgressLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1803592112" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Open Results</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PrimaryResultsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1288457274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Start</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PrimaryStartLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 3950098385" size-unit="char" translate="yes" xml:space="preserve">
           <source>Step details</source>
@@ -3258,10 +3308,20 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Monitoring Mgt - NamedType CancelledLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1006136770 - NamedType 1763069322" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The original queue error is not available. Review the affected batch and obtain the earliest failed standard job queue log, including its full error and call stack. Do not repeat claimed work without a verified checkpoint.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Monitoring Mgt - NamedType MissingErrorLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1006136770 - NamedType 2632257396" size-unit="char" translate="yes" xml:space="preserve">
           <source>No saved plan</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Monitoring Mgt - NamedType NoPlanLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1006136770 - NamedType 1962733114" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This run has no visible generated partners of the selected type. Review its result provenance.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Monitoring Mgt - NamedType NoResultsErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1006136770 - NamedType 2007738364" size-unit="char" translate="yes" xml:space="preserve">
           <source>Batch review required</source>
@@ -3277,6 +3337,11 @@
           <source>Unconfirmed work remains</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Monitoring Mgt - NamedType WaitingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2935868274 - NamedType 2149861178" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Start this captured partner run after rechecking its setup and permissions? Test generation will be enabled. Existing or uncertain batches are not repeated.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Quick Scenario Run - NamedType CapturedQst</note>
         </trans-unit>
         <trans-unit id="Codeunit 2935868274 - NamedType 3824323543" size-unit="char" translate="yes" xml:space="preserve">
           <source>Start %1 in company %2? This prepares missing demo partner setup and enables test data generation in the company. No posting is approved.</source>
@@ -3713,6 +3778,26 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Step Progress - Control Blocker - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 2858098029 - Control 1951177368 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the entity name in the session language.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Step Progress - Control EntityName - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2858098029 - Control 1951177368 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entity</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Step Progress - Control EntityName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2858098029 - Control 3122420063 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the module name in the session language.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Step Progress - Control ModuleName - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2858098029 - Control 3122420063 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Module</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Step Progress - Control ModuleName - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 2858098029 - Action 2243748878 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Shows persisted batches for the selected run and step, including uncertain and cancelled work.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3758,6 +3843,71 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Batch Diagnostics - Action ViewStandardLogs - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1160320011 - NamedType 4287601559" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 2824280835">
+          <source>%1 of %2</source>
+          <note from="Developer" annotates="general" priority="2">%1 = completed batches, %2 = total batches</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - NamedType BatchCountLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - NamedType 749275874" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 2824280835">
+          <source>Not started</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - NamedType NotStartedLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - NamedType 2007738364" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 2824280835">
+          <source>Open Show Errors and review the affected batch. Claimed work must not be repeated without a verified checkpoint. Recovery actions are under Diagnostics.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - NamedType ReviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - NamedType 1286881030" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 2824280835">
+          <source>The batch failed before claim. Read the original error, correct setup or permissions, then use Diagnostics, Batches, Retry Unclaimed Failure. The server checks that no work was claimed or recorded.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - NamedType UnclaimedLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - NamedType 3514115166" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 2824280835">
+          <source>Open Show Errors to inspect the failed final validation. Existing results are retained; do not repeat generation to repair an unverified result.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - NamedType ValidationFailedLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 3790427842 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Opens the provenance of records created by this run. Each partner result opens its exact standard record.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Action OpenResults - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 3790427842 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Open Results</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Action OpenResults - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 3993650900 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Opens this run's original queue error or failed validation, with the affected batch retained for safe review.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Action ShowErrors - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 3993650900 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Show Errors</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Action ShowErrors - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 888059963 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Checks, prepares and starts this captured partner run with one confirmation.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Action StartRun - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 888059963 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Start</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Action StartRun - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 3615630444 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Refreshes the run and opens its confirmed step progress.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Action ViewProgress - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 3615630444 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>View Progress</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Action ViewProgress - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1160320011 - Action 4169195256 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
           <source>Opens persisted monitoring without starting any work.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3777,6 +3927,91 @@
           <source>View Step Progress</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Action MonitorProgress - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 653081549 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Progress and Results</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control RunResults - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 4081835546 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Opens the batch associated with the original queue error or the first unconfirmed failure.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control AffectedBatch - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 4081835546 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Affected Batch</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control AffectedBatch - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 455475699 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Shows confirmed completed batches compared with all prepared batches.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control ConfirmedBatches - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 455475699 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Confirmed Batches</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control ConfirmedBatches - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1677740807 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Shows the current background execution state. Refresh this page to read the latest persisted progress.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control CurrentStatus - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1677740807 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Current Execution Status</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control CurrentStatus - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 3606140129 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Opens only customers whose stable identities were recorded for this run.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control Customers - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 3606140129 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Generated Customers</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control Customers - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 3481688708 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Shows the earliest available failed queue message. Use Show Errors for its full registered details and call stack.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control Failure - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 3481688708 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Original Queue Error</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control Failure - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 2805992183 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Explains the safe next action without authorizing an automatic retry.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control NextStep - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 2805992183 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Next Step</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control NextStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1483341903 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Shows the saved final validation result for this run.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control Quality - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1483341903 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Final Validation</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control Quality - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 713531721 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Opens only vendors whose stable identities were recorded for this run.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control Vendors - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 713531721 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
+          <source>Generated Vendors</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Control Vendors - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2520265292 - Action 2368505970 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
           <source>Downloads the selected scenarios and their settings together in one JSON file.</source>
@@ -3807,6 +4042,16 @@
           <source>Load Starter Scenarios</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action LoadStarterScenarios - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 1295580214 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
+          <source>Explicitly restores removed and archived built-in starters without resetting custom names.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action RestoreStarterScenarios - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 1295580214 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
+          <source>Restore Removed Starter Templates</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action RestoreStarterScenarios - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2520265292 - Action 3366542611 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
           <source>Checks, captures and schedules the selected partner scenario in the approved sandbox after confirmation.</source>
@@ -4037,6 +4282,16 @@
           <source>Unposted %</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Data Target - Field Unposted Percent - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1602080946 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Removed Scenario Template</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Removed Template - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1602080946 - Field 1093751773 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario ID</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Removed Template - Field Scenario Id - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 1174910550 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Captured Run</source>
@@ -4413,6 +4668,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 57370450 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies that this template is hidden for new runs. Historical runs and active jobs are retained.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Archived - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 57370450 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Archived</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Archived - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 3536643086 - Field 335865685 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the consumer credit limit in local currency. Zero means no credit limit and does not enforce advance payment.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -4738,6 +5003,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario DB Events - NamedType SnapshotErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1340704077 - NamedType 779158814" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This template has captured runs. Archive it instead of deleting its history.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario DB Events - NamedType UsedTemplateErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1912494491 - NamedType 3108365835" size-unit="char" translate="yes" xml:space="preserve">
           <source>Copy of %1</source>
           <note from="Developer" annotates="general" priority="2">%1 = source scenario description</note>
@@ -4747,6 +5017,16 @@
           <source>New Scenario</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType NewScenarioLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 2808463212" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Delete %1 unused templates and archive %2 templates with captured runs? Used templates cannot be deleted because their run history must remain. Active jobs and results are retained. The classification is checked again before changing data.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = unused count, %2 = used count</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType RemoveQst</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 1955077898" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Restore the selected archived templates for new runs?</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType RestoreQst</note>
         </trans-unit>
         <trans-unit id="Codeunit 1912494491 - NamedType 2024709530" size-unit="char" translate="yes" xml:space="preserve">
           <source>Frozen configuration can only be loaded into temporary display records.</source>
@@ -4867,6 +5147,16 @@
           <source>Import %1 scenarios as new copies in the current company? Existing scenarios are not replaced.</source>
           <note from="Developer" annotates="general" priority="2">%1 = number of scenarios</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Transfer - NamedType ImportQst</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3857170507 - NamedType 2986347666" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Missing reference codes in this company: %1. Review these template settings before starting. Imported templates have not started any runs.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = templates and missing table/code references</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Transfer - NamedType MissingReferencesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3857170507 - NamedType 1162595851" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 [%2]; </source>
+          <note from="Developer" annotates="general" priority="2">%1 = reference table, %2 = missing code</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Transfer - NamedType ReferenceLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3857170507 - NamedType 3052855244" size-unit="char" translate="yes" xml:space="preserve">
           <source>The scenario bundle must not be empty or exceed 4 MiB.</source>
@@ -5033,6 +5323,21 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control Targets - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 1004537179 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Technical Details</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control TechnicalDetails - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 513339096 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Historical Initial Status</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control Status - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Action 3052677768 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Diagnostics</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Action Diagnostics - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 4184647097 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Scenario Factory Captured Runs</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -5047,6 +5352,16 @@
           <source>General</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control General - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the localized default name. Editing saves a custom name for this template.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control Description - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3114165994 - Control 2607913180 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Data Language Preview</source>
@@ -5173,6 +5488,36 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 2520265292 - NamedType 2278290120" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner Master Data</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - NamedType PartnerLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - NamedType 1189112345" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning Only</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - NamedType PlanningLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Control 2336152139 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Only partner master data has executable generators. Other templates support planning only.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Control Availability - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Control 2336152139 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Availability</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Control Availability - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the template name in the session language when it is an unchanged built-in name.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Control 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Control Description - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 2520265292 - Action 707938486 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Opens the captured configuration history.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -5223,6 +5568,36 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action NewGuidedScenario - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 301364383 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Deletes unused selected templates and archives templates with captured runs after showing the counts and confirming.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action RemoveTemplates - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 301364383 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Delete Selected Templates</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action RemoveTemplates - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 1169068261 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Makes selected archived templates available for new runs after confirmation.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action RestoreTemplates - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 1169068261 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Restore Selected Templates</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action RestoreTemplates - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 3218005591 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Includes or hides archived templates. This does not resume jobs or restore removed starters.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action ShowArchived - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 3218005591 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Show or Hide Archived Templates</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Action ShowArchived - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 3005984901 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Scenario Modules</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -5267,6 +5642,16 @@
           <source>1. Industry and Purpose</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Control Industry - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1115899955 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the localized default name. Editing saves a custom name for this template.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1115899955 - Control 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Control Description - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1115899955 - Control 165235931 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Explains that profile identifiers do not install generators or apply an industry preset.</source>

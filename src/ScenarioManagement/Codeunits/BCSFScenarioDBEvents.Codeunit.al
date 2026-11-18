@@ -5,6 +5,8 @@ using BCScenarioFactory.Core;
 codeunit 90145 "BCSF Scenario DB Events"
 {
   Access = Internal;
+  Permissions = tabledata "BCSF Data Target" = D, tabledata "BCSF Scenario Module" = D,
+    tabledata "BCSF Removed Template" = I;
 
   [EventSubscriber(ObjectType::Table, Database::"BCSF Scenario", 'OnBeforeInsertEvent', '', false, false)]
   local procedure ScenarioInsert(var Rec: Record "BCSF Scenario"; RunTrigger: Boolean)
@@ -20,22 +22,48 @@ codeunit 90145 "BCSF Scenario DB Events"
   [EventSubscriber(ObjectType::Table, Database::"BCSF Scenario", 'OnBeforeModifyEvent', '', false, false)]
   local procedure ScenarioModify(var Rec: Record "BCSF Scenario"; var xRec: Record "BCSF Scenario"; RunTrigger: Boolean)
   var
+    Previous: Record "BCSF Scenario";
     Policy: Codeunit "BCSF Scenario Policy";
   begin
     if Rec.IsTemporary() then
       exit;
-    if xRec.Revision = 2147483647 then
+    Previous.LockTable();
+    Previous.Get(Rec."Scenario Id");
+    if Previous.Revision = 2147483647 then
       Error(RevisionErr);
-    Rec.Revision := xRec.Revision + 1;
+    Rec.Revision := Previous.Revision + 1;
     Policy.ValidateScenario(Rec);
   end;
 
   [EventSubscriber(ObjectType::Table, Database::"BCSF Scenario", 'OnBeforeDeleteEvent', '', false, false)]
   local procedure ScenarioDelete(var Rec: Record "BCSF Scenario"; RunTrigger: Boolean)
+  var
+    Scenario: Record "BCSF Scenario";
+    Header: Record "BCSF Run Header";
+    Target: Record "BCSF Data Target";
+    Selection: Record "BCSF Scenario Module";
+    Removed: Record "BCSF Removed Template";
   begin
     if Rec.IsTemporary() then
       exit;
-    Error(ImmutableErr);
+    Scenario.LockTable();
+    Scenario.Get(Rec."Scenario Id");
+    Header.SecurityFiltering(SecurityFilter::Disallowed);
+    Header.SetRange("Scenario Id", Rec."Scenario Id");
+    if not Header.IsEmpty() then
+      Error(UsedTemplateErr);
+    Target.SetRange("Scenario Id", Rec."Scenario Id");
+    Target.DeleteAll(true);
+    Selection.SetRange("Scenario Id", Rec."Scenario Id");
+    Selection.DeleteAll(true);
+    // Child deletes advance the parent revision. Use the final stored row for the delete itself.
+    Scenario.Get(Rec."Scenario Id");
+    Rec := Scenario;
+    if not Removed.Get(Rec."Scenario Id") then begin
+      Removed.Init();
+      Removed."Scenario Id" := Rec."Scenario Id";
+      Removed.Insert(true);
+    end;
   end;
 
   [EventSubscriber(ObjectType::Table, Database::"BCSF Scenario", 'OnBeforeRenameEvent', '', false, false)]
@@ -141,6 +169,7 @@ codeunit 90145 "BCSF Scenario DB Events"
     if IsNullGuid(Rec."Run Id") then
       Error(SnapshotErr);
     Scenario.Get(Rec."Scenario Id");
+    Scenario.TestField(Archived, false);
     if (Rec."Scenario Revision" <> Scenario.Revision) or (Rec."Schema Version" <> 1) then
       Error(SnapshotErr);
     if Rec.Status <> "BCSF Run Status"::Draft then
@@ -255,6 +284,7 @@ codeunit 90145 "BCSF Scenario DB Events"
   end;
 
   var
+    UsedTemplateErr: Label 'This template has captured runs. Archive it instead of deleting its history.';
     ImmutableErr: Label 'Captured runs and snapshots cannot be changed or deleted. Template and entity keys cannot be renamed; create a copy or a new target instead.';
     RevisionErr: Label 'This template has reached its revision limit. Create a copy.';
     SnapshotErr: Label 'The captured configuration is incomplete or inconsistent. Create a new snapshot from a valid template.';

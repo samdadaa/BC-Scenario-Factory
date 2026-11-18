@@ -1,5 +1,8 @@
 namespace BCScenarioFactory.DataGeneration;
 
+using Microsoft.Purchases.Vendor;
+using Microsoft.Sales.Customer;
+
 page 90254 "BCSF Generated Records"
 {
   PageType = List;
@@ -34,6 +37,32 @@ page 90254 "BCSF Generated Records"
   {
     area(Processing)
     {
+      action(OpenPartner)
+      {
+        ApplicationArea = All;
+        Caption = 'Open Generated Partner';
+        ToolTip = 'Opens the exact customer or vendor by its recorded stable identity.';
+        Image = View;
+        trigger OnAction()
+        var
+          Customer: Record Customer;
+          Vendor: Record Vendor;
+        begin
+          case Rec."Table Id" of
+            Database::Customer:
+              begin
+                Customer.GetBySystemId(Rec."Record SystemId");
+                Page.Run(Page::"Customer Card", Customer);
+              end;
+            Database::Vendor:
+              begin
+                Vendor.GetBySystemId(Rec."Record SystemId");
+                Page.Run(Page::"Vendor Card", Vendor);
+              end;
+            else Message(MissingLbl);
+          end;
+        end;
+      }
       action(CheckIdentity)
       {
         ApplicationArea = All;

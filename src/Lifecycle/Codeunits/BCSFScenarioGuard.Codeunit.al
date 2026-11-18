@@ -186,4 +186,52 @@ codeunit 90377 "BCSF Scenario Guard"
       Guard.EnsureCanConfigure(Rec.CurrentCompany());
   end;
 
+  [EventSubscriber(ObjectType::Table, Database::"BCSF Removed Template", 'OnBeforeInsertEvent', '', false, false)]
+  local procedure RemovedInsert(var Rec: Record "BCSF Removed Template"; RunTrigger: Boolean)
+  var
+    Guard: Codeunit "BCSF Environment Guard";
+  begin
+    if Rec.IsTemporary() then
+      exit;
+    Guard.EnsureCanConfigure(Rec.CurrentCompany());
+    Rec.TestField("Scenario Id");
+  end;
+
+  [EventSubscriber(ObjectType::Table, Database::"BCSF Removed Template", 'OnBeforeModifyEvent', '', false, false)]
+  local procedure RemovedModify(var Rec: Record "BCSF Removed Template"; var xRec: Record "BCSF Removed Template"; RunTrigger: Boolean)
+  var
+    Guard: Codeunit "BCSF Environment Guard";
+  begin
+    if Rec.IsTemporary() then
+      exit;
+    Guard.EnsureCanConfigure(Rec.CurrentCompany());
+    Rec.TestField("Scenario Id");
+    Error(RemovedImmutableErr);
+  end;
+
+  [EventSubscriber(ObjectType::Table, Database::"BCSF Removed Template", 'OnBeforeDeleteEvent', '', false, false)]
+  local procedure RemovedDelete(var Rec: Record "BCSF Removed Template"; RunTrigger: Boolean)
+  var
+    Guard: Codeunit "BCSF Environment Guard";
+  begin
+    if Rec.IsTemporary() then
+      exit;
+    Guard.EnsureCanConfigure(Rec.CurrentCompany());
+    Rec.TestField("Scenario Id");
+  end;
+
+  [EventSubscriber(ObjectType::Table, Database::"BCSF Removed Template", 'OnBeforeRenameEvent', '', false, false)]
+  local procedure RemovedRename(var Rec: Record "BCSF Removed Template"; var xRec: Record "BCSF Removed Template"; RunTrigger: Boolean)
+  var
+    Guard: Codeunit "BCSF Environment Guard";
+  begin
+    if Rec.IsTemporary() then
+      exit;
+    Guard.EnsureCanConfigure(Rec.CurrentCompany());
+    Rec.TestField("Scenario Id");
+    Error(RemovedImmutableErr);
+  end;
+
+  var
+    RemovedImmutableErr: Label 'Removed template identities cannot be changed. Restore starter templates explicitly.';
 }

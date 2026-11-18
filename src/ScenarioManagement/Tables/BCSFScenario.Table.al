@@ -178,6 +178,11 @@ table 90125 "BCSF Scenario"
       MinValue = 0;
       DecimalPlaces = 0 : 2;
     }
+    field(28; Archived; Boolean)
+    {
+      Caption = 'Archived';
+      ToolTip = 'Specifies that this template is hidden for new runs. Historical runs and active jobs are retained.';
+    }
   }
 
   keys

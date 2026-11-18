@@ -83,11 +83,30 @@ codeunit 90365 "BCSF Dashboard Data"
   var
     Execution: Record "BCSF Run Execution";
     Control: Record "BCSF Run Control";
+    Batch: Record "BCSF Batch";
+    Header: Record "BCSF Run Header";
+    TempTarget: Record "BCSF Data Target" temporary;
+    Manager: Codeunit "BCSF Scenario Manager";
     Validation: Codeunit "BCSF Validation Manager";
+    CanStart: Boolean;
   begin
+    Header.Get(RunId);
+    CanStart := Header."Process Mode" = "BCSF Process Mode"::SetupAndMasterData;
+    Manager.LoadFrozenTargets(RunId, TempTarget);
+    TempTarget.SetFilter(Quantity, '>0');
+    CanStart := CanStart and not TempTarget.IsEmpty();
+    if TempTarget.FindSet() then
+      repeat
+        CanStart := CanStart and (TempTarget.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]);
+      until TempTarget.Next() = 0;
+    Item.Add('canStart', CanStart);
     Item.Add('quality', Validation.Describe(RunId));
     Item.Add('hasExecution', Execution.Get(RunId));
     Item.Add('statusCode', Execution.Status.AsInteger());
+    Batch.SetRange("Run Id", RunId);
+    Batch.SetFilter(Status, '%1|%2|%3', Batch.Status::Failed, Batch.Status::NeedsReview, Batch.Status::Running);
+    Item.Add('canResume', (Execution.Status = Execution.Status::Paused) or
+      ((Execution.Status = Execution.Status::Failed) and Batch.IsEmpty()));
     Item.Add('totalBatches', Execution."Total Batches");
     Item.Add('completedBatches', Execution."Completed Batches");
     Item.Add('earliest', Format(Execution."Earliest Start"));
@@ -103,6 +122,7 @@ codeunit 90365 "BCSF Dashboard Data"
   var
     TempMetric: Record "BCSF Step Metric" temporary;
     Monitor: Codeunit "BCSF Monitoring Mgt";
+    Policy: Codeunit "BCSF Scenario Policy";
     Items: JsonArray;
     Item: JsonObject;
   begin
@@ -111,8 +131,8 @@ codeunit 90365 "BCSF Dashboard Data"
       repeat
         Clear(Item);
         Item.Add('node', TempMetric."Node Code");
-        Item.Add('module', TempMetric."Module Code");
-        Item.Add('entity', TempMetric."Entity Code");
+        Item.Add('module', Policy.GetModuleName(TempMetric."Module Code"));
+        Item.Add('entity', Policy.GetEntityName(TempMetric."Entity Code"));
         Item.Add('target', TempMetric."Planned Units");
         Item.Add('confirmed', TempMetric."Confirmed Units");
         Item.Add('remaining', TempMetric."Remaining Units");
@@ -127,7 +147,12 @@ codeunit 90365 "BCSF Dashboard Data"
 
   local procedure AddTexts(var Texts: JsonObject)
   begin
-    Texts.Add('title', TitleLbl);
+    Texts.Add('primaryStart', PrimaryStartLbl);
+    Texts.Add('primaryProgress', PrimaryProgressLbl);
+    Texts.Add('primaryErrors', PrimaryErrorsLbl);
+    Texts.Add('primaryResults', PrimaryResultsLbl);
+    Texts.Add('diagnostics', DiagnosticsLbl);
+    Texts.Add('title' , TitleLbl);
     Texts.Add('eyebrow', EyebrowLbl);
     Texts.Add('subtitle', SubtitleLbl);
     Texts.Add('new', NewLbl);
@@ -207,6 +232,11 @@ codeunit 90365 "BCSF Dashboard Data"
   end;
 
   var
+    PrimaryStartLbl: Label 'Start';
+    PrimaryProgressLbl: Label 'View Progress';
+    PrimaryErrorsLbl: Label 'Show Errors';
+    PrimaryResultsLbl: Label 'Open Results';
+    DiagnosticsLbl: Label 'Diagnostics';
     TitleLbl: Label 'Scenario Factory';
     EyebrowLbl: Label 'SCENARIO WORKSPACE';
     SubtitleLbl: Label 'Define scenarios. Plan with confidence. Follow every run.';

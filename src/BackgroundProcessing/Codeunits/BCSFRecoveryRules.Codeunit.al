@@ -20,14 +20,17 @@ codeunit 90315 "BCSF Recovery Rules"
   local procedure ControlModify(var Rec: Record "BCSF Run Control"; var xRec: Record "BCSF Run Control"; RunTrigger: Boolean)
   var
     Execution: Record "BCSF Run Execution";
+    PreviousControl: Record "BCSF Run Control";
   begin
     if Rec.IsTemporary() then
       exit;
     CheckControl(Rec);
-    Rec.TestField("Run Id", xRec."Run Id");
-    if xRec."Cancel Requested" and not Rec."Cancel Requested" then
+    PreviousControl.LockTable();
+    PreviousControl.Get(Rec."Run Id");
+    Rec.TestField("Run Id", PreviousControl."Run Id");
+    if PreviousControl."Cancel Requested" and not Rec."Cancel Requested" then
       Error(ImmutableErr);
-    if xRec."Pause Requested" and not Rec."Pause Requested" then begin
+    if PreviousControl."Pause Requested" and not Rec."Pause Requested" then begin
       Execution.ReadIsolation(IsolationLevel::ReadUncommitted);
       Execution.Get(Rec."Run Id");
       if not (Execution.Status in ["BCSF Run Status"::Paused, "BCSF Run Status"::Failed]) then

@@ -87,6 +87,27 @@ page 90311 "BCSF Batch List"
           CurrPage.Update(false);
         end;
       }
+      action(OriginalError)
+      {
+        ApplicationArea = All;
+        Caption = 'Show Original Queue Error';
+        ToolTip = 'Opens the earliest failed standard log for this batch job, including registered error details and the call stack.';
+        Image = ErrorLog;
+        trigger OnAction()
+        var
+          Log: Record "Job Queue Log Entry";
+        begin
+          Log.SetCurrentKey("Start Date/Time", ID);
+          Log.SetRange(ID, Rec."Job Queue Entry Id");
+          Log.SetRange("Object ID to Run", Codeunit::"BCSF Batch Worker");
+          Log.SetRange(Status, Log.Status::Error);
+          if not Log.FindFirst() then
+            Error(MissingJobErr);
+          Log.ShowErrorMessage();
+          Log.SetRange("Entry No.", Log."Entry No.");
+          Page.Run(Page::"Job Queue Log Entries", Log);
+        end;
+      }
       action(ViewJob)
       {
         ApplicationArea = All;

@@ -18,9 +18,9 @@ codeunit 90357 "BCSF Run Event Writer"
   [EventSubscriber(ObjectType::Table, Database::"BCSF Run Execution", 'OnAfterModifyEvent', '', false, false)]
   local procedure ExecutionChanged(var Rec: Record "BCSF Run Execution"; var xRec: Record "BCSF Run Execution"; RunTrigger: Boolean)
   begin
+    // Log the persisted state, including ownership/counter changes. Never infer history from xRec.
     if not Rec.IsTemporary() then
-      if Rec.Status <> xRec.Status then
-        RecordExecution(Rec);
+      RecordExecution(Rec);
   end;
 
   [EventSubscriber(ObjectType::Table, Database::"BCSF Batch", 'OnAfterInsertEvent', '', false, false)]
@@ -33,9 +33,9 @@ codeunit 90357 "BCSF Run Event Writer"
   [EventSubscriber(ObjectType::Table, Database::"BCSF Batch", 'OnAfterModifyEvent', '', false, false)]
   local procedure BatchChanged(var Rec: Record "BCSF Batch"; var xRec: Record "BCSF Batch"; RunTrigger: Boolean)
   begin
+    // Log the persisted state, including ownership/counter changes. Never infer history from xRec.
     if not Rec.IsTemporary() then
-      if (Rec.Status <> xRec.Status) or (Rec."Job Queue Entry Id" <> xRec."Job Queue Entry Id") then
-        RecordBatch(Rec);
+      RecordBatch(Rec);
   end;
 
   local procedure RecordExecution(Execution: Record "BCSF Run Execution")

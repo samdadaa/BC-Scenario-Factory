@@ -19,11 +19,7 @@ page 90139 "BCSF Run Card"
       group(Configuration)
       {
         Caption = 'Captured Configuration';
-        field("Run Id"; Rec."Run Id") { }
         field(Description; Rec.Description) { }
-        field("Scenario Id"; Rec."Scenario Id") { }
-        field("Scenario Revision"; Rec."Scenario Revision") { }
-        field(Status; Rec.Status) { }
         field("Profile Code"; Rec."Profile Code") { }
         field("Profile Version"; Rec."Profile Version") { }
         field("Usage Mode"; Rec."Usage Mode") { }
@@ -33,6 +29,14 @@ page 90139 "BCSF Run Card"
         field("Ending Date"; Rec."Ending Date") { }
         field("Data Language"; Rec."Data Language") { }
         field("Batch Size"; Rec."Batch Size") { }
+      }
+      group(TechnicalDetails)
+      {
+        Caption = 'Technical Details';
+        field("Run Id"; Rec."Run Id") { Importance = Additional; }
+        field("Scenario Id"; Rec."Scenario Id") { }
+        field("Scenario Revision"; Rec."Scenario Revision") { }
+        field(Status; Rec.Status) { Caption = 'Historical Initial Status'; Importance = Additional; }
         field("Created At"; Rec."Created At") { }
         field("Company Name"; Rec."Company Name") { }
         field("Environment Name"; Rec."Environment Name") { }
@@ -65,7 +69,13 @@ page 90139 "BCSF Run Card"
   }
   actions
   {
-    area(Processing) { }
+    area(Processing)
+    {
+      group(Diagnostics)
+      {
+        Caption = 'Diagnostics';
+      }
+    }
   }
   trigger OnAfterGetCurrRecord()
   var

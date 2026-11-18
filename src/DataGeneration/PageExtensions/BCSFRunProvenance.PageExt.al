@@ -6,7 +6,7 @@ pageextension 90255 "BCSF Run Provenance" extends "BCSF Run Card"
 {
   actions
   {
-    addlast(Processing)
+    addlast(Diagnostics)
     {
       action(ViewProvenance)
       {

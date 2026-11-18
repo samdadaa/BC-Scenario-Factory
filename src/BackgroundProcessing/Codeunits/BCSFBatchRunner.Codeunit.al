@@ -43,6 +43,8 @@ codeunit 90307 "BCSF Batch Runner"
     Batch.Get(BatchId);
     Batch.TestField(Status, Batch.Status::Running);
     Batch.TestField("Job Queue Entry Id", JobId);
+    Batch.TestField("Worker Session Id", SessionId());
+    Batch.TestField("Worker Server Id", ServiceInstanceId());
     Execution.TestField(Status, "BCSF Run Status"::Running);
     Execution.TestField("Job Queue Entry Id", JobId);
     Writer.CheckExecution(Batch."Run Id");

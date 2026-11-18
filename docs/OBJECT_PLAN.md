@@ -316,3 +316,12 @@ EnumExtensions binden Werte 90425/90450 des bestehenden Generator-Type-Enums. Ke
 | Finance | 90408 | Codeunit | BCSF Demo Partner Setup |
 
 Monitoring referenziert IndustryProfiles und Finance für diese Bedienaktionen. Die zusätzlichen Referenzen gehen vom UI-Orchestrator zu den Diensten, nicht umgekehrt. Das Install-/Upgrade-Seeding schreibt ausschließlich eigene, mandantenbezogene App-Daten. Keine Änderungen bestehender IDs. Details und BC-Prüfplan: [STARTER_TEMPLATES.md](STARTER_TEMPLATES.md).
+
+
+## SF-037 – zusätzliche belegte ID, 18.11.2026
+
+| ID | Typ | Objekt | Datei | Zweck |
+| --- | --- | --- | --- | --- |
+| 90148 | Table | BCSF Removed Template | `src/ScenarioManagement/Tables/BCSFRemovedTemplate.Table.al` | Firmenbezogener Entfernt-Vermerk; normaler Starterseed darf absichtliche Entfernung nicht rückgängig machen |
+
+90148 liegt im bestehenden ScenarioManagement-Block 90125–90149; vor Anlage keine lokale Objekt-/Planbelegung gefunden. Keine weiteren Objekt-IDs reserviert, keine Standarddaten oder historischen Laufdaten migriert. Lifecycle-Subscriber sichern Insert/Modify/Delete/Rename auch ohne Tabellentrigger.

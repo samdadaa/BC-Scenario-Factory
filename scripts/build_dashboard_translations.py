@@ -10,7 +10,10 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "src/Monitoring/Dashboard/translations.js"
 NS = {"x": "urn:oasis:names:tc:xliff:document:1.2"}
-OBJECTS = ("Codeunit BCSF Dashboard Data - ", "Codeunit BCSF Monitoring Mgt - ")
+OBJECTS = ("Codeunit BCSF Dashboard Data - ", "Codeunit BCSF Monitoring Mgt - ",
+           "Codeunit BCSF Validation Manager - ", "Enum BCSF Run Status - ",
+           "Enum BCSF Validation Severity - ",
+           "Enum BCSF Entity Type - ", "Enum BCSF Module Type - ", "Enum BCSF Process Mode - ")
 
 
 def render():

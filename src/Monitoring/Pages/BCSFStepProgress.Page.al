@@ -2,6 +2,7 @@ namespace BCScenarioFactory.Monitoring;
 
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.DependencyManager;
+using BCScenarioFactory.ScenarioManagement;
 
 page 90352 "BCSF Step Progress"
 {
@@ -17,8 +18,18 @@ page 90352 "BCSF Step Progress"
     {
       repeater(Steps)
       {
-        field("Module Code"; Rec."Module Code") { }
-        field("Entity Code"; Rec."Entity Code") { }
+        field(ModuleName; ModuleName)
+        {
+          Caption = 'Module';
+          ToolTip = 'Shows the module name in the session language.';
+        }
+        field(EntityName; EntityName)
+        {
+          Caption = 'Entity';
+          ToolTip = 'Shows the entity name in the session language.';
+        }
+        field("Module Code"; Rec."Module Code") { Visible = false; }
+        field("Entity Code"; Rec."Entity Code") { Visible = false; }
         field("Node Code"; Rec."Node Code") { }
         field("Planned Units"; Rec."Planned Units") { }
         field("Confirmed Units"; Rec."Confirmed Units") { }
@@ -74,7 +85,10 @@ page 90352 "BCSF Step Progress"
   trigger OnAfterGetRecord()
   var
     Planner: Codeunit "BCSF Dependency Planner";
+    Policy: Codeunit "BCSF Scenario Policy";
   begin
+    ModuleName := Policy.GetModuleName(Rec."Module Code");
+    EntityName := Policy.GetEntityName(Rec."Entity Code");
     BlockerText := Planner.GetIssueText(Rec.Issue, Rec."Reference Code");
   end;
 
@@ -93,4 +107,6 @@ page 90352 "BCSF Step Progress"
   var
     RunId: Guid;
     BlockerText: Text;
+    ModuleName: Text;
+    EntityName: Text;
 }

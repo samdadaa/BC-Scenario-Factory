@@ -17,7 +17,15 @@ page 90131 "BCSF Scenario Card"
       group(General)
       {
         Caption = 'General';
-        field(Description; Rec.Description) { }
+        field(Description; DisplayName)
+        {
+          Caption = 'Description';
+          ToolTip = 'Shows the localized default name. Editing saves a custom name for this template.';
+          trigger OnValidate()
+          begin
+            Rec.Validate(Description, CopyStr(DisplayName, 1, MaxStrLen(Rec.Description)));
+          end;
+        }
         field(Revision; Rec.Revision) { }
         field("Profile Code"; Rec."Profile Code") { }
         field("Profile Version"; Rec."Profile Version") { }
@@ -166,6 +174,7 @@ page 90131 "BCSF Scenario Card"
         ToolTip = 'Opens the captured configuration history.';
         Image = History;
         RunObject = page "BCSF Run List";
+        RunPageLink = "Scenario Id" = field("Scenario Id");
       }
     }
   }
@@ -188,4 +197,12 @@ page 90131 "BCSF Scenario Card"
     ItemPreview: Text[100];
     MinimumCustomers: Integer;
     MinimumVendors: Integer;
+  trigger OnAfterGetRecord()
+  var
+    Manager: Codeunit "BCSF Scenario Manager";
+  begin
+    DisplayName := Manager.GetDisplayName(Rec);
+  end;
+  var
+    DisplayName: Text;
 }

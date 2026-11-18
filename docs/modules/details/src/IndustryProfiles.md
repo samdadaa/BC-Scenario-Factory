@@ -51,3 +51,8 @@ Der Wizard erfasst beabsichtigten Profilcode und Version, wendet aber kein volls
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/IndustryProfiles/Codeunits/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-037 – Reparaturauftrag 18.11.2026
+
+Optionale Startvorlagen nur über die UI, fixe IDs und bekannte Standardnamen zur sprachabhängigen Anzeige, Entfernt-Vermerke/Archive beim Seed respektiert, Wiederherstellung ausdrücklich bestätigt. Install-/Upgradetrigger schreibfrei. [Aktueller Vertrag](../../../STARTER_TEMPLATES.md), [echte lokale Prüfungen und offene BC-Abnahme](../../../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**.

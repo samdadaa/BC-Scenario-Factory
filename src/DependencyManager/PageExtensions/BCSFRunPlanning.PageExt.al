@@ -17,7 +17,7 @@ pageextension 90208 "BCSF Run Planning" extends "BCSF Run Card"
   }
   actions
   {
-    addlast(Processing)
+    addlast(Diagnostics)
     {
       action(PreviewPlan)
       {

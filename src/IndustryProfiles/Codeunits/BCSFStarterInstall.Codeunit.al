@@ -1,19 +1,12 @@
 namespace BCScenarioFactory.IndustryProfiles;
 
-using BCScenarioFactory.Core;
-using BCScenarioFactory.ScenarioManagement;
-
 codeunit 90156 "BCSF Starter Install"
 {
-    Access = Internal;
-    Subtype = Install;
-    Permissions = tabledata "BCSF Factory Setup" = RIM,
-    tabledata "BCSF Scenario" = RIM,
-    tabledata "BCSF Scenario Module" = RI,
-    tabledata "BCSF Data Target" = RI;
+  Access = Internal;
+  Subtype = Install;
 
-    trigger OnInstallAppPerCompany()
-    begin
-
-    end;
+  trigger OnInstallAppPerCompany()
+  begin
+    // Optional starters are loaded explicitly from the scenario list, never during deployment.
+  end;
 }
