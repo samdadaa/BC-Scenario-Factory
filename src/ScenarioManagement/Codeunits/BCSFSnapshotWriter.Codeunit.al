@@ -89,6 +89,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     Payload.Add('financeMode', Scenario."Finance Mode".AsInteger());
     Payload.Add('financeYear', FinanceYear);
     Payload.Add('financeVersion', FinanceVersion);
+    Payload.Add('partnerSetup', CapturePartners(Scenario));
     ScenarioModule.SetRange("Scenario Id", ScenarioId);
     if ScenarioModule.FindSet() then
       repeat
@@ -135,6 +136,34 @@ codeunit 90144 "BCSF Snapshot Writer"
     Clear(Output);
     Snapshot.Insert(true);
     exit(Header."Run Id");
+  end;
+
+  local procedure CapturePartners(Scenario: Record "BCSF Scenario"): JsonObject
+  var
+    Settings: JsonObject;
+  begin
+    Settings.Add('version', 1);
+    Settings.Add('countryCode', Scenario."Partner Country Code");
+    Settings.Add('customerPostingGroup', Scenario."Customer Posting Group");
+    Settings.Add('vendorPostingGroup', Scenario."Vendor Posting Group");
+    Settings.Add('genBusPostingGroup', Scenario."Gen. Bus. Posting Group");
+    Settings.Add('vatBusPostingGroup', Scenario."VAT Bus. Posting Group");
+    Settings.Add('cashTerms', Scenario."Cash Terms Code");
+    Settings.Add('smallTerms', Scenario."Small Terms Code");
+    Settings.Add('mediumTerms', Scenario."Medium Terms Code");
+    Settings.Add('largeTerms', Scenario."Large Terms Code");
+    Settings.Add('b2cPercent', Scenario."B2C Percent");
+    Settings.Add('smallCreditLimit', Scenario."Small Credit Limit");
+    Settings.Add('mediumCreditLimit', Scenario."Medium Credit Limit");
+    Settings.Add('largeCreditLimit', Scenario."Large Credit Limit");
+    Settings.Add('b2cCreditLimit', Scenario."B2C Credit Limit");
+    OnCapturePartnerSetup(Scenario."Finance Mode", Settings);
+    exit(Settings);
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnCapturePartnerSetup(Mode: Enum "BCSF Finance Mode"; var Settings: JsonObject)
+  begin
   end;
 
   [IntegrationEvent(false, false)]

@@ -25,6 +25,7 @@
 | PageExtension / `.PageExt.al` | `PageExtensions` |
 | Codeunit / `.Codeunit.al` | `Codeunits` |
 | Enum / `.Enum.al` | `Enums` |
+| EnumExtension / `.EnumExt.al` | `EnumExtensions` |
 | PermissionSet / `.PermissionSet.al` | `PermissionSets` |
 | Interface / `.Interface.al` | `Interfaces` |
 | ControlAddIn / `.ControlAddIn.al` | `ControlAddIns` |
@@ -116,3 +117,8 @@ Nach Änderungen deutscher Dashboard-/Monitoringlabels `python3 scripts/build_da
 ## SF-016/SF-017 – 18.11.2026
 
 Validation-Befunde und Finanzpaketidentität sind append-only; feste interne Writer, Ri für Anwender, keine Standardtabellenrechte erhöhen. Pflichtbefunde und optionale WARN-* strikt trennen. Abschluss nur mit vollständigem Summary. Finanz-Kontonummern einschließlich führender Null ausschließlich als Code[20] im Finance-Paket; spätere Generatoren verwenden Paketgruppen statt SKR-Konstanten. Bestehende Vierer-Einrückung im Finance-Paketmanager erhalten, kein Formatierungsrefactoring. [Vertrag](VALIDATION_FINANCE.md).
+
+
+## SF-018 – 18.11.2026
+
+Echte Generatorbindungen per EnumExtension im jeweiligen Fachmodul; gemeinsame Registry importiert keine konkrete Implementierung. Snapshot-Partnervertrag separat mit Version 1, vorhandenen Seed-/Katalogvertrag nicht umdefinieren. Standardnummern über No. Series API und Standard-Validate/Insert(true); Contact-Text vor Insert wie im [Partnervertrag](PARTNER_GENERATION.md) begründet zuweisen. Kein eigener Generatorcommit und kein fachlicher Resume bei unsicherer Arbeit. Standardkontakte sind abgeleitete Nebenwirkungen, primäre Ergebniszähler bleiben Customer/Vendor.

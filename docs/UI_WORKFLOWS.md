@@ -55,3 +55,8 @@ Nach separat freizugebender Installation Profil BC Scenario Factory wählen → 
 Die Laufübersicht zeigt die gespeicherte Qualität; deren Drilldown öffnet rungefilterte Befunde mit Pflichtkennzeichen und Soll-/Istzahlen. Ohne Summary „Nicht validiert“. Pflichtfehler verhindern Completed, Warnungen bleiben sichtbar.
 
 Factory-Einrichtung → „Finanzeinrichtung prüfen“ → Modus auswählen → Vorschau → ausschließlich bei freier Vorschau „Testpaket anwenden“ bestätigen. Im Szenario oder im Wizard-Schritt 4 denselben Finanzmodus wählen; erfasster Modus/Jahr/Version auf der Laufkarte lesbar. Apply erzeugt keine Firma/Belege/Jobs. [Bedienvertrag und Standardbuchungs-Abnahme](VALIDATION_FINANCE.md).
+
+
+## SF-018 – 18.11.2026
+
+Szenariokarte bzw. Wizard-Schritt 3 → „Synthetische Partner“: vorhandenes Land, bei Existing explizite Buchungsgruppen, Zahlungsbedingungen je Klasse/B2C, B2C-Prozent und Kreditlimits auswählen. SKR-Testpakete verwenden ihre Paketgruppen und unterstützen in diesem Vertrag DE. Danach neuer Snapshot, neuer Plan, Einrichtungsvorprüfung und vorhandene explizite Queuefreigabe. Alte blockierte Pläne werden nicht verändert. Reine Kunden-/Lieferantenläufe haben nun echte Implementierungen; weitere Fachziele können weiterhin blockiert sein. [Bedienung, Standardkontakte und offene Abnahme](PARTNER_GENERATION.md).

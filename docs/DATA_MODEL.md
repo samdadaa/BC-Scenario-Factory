@@ -43,3 +43,8 @@ SF-010 implementiert stateless Integer-/Datumswerte und synthetische Firmen-/Per
 SF-011: Herkunft mit Run/Step/logischem Integer-Schlüssel/Artefaktcode, Batch, eingefrorenem Generator, Tabelle/SystemId, ursprünglichem RecordId und Eltern-Eintrags-GUID implementiert. Eindeutige SQL-Schlüssel verhindern widersprüchliche logische und physische Zuordnungen; Standarddaten werden nur referenziert, niemals generisch erstellt. SF-012 bestätigt Batchzählwerte erst nach vollständiger Herkunftsabdeckung und erfolgreicher Generator-Outputvalidierung. Fachliche Postenbeziehungen und globale Qualitätsprüfung bleiben generatorspezifisch bzw. SF-016. [EXECUTION_REGISTRY.md](EXECUTION_REGISTRY.md).
 
 SF-013: versionierte, immutable technische Checkpoints ergänzen die Herkunft. Sie binden Run/Batch/Generator, Sprache, Ergebnisflags und Zähler; keine Namen/Adressen/Beträge oder frei kopierte Ergebnis-JSON. Wiederaufnahme prüft alle Ergebnis-SystemIds und Generator-Output erneut. Ein alter Primärschlüssel, fehlende Registry oder abgelaufene Zeit ersetzt keinen Nachweis. [RECOVERY.md](RECOVERY.md).
+
+
+## SF-018 – 18.11.2026
+
+Optionaler Snapshotuntervertrag partnerSetup Version 1 hält Land, explizite bzw. paketgebundene Gruppen, erfasste Kontenzuordnungen, Nummernserien, Zahlungsbedingungen/-formeln, CRM-Beziehungs-/Kontaktseriencodes, Privatkundenanteil und Kreditlimits. Vorhandene Schema-1-Snapshots und syntheticRules unverändert lesbar; neue Generatoren verlangen diese zusätzlichen Angaben. Führende Ergebnisse sind Standard Customer/Vendor plus Herkunftsrolle CUSTOMER/VENDOR und SystemId; Standardkontaktnebenwirkungen sind keine zusätzlichen primären Mengeneinheiten. [Vertrag](PARTNER_GENERATION.md).

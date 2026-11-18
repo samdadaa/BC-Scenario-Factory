@@ -93,6 +93,10 @@ codeunit 90143 "BCSF Scenario Policy"
       Error(ModeErr);
     if not (Scenario."Finance Mode" in ["BCSF Finance Mode"::Existing, "BCSF Finance Mode"::SKR03, "BCSF Finance Mode"::SKR04]) then
       Error(ModeErr);
+    if (Scenario."B2C Percent" < 0) or (Scenario."B2C Percent" > 100) or
+      (Scenario."Small Credit Limit" < 0) or (Scenario."Medium Credit Limit" < 0) or
+      (Scenario."Large Credit Limit" < 0) or (Scenario."B2C Credit Limit" < 0) then
+      Error(PartnerRulesErr);
     LanguageManagement.ResolveDataLanguage(Scenario."Data Language");
     if (Scenario."Starting Date" = 0D) or (Scenario."Ending Date" < Scenario."Starting Date") then
       Error(DateErr);
@@ -241,6 +245,7 @@ codeunit 90143 "BCSF Scenario Policy"
   end;
 
   var
+    PartnerRulesErr: Label 'Use a consumer percentage from 0 to 100 and nonnegative customer credit limits.';
     EntityErr: Label 'Select a supported entity.';
     IdentityErr: Label 'Create the scenario with a new, nonempty identity.';
     ModeErr: Label 'Select a supported process and usage mode.';

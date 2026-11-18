@@ -289,3 +289,16 @@ Monitoring referenziert zusätzlich die vorhandenen UI-/Lesetypen aus ModuleRegi
 | Validation | 90328 | page | `BCSF Validation Results` | `src/Validation/Pages/BCSFValidationResults.Page.al` | SF-016 |
 
 Validation → Lifecycle für den bestehenden Sandbox-/Firmen-Guard. BackgroundProcessing → Validation einschließlich Pflichtsubscriber OnCheckResult; keine Rückreferenz im Validation-Modul. Finance → ScenarioManagement/SetupManager/Lifecycle wie vorgesehen; Core-Permission-Set bleibt deklarative Ausnahme. Keine neuen Runtime-/App-Dependencies. [Vertrag](VALIDATION_FINANCE.md).
+
+
+## SF-018 – Partnergeneratoren, 18.11.2026
+
+121 AL-Dateien in 14 Modulen, davon 118 numerische IDs sowie Interface/ControlAddIn/Profil. Vorhandene Planreservierungen 90425 und 90450 implementiert; drei zusätzliche freie Werte im eigenen Modulblock ergänzt:
+
+| Modul | ID | Typ | Objekt | Datei | Ticket |
+| --- | --- | --- | --- | --- | --- |
+| DataGeneration | 90256 | Codeunit | `BCSF Partner Rules` | `src/DataGeneration/Codeunits/BCSFPartnerRules.Codeunit.al` | SF-018 |
+| Sales | 90427 | EnumExtension | `BCSF Customer Binding` | `src/Sales/EnumExtensions/BCSFCustomerBinding.EnumExt.al` | SF-018 |
+| Purchasing | 90452 | EnumExtension | `BCSF Vendor Binding` | `src/Purchasing/EnumExtensions/BCSFVendorBinding.EnumExt.al` | SF-018 |
+
+EnumExtensions binden Werte 90425/90450 des bestehenden Generator-Type-Enums. Keine Änderung vorhandener Enumwerte oder zentralen Registry-Imports auf Fachmodule. DataGeneration bleibt ohne Lifecycle-/BackgroundProcessing-Import: verpflichtender BackgroundProcessing-Subscriber am Partner-Batchereignis führt die bestehenden Environment-/Besitzprüfungen aus. Finance erfasst Paketgruppen und Standard-Setupfingerprints über ein enges neues Snapshotereignis. SetupManager nutzt seine bereits erlaubte Registry-Abhängigkeit für konkrete Partner-Prerequisites. Keine neue gerichtete Geschäftsmodul-Abhängigkeit und keine app.json-Dependency. [Vertrag](PARTNER_GENERATION.md).

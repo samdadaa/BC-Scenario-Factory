@@ -8,6 +8,8 @@ using BCScenarioFactory.IndustryProfiles;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.Monitoring;
+using BCScenarioFactory.Purchasing;
+using BCScenarioFactory.Sales;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.SetupManager;
 using BCScenarioFactory.Validation;
@@ -122,5 +124,8 @@ permissionset 90105 "BCSF ADMIN"
     table "BCSF Finance Package" = X,
     codeunit "BCSF Finance Package Mgt" = X,
     page "BCSF Finance Selection" = X,
-    page "BCSF Finance Preview" = X;
+    page "BCSF Finance Preview" = X,
+    codeunit "BCSF Partner Rules" = X,
+    codeunit "BCSF Customer Generator" = X,
+    codeunit "BCSF Vendor Generator" = X;
 }

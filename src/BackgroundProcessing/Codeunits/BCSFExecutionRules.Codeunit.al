@@ -7,6 +7,7 @@ using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.Validation;
 using System.Environment;
+using System.Threading;
 
 codeunit 90306 "BCSF Execution Rules"
 {
@@ -51,6 +52,54 @@ codeunit 90306 "BCSF Execution Rules"
       until Entry.Next() = 0;
     if (Units <> Batch."Last Key" - Batch."First Key" + 1) or (Batch."Processed Units" <> Units) then
       Error(CoverageErr);
+  end;
+
+  [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Partner Rules", 'OnCheckExecutingBatch', '', false, false)]
+  local procedure CheckPartnerWorker(RunId: Guid; BatchId: Guid; NodeCode: Code[30]; Batch: JsonObject)
+  var
+    StoredBatch: Record "BCSF Batch";
+    Header: Record "BCSF Run Header";
+    Step: Record "BCSF Run Step";
+    Job: Record "Job Queue Entry";
+    Execution: Record "BCSF Run Execution";
+    Active: Record "Active Session";
+    Contract: Codeunit "BCSF Contract JSON";
+    Guard: Codeunit "BCSF Environment Guard";
+  begin
+    CheckEnvironment(RunId, CompanyName());
+    if GuiAllowed() then
+      Error(StateErr);
+    StoredBatch.LockTable();
+    StoredBatch.Get(BatchId);
+    StoredBatch.TestField("Run Id", RunId);
+    StoredBatch.TestField("Node Code", NodeCode);
+    StoredBatch.TestField(Status, StoredBatch.Status::Running);
+    Header.Get(RunId);
+    Step.Get(RunId, NodeCode);
+    Guard.EnsureCanGenerate(Header."Company Name", "BCSF Process Mode"::SetupAndMasterData,
+      Step."Work Units", StoredBatch."Last Key" - StoredBatch."First Key" + 1, false);
+    StoredBatch.TestField("Batch Key", Contract.GetText(Batch, 'batchKey'));
+    StoredBatch.TestField("First Key", Contract.GetInteger(Batch, 'firstKey'));
+    StoredBatch.TestField("Last Key", Contract.GetInteger(Batch, 'lastKey'));
+    StoredBatch.TestField("Worker Session Id", SessionId());
+    StoredBatch.TestField("Worker Server Id", ServiceInstanceId());
+    Execution.Get(RunId);
+    Execution.TestField(Status, Execution.Status::Running);
+    Execution.TestField("Job Queue Entry Id", StoredBatch."Job Queue Entry Id");
+    Job.Get(StoredBatch."Job Queue Entry Id");
+    Job.TestField(Status, Job.Status::"In Process");
+    Job.TestField("Object Type to Run", Job."Object Type to Run"::Codeunit);
+    Job.TestField("Object ID to Run", Codeunit::"BCSF Batch Worker");
+    Job.TestField("Job Queue Category Code", 'BCSF.SER');
+    Job.TestField("Recurring Job", false);
+    Job.TestField("Maximum No. of Attempts to Run", 0);
+    if Job."Record ID to Process" <> StoredBatch.RecordId() then
+      Error(StateErr);
+    Active.SecurityFiltering(SecurityFilter::Disallowed);
+    Active.SetRange("Server Instance ID", ServiceInstanceId());
+    Active.SetRange("Session ID", SessionId());
+    Active.FindFirst();
+    StoredBatch.TestField("Worker Session Guid", Active."Session Unique ID");
   end;
 
   [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Record Registry", 'OnCheckBatch', '', false, false)]

@@ -1,6 +1,12 @@
 namespace BCScenarioFactory.ScenarioManagement;
 
 using BCScenarioFactory.Core;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Finance.VAT.Setup;
+using Microsoft.Foundation.Address;
+using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Purchases.Vendor;
+using Microsoft.Sales.Customer;
 
 table 90125 "BCSF Scenario"
 {
@@ -77,6 +83,100 @@ table 90125 "BCSF Scenario"
     {
       Caption = 'Finance Setup';
       ToolTip = 'Specifies which finance setup the scenario expects. A test package must already be applied in this company.';
+    }
+    field(14; "Partner Country Code"; Code[10])
+    {
+      Caption = 'Partner Country/Region';
+      ToolTip = 'Specifies the existing country code for synthetic partner addresses.';
+      TableRelation = "Country/Region";
+    }
+    field(15; "Customer Posting Group"; Code[20])
+    {
+      Caption = 'Customer Posting Group';
+      ToolTip = 'Specifies the exact existing customer posting group. Test packages supply their own group.';
+      TableRelation = "Customer Posting Group";
+    }
+    field(16; "Vendor Posting Group"; Code[20])
+    {
+      Caption = 'Vendor Posting Group';
+      ToolTip = 'Specifies the exact existing vendor posting group. Test packages supply their own group.';
+      TableRelation = "Vendor Posting Group";
+    }
+    field(17; "Gen. Bus. Posting Group"; Code[20])
+    {
+      Caption = 'General Business Posting Group';
+      ToolTip = 'Specifies the exact existing general business posting group. Test packages supply their own group.';
+      TableRelation = "Gen. Business Posting Group";
+    }
+    field(18; "VAT Bus. Posting Group"; Code[20])
+    {
+      Caption = 'VAT Business Posting Group';
+      ToolTip = 'Specifies the exact existing VAT business posting group. Test packages supply their own group.';
+      TableRelation = "VAT Business Posting Group";
+    }
+    field(19; "Cash Terms Code"; Code[10])
+    {
+      Caption = 'B2C Payment Terms';
+      ToolTip = 'Specifies existing terms due immediately without a payment discount for synthetic consumer customers.';
+      TableRelation = "Payment Terms";
+    }
+    field(20; "Small Terms Code"; Code[10])
+    {
+      Caption = 'Small Partner Payment Terms';
+      ToolTip = 'Specifies existing payment terms for the small synthetic partner class.';
+      TableRelation = "Payment Terms";
+    }
+    field(21; "Medium Terms Code"; Code[10])
+    {
+      Caption = 'Medium Partner Payment Terms';
+      ToolTip = 'Specifies existing payment terms for the medium synthetic partner class.';
+      TableRelation = "Payment Terms";
+    }
+    field(22; "Large Terms Code"; Code[10])
+    {
+      Caption = 'Large Partner Payment Terms';
+      ToolTip = 'Specifies existing payment terms for the large synthetic partner class.';
+      TableRelation = "Payment Terms";
+    }
+    field(23; "B2C Percent"; Integer)
+    {
+      Caption = 'Consumer Customer Percentage';
+      ToolTip = 'Specifies the synthetic consumer share as a sampling probability, not an exact quota.';
+      InitValue = 15;
+      MinValue = 0;
+      MaxValue = 100;
+    }
+    field(24; "Small Credit Limit"; Decimal)
+    {
+      Caption = 'Small Customer Credit Limit';
+      ToolTip = 'Specifies the credit limit in local currency for small business customers. Zero means no credit limit.';
+      InitValue = 1000;
+      MinValue = 0;
+      DecimalPlaces = 0 : 2;
+    }
+    field(25; "Medium Credit Limit"; Decimal)
+    {
+      Caption = 'Medium Customer Credit Limit';
+      ToolTip = 'Specifies the credit limit in local currency for medium business customers. Zero means no credit limit.';
+      InitValue = 10000;
+      MinValue = 0;
+      DecimalPlaces = 0 : 2;
+    }
+    field(26; "Large Credit Limit"; Decimal)
+    {
+      Caption = 'Large Customer Credit Limit';
+      ToolTip = 'Specifies the credit limit in local currency for large business customers. Zero means no credit limit.';
+      InitValue = 100000;
+      MinValue = 0;
+      DecimalPlaces = 0 : 2;
+    }
+    field(27; "B2C Credit Limit"; Decimal)
+    {
+      Caption = 'Consumer Customer Credit Limit';
+      ToolTip = 'Specifies the consumer credit limit in local currency. Zero means no credit limit and does not enforce advance payment.';
+      InitValue = 0;
+      MinValue = 0;
+      DecimalPlaces = 0 : 2;
     }
   }
 

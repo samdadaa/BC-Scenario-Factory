@@ -90,3 +90,8 @@ Vorhandene AL-Objekte liegen unter `src/ScenarioManagement/Codeunits/`, `src/Sce
 ## SF-016/SF-017 – 18.11.2026
 
 Finanzmodus in Vorlage/Wizard; unbekannte Enumwerte gesperrt. Snapshot übernimmt Modus/Jahr/Version über bestehendes Finance-Capture-Ereignis. Historische Snapshots unverändert. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.
+
+
+## SF-018 – 18.11.2026
+
+Vierzehn zusätzliche optionale Partnerfelder auf bestehender Vorlage, sichtbar auf Karte/Wizard; DB-Policy prüft B2C-/Limitgrenzen, bestehende Sicherheits-/Revisionsevents gelten unverändert. Neues optionales partnerSetup-Objekt im Snapshot Schema 1. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.

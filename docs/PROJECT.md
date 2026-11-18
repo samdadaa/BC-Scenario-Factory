@@ -123,3 +123,8 @@ Eigener höhenbegrenzter Scrollbereich und aus dem vorhandenen deutschen XLIFF-M
 116 vorhandene AL-Dateien in zwölf Modulen, davon 113 numerische IDs und Interface/ControlAddIn/Profil. Core 14, ScenarioManagement 22, IndustryProfiles 1, ModuleRegistry 10, DependencyManager 9, SetupManager 4, DataGeneration 6, BackgroundProcessing 17, Validation 4, Monitoring 18, Lifecycle 4, Finance 7. Zwölf Module ohne AL-Code. Der Ausgangscode enthielt bereits die zwölf zusätzlichen Objekte; deren Sicherheits-/Qualitätslücken und Analyzerbefunde wurden im aktuellen Auftrag bearbeitet, ohne Objektverschiebung oder neue IDs.
 
 Pflichtabschluss, append-only Befunde und versionierte SKR03-/SKR04-Testeinrichtung einschließlich Standard-Finanzberichten implementiert. Manifest/Launch/AGENTS unverändert; Runtime 17, Dependencies []. Lokaler strenger Build und Übersetzungs-/Dashboardprüfung ersetzen keine Sandbox-/Buchungsabnahme. [Vertrag und BC-Prüfplan](VALIDATION_FINANCE.md). **Zur Prüfung**.
+
+
+## Aktueller Bestand SF-018 – 18.11.2026
+
+121 AL-Dateien in 14 Modulen: neu zwei Sales-, zwei Purchasing-Objekte und eine gemeinsame DataGeneration-Codeunit (dort jetzt 7). 118 eindeutige numerische IDs; zehn Module ohne AL-Code. Echte Customer-/Vendor-Mastergeneratoren samt konkreter Partnerkonfiguration, Snapshotbindung und Queue-/Herkunfts-/Abschlussintegration. Keine Artikel-/Dokument-/Postinggeneratoren ergänzt. Manifest/Launch unverändert, lokale Symbole BC 28.5/DE, Runtime 17. [Vertrag und offene BC-Abnahme](PARTNER_GENERATION.md). **Zur Prüfung**.

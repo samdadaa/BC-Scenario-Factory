@@ -60,3 +60,8 @@ Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Si
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/ModuleRegistry/Codeunits/`, `src/ModuleRegistry/Enums/`, `src/ModuleRegistry/Interfaces/`, `src/ModuleRegistry/Pages/`, `src/ModuleRegistry/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-018 – 18.11.2026
+
+Katalog enthält über neue Fachmodul-EnumExtensions zusätzlich zwei echte Partnergeneratoren. Zentrale Registry und beide lesenden Vertragsproben unverändert; keine Rückimports auf Sales/Purchasing. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.

@@ -57,3 +57,8 @@ Vorhandene AL-Objekte liegen unter `src/BackgroundProcessing/Codeunits/`, `src/B
 ## SF-016/SF-017 – 18.11.2026
 
 Vorhandene Codeunit 90317 Run Quality: aktuelle Pflichtprüfungen, optionale Warnungen und abgeschlossene Summary im vorhandenen Dispatcher-/Recovery-Abschluss. Endstatus nur gemäß Summary. Keine neue Queue-/Retryfreigabe. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.
+
+
+## SF-018 – 18.11.2026
+
+Zusätzlicher Pflichtsubscriber am Partner-Batchereignis prüft tatsächliche Sandbox/Firma, Generationserlaubnis, gespeicherte Batchbereiche, Standardjob, Worker-/Server-ID und Session-GUID. Kein neuer Commit oder Replayvertrag. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.

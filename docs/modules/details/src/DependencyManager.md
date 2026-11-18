@@ -59,3 +59,8 @@ Verantwortung, Datenfluss, temporäre/persistente Tabellen, Versionierung und Si
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/DependencyManager/Codeunits/`, `src/DependencyManager/PageExtensions/`, `src/DependencyManager/Pages/`, `src/DependencyManager/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-018 – 18.11.2026
+
+Für reine Customer-/Vendor-Ziele kein künstlich ungelöster FINANCE.SETUP-Knoten; konkrete Generator-Prerequisites bleiben erforderlich. Gemischte/Artikel-/Dokument-/Stockpläne behalten externe Gates. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.

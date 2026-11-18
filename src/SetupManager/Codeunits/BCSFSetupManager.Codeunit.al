@@ -2,6 +2,7 @@ namespace BCScenarioFactory.SetupManager;
 
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DependencyManager;
+using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.ScenarioManagement;
 using Microsoft.Finance.Dimension;
 using Microsoft.Finance.GeneralLedger.Setup;
@@ -36,6 +37,7 @@ codeunit 90226 "BCSF Setup Manager"
     NeedPurchases: Boolean;
     NeedItems: Boolean;
     Posting: Boolean;
+    PartnersOnly: Boolean;
   begin
     TempDiff.Reset();
     TempDiff.DeleteAll();
@@ -44,9 +46,11 @@ codeunit 90226 "BCSF Setup Manager"
     if Header."Company Name" <> CompanyName() then
       Error(CompanyErr);
     Manager.LoadFrozenTargets(RunId, TempTargets);
+    PartnersOnly := true;
     TempTargets.SetFilter(Quantity, '>0');
     if TempTargets.FindSet() then
       repeat
+        PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]);
         NeedSales := NeedSales or (TempTargets.Module = "BCSF Module Type"::Sales);
         NeedPurchases := NeedPurchases or (TempTargets.Module = "BCSF Module Type"::Purchasing);
         NeedItems := NeedItems or (TempTargets.Entity = "BCSF Entity Type"::Item) or
@@ -90,7 +94,7 @@ codeunit 90226 "BCSF Setup Manager"
           if InventorySetup."Location Mandatory" then
             CheckTable(Database::Location, false, TempDiff);
     end;
-    if NeedSales or NeedPurchases or NeedItems then begin
+    if (NeedSales or NeedPurchases or NeedItems) and not PartnersOnly then begin
       CheckTable(Database::"General Posting Setup", false, TempDiff);
       CheckTable(Database::"VAT Posting Setup", false, TempDiff);
     end;
@@ -99,8 +103,47 @@ codeunit 90226 "BCSF Setup Manager"
     OnInspectFinance(NeedSales, NeedPurchases, TempDiff);
     OnInspectFinancePackage(Context, Header."Starting Date", TempDiff);
     // Presence is never evidence that a particular generator's posting combination is valid.
-    AddFinding(TempDiff, BindingLbl, true, BindingFindingLbl, BindingActionLbl);
+    if not PartnersOnly or not CheckPartnerBindings(Context, TempTargets, TempDiff) then
+      AddFinding(TempDiff, BindingLbl, true, BindingFindingLbl, BindingActionLbl);
     exit(not HasBlockers(TempDiff));
+  end;
+
+  local procedure CheckPartnerBindings(Context: JsonObject; var TempTargets: Record "BCSF Data Target" temporary; var TempDiff: Record "BCSF Setup Diff" temporary): Boolean
+  var
+    TempCapability: Record "BCSF Generator Registry" temporary;
+    Registry: Codeunit "BCSF Generator Registry Mgt";
+    Policy: Codeunit "BCSF Scenario Policy";
+    Contract: Codeunit "BCSF Contract JSON";
+    Generator: Interface "BCSF Generator";
+    Target: JsonObject;
+    Findings: JsonArray;
+    Token: JsonToken;
+    Valid: Boolean;
+  begin
+    Valid := true;
+    TempTargets.Reset();
+    TempTargets.SetFilter(Quantity, '>0');
+    if TempTargets.IsEmpty() then
+      exit(false);
+    if TempTargets.FindSet() then
+      repeat
+        if not Registry.SelectForTarget(Policy.GetEntityCode(TempTargets.Entity), TempTargets."Process Mode", false, TempCapability) then
+          exit(false);
+        if not (TempCapability."Generator Code" in ['CUSTOMER', 'VENDOR']) then
+          exit(false);
+        Clear(Target);
+        Target.Add('entityCode', Policy.GetEntityCode(TempTargets.Entity));
+        Target.Add('moduleCode', Policy.GetModuleCode(TempTargets.Module));
+        Target.Add('quantity', TempTargets.Quantity);
+        Target.Add('processMode', TempTargets."Process Mode".AsInteger());
+        Generator := Registry.Resolve(TempCapability."Generator Code", TempCapability."Entity Code", TempCapability);
+        Generator.CheckPrerequisites(Contract.Clone(Context), Target, Findings);
+        foreach Token in Findings do begin
+          AddFinding(TempDiff, TempCapability.Name, true, Contract.GetText(Token.AsObject(), 'message'), BindingActionLbl);
+          Valid := false;
+        end;
+      until TempTargets.Next() = 0;
+    exit(Valid);
   end;
 
   [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Plan Writer", 'OnBeforeRunStart', '', false, false)]

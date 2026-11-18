@@ -4,6 +4,7 @@ using BCScenarioFactory.Core;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.SetupManager;
+using Microsoft.CRM.Setup;
 using Microsoft.Finance.FinancialReports;
 using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Finance.GeneralLedger.Journal;
@@ -779,6 +780,79 @@ codeunit 90400 "BCSF Finance Package Mgt"
             SetupManager.AddFinding(TempDiff, Requirement, false, ReuseLbl, NoChangeLbl)
         else
             SetupManager.AddFinding(TempDiff, Requirement, true, MissingFoundationLbl, ResolveLbl);
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Snapshot Writer", 'OnCapturePartnerSetup', '', false, false)]
+    local procedure CapturePartnerSetup(Mode: Enum "BCSF Finance Mode"; var Settings: JsonObject)
+    var
+        Sales: Record "Sales & Receivables Setup";
+        Purchases: Record "Purchases & Payables Setup";
+        Marketing: Record "Marketing Setup";
+        GroupCode: Code[20];
+    begin
+        Sales.SecurityFiltering(SecurityFilter::Disallowed);
+        Purchases.SecurityFiltering(SecurityFilter::Disallowed);
+        Marketing.SecurityFiltering(SecurityFilter::Disallowed);
+        if Marketing.ReadPermission() then
+            if Marketing.Get() then begin
+                Settings.Add('customerContactRelation', Marketing."Bus. Rel. Code for Customers");
+                Settings.Add('vendorContactRelation', Marketing."Bus. Rel. Code for Vendors");
+                Settings.Add('contactNoSeries', Marketing."Contact Nos.");
+            end;
+        if Sales.ReadPermission() then
+            if Sales.Get() then
+                Settings.Add('customerNoSeries', Sales."Customer Nos.");
+        if Purchases.ReadPermission() then
+            if Purchases.Get() then
+                Settings.Add('vendorNoSeries', Purchases."Vendor Nos.");
+        if Mode <> Mode::Existing then begin
+            GroupCode := GetTestPostingGroup(Mode);
+            Settings.Replace('customerPostingGroup', GroupCode);
+            Settings.Replace('vendorPostingGroup', GroupCode);
+            Settings.Replace('genBusPostingGroup', GroupCode);
+            Settings.Replace('vatBusPostingGroup', GroupCode);
+        end;
+        FreezePartnerAccount(Settings, true);
+        FreezePartnerAccount(Settings, false);
+        FreezePartnerTerms(Settings, 'cashTerms');
+        FreezePartnerTerms(Settings, 'smallTerms');
+        FreezePartnerTerms(Settings, 'mediumTerms');
+        FreezePartnerTerms(Settings, 'largeTerms');
+    end;
+
+    local procedure FreezePartnerAccount(var Settings: JsonObject; Customer: Boolean)
+    var
+        CustomerPostingGroup: Record "Customer Posting Group";
+        VendorPostingGroup: Record "Vendor Posting Group";
+        Contract: Codeunit "BCSF Contract JSON";
+        GroupCode: Code[20];
+    begin
+        CustomerPostingGroup.SecurityFiltering(SecurityFilter::Disallowed);
+        VendorPostingGroup.SecurityFiltering(SecurityFilter::Disallowed);
+        if Customer then begin
+            GroupCode := CopyStr(Contract.GetText(Settings, 'customerPostingGroup'), 1, MaxStrLen(GroupCode));
+            if (GroupCode <> '') and CustomerPostingGroup.ReadPermission() then
+                if CustomerPostingGroup.Get(GroupCode) then
+                    Settings.Add('customerAccountNo', CustomerPostingGroup."Receivables Account");
+        end else begin
+            GroupCode := CopyStr(Contract.GetText(Settings, 'vendorPostingGroup'), 1, MaxStrLen(GroupCode));
+            if (GroupCode <> '') and VendorPostingGroup.ReadPermission() then
+                if VendorPostingGroup.Get(GroupCode) then
+                    Settings.Add('vendorAccountNo', VendorPostingGroup."Payables Account");
+        end;
+    end;
+
+    local procedure FreezePartnerTerms(var Settings: JsonObject; FieldName: Text)
+    var
+        Terms: Record "Payment Terms";
+        Contract: Codeunit "BCSF Contract JSON";
+        TermsCode: Code[10];
+    begin
+        TermsCode := CopyStr(Contract.GetText(Settings, FieldName), 1, MaxStrLen(TermsCode));
+        Terms.SecurityFiltering(SecurityFilter::Disallowed);
+        if (TermsCode <> '') and Terms.ReadPermission() then
+            if Terms.Get(TermsCode) then
+                Settings.Add(FieldName + 'Formula', Format(Terms."Due Date Calculation", 0, 9));
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Snapshot Writer", 'OnCaptureFinancePackage', '', false, false)]

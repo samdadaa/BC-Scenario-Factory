@@ -117,3 +117,10 @@ Der Nutzer verlangt ausdrücklich JavaScript-ControlAddIn statt ausschließlich 
 Beide Tickets ausdrücklich gemeinsam beauftragt; keine Vorziehung SF-018–SF-022. Vorhandene und noch nicht dokumentierte Implementierungsansätze werden vervollständigt. Qualitätsbefunde immutable mit Pflichtsummary; Generator-ValidateOutput erneut am Runabschluss. Konkrete Partner-/Sachpostenbeziehungen statt bloßer Tabellenanwesenheit für Rechnungen/Gutschriften.
 
 Finanzpakete sind begrenzte SKR03-/SKR04-Testkontenpläne 2026/1.0.0 mit eigenständiger Rollen-/Berichtsanordnung; Inland 19 %, keine vollständigen DATEV-Rahmen oder gesetzliche Abschlüsse. Apply explizit, commitfrei, ohne vorhandene Datensätze zu ändern. Firmeninitialisierung und Grundlagen bleiben BC-Standardaufgabe, keine Umsetzung einer automatischen Leerfirmenanlage. Die tatsächliche fachliche Buchungs-/Berichtsabnahme je Paket bleibt **Zu prüfen**, nicht durch einen leeren Bericht oder lokalen Build ersetzbar. [Vertrag und erwartete Beispielbeträge](VALIDATION_FINANCE.md).
+
+
+## SF-018 – Implementierungsentscheidungen zur Prüfung, 18.11.2026
+
+Nur SF-018 beauftragt. Echte Implementierungen registrieren sich per EnumExtensions in ihren Fachmodulen. Partnerparameter/Snapshotuntervertrag Version 1 statt Änderung historischer Seedregeln. Explizite Gruppenwahl bei Existing, Paketgruppen bei SKR-Modus; Standardkonten bleiben ausschließlich im Finanzpaket. Vier fiktive Regionen, konfigurierbare Privatkundenwahrscheinlichkeit, klassenspezifische Bedingungen/Limits und Lieferantenprioritäten sind technische Demonstrationsregeln, kein bestätigtes Branchenprofil. Null-Kreditlimit bedeutet im BC-Standard unbegrenzt.
+
+Ein explizit geclaimter Queuebatch mit unverändertem Snapshot ist der einzige neue Mutationspfad; kein fachliches Resume oder fremde Standardrechte. Reine Partnerläufe dürfen konkrete Prerequisites statt pauschaler zukünftiger Gates verwenden; SF-019–SF-022 bleiben offen. Standardkontaktnebenwirkungen werden geprüft und dokumentiert, nicht durch Triggerumgehung unterdrückt. [Vertrag](PARTNER_GENERATION.md). Tatsächliche BC-/CRM-/Parallelitätsabnahme bleibt **Zu prüfen**.

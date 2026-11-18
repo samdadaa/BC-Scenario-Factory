@@ -1,6 +1,6 @@
 # Modulindex – Zielarchitektur
 
-**Aktueller Bestand SF-016/SF-017, 18.11.2026:** 116 AL-Dateien in zwölf Modulen; zwölf Module ohne AL-Code. Qualitätsabschluss und SKR03-/SKR04-Testpakete zur Prüfung; keine echten Fachgeneratoren oder BC-Laufzeitabnahme. [Vertrag](../VALIDATION_FINANCE.md).
+**Aktueller Bestand SF-018, 18.11.2026:** 121 AL-Dateien in 14 Modulen; zehn Module ohne AL-Code. Zwei echte Partnerstammdatengeneratoren, Qualitätsabschluss und Finanztestpakete zur Prüfung; BC-Laufzeitabnahme weiterhin offen. [Partnervertrag](../PARTNER_GENERATION.md).
 
 | Modul | Kategorie | Ziel | Status |
 | --- | --- | --- | --- |
@@ -10,15 +10,15 @@
 | [ModuleRegistry](details/src/ModuleRegistry.md) | Kern | `src/ModuleRegistry/` | Vertrag/Katalog/Proben: 10 AL-Objekte, zur Prüfung |
 | [DependencyManager](details/src/DependencyManager.md) | Kern | `src/DependencyManager/` | Graph/Plan/Vorschau: 9 AL-Objekte, zur Prüfung |
 | [SetupManager](details/src/SetupManager.md) | Kern | `src/SetupManager/` | 4 AL-Objekte: temporärer Setup-Diff, Manager, Vorschau und Laufkarten-Erweiterung; zur Prüfung. |
-| [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | 6 AL-Objekte: Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. |
+| [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | 7 AL-Objekte: Partnerregeln, Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. |
 | [ProcessEngine](details/src/ProcessEngine.md) | Kern | `src/ProcessEngine/` | Geplant, ohne Code |
 | [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 17 AL-Objekte: Qualitätsabschluss, Ausführung, Queue und begrenzte Recovery mit Checkpoints/Steuerung; zur Prüfung. |
 | [Validation](details/src/Validation.md) | Kern | `src/Validation/` | 4 AL-Objekte: immutable Qualitätsbefunde, Manager, Severity und Ergebnisliste; zur Prüfung |
 | [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | 18 AL-Objekte: JS-Dashboard, Role-Center/Profil, Kennzahlen, Historie und Wizard-Ausführungsintegration, zur Prüfung |
 | [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Teilweise implementiert, 4 AL-Objekte, Zur Prüfung. |
 | [Finance](details/src/Finance.md) | Fach | `src/Finance/` | 7 AL-Objekte: lesender Finanzcheck, versionierter Paketmanager/Paketvermerk, Auswahl/Vorschau und zwei PageExtensions; zur Prüfung. Keine Fachbuchungsgeneratoren. |
-| [Sales](details/src/Sales.md) | Fach | `src/Sales/` | Geplant, ohne Code |
-| [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | Geplant, ohne Code |
+| [Sales](details/src/Sales.md) | Fach | `src/Sales/` | 2 AL-Objekte: echter Customer-Generator und EnumExtension-Bindung; zur Prüfung. Beleggeneratoren geplant. |
+| [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | 2 AL-Objekte: echter Vendor-Generator und EnumExtension-Bindung; zur Prüfung. Beleggeneratoren geplant. |
 | [Inventory](details/src/Inventory.md) | Fach | `src/Inventory/` | Geplant, ohne Code |
 | [Warehouse](details/src/Warehouse.md) | Fach | `src/Warehouse/` | Geplant, ohne Code |
 | [Manufacturing](details/src/Manufacturing.md) | Fach | `src/Manufacturing/` | Geplant, ohne Code |

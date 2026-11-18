@@ -1,6 +1,6 @@
 # Sales – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/Sales/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** MVP / P1.
+**Status:** 2 AL-Objekte für Partnerstammdaten implementiert, zur Prüfung; Beleggeneratoren weiterhin geplant. **Pfad:** `src/Sales/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -36,9 +36,14 @@ Konkrete Standardtabellen, Events und Codeunits in der Zielversion nachprüfen; 
 
 ## Objektplanung SF-002
 
-Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.Sales`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; das Modul bleibt geplant und leer. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
+Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJECT_PLAN.md). Namespace: `BCScenarioFactory.Sales`; Präfix: `BCSF`. Der Plan erzeugt keine AL-Objekte; der aktuelle Stand wird unten ergänzt. Signaturen und Standard-APIs erst im jeweiligen Umsetzungsticket prüfen.
 
 
 ## Ablage – SF-002, 16.11.2026
 
-Weiterhin kein AL-Code; der Modulmarker bleibt erhalten. Typordner entstehen erst mit vorhandenen Objekten. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+Vorhandene Objekte liegen in Codeunits/ und EnumExtensions/; der Modulmarker bleibt erhalten. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-018 – 18.11.2026
+
+90425 Customer Generator und 90427 Customer Binding: synthetische B2B-/B2C-Debitoren, explizite Gruppen, Klassenbedingungen/-kreditlimits, Standard-Validate/Insert und Herkunft/Outputvalidierung. Keine Verkaufsbelege. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.

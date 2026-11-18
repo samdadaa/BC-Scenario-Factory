@@ -59,3 +59,8 @@ Separate Run Execution, unveränderliche Batchbereiche, Dispatcher, Hintergrundw
 ## Begrenzte Recovery SF-013 – 16.11.2026
 
 Pausen-/Abbruchanforderungen sind separat dauerhaft; Anwendung vor Übernahme/nächster Einplanung, ohne laufende Arbeit zu beenden. Checkpoint und erfolgreicher Batchabschluss atomar. Sicherer Retry nur für nie übernommenes Failed ohne Herkunft/Checkpoint, insgesamt höchstens drei Einplanungen. Reconciliation bestätigter Ergebnisse verlangt passenden Checkpoint, tatsächliche Ergebnisidentitäten, Outputvalidierung und nachgewiesenes Ende der eindeutigen Worker-Sitzung. Keine blinde Generator.Resume-/ExecuteBatch-Wiederholung bei NeedsReview. Legacy- und fehlende Nachweise bleiben blockierend. Konkrete Zustände, Transaktionen und Grenzen: [RECOVERY.md](RECOVERY.md).
+
+
+## SF-018 – 18.11.2026
+
+CUSTOMER/VENDOR sind nun echte Generatorbindungen für reine Stammdaten. Vor dem ersten Standardinsert prüfen gemeinsame Partner Rules und verpflichtender BackgroundProcessing-Subscriber die unveränderte Snapshotbindung, konkreten Batch-/Jobbesitz sowie Session-/Server-ID und Session-GUID. Vorhandener Claimcommit/Runner/Checkpoint/Recovery bleiben erhalten; keine neue Commit- oder Retrygrenze. Generator.Resume bleibt gesperrt. Abgeleitete Standardkontakte teilen den Batch, Zähler beziehen sich auf führende Partner. [Vertrag und noch offene Laufzeitfälle](PARTNER_GENERATION.md).

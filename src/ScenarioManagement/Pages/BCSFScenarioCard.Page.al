@@ -40,6 +40,24 @@ page 90131 "BCSF Scenario Card"
         field("Batch Size"; Rec."Batch Size") { }
         field("Finance Mode"; Rec."Finance Mode") { }
       }
+      group(PartnerGeneration)
+      {
+        Caption = 'Synthetic Partners';
+        field("Partner Country Code"; Rec."Partner Country Code") { }
+        field("Customer Posting Group"; Rec."Customer Posting Group") { }
+        field("Vendor Posting Group"; Rec."Vendor Posting Group") { }
+        field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group") { }
+        field("VAT Bus. Posting Group"; Rec."VAT Bus. Posting Group") { }
+        field("Cash Terms Code"; Rec."Cash Terms Code") { }
+        field("Small Terms Code"; Rec."Small Terms Code") { }
+        field("Medium Terms Code"; Rec."Medium Terms Code") { }
+        field("Large Terms Code"; Rec."Large Terms Code") { }
+        field("B2C Percent"; Rec."B2C Percent") { }
+        field("Small Credit Limit"; Rec."Small Credit Limit") { }
+        field("Medium Credit Limit"; Rec."Medium Credit Limit") { }
+        field("Large Credit Limit"; Rec."Large Credit Limit") { }
+        field("B2C Credit Limit"; Rec."B2C Credit Limit") { }
+      }
       group(LanguagePreview)
       {
         Caption = 'Data Language Preview';

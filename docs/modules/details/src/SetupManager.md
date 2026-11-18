@@ -52,3 +52,8 @@ Vorhandene AL-Objekte liegen unter `src/SetupManager/Codeunits/`, `src/SetupMana
 ## SF-016/SF-017 – 18.11.2026
 
 Bestehender Paket-Inspektionsvertrag wird durch Finance implementiert; sämtliche SetupManager-Prüfungen bleiben lesend. Keine Standarddatenmutation durch SF-009. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.
+
+
+## SF-018 – 18.11.2026
+
+Für reine Customer-/Vendor-Ziele konkrete echte Prerequisites und temporäre Detailbefunde statt pauschalem zukünftigen Bindungsblocker. Andere Prozessgates unverändert. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.

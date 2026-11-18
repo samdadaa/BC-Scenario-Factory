@@ -1,6 +1,6 @@
 # BC Scenario Factory
 
-**Status: Grundlagen bis Qualitätsabschluss und Finanztestpaketen (SF-003–SF-017) implementiert, zur Prüfung; Fachgeneratoren und BC-End-to-End-Abnahme ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
+**Status: Grundlagen bis Qualitätsabschluss und Finanztestpaketen (SF-003–SF-017) sowie Partnerstammdaten (SF-018) implementiert, zur Prüfung; weitere Fachgeneratoren und BC-End-to-End-Abnahme ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
 
 ## Zielgruppen und Nutzen
 
@@ -99,3 +99,8 @@ Das Profil **BC Scenario Factory** öffnet das eigene App-Role-Center mit JavaSc
 Pflichtprüfungen gleichen Mengen, Herkunft, Generatorergebnisse sowie registrierte Rechnungen/Gutschriften mit tatsächlichen Posten ab. Nur erfolgreiche Pflichtprüfungen erlauben Completed; optionale Befunde führen zu Warnungen. Befunde sind unveränderlich und in der Laufübersicht erreichbar.
 
 In der Factory-Einrichtung „Finanzeinrichtung prüfen“ öffnen: vorhandene Einrichtung lesend prüfen oder SKR03-/SKR04-Testpaket 2026/1.0.0 nach Vorschau ausdrücklich anwenden. Die Pakete enthalten 14 Konten, Buchungsgruppen/-matrizen und je Bilanz/GuV; keine vollständigen DATEV-Kontenrahmen. Finanzmodus anschließend auf Szenario/Wizard wählen; Jahr und Version werden eingefroren. [Bedienung, Grenzen und Buchungsbeispiel](docs/VALIDATION_FINANCE.md). 116 AL-Dateien und 1.071 Texte lokal geprüft; tatsächliche BC-Buchungs-/Berichtsabnahme offen. **Zur Prüfung**.
+
+
+## Debitoren und Kreditoren (SF-018)
+
+Zwei echte Stammdatengeneratoren verwenden die vorhandene Queue, Seed-Engine und Herkunftsregistry. Synthetische Firmen/Privatkunden, fiktive Regionen, klassenspezifische Zahlungsbedingungen, Kreditlimits und Lieferantenprioritäten sind unterstützt. In der Szenariokarte oder im Wizard unter „Synthetische Partner“ die konkrete Einrichtung wählen, dann neuen Snapshot/Plan erstellen. Reine Debitoren-/Kreditorenläufe werden anhand ihrer tatsächlichen Voraussetzungen geprüft; Artikel-/Beleg-/Buchungsgeneratoren bleiben ausstehend. [Bedienung und Grenzen](docs/PARTNER_GENERATION.md). 121 AL-Dateien, Runtime 17; **Zur Prüfung**, kein bestätigter Sandboxlauf.

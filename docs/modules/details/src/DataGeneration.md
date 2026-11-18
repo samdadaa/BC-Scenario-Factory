@@ -52,3 +52,8 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/DataGeneration/Codeunits/`, `src/DataGeneration/PageExtensions/`, `src/DataGeneration/Pages/`, `src/DataGeneration/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-018 – 18.11.2026
+
+Neue Codeunit 90256 Partner Rules: gemeinsame versionierte Partnerwerte, lesende Setup-/Seedprüfung, Batchplanung und Snapshot-/Ergebnisvertrag. Keine direkte Lifecycle-/BackgroundProcessing-Rückreferenz; Pflichtsubscriber prüft Ausführungsbesitz. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.

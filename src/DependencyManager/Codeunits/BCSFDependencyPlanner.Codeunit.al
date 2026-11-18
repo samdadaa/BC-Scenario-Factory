@@ -22,6 +22,7 @@ codeunit 90201 "BCSF Dependency Planner"
     UnpostedCount: Integer;
     PostedCount: Integer;
     PartialCount: Integer;
+    PartnersOnly: Boolean;
   begin
     Nodes.Reset();
     Nodes.DeleteAll();
@@ -31,9 +32,11 @@ codeunit 90201 "BCSF Dependency Planner"
     Contract.CheckContext(Context);
     Manager.LoadFrozenTargets(RunId, TempTargets);
     Manager.LoadFrozenModules(RunId, TempModules);
+    PartnersOnly := true;
     TempTargets.SetFilter(Quantity, '>0');
     if TempTargets.FindSet() then
       repeat
+        PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]);
         EntityCode := Policy.GetEntityCode(TempTargets.Entity);
         Nodes.Init();
         Nodes."Node Code" := EntityCode;
@@ -49,8 +52,9 @@ codeunit 90201 "BCSF Dependency Planner"
       until TempTargets.Next() = 0;
     if Nodes.IsEmpty() then
       Error(EmptyPlanErr);
-    // Setup is an unresolved external check, never an invented finance generator or setup success.
-    EnsureExternal(Nodes, TempModules, 'FINANCE.SETUP', 'FINANCE', MinimumMode);
+    // Partner-only runs validate exact master setup through their real generators. Other workflows retain the external gate.
+    if not PartnersOnly then
+      EnsureExternal(Nodes, TempModules, 'FINANCE.SETUP', 'FINANCE', MinimumMode);
     TempTargets.Reset();
     TempTargets.SetFilter(Quantity, '>0');
     if TempTargets.FindSet() then
@@ -58,7 +62,8 @@ codeunit 90201 "BCSF Dependency Planner"
         EntityCode := Policy.GetEntityCode(TempTargets.Entity);
         case TempTargets.Entity of
           "BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item:
-            AddEdge(Edges, EntityCode, 'FINANCE.SETUP', "BCSF Dependency Kind"::External);
+            if not PartnersOnly then
+              AddEdge(Edges, EntityCode, 'FINANCE.SETUP', "BCSF Dependency Kind"::External);
           "BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesOrder,
           "BCSF Entity Type"::SalesInvoice, "BCSF Entity Type"::SalesCreditMemo:
             begin

@@ -6430,6 +6430,276 @@
         <note from="Developer" annotates="general" priority="2" />
         <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Validation Severity - EnumValue Warning - Property Caption</note>
       </trans-unit>
+      <trans-unit id="Codeunit 1086369249 - NamedType 1219310954" size-unit="char" translate="yes" xml:space="preserve">
+        <source>The configured standard contact integration requires read and write permissions for contacts and contact business relations.</source>
+        <target state="translated">Die konfigurierte Standard-Kontaktintegration erfordert Lese- und Schreibrechte für Kontakte und Kontakt-Geschäftsbeziehungen.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Rules - NamedType ContactPermissionErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 1086369249 - NamedType 1813582007" size-unit="char" translate="yes" xml:space="preserve">
+        <source>The current SKR test packages support domestic German partners only. Select country code DE or use explicitly configured existing setup.</source>
+        <target state="translated">Die aktuellen SKR-Testpakete unterstützen nur deutsche Inlandspartner. Wählen Sie den Ländercode DE oder ausdrücklich konfigurierte vorhandene Einrichtung.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Rules - NamedType CountryErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 1086369249 - NamedType 3497246601" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Partner generation requires the unchanged captured configuration and its currently owned job-queue batch. Do not replay uncertain work.</source>
+        <target state="translated">Die Partnergenerierung erfordert die unveränderte erfasste Konfiguration und das aktuell übernommene Warteschlangenpaket. Wiederholen Sie keine ungeklärte Arbeit.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Rules - NamedType ExecutionErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 1086369249 - NamedType 3853983852" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Capture a new run with partner settings version 1, existing country and posting groups, usable number series, payment terms and nonnegative credit limits.</source>
+        <target state="translated">Erfassen Sie einen neuen Lauf mit Partnereinstellungen Version 1, vorhandenem Land und Buchungsgruppen, verwendbaren Nummernserien, Zahlungsbedingungen und nicht negativen Kreditlimits.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Rules - NamedType SettingsErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 1086369249 - NamedType 3123911384" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Use a customer or vendor master-data target and valid logical batch ranges.</source>
+        <target state="translated">Verwenden Sie ein Debitoren- oder Kreditorenstammdatenziel und gültige logische Paketbereiche.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Rules - NamedType TargetErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 1086369249 - NamedType 3120193092" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Use payment terms without payment discounts and with a nonnegative due date. Consumer terms must be due immediately.</source>
+        <target state="translated">Verwenden Sie Zahlungsbedingungen ohne Skonto und mit Fälligkeit frühestens am Belegdatum. Privatkundenbedingungen müssen sofort fällig sein.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Rules - NamedType TermsErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 3758100613 - NamedType 1981706351" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Synthetic Vendor Master Data</source>
+        <target state="translated">Synthetische Kreditorenstammdaten</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Vendor Generator - NamedType NameLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 3758100613 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Partner generation requires effective standard read and write permissions for the selected customer or vendor table.</source>
+        <target state="translated">Die Partnergenerierung erfordert wirksame Standard-Lese- und Schreibrechte für die gewählte Debitoren- oder Kreditorentabelle.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Vendor Generator - NamedType PermissionErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 3758100613 - NamedType 612572586" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Partner results are missing, changed or already registered. Review the existing batch and checkpoint; do not recreate uncertain work.</source>
+        <target state="translated">Partnerergebnisse fehlen, wurden geändert oder sind bereits registriert. Prüfen Sie das vorhandene Paket und den Checkpoint; erzeugen Sie ungeklärte Arbeit nicht erneut.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Vendor Generator - NamedType ReplayErr</note>
+      </trans-unit>
+      <trans-unit id="Enum 224228713 - EnumValue 1936001480 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Enum 224228713">
+        <source>Synthetic Vendor Master Data</source>
+        <target state="translated">Synthetische Kreditorenstammdaten</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">EnumExtension BCSF Vendor Binding - EnumValue Vendor - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 3859610237 - NamedType 1981706351" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Synthetic Customer Master Data</source>
+        <target state="translated">Synthetische Debitorenstammdaten</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Customer Generator - NamedType NameLbl</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 3859610237 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Partner generation requires effective standard read and write permissions for the selected customer or vendor table.</source>
+        <target state="translated">Die Partnergenerierung erfordert wirksame Standard-Lese- und Schreibrechte für die gewählte Debitoren- oder Kreditorentabelle.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Customer Generator - NamedType PermissionErr</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 3859610237 - NamedType 612572586" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Partner results are missing, changed or already registered. Review the existing batch and checkpoint; do not recreate uncertain work.</source>
+        <target state="translated">Partnerergebnisse fehlen, wurden geändert oder sind bereits registriert. Prüfen Sie das vorhandene Paket und den Checkpoint; erzeugen Sie ungeklärte Arbeit nicht erneut.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Customer Generator - NamedType ReplayErr</note>
+      </trans-unit>
+      <trans-unit id="Enum 224228713 - EnumValue 1994964448 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Enum 224228713">
+        <source>Synthetic Customer Master Data</source>
+        <target state="translated">Synthetische Debitorenstammdaten</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">EnumExtension BCSF Customer Binding - EnumValue Customer - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 335865685 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the consumer credit limit in local currency. Zero means no credit limit and does not enforce advance payment.</source>
+        <target state="translated">Gibt das Privatkunden-Kreditlimit in Mandantenwährung an. Null bedeutet kein Kreditlimit und erzwingt keine Vorauszahlung.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field B2C Credit Limit - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 335865685 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Consumer Customer Credit Limit</source>
+        <target state="translated">Privatkunden-Kreditlimit</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field B2C Credit Limit - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 1272113508 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the synthetic consumer share as a sampling probability, not an exact quota.</source>
+        <target state="translated">Gibt den synthetischen Privatkundenanteil als Auswahlwahrscheinlichkeit an, nicht als exakte Quote.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field B2C Percent - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 1272113508 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Consumer Customer Percentage</source>
+        <target state="translated">Privatkundenanteil in Prozent</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field B2C Percent - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 24853027 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies existing terms due immediately without a payment discount for synthetic consumer customers.</source>
+        <target state="translated">Gibt vorhandene, sofort fällige Zahlungsbedingungen ohne Skonto für synthetische Privatkunden an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Cash Terms Code - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 24853027 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>B2C Payment Terms</source>
+        <target state="translated">Privatkunden-Zahlungsbedingungen</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Cash Terms Code - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 410940989 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the exact existing customer posting group. Test packages supply their own group.</source>
+        <target state="translated">Gibt die konkrete vorhandene Debitorenbuchungsgruppe an. Testpakete verwenden ihre eigene Gruppe.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Customer Posting Group - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 410940989 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Customer Posting Group</source>
+        <target state="translated">Debitorenbuchungsgruppe</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Customer Posting Group - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 633819257 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the exact existing general business posting group. Test packages supply their own group.</source>
+        <target state="translated">Gibt die konkrete vorhandene Geschäftsbuchungsgruppe an. Testpakete verwenden ihre eigene Gruppe.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Gen. Bus. Posting Group - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 633819257 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>General Business Posting Group</source>
+        <target state="translated">Geschäftsbuchungsgruppe</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Gen. Bus. Posting Group - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 2456069703 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the credit limit in local currency for large business customers. Zero means no credit limit.</source>
+        <target state="translated">Gibt das Kreditlimit in Mandantenwährung für große Geschäftskunden an. Null bedeutet kein Kreditlimit.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Large Credit Limit - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 2456069703 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Large Customer Credit Limit</source>
+        <target state="translated">Kreditlimit großer Debitoren</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Large Credit Limit - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 1832979623 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies existing payment terms for the large synthetic partner class.</source>
+        <target state="translated">Gibt vorhandene Zahlungsbedingungen für die große synthetische Partnerklasse an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Large Terms Code - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 1832979623 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Large Partner Payment Terms</source>
+        <target state="translated">Zahlungsbedingungen großer Partner</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Large Terms Code - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 4050498399 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the credit limit in local currency for medium business customers. Zero means no credit limit.</source>
+        <target state="translated">Gibt das Kreditlimit in Mandantenwährung für mittlere Geschäftskunden an. Null bedeutet kein Kreditlimit.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Medium Credit Limit - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 4050498399 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Medium Customer Credit Limit</source>
+        <target state="translated">Kreditlimit mittlerer Debitoren</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Medium Credit Limit - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 2961176623 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies existing payment terms for the medium synthetic partner class.</source>
+        <target state="translated">Gibt vorhandene Zahlungsbedingungen für die mittlere synthetische Partnerklasse an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Medium Terms Code - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 2961176623 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Medium Partner Payment Terms</source>
+        <target state="translated">Zahlungsbedingungen mittlerer Partner</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Medium Terms Code - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 4099394325 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the existing country code for synthetic partner addresses.</source>
+        <target state="translated">Gibt den vorhandenen Ländercode für synthetische Partneradressen an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Country Code - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 4099394325 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Partner Country/Region</source>
+        <target state="translated">Partnerland/-region</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Country Code - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 2456675073 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the credit limit in local currency for small business customers. Zero means no credit limit.</source>
+        <target state="translated">Gibt das Kreditlimit in Mandantenwährung für kleine Geschäftskunden an. Null bedeutet kein Kreditlimit.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Small Credit Limit - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 2456675073 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Small Customer Credit Limit</source>
+        <target state="translated">Kreditlimit kleiner Debitoren</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Small Credit Limit - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 4030952593 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies existing payment terms for the small synthetic partner class.</source>
+        <target state="translated">Gibt vorhandene Zahlungsbedingungen für die kleine synthetische Partnerklasse an.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Small Terms Code - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 4030952593 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Small Partner Payment Terms</source>
+        <target state="translated">Zahlungsbedingungen kleiner Partner</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Small Terms Code - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 1844012642 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the exact existing VAT business posting group. Test packages supply their own group.</source>
+        <target state="translated">Gibt die konkrete vorhandene MwSt.-Geschäftsbuchungsgruppe an. Testpakete verwenden ihre eigene Gruppe.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field VAT Bus. Posting Group - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 1844012642 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>VAT Business Posting Group</source>
+        <target state="translated">MwSt.-Geschäftsbuchungsgruppe</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field VAT Bus. Posting Group - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 3194161445 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Specifies the exact existing vendor posting group. Test packages supply their own group.</source>
+        <target state="translated">Gibt die konkrete vorhandene Kreditorenbuchungsgruppe an. Testpakete verwenden ihre eigene Gruppe.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Vendor Posting Group - Property ToolTip</note>
+      </trans-unit>
+      <trans-unit id="Table 3536643086 - Field 3194161445 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Vendor Posting Group</source>
+        <target state="translated">Kreditorenbuchungsgruppe</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Vendor Posting Group - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Codeunit 2353035614 - NamedType 3492220642" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Use a consumer percentage from 0 to 100 and nonnegative customer credit limits.</source>
+        <target state="translated">Verwenden Sie einen Privatkundenanteil von 0 bis 100 Prozent und nicht negative Debitoren-Kreditlimits.</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType PartnerRulesErr</note>
+      </trans-unit>
+      <trans-unit id="Page 3114165994 - Control 1371196100 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Synthetic Partners</source>
+        <target state="translated">Synthetische Partner</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control PartnerGeneration - Property Caption</note>
+      </trans-unit>
+      <trans-unit id="Page 1115899955 - Control 1371196100 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <source>Synthetic Partners</source>
+        <target state="translated">Synthetische Partner</target>
+        <note from="Developer" annotates="general" priority="2" />
+        <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Control PartnerGeneration - Property Caption</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

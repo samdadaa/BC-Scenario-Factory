@@ -52,3 +52,8 @@ Vorhandene AL-Objekte liegen unter `src/Finance/Codeunits/`. Zuordnung gemäß [
 ## SF-016/SF-017 – 18.11.2026
 
 90400 Finance Package Mgt, 90402 Finance Setup Check, 90403 Finance Package, 90404 Finance Selection, 90405 Finance Preview, 90406 Finance Setup, 90407 Run Finance. Versionierte Testpakete, Standardberichte, Vorschau/Apply und Snapshotbindung. Kein Finanzbuchungs-/Zahlungsgenerator. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.
+
+
+## SF-018 – 18.11.2026
+
+Partner-Capture-Subscriber liefert paketabhängige Gruppen und erfasste Standardnummernserien, Kontenzuordnungen, Zahlungsformeln und CRM-Bindungen. Keine neuen Konten oder Standardrechte, kein automatisches Apply. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.
