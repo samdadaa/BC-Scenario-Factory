@@ -47,3 +47,8 @@ SF-013: [Recovery-Vertrag](../RECOVERY.md), [Prüfnachweise](../TESTS.md).
 ## Ablage – SF-002, 16.11.2026
 
 Alle 104 vorhandenen AL-Dateien liegen je Modul in Typordnern gemäß [CONVENTIONS.md](../CONVENTIONS.md). Die Modulpfade der Tabelle bleiben Einstiegspunkte; die konkreten Typordner stehen in den jeweiligen Modulspezifikationen. Keine neuen Objekte oder fachlichen Implementierungen; 13 Module weiterhin ohne AL-Code. Status **Zur Prüfung**.
+
+
+## SF-014 – Dashboardkorrektur 17.11.2026
+
+Eigener Scrollbereich und generierte deutsche UI-Fallback-Ressource im bestehenden Monitoring-Dashboard ergänzt; keine neuen AL-Objekte. [Vertrag](../DASHBOARD_EMBEDDING.md), [Prüfnachweis](../TESTS.md#sf-014--scroll--und-sprachkorrektur-17112026). **Zur Prüfung**.

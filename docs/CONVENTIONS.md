@@ -106,3 +106,8 @@ SF-013: bestätigte technische Checkpoints sind immutable und versioniert (Schem
 Monitoring darf beim Öffnen oder Aktualisieren keine Ausführung starten. Ausdrückliche Bedienaktionen im JavaScript-Dashboard delegieren nach serverseitiger Bestätigung an bestehende geprüfte AL-Workflows. Fortschritt aus Completed-Batches je Step; Artefakte, logische Einheiten und globale Qualitätsfreigabe getrennt benennen. Statushistorie nur technische Metadaten aus derselben Übergangstransaktion, keine Fehlertexte kopieren. UI-Integration über PageExtension im abhängigen Monitoring-Modul erhält die gerichtete Modulstruktur. Geführte Vorlagenbearbeitung nutzt bestehende Policies/Unterseiten; Erfassung trennt editierbare Vorlage und festen Review-Run. [Vertrag und Grenzen](MONITORING_WIZARD.md), **Zur Prüfung**.
 
 JavaScript-Dashboard: alle UI-Texte als AL/XLIFF-Vertrag liefern; DOM über textContent aufbauen, keine HTML-Fragmente aus Daten. Nur gebündelte eigene Ressourcen, asynchrone Aufrufe serialisieren und Fehler sichtbar rückmelden. Wiederverwendung über öffentliche CardPart, keine kopierten Dashboardimplementierungen je Role-Center. [Einbauvertrag](DASHBOARD_EMBEDDING.md).
+
+
+## SF-014 – Dashboardressourcen 17.11.2026
+
+Nach Änderungen deutscher Dashboard-/Monitoringlabels `python3 scripts/build_dashboard_translations.py` ausführen; die erzeugte `translations.js` gemeinsam mit dem ControlAddIn paketieren. `--check` prüft Frische. Bestehende XLIFF- und Browserprüfungen bleiben erforderlich. UI-Sprache ausschließlich aus dem BC-Payload, Formatregion getrennt; keine Übersetzung gespeicherter Benutzerdaten im Frontend.

@@ -626,6 +626,10 @@
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
+**Korrekturauftrag 17.11.2026 — Ziel und Testweg:** Abgeschnittenes ControlAddIn durch einen auf die Iframehöhe begrenzten, per Tastatur erreichbaren Scrollbereich beheben. Deutsche Sitzung soll Dashboardtexte einschließlich technischem Schrittstatus aus dem bestehenden XLIFF-Master erhalten, auch wenn der AL-Payload noch englische Quellen liefert. Betroffen: Dashboard CSS/JS, generierte eigene Übersetzungsressource samt lokalem Generator, ControlAddIn-Ressourcenliste, bestehender Browsertest und Vertrags-/Prüfdokumentation. Keine Änderung von Datensprache, Laufdaten, Objektidentitäten oder Berechtigungen. Testweg: 500px Höhe mit äußerem Overflow hidden, Erreichbarkeit letzter Aktionen/Footer, Scrollposition nach Refresh, alle deutschen Regionen und englische UI mit deutscher Zahlenregion, vollständiger AL-Build mit CodeCop/UICop, Ressourcen-/XLIFF-Prüfung. Ursache der auf dem Screenshot sichtbaren englischen Laufzeitlabels bleibt ohne BC-Sitzungszugriff **Zu prüfen**; keine Installation/Veröffentlichung im Umfang.
+
+**Prüfergebnis 17.11.2026:** Scrollen/Tastatur/Footer/Refresh bei 500px und echter lokaler Iframe sowie deutsche Fallbacklabels für fünf Regionen im bestehenden Browsertest PASS; XLIFF-Prüfung 977 Einheiten PASS; reine AL-Kompilierung 116 Dateien Exit 0 und vier Ressourcen im Paket geprüft. Strenger CodeCop/UICop-Gesamtbuild scheitert an 23 unveränderten Ausgangsbefunden außerhalb des geänderten ControlAddIn. Keine BC-Installation/Veröffentlichung oder echte Sitzungsabnahme. [Nachweise und Grenzen](docs/TESTS.md#sf-014--scroll--und-sprachkorrektur-17112026). Status **Zur Prüfung**.
+
 ---
 
 ### SF-015 — Wizard für Branche, Module, Umfang und Planung

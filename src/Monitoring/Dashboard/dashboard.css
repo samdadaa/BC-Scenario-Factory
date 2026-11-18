@@ -1,6 +1,8 @@
 :root { color-scheme: light; font-family: "Segoe UI", system-ui, sans-serif; color: #182b38; background: #f5f7f8; }
 * { box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
 body { margin: 0; }
+#controlAddIn { height: 100%; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
 button, select { font: inherit; }
 button { cursor: pointer; }
 button:disabled, select:disabled { cursor: wait; opacity: .58; }

@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const chromeBin = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 assert.ok(existsSync(chromeBin), 'Set CHROME_BIN to an installed Chromium executable. No installation is performed.');
+execFileSync('python3', ['scripts/build_dashboard_translations.py', '--check'], { cwd: root });
 const work = await mkdtemp(join(tmpdir(), 'bcsf-dashboard-'));
 const source = await readFile(join(root, 'src/Monitoring/Codeunits/BCSFDashboardData.Codeunit.al'), 'utf8');
 const labels = Object.fromEntries([...source.matchAll(/(\w+Lbl): Label '((?:[^']|'')*)';/gu)].map(match => [match[1], match[2].replaceAll("''", "'")]));
@@ -38,12 +39,12 @@ window.Microsoft={Dynamics:{NAV:{InvokeExtensibilityMethod:function(name,args,sk
     window.SetDashboard(JSON.stringify(window.fixture)); success();}
   if(window.hold)window.pending=finish;else setTimeout(finish,0);
 }}}};
-</script><script src="/dashboard.js"></script><script src="/startup.js"></script></body></html>`;
+</script><script src="/translations.js"></script><script src="/dashboard.js"></script><script src="/startup.js"></script></body></html>`;
 const server = createServer(async (request, response) => {
   try {
     if (request.url === '/') { response.setHeader('Content-Type', 'text/html; charset=utf-8'); response.end(html); return; }
     const name = request.url.slice(1);
-    if (!['dashboard.js', 'startup.js', 'dashboard.css'].includes(name)) { response.writeHead(404); response.end(); return; }
+    if (!['translations.js', 'dashboard.js', 'startup.js', 'dashboard.css'].includes(name)) { response.writeHead(404); response.end(); return; }
     response.setHeader('Content-Type', name.endsWith('.css') ? 'text/css' : 'text/javascript');
     response.end(await readFile(join(root, 'src/Monitoring/Dashboard', name)));
   } catch { response.writeHead(500); response.end(); }
@@ -117,6 +118,37 @@ try {
   assert.equal(await evaluate('document.querySelectorAll(".sf-feedback[aria-live=polite]").length'), 1);
   await evaluate('window.SetDashboard(JSON.stringify({schemaVersion:99}))');
   assert.equal(await evaluate('document.querySelector(".sf-feedback").textContent'), texts.error, 'Invalid payloads must retain the prior view and show an error.');
+  // Reproduce the reported mixed payload: German session, English AL labels.
+  for (const language of ['de-DE', 'de-AT', 'de-CH', 'de-LI', 'de-LU']) {
+    await evaluate(`window.fixture.language=${JSON.stringify(language)};window.fixture.locale='de-DE';window.SetDashboard(JSON.stringify(window.fixture))`);
+    assert.equal(await evaluate('document.querySelector("[data-action=scenarios]").textContent.includes("Szenariovorlagen")'), true);
+    assert.equal(await evaluate('document.querySelector(".sf-stat-label").textContent'), 'Vorlagen');
+    assert.equal(await evaluate('document.querySelectorAll(".sf-step-state")[1].firstElementChild.textContent'), 'Kein gespeicherter Plan');
+  }
+  await evaluate('window.fixture.language="en-US";window.fixture.locale="de-DE";window.fixture.summary.templates=1000;window.SetDashboard(JSON.stringify(window.fixture))');
+  assert.equal(await evaluate('document.querySelector(".sf-stat-label").textContent'), 'Templates', 'Format region must never select UI language.');
+  assert.equal(await evaluate('document.querySelector(".sf-stat-value").textContent'), '1.000');
+  await cdp('Emulation.setDeviceMetricsOverride', { width: 1440, height: 500, deviceScaleFactor: 1, mobile: false });
+  assert.equal(await evaluate('getComputedStyle(document.documentElement).overflowY'), 'hidden');
+  assert.equal(await evaluate('document.querySelector("#controlAddIn").clientHeight<=500'), true);
+  assert.equal(await evaluate('document.querySelector("#controlAddIn").scrollHeight>document.querySelector("#controlAddIn").clientHeight'), true);
+  await evaluate('document.querySelector("#controlAddIn").focus()');
+  await cdp('Input.dispatchKeyEvent', { type: 'keyDown', key: 'PageDown', code: 'PageDown', windowsVirtualKeyCode: 34 });
+  await cdp('Input.dispatchKeyEvent', { type: 'keyUp', key: 'PageDown', code: 'PageDown', windowsVirtualKeyCode: 34 });
+  await until('document.querySelector("#controlAddIn").scrollTop>0');
+  await evaluate('document.querySelector("#controlAddIn").scrollTop=100000');
+  assert.equal(await evaluate('document.querySelector(".sf-footer").getBoundingClientRect().bottom<=window.innerHeight+1'), true, 'Footer must be reachable inside the restricted viewport.');
+  assert.equal(await evaluate('document.querySelector("[data-action=queue]").getBoundingClientRect().bottom<=window.innerHeight'), true, 'Last run action must be reachable.');
+  const scrollTop = await evaluate('document.querySelector("#controlAddIn").scrollTop');
+  await evaluate('window.SetDashboard(JSON.stringify(window.fixture))');
+  assert.equal(await evaluate('document.querySelector("#controlAddIn").scrollTop'), scrollTop, 'Refreshing must preserve scroll position.');
+  // Check the same assets inside a real iframe whose parent cannot scroll.
+  await evaluate(`const frame=document.createElement('iframe');frame.id='sf-test-frame';frame.src='/';frame.style.cssText='position:fixed;inset:0;width:100%;height:500px;border:0';document.body.appendChild(frame)`);
+  await until('document.querySelector("#sf-test-frame").contentDocument.querySelector(".sf-footer")');
+  assert.equal(await evaluate(`document.querySelector('#sf-test-frame').contentDocument.querySelector('#controlAddIn').clientHeight`), 500);
+  await evaluate(`document.querySelector('#sf-test-frame').contentDocument.querySelector('#controlAddIn').scrollTop=100000`);
+  assert.equal(await evaluate(`document.querySelector('#sf-test-frame').contentDocument.querySelector('.sf-footer').getBoundingClientRect().bottom<=500`), true);
+  await evaluate('document.querySelector("#sf-test-frame").remove()');
   const germanBySource = JSON.parse(execFileSync('python3', ['-c', 'import json,xml.etree.ElementTree as E; n={"x":"urn:oasis:names:tc:xliff:document:1.2"};t=E.parse("Translations/BC Scenario Factory.de-DE.xlf"); print(json.dumps({u.find("x:source",n).text:u.find("x:target",n).text for u in t.findall(".//x:trans-unit",n)}))'], { cwd: root, encoding: 'utf8' }));
   const germanTexts = Object.fromEntries(Object.entries(texts).map(([key, value]) => [key, germanBySource[value]]));
   assert.ok(Object.values(germanTexts).every(Boolean), 'Every UI text must have an actual German XLIFF target.');
@@ -135,7 +167,7 @@ try {
   assert.equal(await evaluate('document.querySelectorAll(".sf-action-groups").length'), 0);
   assert.equal(await evaluate('document.querySelector(".sf-empty").textContent.includes(window.fixture.texts.empty)'), true);
   assert.equal(await evaluate('document.querySelectorAll(".sf-nav-link").length'), 8, 'Empty state must retain complete navigation.');
-  console.log('PASS: real Chromium rendering, ready handshake, 29 entry points, run routing, confirmed/remaining/artifact separation, duplicate suppression, error recovery, invalid payload recovery, XSS text rendering, real German XLIFF labels/number formatting, empty state and 1440/768/320px layouts.');
+  console.log('PASS: real Chromium rendering, ready handshake, 29 entry points, run routing, confirmed/remaining/artifact separation, duplicate suppression, error recovery, invalid payload recovery, XSS text rendering, real German XLIFF labels/number formatting, German fallback from English labels in five cultures, English UI with German format region, 500px scrolling/keyboard/footer/refresh, empty state and 1440/768/320px layouts.');
   console.log(`Synthetic local preview: ${join(tmpdir(), 'BCSF-dashboard-preview.png')}. AL/BC iframe, security, dialogs and profile selection were not executed.`);
 } finally {
   if (ws) ws.close();

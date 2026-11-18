@@ -11,7 +11,12 @@
     executeGroup: ["prepare", "schedule", "pause", "cancel", "apply", "resume"],
     resultGroup: ["progress", "batches", "history", "records", "queue"]
   };
-  const text = (key) => model.texts[key];
+  const localized = (value) => {
+    const language = (model.language || "").toLowerCase().split("-")[0];
+    const catalog = window.BCSFDashboardTranslations && window.BCSFDashboardTranslations[language];
+    return catalog && Object.hasOwn(catalog, value) ? catalog[value] : value;
+  };
+  const text = (key) => localized(model.texts[key]);
   const node = (tag, className, value) => {
     const element = document.createElement(tag);
     if (className) element.className = className;
@@ -102,7 +107,7 @@
     const head = node("div", "sf-run-heading");
     const heading = node("div");
     append(heading, node("div", "sf-section-label", text("choose")), node("h2", "", run.description));
-    append(head, heading, node("span", "sf-status", run.status));
+    append(head, heading, node("span", "sf-status", localized(run.status)));
     append(section, head, node("div", "sf-run-meta", [run.profile, run.processMode, run.id].join(" · ")));
     const flags = node("div", "sf-flags");
     if (run.pauseRequested) flags.appendChild(node("span", "sf-flag", text("pauseRequested")));
@@ -140,7 +145,7 @@
       row.appendChild(identity);
       [step.external ? null : step.target, step.external ? null : step.confirmed, step.external ? null : step.remaining, step.external ? null : step.artifacts].forEach(value => row.appendChild(node("td", "sf-number", value === null ? "—" : number(value))));
       const status = node("td", "sf-step-state");
-      append(status, node("span", "", step.external ? text("external") : step.state));
+      append(status, node("span", "", step.external ? text("external") : localized(step.state)));
       if (!step.external) {
         const progress = node("progress", "sf-progress");
         progress.max = 100;
@@ -171,8 +176,10 @@
   function render() {
     if (!root || !model) return;
     const focused = document.activeElement && document.activeElement.dataset.action;
+    const scrollTop = root.scrollTop;
     root.replaceChildren();
     root.className = "sf-dashboard";
+    root.setAttribute("aria-label", text("title"));
     const hero = node("header", "sf-hero");
     const title = node("div");
     append(title, node("p", "sf-eyebrow", text("eyebrow")), node("h1", "", text("title")), node("p", "sf-subtitle", text("subtitle")));
@@ -198,8 +205,9 @@
     setBusy(busy);
     if (focused) {
       const target = Array.from(root.querySelectorAll("button[data-action]")).find(element => element.dataset.action === focused);
-      if (target && !target.disabled) target.focus();
+      if (target && !target.disabled) target.focus({ preventScroll: true });
     }
+    root.scrollTop = scrollTop;
   }
   window.SetDashboard = function (payload) {
     try {
@@ -218,6 +226,8 @@
   window.BCSFStart = function () {
     root = document.getElementById("controlAddIn");
     if (!root) return;
+    root.tabIndex = 0;
+    root.setAttribute("role", "region");
     root.setAttribute("aria-busy", "true");
     busy = true;
     invoke("Ready", [], () => setBusy(false), () => { failed = true; setBusy(false); });

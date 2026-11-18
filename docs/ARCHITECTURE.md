@@ -130,3 +130,8 @@ Role-Center 90364/Host 90363 → wiederverwendbare CardPart 90362 → ControlAdd
 ## Modulablage – SF-002, 16.11.2026
 
 Die physische Ablage folgt `src/<Modul>/<Objekttyp>/`; Geschäftsverantwortungen, Namespaces, Abhängigkeiten und Transaktionsgrenzen bleiben erhalten. Typordner gemäß [CONVENTIONS.md](CONVENTIONS.md) werden für vorhandene Objekte angelegt. Die gebündelten Dashboardressourcen verbleiben unter `src/Monitoring/Dashboard/`; AL-Ressourcenpfade sind projektwurzelrelativ.
+
+
+## SF-014 – Darstellungskorrektur 17.11.2026
+
+ControlAddIn bindet zusätzlich die eigene generierte Ressource `Monitoring/Dashboard/translations.js`. Sie ergänzt bekannte englische UI-Labels bei deutscher BC-Sitzung aus dem vorhandenen XLIFF-Master, ohne Backend-/Daten-/Transaktionsänderung. Der äußere Dashboardcontainer scrollt innerhalb der Iframehöhe. [Vertrag](DASHBOARD_EMBEDDING.md).

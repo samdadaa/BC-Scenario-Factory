@@ -111,3 +111,8 @@ Jetzt 104 AL-Objekte (101 numerisch sowie Interface, ControlAddIn und Profil ohn
 ## SF-002 – Strukturumstellung (16.11.2026)
 
 104 vorhandene AL-Dateien in elf Modulen nach Objekttyp unter `src/<Modul>/<Objekttyp>/` eingeordnet; 13 Module ohne AL-Code bleiben mit Modulmarker erhalten. Dateinamen, Dateiinhalt, Objektidentitäten, Namespaces und Manifest werden erhalten. Bestehende offene Nutzeränderungen sind Teil des Ausgangsbestands. Konventionen, Objektpfade und Dashboard-Prüfskript folgen der neuen Ablage. Prüfungen und Grenzen: [TESTS.md](TESTS.md#sf-002--strukturumstellung-16112026). Status **Zur Prüfung**.
+
+
+## SF-014 – Dashboardkorrektur 17.11.2026
+
+Eigener höhenbegrenzter Scrollbereich und aus dem vorhandenen deutschen XLIFF-Master erzeugte Fallback-Ressource für Dashboardlabels ergänzt. BC-Sitzungssprache und Zahlenregion bleiben getrennt. Browserregression einschließlich 500px/Iframe/DE bestanden; reine Kompilierung erfolgreich, strenger Gesamtbuild durch 23 bereits im Ausgangsbestand vorhandene Analyzerbefunde blockiert. Kein Deployment. [Vertrag](DASHBOARD_EMBEDDING.md), [Prüfungen](TESTS.md#sf-014--scroll--und-sprachkorrektur-17112026). **Zur Prüfung**.

@@ -52,3 +52,8 @@ ControlAddIn, wiederverwendbare CardPart, große Hostseite, eigenes Role-Center/
 ## Ablage – SF-002, 16.11.2026
 
 Vorhandene AL-Objekte liegen unter `src/Monitoring/Codeunits/`, `src/Monitoring/ControlAddIns/`, `src/Monitoring/PageExtensions/`, `src/Monitoring/Pages/`, `src/Monitoring/Profiles/`, `src/Monitoring/Tables/`. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+
+## SF-014 – Scrollen und deutsche Anzeige, 17.11.2026
+
+Dashboardcontainer scrollt innerhalb begrenzter Iframehöhe; Scrollposition bleibt beim Refresh erhalten. Bekannte englische Dashboardlabels erhalten bei deutscher BC-Sitzung eine generierte XLIFF-Fallbackübersetzung. Keine neuen AL-Objekte, Datenmutationen oder Rechte. [Vertrag](../../../DASHBOARD_EMBEDDING.md), [Prüfungen](../../../TESTS.md#sf-014--scroll--und-sprachkorrektur-17112026). **Zur Prüfung**.
