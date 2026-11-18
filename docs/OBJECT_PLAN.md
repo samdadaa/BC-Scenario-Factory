@@ -302,3 +302,17 @@ Validation → Lifecycle für den bestehenden Sandbox-/Firmen-Guard. BackgroundP
 | Purchasing | 90452 | EnumExtension | `BCSF Vendor Binding` | `src/Purchasing/EnumExtensions/BCSFVendorBinding.EnumExt.al` | SF-018 |
 
 EnumExtensions binden Werte 90425/90450 des bestehenden Generator-Type-Enums. Keine Änderung vorhandener Enumwerte oder zentralen Registry-Imports auf Fachmodule. DataGeneration bleibt ohne Lifecycle-/BackgroundProcessing-Import: verpflichtender BackgroundProcessing-Subscriber am Partner-Batchereignis führt die bestehenden Environment-/Besitzprüfungen aus. Finance erfasst Paketgruppen und Standard-Setupfingerprints über ein enges neues Snapshotereignis. SetupManager nutzt seine bereits erlaubte Registry-Abhängigkeit für konkrete Partner-Prerequisites. Keine neue gerichtete Geschäftsmodul-Abhängigkeit und keine app.json-Dependency. [Vertrag](PARTNER_GENERATION.md).
+
+## Startvorlagen, Schnellstart und Sammeltransfer – 18.11.2026
+
+| Modul | ID | Typ | Objekt |
+| --- | ---: | --- | --- |
+| ScenarioManagement | 90147 | Codeunit | BCSF Scenario Transfer |
+| IndustryProfiles | 90155 | Codeunit | BCSF Starter Catalog |
+| IndustryProfiles | 90156 | Install-Codeunit | BCSF Starter Install |
+| IndustryProfiles | 90157 | Upgrade-Codeunit | BCSF Starter Upgrade |
+| Monitoring | 90367 | Codeunit | BCSF Quick Scenario Run |
+| Monitoring | 90368 | PageExtension | BCSF Scenario Actions |
+| Finance | 90408 | Codeunit | BCSF Demo Partner Setup |
+
+Monitoring referenziert IndustryProfiles und Finance für diese Bedienaktionen. Die zusätzlichen Referenzen gehen vom UI-Orchestrator zu den Diensten, nicht umgekehrt. Das Install-/Upgrade-Seeding schreibt ausschließlich eigene, mandantenbezogene App-Daten. Keine Änderungen bestehender IDs. Details und BC-Prüfplan: [STARTER_TEMPLATES.md](STARTER_TEMPLATES.md).

@@ -104,3 +104,7 @@ In der Factory-Einrichtung „Finanzeinrichtung prüfen“ öffnen: vorhandene E
 ## Debitoren und Kreditoren (SF-018)
 
 Zwei echte Stammdatengeneratoren verwenden die vorhandene Queue, Seed-Engine und Herkunftsregistry. Synthetische Firmen/Privatkunden, fiktive Regionen, klassenspezifische Zahlungsbedingungen, Kreditlimits und Lieferantenprioritäten sind unterstützt. In der Szenariokarte oder im Wizard unter „Synthetische Partner“ die konkrete Einrichtung wählen, dann neuen Snapshot/Plan erstellen. Reine Debitoren-/Kreditorenläufe werden anhand ihrer tatsächlichen Voraussetzungen geprüft; Artikel-/Beleg-/Buchungsgeneratoren bleiben ausstehend. [Bedienung und Grenzen](docs/PARTNER_GENERATION.md). 121 AL-Dateien, Runtime 17; **Zur Prüfung**, kein bestätigter Sandboxlauf.
+
+## Startvorlagen, Schnellstart und Szenariopakete
+
+In der freigegebenen Playground-Sandbox werden bei Installation/Upgrade Startvorlagen angelegt. Für reine Partner-Vorlagen gibt es einen bestätigten Schnellstart mit optionaler Minimal-Testeinrichtung. Die Szenarienliste unterstützt außerdem gemeinsamen JSON-Export der Auswahl und gemeinsamen Import in einen anderen Testmandanten. Beleg- und Folgeprozess-Vorlagen bleiben Planung. [Bedienung, Grenzen und Tests](docs/STARTER_TEMPLATES.md).

@@ -127,5 +127,9 @@ permissionset 90105 "BCSF ADMIN"
     page "BCSF Finance Preview" = X,
     codeunit "BCSF Partner Rules" = X,
     codeunit "BCSF Customer Generator" = X,
-    codeunit "BCSF Vendor Generator" = X;
+    codeunit "BCSF Vendor Generator" = X,
+    codeunit "BCSF Starter Catalog" = X,
+    codeunit "BCSF Scenario Transfer" = X,
+    codeunit "BCSF Demo Partner Setup" = X,
+    codeunit "BCSF Quick Scenario Run" = X;
 }

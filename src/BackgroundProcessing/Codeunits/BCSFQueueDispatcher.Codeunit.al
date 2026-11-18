@@ -40,6 +40,8 @@ codeunit 90302 "BCSF Queue Dispatcher"
       repeat
         PlanStep(Context, Step, SequenceNo);
       until Step.Next() = 0;
+    // Base the Ready update on the stored row, including the persisted Created At value.
+    Execution.Get(RunId);
     Execution."Total Batches" := SequenceNo;
     Execution.Status := "BCSF Run Status"::Ready;
     Execution.Modify(true);

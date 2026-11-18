@@ -139,28 +139,25 @@ codeunit 90306 "BCSF Execution Rules"
   [EventSubscriber(ObjectType::Table, Database::"BCSF Run Execution", 'OnBeforeModifyEvent', '', false, false)]
   local procedure ExecutionModify(var Rec: Record "BCSF Run Execution"; var xRec: Record "BCSF Run Execution"; RunTrigger: Boolean)
   var
+    PreviousExecution: Record "BCSF Run Execution";
     Batch: Record "BCSF Batch";
     Control: Record "BCSF Run Control";
     Writer: Codeunit "BCSF Plan Writer";
     StateManagement: Codeunit "BCSF Run State Mgt";
     Validation: Codeunit "BCSF Validation Manager";
     Severity: Enum "BCSF Validation Severity";
-    Mutable: List of [Integer];
     Valid: Boolean;
   begin
     if Rec.IsTemporary() then
       exit;
     CheckEnvironment(Rec."Run Id", Rec.CurrentCompany());
-    Mutable.Add(Rec.FieldNo(Status));
-    Mutable.Add(Rec.FieldNo("Earliest Start"));
-    Mutable.Add(Rec.FieldNo("Job Queue Entry Id"));
-    Mutable.Add(Rec.FieldNo("Started At"));
-    Mutable.Add(Rec.FieldNo("Finished At"));
-    Mutable.Add(Rec.FieldNo("Total Batches"));
-    Mutable.Add(Rec.FieldNo("Completed Batches"));
-    CheckImmutable(Rec, xRec, Mutable);
-    StateManagement.CheckTransition(xRec.Status, Rec.Status);
-    case xRec.Status of
+    // Table modify events do not reliably carry the persisted values in xRec.
+    PreviousExecution.LockTable();
+    PreviousExecution.Get(Rec."Run Id");
+    Rec.TestField("Run Id", PreviousExecution."Run Id");
+    Rec.TestField("Created At", PreviousExecution."Created At");
+    StateManagement.CheckTransition(PreviousExecution.Status, Rec.Status);
+    case PreviousExecution.Status of
       "BCSF Run Status"::Preflight: Valid := Rec.Status = "BCSF Run Status"::Ready;
       "BCSF Run Status"::Ready: Valid := Rec.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled, "BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled];
       "BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled: Valid := Rec.Status in ["BCSF Run Status"::Running, "BCSF Run Status"::Failed, "BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled];
@@ -182,18 +179,18 @@ codeunit 90306 "BCSF Execution Rules"
       Writer.CheckExecution(Rec."Run Id");
       CheckPlanCoverage(Rec."Run Id");
     end;
-    if xRec.Status <> "BCSF Run Status"::Ready then
-      Rec.TestField("Earliest Start", xRec."Earliest Start");
-    if not (xRec.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled]) then
-      Rec.TestField("Started At", xRec."Started At");
+    if PreviousExecution.Status <> "BCSF Run Status"::Ready then
+      Rec.TestField("Earliest Start", PreviousExecution."Earliest Start");
+    if not (PreviousExecution.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled]) then
+      Rec.TestField("Started At", PreviousExecution."Started At");
     if not (Rec.Status in ["BCSF Run Status"::Failed, "BCSF Run Status"::Completed, "BCSF Run Status"::CompletedWithWarnings, "BCSF Run Status"::ValidationFailed]) then begin
       Rec.TestField("Finished At", 0DT);
       if Rec.Status in ["BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled, "BCSF Run Status"::Running] then
         Rec.TestField("Job Queue Entry Id");
     end;
-    if xRec.Status <> "BCSF Run Status"::Preflight then begin
-      Rec.TestField("Total Batches", xRec."Total Batches");
-      if Rec."Completed Batches" < xRec."Completed Batches" then
+    if PreviousExecution.Status <> "BCSF Run Status"::Preflight then begin
+      Rec.TestField("Total Batches", PreviousExecution."Total Batches");
+      if Rec."Completed Batches" < PreviousExecution."Completed Batches" then
         Error(StateErr);
     end;
     if Rec.Status in ["BCSF Run Status"::Paused, "BCSF Run Status"::Cancelled] then begin
@@ -264,25 +261,23 @@ codeunit 90306 "BCSF Execution Rules"
   [EventSubscriber(ObjectType::Table, Database::"BCSF Batch", 'OnBeforeModifyEvent', '', false, false)]
   local procedure BatchModify(var Rec: Record "BCSF Batch"; var xRec: Record "BCSF Batch"; RunTrigger: Boolean)
   var
+    PreviousBatch: Record "BCSF Batch";
     Recovery: Codeunit "BCSF Batch Recovery";
-    Mutable: List of [Integer];
   begin
     if Rec.IsTemporary() then
       exit;
     CheckEnvironment(Rec."Run Id", Rec.CurrentCompany());
-    Mutable.Add(Rec.FieldNo(Status));
-    Mutable.Add(Rec.FieldNo("Job Queue Entry Id"));
-    Mutable.Add(Rec.FieldNo("Started At"));
-    Mutable.Add(Rec.FieldNo("Finished At"));
-    Mutable.Add(Rec.FieldNo("Processed Units"));
-    Mutable.Add(Rec.FieldNo("Created Records"));
-    Mutable.Add(Rec.FieldNo("Schedule Attempts"));
-    Mutable.Add(Rec.FieldNo("Previous Job Id"));
-    Mutable.Add(Rec.FieldNo("Worker Session Id"));
-    Mutable.Add(Rec.FieldNo("Worker Server Id"));
-    Mutable.Add(Rec.FieldNo("Worker Session Guid"));
-    CheckImmutable(Rec, xRec, Mutable);
-    Recovery.CheckBatchChange(Rec, xRec);
+    // Table modify events do not reliably carry the persisted values in xRec.
+    PreviousBatch.LockTable();
+    PreviousBatch.Get(Rec."Batch Id");
+    Rec.TestField("Batch Id", PreviousBatch."Batch Id");
+    Rec.TestField("Run Id", PreviousBatch."Run Id");
+    Rec.TestField("Node Code", PreviousBatch."Node Code");
+    Rec.TestField("Sequence No.", PreviousBatch."Sequence No.");
+    Rec.TestField("Batch Key", PreviousBatch."Batch Key");
+    Rec.TestField("First Key", PreviousBatch."First Key");
+    Rec.TestField("Last Key", PreviousBatch."Last Key");
+    Recovery.CheckBatchChange(Rec, PreviousBatch);
   end;
 
   [EventSubscriber(ObjectType::Table, Database::"BCSF Batch", 'OnBeforeDeleteEvent', '', false, false)]
@@ -350,26 +345,6 @@ codeunit 90306 "BCSF Execution Rules"
         if LastKey <> Step."Work Units" then
           Error(CoverageErr);
       until Step.Next() = 0;
-  end;
-
-  local procedure CheckImmutable(NewRecord: Variant; OldRecord: Variant; Mutable: List of [Integer])
-  var
-    NewRef: RecordRef;
-    OldRef: RecordRef;
-    NewField: FieldRef;
-    OldField: FieldRef;
-    Index: Integer;
-  begin
-    NewRef.GetTable(NewRecord);
-    OldRef.GetTable(OldRecord);
-    for Index := 1 to NewRef.FieldCount() do begin
-      NewField := NewRef.FieldIndex(Index);
-      if (NewField.Number < 2000000000) and not Mutable.Contains(NewField.Number) then begin
-        OldField := OldRef.Field(NewField.Number);
-        if NewField.Value <> OldField.Value then
-          Error(ImmutableErr);
-      end;
-    end;
   end;
 
   var

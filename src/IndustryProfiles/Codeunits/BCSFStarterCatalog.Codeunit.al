@@ -1,0 +1,229 @@
+namespace BCScenarioFactory.IndustryProfiles;
+
+using BCScenarioFactory.Core;
+using BCScenarioFactory.ScenarioManagement;
+using System.Environment;
+
+codeunit 90155 "BCSF Starter Catalog"
+{
+    Access = Internal;
+
+    procedure IsStarterSandbox(): Boolean
+    var
+        Environment: Codeunit "Environment Information";
+    begin
+        exit(Environment.IsSaaS() and Environment.IsSandbox() and not Environment.IsProduction());
+    end;
+
+    procedure SeedDuringDeployment()
+    var
+        Setup: Record "BCSF Factory Setup";
+        Environment: Codeunit "Environment Information";
+    begin
+        if not IsStarterSandbox() then
+            exit;
+        // Copied companies may carry an explicit setup bound to a different company or environment.
+        if Setup.Get(Setup.GetSetupKey()) then
+            if (Setup."Allowed Environment Name" <> Environment.GetEnvironmentName()) or (Setup."Allowed Company Name" <> CompanyName()) then
+                exit;
+        Seed();
+    end;
+
+    [CommitBehavior(CommitBehavior::Error)]
+    procedure Seed()
+    var
+        Setup: Record "BCSF Factory Setup";
+        Scenario: Record "BCSF Scenario";
+        SetupMgt: Codeunit "BCSF Setup Management";
+        Industry: Integer;
+    begin
+        if not IsStarterSandbox() then
+            Error(SandboxErr);
+        Scenario.LockTable();
+        SetupMgt.InitializeSetup();
+        SetupMgt.GetSetup(Setup);
+        for Industry := 1 to 8 do
+            SeedIndustry(Industry, Setup);
+    end;
+
+    local procedure SeedIndustry(Industry: Integer; Setup: Record "BCSF Factory Setup")
+    var
+        Profile: Code[20];
+        Name: Text;
+        Consumer: Integer;
+    begin
+        Consumer := 0;
+        case Industry of
+            1:
+                begin
+                    Profile := 'GENERAL';
+                    Name := GeneralLbl;
+                end;
+            2:
+                begin
+                    Profile := 'TRADE';
+                    Name := TradeLbl;
+                    Consumer := 15;
+                end;
+            3:
+                begin
+                    Profile := 'ECOMMERCE';
+                    Name := EcommerceLbl;
+                    Consumer := 75;
+                end;
+            4:
+                begin
+                    Profile := 'DISTRIBUTION';
+                    Name := DistributionLbl;
+                end;
+            5:
+                begin
+                    Profile := 'MANUFACTURING';
+                    Name := ManufacturingLbl;
+                end;
+            6:
+                begin
+                    Profile := 'CONSULTING';
+                    Name := ConsultingLbl;
+                end;
+            7:
+                begin
+                    Profile := 'CONSTRUCTION';
+                    Name := ConstructionLbl;
+                end;
+            8:
+                begin
+                    Profile := 'SERVICE';
+                    Name := ServiceLbl;
+                    Consumer := 35;
+                end;
+        end;
+        SeedOne(Industry, 1, Profile, Name, DemoLbl, "BCSF Usage Mode"::Demo, "BCSF Process Mode"::SetupAndMasterData, Consumer, 12, 7, Setup);
+        SeedOne(Industry, 2, Profile, Name, TrainingLbl, "BCSF Usage Mode"::Training, "BCSF Process Mode"::SetupAndMasterData, Consumer, 20, 10, Setup);
+        SeedOne(Industry, 3, Profile, Name, FunctionalLbl, "BCSF Usage Mode"::Functional, "BCSF Process Mode"::SetupAndMasterData, Consumer, 5, 5, Setup);
+        SeedOne(Industry, 4, Profile, Name, PerformanceLbl, "BCSF Usage Mode"::Performance, "BCSF Process Mode"::SetupAndMasterData, Consumer, 1000, 500, Setup);
+        SeedOne(Industry, 5, Profile, Name, DocumentsLbl, "BCSF Usage Mode"::Demo, "BCSF Process Mode"::UnpostedDocuments, Consumer, 12, 7, Setup);
+        SeedOne(Industry, 6, Profile, Name, PostedLbl, "BCSF Usage Mode"::Demo, "BCSF Process Mode"::PostedMovements, Consumer, 12, 7, Setup);
+        SeedOne(Industry, 7, Profile, Name, FollowUpLbl, "BCSF Usage Mode"::Demo, "BCSF Process Mode"::FollowUpProcesses, Consumer, 12, 7, Setup);
+    end;
+
+    local procedure SeedOne(Industry: Integer; VariantNo: Integer; Profile: Code[20]; Name: Text; Purpose: Text; Usage: Enum "BCSF Usage Mode"; Scope: Enum "BCSF Process Mode"; Consumer: Integer; Customers: Integer; Vendors: Integer; Setup: Record "BCSF Factory Setup")
+    var
+        Scenario: Record "BCSF Scenario";
+        ScenarioId: Guid;
+        StableId: Text;
+        Qty: Integer;
+        Share: Decimal;
+    begin
+        StableId := StrSubstNo('{bc5f2026-0001-4a01-8101-0000000000%1%2}', Industry, VariantNo);
+        Evaluate(ScenarioId, StableId);
+        Scenario.LockTable();
+        if Scenario.Get(ScenarioId) then
+            exit;
+        Customers := MinValue(Customers, Setup."Maximum Records per Entity");
+        Vendors := MinValue(Vendors, Setup."Maximum Records per Entity");
+        Scenario.Init();
+        Scenario."Scenario Id" := ScenarioId;
+        Scenario.Description := CopyStr(StrSubstNo(TitleLbl, Name, Purpose), 1, MaxStrLen(Scenario.Description));
+        Scenario."Profile Code" := Profile;
+        Scenario."Profile Version" := '1';
+        Scenario."Usage Mode" := Usage;
+        Scenario."Process Mode" := Scope;
+        Scenario."Finance Mode" := "BCSF Finance Mode"::Existing;
+        Scenario.Seed := Industry * 100 + VariantNo;
+        Scenario."Starting Date" := WorkDate();
+        Scenario."Ending Date" := WorkDate();
+        Scenario."Batch Size" := MinValue(Setup."Default Batch Size", MinValue(Customers, Vendors));
+        Scenario."Data Language" := Setup."Default Data Language";
+        Scenario."Partner Country Code" := 'DE';
+        Scenario."Customer Posting Group" := 'BCSF-DEMO';
+        Scenario."Vendor Posting Group" := 'BCSF-DEMO';
+        Scenario."Gen. Bus. Posting Group" := 'BCSF-DEMO';
+        Scenario."VAT Bus. Posting Group" := 'BCSF-DEMO';
+        Scenario."Cash Terms Code" := 'BCSF-0D';
+        Scenario."Small Terms Code" := 'BCSF-14D';
+        Scenario."Medium Terms Code" := 'BCSF-30D';
+        Scenario."Large Terms Code" := 'BCSF-60D';
+        Scenario."B2C Percent" := Consumer;
+        Scenario.Insert(true);
+        AddModule(ScenarioId, "BCSF Module Type"::Sales);
+        AddModule(ScenarioId, "BCSF Module Type"::Purchasing);
+        AddTarget(ScenarioId, "BCSF Entity Type"::Customer, Customers, "BCSF Process Mode"::SetupAndMasterData, 0);
+        AddTarget(ScenarioId, "BCSF Entity Type"::Vendor, Vendors, "BCSF Process Mode"::SetupAndMasterData, 0);
+        if Scope = "BCSF Process Mode"::SetupAndMasterData then
+            exit;
+        Qty := MinValue(5, Setup."Maximum Records per Entity");
+        if Industry in [2, 3, 4, 5, 8] then begin
+            AddModule(ScenarioId, "BCSF Module Type"::Inventory);
+            AddTarget(ScenarioId, "BCSF Entity Type"::Item, Qty, "BCSF Process Mode"::SetupAndMasterData, 0);
+        end;
+        case Industry of
+            4:
+                AddModule(ScenarioId, "BCSF Module Type"::Warehouse);
+            5:
+                begin
+                    AddModule(ScenarioId, "BCSF Module Type"::Manufacturing);
+                    AddModule(ScenarioId, "BCSF Module Type"::Assembly);
+                end;
+            6, 7:
+                AddModule(ScenarioId, "BCSF Module Type"::Projects);
+            8:
+                AddModule(ScenarioId, "BCSF Module Type"::ServiceManagement);
+        end;
+        if Scope <> "BCSF Process Mode"::UnpostedDocuments then
+            Share := 100;
+        AddTarget(ScenarioId, "BCSF Entity Type"::SalesOrder, Qty, Scope, Share);
+        AddTarget(ScenarioId, "BCSF Entity Type"::PurchaseOrder, Qty, Scope, Share);
+    end;
+
+    local procedure AddModule(ScenarioId: Guid; ModuleType: Enum "BCSF Module Type")
+    var
+        Selection: Record "BCSF Scenario Module";
+    begin
+        Selection.Init();
+        Selection."Scenario Id" := ScenarioId;
+        Selection.Module := ModuleType;
+        Selection.Enabled := true;
+        Selection.Insert(true);
+    end;
+
+    local procedure AddTarget(ScenarioId: Guid; Entity: Enum "BCSF Entity Type"; Quantity: Integer; Scope: Enum "BCSF Process Mode"; PostedShare: Decimal)
+    var
+        Target: Record "BCSF Data Target";
+    begin
+        Target.Init();
+        Target."Scenario Id" := ScenarioId;
+        Target.Validate(Entity, Entity);
+        Target.Quantity := Quantity;
+        Target."Process Mode" := Scope;
+        Target."Unposted Percent" := 100 - PostedShare;
+        Target."Posted Percent" := PostedShare;
+        Target.Insert(true);
+    end;
+
+    local procedure MinValue(Left: Integer; Right: Integer): Integer
+    begin
+        if Left < Right then
+            exit(Left);
+        exit(Right);
+    end;
+
+    var
+        SandboxErr: Label 'Load starter scenarios only in an approved sandbox.';
+        TitleLbl: Label '%1 - %2', Comment = '%1 = industry, %2 = scenario type';
+        GeneralLbl: Label 'General Business';
+        TradeLbl: Label 'Wholesale and Retail';
+        EcommerceLbl: Label 'E-Commerce';
+        DistributionLbl: Label 'Distribution and Logistics';
+        ManufacturingLbl: Label 'Manufacturing';
+        ConsultingLbl: Label 'Services and Consulting';
+        ConstructionLbl: Label 'Construction and Projects';
+        ServiceLbl: Label 'Service and Maintenance';
+        DemoLbl: Label 'Demo Partners';
+        TrainingLbl: Label 'Training Partners';
+        FunctionalLbl: Label 'Functional Partner Test';
+        PerformanceLbl: Label 'Partner Volume Test';
+        DocumentsLbl: Label 'Planning Only: Open Documents';
+        PostedLbl: Label 'Planning Only: Posted Movements';
+        FollowUpLbl: Label 'Planning Only: Follow-Up Processes';
+}

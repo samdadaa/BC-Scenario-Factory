@@ -1808,6 +1808,41 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Finance Package - Field Version - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 1342218725" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The existing setup conflicts with the reserved partner demo setup. Select compatible existing settings instead.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ConflictErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 2234300843" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Germany</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType GermanyLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 3283068911" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Partner Test</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType GroupLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 416938829" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Test Payables</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType PayablesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 546602968" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner demo setup can only be prepared in a sandbox test company without G/L entries.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType PostedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 3042025655" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory Test Receivables</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ReceivablesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 4032538393" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory test terms %1</source>
+          <note from="Developer" annotates="general" priority="2">%1 = due date formula</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType TermsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 4291717659" size-unit="char" translate="yes" xml:space="preserve">
           <source>Test Inventory Accrual</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -2097,6 +2132,91 @@
           <source>Finance Reference Year</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Finance - Control FrozenFinanceYear - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 309162025" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Construction and Projects</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType ConstructionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 3461188498" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Services and Consulting</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType ConsultingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 2620145955" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Demo Partners</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType DemoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 2720590772" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Distribution and Logistics</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType DistributionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 3901634850" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning Only: Open Documents</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType DocumentsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 2707171134" size-unit="char" translate="yes" xml:space="preserve">
+          <source>E-Commerce</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType EcommerceLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1886611882" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning Only: Follow-Up Processes</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType FollowUpLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1055002303" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Functional Partner Test</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType FunctionalLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1296160200" size-unit="char" translate="yes" xml:space="preserve">
+          <source>General Business</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType GeneralLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1221404638" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manufacturing</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType ManufacturingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 429102550" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner Volume Test</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PerformanceLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1733831957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning Only: Posted Movements</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PostedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 381116628" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Load starter scenarios only in an approved sandbox.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType SandboxErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1869981609" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Service and Maintenance</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType ServiceLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 - %2</source>
+          <note from="Developer" annotates="general" priority="2">%1 = industry, %2 = scenario type</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 2501458656" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale and Retail</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType TradeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1335907414" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Training Partners</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType TrainingLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2111972200 - NamedType 2417619304" size-unit="char" translate="yes" xml:space="preserve">
           <source>Request a positive batch size within Maximum Batch Size and the requested record count.</source>
@@ -3158,6 +3278,21 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Monitoring Mgt - NamedType WaitingLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2935868274 - NamedType 3824323543" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Start %1 in company %2? This prepares missing demo partner setup and enables test data generation in the company. No posting is approved.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = scenario description, %2 = company</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Quick Scenario Run - NamedType DemoQst</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2935868274 - NamedType 2102399103" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Start %1 in company %2 using its existing BC setup? This enables test data generation in the company. No posting is approved.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = scenario description, %2 = company</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Quick Scenario Run - NamedType ExistingQst</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2935868274 - NamedType 1968297929" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quick run supports only customer and vendor master data. Use guided planning to inspect other templates.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Quick Scenario Run - NamedType PartnerOnlyErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 153504002 - NamedType 1381824369" size-unit="char" translate="yes" xml:space="preserve">
           <source>Monitoring events cannot be changed, deleted or renamed.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3642,6 +3777,46 @@
           <source>View Step Progress</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Run Monitoring - Action MonitorProgress - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 2368505970 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
+          <source>Downloads the selected scenarios and their settings together in one JSON file.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action ExportScenarioBundle - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 2368505970 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
+          <source>Export Selected Scenarios</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action ExportScenarioBundle - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 3592675921 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
+          <source>Imports multiple scenarios from a JSON file as new copies without starting any runs.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action ImportScenarioBundle - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 3592675921 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
+          <source>Import Scenario Bundle</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action ImportScenarioBundle - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 773921824 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
+          <source>Adds missing built-in starter scenarios without replacing existing templates or starting a run.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action LoadStarterScenarios - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 773921824 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
+          <source>Load Starter Scenarios</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action LoadStarterScenarios - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 3366542611 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
+          <source>Checks, captures and schedules the selected partner scenario in the approved sandbox after confirmation.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action RunPartnerScenario - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - Action 3366542611 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
+          <source>Run Partner Scenario</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action RunPartnerScenario - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1115899955 - NamedType 1698880782" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 2133817599">
           <source>Explicitly approve sandbox execution before scheduling the captured run.</source>
@@ -4662,6 +4837,41 @@
           <source>The entity process scope cannot exceed the scenario maximum. Adjust the targets first.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType ScopeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3857170507 - NamedType 1377788994" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select between 1 and 250 scenarios per bundle.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Transfer - NamedType CountErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3857170507 - NamedType 3555830849" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The scenario bundle contains an invalid value for %1.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = JSON field name</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Transfer - NamedType FieldErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3857170507 - NamedType 4139432870" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario bundles (*.json)|*.json</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Transfer - NamedType FilterLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3857170507 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The file is not a Scenario Factory bundle in supported schema version 1.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Transfer - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3857170507 - NamedType 2479959490" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Imported %1 scenarios. Check copied posting group and payment term codes in this company before running.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = number of scenarios</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Transfer - NamedType ImportedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3857170507 - NamedType 2130936629" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Import %1 scenarios as new copies in the current company? Existing scenarios are not replaced.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = number of scenarios</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Transfer - NamedType ImportQst</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3857170507 - NamedType 3052855244" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The scenario bundle must not be empty or exceed 4 MiB.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Transfer - NamedType SizeErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1543854089 - NamedType 3770859965" size-unit="char" translate="yes" xml:space="preserve">
           <source>Enter at least one positive entity target before capturing a run.</source>
