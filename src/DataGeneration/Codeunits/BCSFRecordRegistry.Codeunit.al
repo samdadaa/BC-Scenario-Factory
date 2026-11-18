@@ -129,7 +129,7 @@ codeunit 90252 "BCSF Record Registry"
 
   local procedure IsAllowedTable(TableId: Integer): Boolean
   begin
-    exit(TableId in [Database::Customer, Database::Vendor, Database::Item,
+    exit(TableId in [Database::Customer, Database::Vendor, Database::Item, Database::"Ship-to Address", Database::"Order Address",
       Database::"Sales Header", Database::"Purchase Header", Database::"Sales Invoice Header",
       Database::"Sales Cr.Memo Header", Database::"Sales Shipment Header", Database::"Purch. Inv. Header",
       Database::"Purch. Cr. Memo Hdr.", Database::"Purch. Rcpt. Header", Database::"Cust. Ledger Entry",

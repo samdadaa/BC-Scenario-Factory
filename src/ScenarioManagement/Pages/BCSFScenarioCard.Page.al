@@ -52,6 +52,18 @@ page 90131 "BCSF Scenario Card"
       {
         Caption = 'Synthetic Partners';
         field("Partner Country Code"; Rec."Partner Country Code") { }
+        field("Partner Currency Code"; Rec."Partner Currency Code") { }
+        field("Partner Payment Method"; Rec."Partner Payment Method") { }
+        field("Partner Dimension 1"; Rec."Partner Dimension 1") { }
+        field("Partner Dimension 2"; Rec."Partner Dimension 2") { }
+        field(PaymentReadiness; BankNoticeLbl)
+        {
+          Caption = 'Payment Readiness';
+          ToolTip = 'Explains why payment processes remain blocked without approved synthetic bank details.';
+          Editable = false;
+          MultiLine = true;
+        }
+
         field("Customer Posting Group"; Rec."Customer Posting Group") { }
         field("Vendor Posting Group"; Rec."Vendor Posting Group") { }
         field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group") { }
@@ -122,6 +134,25 @@ page 90131 "BCSF Scenario Card"
   {
     area(Processing)
     {
+      action(ConfigureFinance)
+      {
+        ApplicationArea = All;
+        Caption = 'Review Finance Setup';
+        ToolTip = 'Opens the shared finance preview. Apply a reviewed package explicitly, then select it for this template.';
+        Image = Setup;
+        trigger OnAction()
+        var
+          Manager: Codeunit "BCSF Scenario Manager";
+        begin
+          CurrPage.SaveRecord();
+          // Finish template editing before opening the separate reviewed setup workflow.
+          Commit();
+          Manager.ConfigureFinance(Rec."Scenario Id");
+          Rec.Get(Rec."Scenario Id");
+          CurrPage.Update(false);
+        end;
+      }
+
       action(GuidedPlanning)
       {
         ApplicationArea = All;
@@ -181,14 +212,9 @@ page 90131 "BCSF Scenario Card"
   trigger OnAfterGetCurrRecord()
   var
     Manager: Codeunit "BCSF Scenario Manager";
-    Languages: Codeunit "BCSF Language Mgt";
-    Resolved: Enum "BCSF Data Language";
   begin
     Manager.GetMinimumReferences(Rec."Scenario Id", MinimumCustomers, MinimumVendors);
-    Resolved := Languages.ResolveDataLanguage(Rec."Data Language");
-    CustomerPreview := Languages.GetSyntheticName('CUSTOMER', 1, Resolved, Languages.GetCatalogVersion());
-    VendorPreview := Languages.GetSyntheticName('VENDOR', 1, Resolved, Languages.GetCatalogVersion());
-    ItemPreview := Languages.GetSyntheticName('ITEM', 1, Resolved, Languages.GetCatalogVersion());
+    Manager.GetScenarioLanguagePreview(Rec, CustomerPreview, VendorPreview, ItemPreview);
   end;
 
   var
@@ -205,4 +231,5 @@ page 90131 "BCSF Scenario Card"
   end;
   var
     DisplayName: Text;
+    BankNoticeLbl: Label 'No approved synthetic bank dataset is configured. Payment-ready bank accounts and payment exports are not generated. Configure and verify bank data separately before any payment process.';
 }

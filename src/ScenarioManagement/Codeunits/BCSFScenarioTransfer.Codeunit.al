@@ -1,6 +1,9 @@
 namespace BCScenarioFactory.ScenarioManagement;
 
 using BCScenarioFactory.Core;
+using Microsoft.Bank.BankAccount;
+using Microsoft.Finance.Currency;
+using Microsoft.Finance.Dimension;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Setup;
 using Microsoft.Foundation.Address;
@@ -144,6 +147,11 @@ codeunit 90147 "BCSF Scenario Transfer"
     Item.Add('mediumCreditLimit', Scenario."Medium Credit Limit");
     Item.Add('largeCreditLimit', Scenario."Large Credit Limit");
     Item.Add('b2cCreditLimit', Scenario."B2C Credit Limit");
+    Item.Add('currencyCode', Scenario."Partner Currency Code");
+    Item.Add('paymentMethod', Scenario."Partner Payment Method");
+    Item.Add('dimension1', Scenario."Partner Dimension 1");
+    Item.Add('dimension2', Scenario."Partner Dimension 2");
+
     ScenarioModule.SetRange("Scenario Id", Scenario."Scenario Id");
     if ScenarioModule.FindSet() then
       repeat
@@ -207,6 +215,14 @@ codeunit 90147 "BCSF Scenario Transfer"
     Scenario."Medium Credit Limit" := ReadDecimal(Item, 'mediumCreditLimit');
     Scenario."Large Credit Limit" := ReadDecimal(Item, 'largeCreditLimit');
     Scenario."B2C Credit Limit" := ReadDecimal(Item, 'b2cCreditLimit');
+    if Item.Contains('currencyCode') then
+      Scenario."Partner Currency Code" := CopyStr(ReadText(Item, 'currencyCode', MaxStrLen(Scenario."Partner Currency Code")), 1, MaxStrLen(Scenario."Partner Currency Code"));
+    if Item.Contains('paymentMethod') then
+      Scenario."Partner Payment Method" := CopyStr(ReadText(Item, 'paymentMethod', MaxStrLen(Scenario."Partner Payment Method")), 1, MaxStrLen(Scenario."Partner Payment Method"));
+    if Item.Contains('dimension1') then
+      Scenario."Partner Dimension 1" := CopyStr(ReadText(Item, 'dimension1', MaxStrLen(Scenario."Partner Dimension 1")), 1, MaxStrLen(Scenario."Partner Dimension 1"));
+    if Item.Contains('dimension2') then
+      Scenario."Partner Dimension 2" := CopyStr(ReadText(Item, 'dimension2', MaxStrLen(Scenario."Partner Dimension 2")), 1, MaxStrLen(Scenario."Partner Dimension 2"));
     Scenario.Insert(true);
     Modules := ReadArray(Item, 'modules', 12);
     foreach Token in Modules do begin
@@ -241,6 +257,10 @@ codeunit 90147 "BCSF Scenario Transfer"
     GeneralGroup: Record "Gen. Business Posting Group";
     VATGroup: Record "VAT Business Posting Group";
     Terms: Record "Payment Terms";
+    Currency: Record Currency;
+    PaymentMethod: Record "Payment Method";
+    Dimension: Record "Dimension Value";
+    GL: Record "General Ledger Setup";
     Missing: Text;
     TermCode: Code[10];
     TermCodes: List of [Code[10]];
@@ -264,6 +284,20 @@ codeunit 90147 "BCSF Scenario Transfer"
     foreach TermCode in TermCodes do
       if not Terms.Get(TermCode) then
         Missing += StrSubstNo(ReferenceLbl, Terms.TableCaption(), TermCode);
+    if Scenario."Partner Currency Code" <> '' then
+      if not Currency.Get(Scenario."Partner Currency Code") then
+        Missing += StrSubstNo(ReferenceLbl, Currency.TableCaption(), Scenario."Partner Currency Code");
+    if Scenario."Partner Payment Method" <> '' then
+      if not PaymentMethod.Get(Scenario."Partner Payment Method") then
+        Missing += StrSubstNo(ReferenceLbl, PaymentMethod.TableCaption(), Scenario."Partner Payment Method");
+    if not GL.Get() then
+      Clear(GL);
+    if Scenario."Partner Dimension 1" <> '' then
+      if not Dimension.Get(GL."Global Dimension 1 Code", Scenario."Partner Dimension 1") then
+        Missing += StrSubstNo(ReferenceLbl, Dimension.TableCaption(), GL."Global Dimension 1 Code" + '/' + Scenario."Partner Dimension 1");
+    if Scenario."Partner Dimension 2" <> '' then
+      if not Dimension.Get(GL."Global Dimension 2 Code", Scenario."Partner Dimension 2") then
+        Missing += StrSubstNo(ReferenceLbl, Dimension.TableCaption(), GL."Global Dimension 2 Code" + '/' + Scenario."Partner Dimension 2");
     if Missing <> '' then
       exit(Scenario.Description + ': ' + Missing + '\');
     exit('');

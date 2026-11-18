@@ -10,7 +10,7 @@ codeunit 90154 "BCSF Synthetic Rules"
   [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Snapshot Writer", 'OnBuildSyntheticRules', '', false, false)]
   local procedure CaptureRules(var Rules: JsonObject)
   begin
-    Rules.Add('version', 1);
+    Rules.Add('version', 2);
     Rules.Add('smallPercent', 70);
     Rules.Add('mediumPercent', 25);
     Rules.Add('smallMinimumCents', 100);

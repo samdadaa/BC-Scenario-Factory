@@ -86,3 +86,8 @@ Konkretes **erwartetes Beispiel**, keine beobachteten Buchungen:
 | GuV RESULT | −80,00 |
 
 Weitere SF-016-Fälle: tatsächlicher vollständiger Output → Completed; fehlende/gelöschte Identität, falscher Partnerposten/Betrag/Transaktion, unvollständige Sachpostenregistrierung, ungültiger Elternbezug oder Generatorbefund → ValidationFailed; nur WARN-* → CompletedWithWarnings; fehlerhafter optionaler Subscriber → sichtbare Warnung; ohne alle Pflichtbefunde kein Summary/Completed. Trigger-false-Änderung/Löschung von Befunden und Paketvermerk wird abgewiesen. Legacy ohne Checkpoint bleibt blockiert. Effektive Rechte und parallele Sitzungen separat prüfen. Aktuell fehlen echte Fachgeneratoren; für Queue-End-to-End ist deren spätere Implementierung erforderlich, keine Vertragsprobe in echte Pläne einschleusen.
+
+
+## SF-038 – Nachfolgevertrag
+
+Für Neuinstallation gilt Paket 2.0.0: 15 Buchungskonten plus 3 Summenkonten, INLAND03/04, Bankbuchungsgruppe, Standard-Sachkontenzeilen und bestätigte Foundation-Ergänzung. Die obigen 1.0.0-Angaben bleiben historische Dokumentation. Keine automatische Migration; reale Standardbuchungen weiter offen. [Aktuelle Rollen, Grenzen und Altbestand](STABILIZATION_FINANCE_PARTNERS.md#paketumfang-200--bezugsjahr-2026).

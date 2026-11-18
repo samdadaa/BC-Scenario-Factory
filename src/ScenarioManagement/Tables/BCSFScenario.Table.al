@@ -1,6 +1,9 @@
 namespace BCScenarioFactory.ScenarioManagement;
 
 using BCScenarioFactory.Core;
+using Microsoft.Bank.BankAccount;
+using Microsoft.Finance.Currency;
+using Microsoft.Finance.Dimension;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Setup;
 using Microsoft.Foundation.Address;
@@ -183,6 +186,31 @@ table 90125 "BCSF Scenario"
       Caption = 'Archived';
       ToolTip = 'Specifies that this template is hidden for new runs. Historical runs and active jobs are retained.';
     }
+    field(29; "Partner Currency Code"; Code[10])
+    {
+      Caption = 'Partner Currency';
+      ToolTip = 'Specifies an existing currency. Blank uses local currency; a valid exchange rate is required.';
+      TableRelation = Currency;
+    }
+    field(30; "Partner Payment Method"; Code[10])
+    {
+      Caption = 'Partner Payment Method';
+      ToolTip = 'Specifies an existing payment method. This does not make bank data ready for payments.';
+      TableRelation = "Payment Method";
+    }
+    field(31; "Partner Dimension 1"; Code[20])
+    {
+      Caption = 'Partner Global Dimension 1';
+      ToolTip = 'Specifies an existing value of the first global dimension. Blank leaves the dimension unset.';
+      TableRelation = "Dimension Value".Code where("Global Dimension No." = const(1), Blocked = const(false));
+    }
+    field(32; "Partner Dimension 2"; Code[20])
+    {
+      Caption = 'Partner Global Dimension 2';
+      ToolTip = 'Specifies an existing value of the second global dimension. Blank leaves the dimension unset.';
+      TableRelation = "Dimension Value".Code where("Global Dimension No." = const(2), Blocked = const(false));
+    }
+
   }
 
   keys

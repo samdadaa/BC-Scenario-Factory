@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 18.11.2026 – SF-016/SF-017 zur Prüfung: Qualitätsabschluss und SKR03-/SKR04-Testpakete, 116 AL-Dateien und 1.071 Texteinheiten lokal geprüft. Echte BC-Buchungs-/Berichts-/Berechtigungsabnahme und Fachgeneratoren weiterhin offen.
+**Stand:** 18.11.2026 – Der Partnerlauf funktioniert nach Nutzerbericht wieder. SF-017, SF-018 und SF-037 stehen weiterhin zur fachlichen Prüfung. Vorrang haben jetzt realistische Stammdaten, eine buchungsfähige Einrichtung und eine verständliche Bedienung (SF-038 bis SF-042). Historische Prüfprotokolle bleiben erhalten.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -13,14 +13,32 @@
 - Tests niemals als ausgeführt/erfolgreich ausgeben, wenn sie nicht wirklich liefen.
 - Allgemeine Prinzipien: Sandbox-only, synthetische Daten, freigegebene BC-Standardbuchungen, kontrollierte Queue-Batches, sicheres Retry, kein XERJ in BC.
 
+## Aktuelle Priorität – Stabilisierung vor Ausbau
+
+P0-Reihenfolge: [SF-038](#sf-038) Finanzsetup → [SF-039](#sf-039) Partnerdaten → [SF-040](#sf-040) Stammdatenbasis. [SF-041](#sf-041) Dashboard kann nach Prüfung seiner eigenen Voraussetzungen unabhängig bearbeitet werden. [SF-042](#sf-042) schließt die Stabilisierung mit realer Sandbox-Abnahme ab. Erst danach [SF-019](#sf-019) und weitere neue Fachgeneratoren beginnen. Jedes Ticket bleibt ein eigener Auftrag.
+
+**Verbindliche Qualitätsregeln für neue und geänderte Generatoren**
+
+- Fachwerte natürlich, vielfältig und synthetisch erzeugen. Keine generischen Test-/Demo-/Muster-Präfixe und keine Zählersuffixe in Fachfeldern. Herkunft intern zuordnen, statt die BC-Fachwerte zu verfälschen. Keine echten Empfänger oder Zahlungsdaten verwenden.
+- Pro Modul Setup, benötigte Stammdaten und Abhängigkeiten dokumentieren und vor dem ersten abhängigen Schritt prüfen. Passendes BC-Setup wiederverwenden. Keine spontanen Dummy-Konten, keine stillen Überschreibungen und keine Belege oder Buchungen bei blockierenden Voraussetzungen.
+- BC-Standardvalidierung und freigegebene Standardprozesse verwenden. Daten und Beziehungen bleiben vollständig, Lauf und Wiederanlauf nachvollziehbar und frei von unbeabsichtigten Duplikaten.
+- Neue Entitäten mit verständlicher Beschriftung, Zählquelle und korrektem, berechtigungsgeprüftem Drilldown in der Modulstatistik berücksichtigen. BC-Sitzungssprache und gewählte Datensprache trennen.
+- Jedes Generator-Ticket enthält mindestens einen fachlichen Sandbox-Nachweis, einen Negativ-/Wiederanlauffall passend zum Umfang und einen Nachweis des Drilldowns. Regeln werden mit SF-042 in `AGENTS.md` und der Modul-/Testdokumentation verankert.
+
 ## Ticketübersicht
 
 | Ticket | Phase | Prio | Titel | Status |
 | --- | --- | --- | --- | --- |
-|x[SF-001](#sf-001) | 0 / Fundierung | P0 | Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen | Blockiert |
-|x[SF-002](#sf-002) | 0 / Fundierung | P0 | AL-Struktur, Namenskonventionen und Objektplan finalisieren | Zur Prüfung |
-|x[SF-003](#sf-003) | 0 / Fundierung | P0 | Sicherheitsguard: Sandbox, Mandant, Berechtigung | Zur Prüfung |
-|x[SF-004](#sf-004) | 0 / Fundierung | P0 | Globale Factory-Einstellungen und Statusgrundlagen | Zur Prüfung |
+| [SF-037](#sf-037) | Stabilisierung | P0 | Reparatur Vorlage → Start → Ergebnis | Zur Prüfung |
+| [SF-038](#sf-038) | Stabilisierung | P0 | Realistische Kontenpläne und vollständige Buchungseinrichtung im Starterpfad | Zur Prüfung |
+| [SF-039](#sf-039) | Stabilisierung | P0 | Realistische Geschäftspartner und nutzbare Partnerstammdaten | Zur Prüfung |
+| [SF-040](#sf-040) | Stabilisierung | P0 | Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten | Offen |
+| [SF-041](#sf-041) | Stabilisierung | P0 | Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns | Offen |
+| [SF-042](#sf-042) | Stabilisierung | P0 | Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben | Offen |
+| [SF-001](#sf-001) | 0 / Fundierung | P0 | Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen | Blockiert |
+| [SF-002](#sf-002) | 0 / Fundierung | P0 | AL-Struktur, Namenskonventionen und Objektplan finalisieren | Zur Prüfung |
+| [SF-003](#sf-003) | 0 / Fundierung | P0 | Sicherheitsguard: Sandbox, Mandant, Berechtigung | Zur Prüfung |
+| [SF-004](#sf-004) | 0 / Fundierung | P0 | Globale Factory-Einstellungen und Statusgrundlagen | Zur Prüfung |
 | [SF-005](#sf-005) | 0 / Fundierung | P0 | Szenariovorlagen und versionierte Run-Snapshots | Zur Prüfung |
 | [SF-006](#sf-006) | 0 / Fundierung | P0 | Entitätsmengen, Quoten und Prozessmodi konfigurieren | Zur Prüfung |
 | [SF-007](#sf-007) | 0 / Fundierung | P0 | Generator-Vertrag und Registry definieren | Zur Prüfung |
@@ -33,8 +51,8 @@
 | [SF-014](#sf-014) | 0 / Fundierung | P0 | Monitoring-Datenmodell und Dashboard | Zur Prüfung |
 | [SF-015](#sf-015) | 0 / Fundierung | P0 | Wizard für Branche, Module, Umfang und Planung | Zur Prüfung |
 | [SF-016](#sf-016) | 0 / Fundierung | P0 | Validierungsframework und Abschlussstatus | Zur Prüfung |
-| [SF-017](#sf-017) | 1 / MVP | P1 | Finanz-Grundsetup für Handelsprofil | Zur Prüfung |
-| [SF-018](#sf-018) | 1 / MVP | P1 | Debitoren und Kreditoren als kohärente Stammdaten | Offen |
+| [SF-017](#sf-017) | 1 / MVP | P1 | Finanzsetup und auswertbare Testkontenpläne für SKR03 und SKR04 | Zur Prüfung |
+| [SF-018](#sf-018) | 1 / MVP | P1 | Debitoren und Kreditoren als kohärente Stammdaten | Zur Prüfung |
 | [SF-019](#sf-019) | 1 / MVP | P1 | Artikel, Kategorien, Varianten und Lagerbasics | Offen |
 | [SF-020](#sf-020) | 1 / MVP | P1 | Einkaufsprozess: Bestellung bis gebuchte Rechnung | Offen |
 | [SF-021](#sf-021) | 1 / MVP | P1 | Verkaufsprozess: Angebot bis gebuchte Rechnung | Offen |
@@ -73,6 +91,8 @@
 **Akzeptanz:** Eine belegte Bestandsaufnahme, keine behaupteten Tests, keine unfreigegebenen AL-/Git-/Deployment-Änderungen.
 
 ---
+
+<a name="sf-001"></a>
 
 ### SF-001 — Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen
 
@@ -117,6 +137,8 @@
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
+
+<a name="sf-002"></a>
 
 ### SF-002 — AL-Struktur, Namenskonventionen und Objektplan finalisieren
 
@@ -166,6 +188,8 @@
 
 ---
 
+<a name="sf-003"></a>
+
 ### SF-003 — Sicherheitsguard: Sandbox, Mandant, Berechtigung
 
 **Status:** Zur Prüfung\
@@ -204,6 +228,8 @@
 
 ---
 
+<a name="sf-004"></a>
+
 ### SF-004 — Globale Factory-Einstellungen und Statusgrundlagen
 
 **Status:** Zur Prüfung\
@@ -241,6 +267,8 @@
 **Abnahme:** [x] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
+
+<a name="sf-005"></a>
 
 ### SF-005 — Szenariovorlagen und versionierte Run-Snapshots
 
@@ -282,6 +310,8 @@
 
 ---
 
+<a name="sf-006"></a>
+
 ### SF-006 — Entitätsmengen, Quoten und Prozessmodi konfigurieren
 
 **Status:** Zur Prüfung\
@@ -322,6 +352,8 @@
 
 ---
 
+<a name="sf-007"></a>
+
 ### SF-007 — Generator-Vertrag und Registry definieren
 
 **Status:** Zur Prüfung
@@ -359,6 +391,8 @@
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
+
+<a name="sf-008"></a>
 
 ### SF-008 — Abhängigkeitsgraph und Ausführungsplan
 
@@ -398,6 +432,8 @@
 
 ---
 
+<a name="sf-009"></a>
+
 ### SF-009 — BC-Setup-Prüfung und nicht-destruktiver Setup-Diff
 
 **Status:** Zur Prüfung
@@ -436,6 +472,8 @@
 
 ---
 
+<a name="sf-010"></a>
+
 ### SF-010 — Synthetischer Realismus und Seed-Engine
 
 **Status:** Zur Prüfung
@@ -443,6 +481,8 @@
 **Abhängigkeiten:** SF-004,SF-006  
 **Verantwortung / betroffene Module:** DataGeneration, IndustryProfiles  
 **Verantwortliche Person:** Zu prüfen
+
+**Korrektur / neuer Prüfumfang:** [SF-039](#sf-039) konkretisiert naturnahe Stammdaten und prüft alle sichtbaren Platzhalter. Der Realismusvertrag gilt auch für Artikel, Regionen und nachgelagerte Generatoren.
 
 **Ausgangslage / Problem:** Deterministische synthetische Firmen-/Personen-/Artikel-/Preiswerte mit realistischen Streuungen, Datums-/Klassenregeln.
 
@@ -473,6 +513,8 @@
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
+
+<a name="sf-011"></a>
 
 ### SF-011 — Erzeugte Datensätze und Belegketten nachverfolgen
 
@@ -512,6 +554,8 @@
 
 ---
 
+<a name="sf-012"></a>
+
 ### SF-012 — Job-Queue Dispatcher, Run-/Batch-Tabellen
 
 **Status:** Zur Prüfung
@@ -549,6 +593,8 @@
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
+
+<a name="sf-013"></a>
 
 ### SF-013 — Batch-Checkpoint, Retry, Pause/Resume, Cancellation
 
@@ -588,6 +634,8 @@
 
 ---
 
+<a name="sf-014"></a>
+
 ### SF-014 — Monitoring-Datenmodell und Dashboard
 
 **Status:** Zur Prüfung
@@ -595,6 +643,8 @@
 **Abhängigkeiten:** SF-012,SF-013  
 **Verantwortung / betroffene Module:** Monitoring, UI  
 **Verantwortliche Person:** Zu prüfen
+
+**Korrektur / neuer Funktionsumfang:** [SF-041](#sf-041) ergänzt fachliche Modulstatistiken und Standardlisten-Drilldowns. [SF-042](#sf-042) vereinfacht den Hauptpfad und prüft Sprache und Navigation in BC.
 
 **Ausgangslage / Problem:** Kacheln, Modul-/Entitäts-Soll/Ist, Queue-Status, Zeiten, Drilldowns, Fehlermeldungen und Validierung.
 
@@ -632,6 +682,8 @@
 
 ---
 
+<a name="sf-015"></a>
+
 ### SF-015 — Wizard für Branche, Module, Umfang und Planung
 
 **Status:** Zur Prüfung
@@ -667,6 +719,8 @@
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
+
+<a name="sf-016"></a>
 
 ### SF-016 — Validierungsframework und Abschlussstatus
 
@@ -707,6 +761,8 @@
 
 ---
 
+<a name="sf-017"></a>
+
 ### SF-017 — Finanzsetup und auswertbare Testkontenpläne für SKR03 und SKR04
 
 **Status:** Zur Prüfung
@@ -714,6 +770,8 @@
 **Phase:** 1 / MVP  
 **Abhängigkeiten:** SF-009, SF-010  
 **Betroffene Module:** Finance, SetupManager, ScenarioManagement
+
+**Korrektur / neuer Prüfumfang:** [SF-038](#sf-038) prüft die Anwendung der vorhandenen Pakete im Starter-/Schnellstartpfad und ersetzt dort etwaige Zwei-Konten-Fallbacks. Keine zusätzlichen Finanzpakete neben dem gemeinsamen Paketvertrag.
 
 **Ziel**  
 Die BC Scenario Factory soll eine über den BC-Standard angelegte Sandbox-Testfirma mit einem schlanken **SKR03- oder SKR04-basierten Kontenplan** und der dazu passenden Buchungseinrichtung ausstatten. Der Kontenplan soll nicht nur Einkauf und Verkauf ermöglichen, sondern auch für Sachkontenbuchungen, Funktionstests, Schulungen und Finanzberichte in BC nutzbar sein. Der Nutzer soll dafür weder Sachkonten noch Buchungsgruppen einzeln anlegen müssen.
@@ -751,13 +809,17 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-018"></a>
+
 ### SF-018 — Debitoren und Kreditoren als kohärente Stammdaten
 
-**Status:** Offen  
+**Status:** Zur Prüfung  
 **Priorität:** P1  
 **Abhängigkeiten:** SF-010,SF-011,SF-017  
 **Verantwortung / betroffene Module:** Sales, Purchasing  
 **Verantwortliche Person:** Zu prüfen
+
+**Nutzerstand / Korrektur:** Partnergeneratoren wurden laut Nutzer umgesetzt und haben Geschäftspartner angelegt. Der Backlog hält deshalb „Zur Prüfung“ fest. Die sichtbaren Platzhalter und noch nicht nachgewiesenen Partnerbeziehungen werden in [SF-039](#sf-039) korrigiert und nachgetestet. Keine Abnahme abgeleitet.
 
 **Ausgangslage / Problem:** B2B/B2C, Regionen, Zahlungsziele, Kreditlimits, Lieferantenklassen und Beziehungen plausibel und synthetisch anlegen.
 
@@ -785,13 +847,17 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-019"></a>
+
 ### SF-019 — Artikel, Kategorien, Varianten und Lagerbasics
 
 **Status:** Offen  
 **Priorität:** P1  
-**Abhängigkeiten:** SF-009,SF-010,SF-017  
+**Abhängigkeiten:** SF-009,SF-010,SF-017, SF-042  
 **Verantwortung / betroffene Module:** Inventory  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Artikel, Kategorien, Einheiten, Varianten, Preise, Lagerorte und Buchungszuordnungen nach SF-040 planen. Namen und Varianten fachlich plausibel erzeugen. Neue Entitäten in die Statistiken mit passendem Standardlisten-Drilldown aufnehmen.
 
 **Ausgangslage / Problem:** Lager-/Nichtlager-/Serviceartikel, Preise, Einheiten, Kategorien, Lagerorte und Bestandsvoraussetzungen.
 
@@ -819,6 +885,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-020"></a>
+
 ### SF-020 — Einkaufsprozess: Bestellung bis gebuchte Rechnung
 
 **Status:** Offen  
@@ -826,6 +894,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-018,SF-019,SF-013  
 **Verantwortung / betroffene Module:** Purchasing, ProcessEngine  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Vor dem ersten Bestell-/Buchungsschritt Lieferant, Bestelladresse, Zahlungsbedingungen, Artikel und Buchungskombination prüfen. Belegköpfe und resultierende Posten als getrennte Kennzahlen registrieren.
 
 **Ausgangslage / Problem:** Ungebuchte Bestellungen, vollständige/teilweise Eingänge, gebuchte Eingangsrechnungen, ausgewählte Gutschriften.
 
@@ -853,6 +923,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-021"></a>
+
 ### SF-021 — Verkaufsprozess: Angebot bis gebuchte Rechnung
 
 **Status:** Offen  
@@ -860,6 +932,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-018,SF-019,SF-020  
 **Verantwortung / betroffene Module:** Sales, ProcessEngine  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Vor dem ersten Beleg-/Buchungsschritt Debitor, Lieferadresse, Zahlungsbedingungen, Artikel und Buchungskombination prüfen. Ungebuchte und gebuchte Belegarten und zugehörige Posten getrennt registrieren.
 
 **Ausgangslage / Problem:** Angebote, Aufträge, Lieferungen, Teilmengen, Faktura, offene Debitorenposten.
 
@@ -887,6 +961,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-022"></a>
+
 ### SF-022 — Zahlungen, Ausgleich, Gutschriften und Folgeprozesse
 
 **Status:** Offen  
@@ -894,6 +970,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-020,SF-021  
 **Verantwortung / betroffene Module:** Finance, Sales, Purchasing, ProcessEngine  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Zahlung, Ausgleich und Gutschrift nur mit passenden Stammdaten und Konto-/Zahlungszuordnungen ausführen. Keine externe Übermittlung und synthetische Bankverbindungen nicht als produktiv nutzbar behandeln. Postenzähler und Drilldowns nachführen.
 
 **Ausgangslage / Problem:** Offene, teilweise und vollständig ausgeglichene Posten; unterschiedliche Zahlungszeitpunkte, Gutschriften/Retouren im freigegebenen Umfang.
 
@@ -921,6 +999,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-023"></a>
+
 ### SF-023 — Großhandel als erstes Branchenprofil
 
 **Status:** Offen  
@@ -928,6 +1008,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-007,SF-010,SF-017,SF-021  
 **Verantwortung / betroffene Module:** IndustryProfiles, Finance, Sales, Purchasing, Inventory  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Pro Branchenprofil unterstützte Prozesse, Datenrealismus, erwartete Finanzrollen und Referenzstämme anhand SF-038 bis SF-040 dokumentieren. Geplante Funktionen klar kennzeichnen.
 
 **Ausgangslage / Problem:** Parameter/Quoten für B2B/B2C, Artikelmix, Belegstatus, Preis- und Mengensegmente; Demo/Training/Functional/Performance.
 
@@ -955,13 +1037,17 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-024"></a>
+
 ### SF-024 — End-to-End-MVP und fachliche Qualitätsgate
 
 **Status:** Offen  
 **Priorität:** P1  
-**Abhängigkeiten:** SF-014,SF-015,SF-016,SF-022,SF-023  
+**Abhängigkeiten:** SF-014,SF-015,SF-016,SF-022,SF-023, SF-042  
 **Verantwortung / betroffene Module:** Validation, Monitoring, UI  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** P0-Stabilisierung als Vorgänger nutzen. Die MVP-Abnahme erweitert deren Belege, Posten, Berichte und Dashboard-Prüfungen um die tatsächlich umgesetzten Prozessgeneratoren.
 
 **Ausgangslage / Problem:** Handelsdemo aus leer genug vorbereiteter Testfirma von Wizard bis Postenkontrolle; keine falschen Erfolgsmeldungen.
 
@@ -989,6 +1075,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-025"></a>
+
 ### SF-025 — AL-Test-App und fachliche Regressionssuite
 
 **Status:** Offen  
@@ -996,6 +1084,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-001,SF-016,SF-024  
 **Verantwortung / betroffene Module:** Tests, alle P1-Module  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Regressionssuite um Datenrealismus, Finance-Pakete, Stammdatenreihenfolge, Wiederanlauf und Abgleich Dashboard → Standardliste erweitern. P0-Smoke-Tests aus SF-042 nicht durch reine Mock-Tests ersetzen.
 
 **Ausgangslage / Problem:** Separate Test-App nach genehmigter Workspace-Strategie; Kern-, Fehler-, Sicherheits-, fachliche und Retry-Tests.
 
@@ -1022,6 +1112,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
+
+<a name="sf-026"></a>
 
 ### SF-026 — Lasttests, Durchsatzmessung, große Datenmengen
 
@@ -1057,6 +1149,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-027"></a>
+
 ### SF-027 — Sicheres Lauf-Lifecycle, Retention und Reset
 
 **Status:** Offen  
@@ -1091,6 +1185,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-028"></a>
+
 ### SF-028 — Warehouse-Prozessgenerator
 
 **Status:** Offen  
@@ -1098,6 +1194,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-024  
 **Verantwortung / betroffene Module:** Warehouse  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Lagerorte, Lagerplätze, Artikel und weitere pro Standort benötigte Referenzen vor Belegen/Bewegungen prüfen. Modulstatistik und Standardlisten-Drilldown aufnehmen.
 
 **Ausgangslage / Problem:** Lagerplätze, Ein-/Auslagerung, Kommissionierung, Umlagerungen und Varianten von Lager-Konfiguration.
 
@@ -1125,6 +1223,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-029"></a>
+
 ### SF-029 — Manufacturing- und Assembly-Generator
 
 **Status:** Offen  
@@ -1132,6 +1232,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-024  
 **Verantwortung / betroffene Module:** Manufacturing, Assembly  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Stücklisten, Arbeitspläne, Kapazitäts-/Produktionsstammdaten und Artikel je Prozess vor Bewegungen prüfen. Fertigung/Montage im Dashboard separat ausweisbar machen.
 
 **Ausgangslage / Problem:** Fertigungsstücklisten, Arbeitsplätze, Arbeitspläne, Produktionsauftrag/Verbrauch/Output sowie Montagestücklisten.
 
@@ -1159,6 +1261,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-030"></a>
+
 ### SF-030 — Projects- und ServiceManagement-Generator
 
 **Status:** Offen  
@@ -1166,6 +1270,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-024  
 **Verantwortung / betroffene Module:** Projects, ServiceManagement  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Projekt-, Ressourcen-, Service- und Partnerbeziehungen pro Prozess dokumentieren, vor Bewegungen prüfen und je Modul Drilldowns aufnehmen.
 
 **Ausgangslage / Problem:** Projekte, Projektaufgaben, Ressourcen, Zeiterfassung und Abrechnung; Servicefälle, Wartung, Ersatzteile, Faktura.
 
@@ -1193,6 +1299,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-031"></a>
+
 ### SF-031 — Anlagen und Abschreibungsfälle
 
 **Status:** Offen  
@@ -1200,6 +1308,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-024  
 **Verantwortung / betroffene Module:** FixedAssets, Finance  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Anlagenstämme, Buchungsgruppen und Abschreibungsbücher vor Buchung prüfen. Anlagen und Anlagenposten getrennt ausweisen.
 
 **Ausgangslage / Problem:** Anlagenklassen, Anschaffung, Abschreibung, Abgang/Sonderfälle als synthetische Belegketten.
 
@@ -1227,6 +1337,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-032"></a>
+
 ### SF-032 — Weitere Profile: E-Commerce, Fertigung, Dienstleistung, Bau, Logistik, Wartung
 
 **Status:** Offen  
@@ -1234,6 +1346,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-028,SF-029,SF-030  
 **Verantwortung / betroffene Module:** IndustryProfiles  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Für jedes Branchenprofil die Modul-/Entitätsmatrix, plausible Datenkataloge, benutzbare Stammdaten und nachgewiesene Pfade aktuell halten.
 
 **Ausgangslage / Problem:** Branchenmischungen realistisch definieren und Fachgeneratoren wiederverwenden, keine harte Datenkopie.
 
@@ -1261,6 +1375,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-033"></a>
+
 ### SF-033 — CRM/Relationship- und Planning-Generatoren
 
 **Status:** Offen  
@@ -1268,6 +1384,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abhängigkeiten:** SF-024  
 **Verantwortung / betroffene Module:** CRM, Planning  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Kontakte, Rollen, Beziehungen und erforderliche Planungsstämme vor Prozessen prüfen und in der Modulstatistik registrieren.
 
 **Ausgangslage / Problem:** Kontakte/Kampagnen/Opportunities und Nachfrage-/Beschaffungsplanung mit plausiblen Daten.
 
@@ -1295,13 +1413,17 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-034"></a>
+
 ### SF-034 — Öffentliche Generator-Erweiterungs-API
 
 **Status:** Offen  
 **Priorität:** P3  
-**Abhängigkeiten:** SF-007,SF-025  
+**Abhängigkeiten:** SF-007,SF-025, SF-042  
 **Verantwortung / betroffene Module:** ModuleRegistry, Core  
 **Verantwortliche Person:** Zu prüfen
+
+**Verbindliche Ergänzung gemäß [SF-042](#sf-042):** Erweiterungen an die gemeinsamen Verträge für Datenqualität, Abhängigkeiten, Herkunft, Sprachtrennung und Statistiken anbinden.
 
 **Ausgangslage / Problem:** Drittanbieter-/Branchenextension registriert Generatoren, Profile und Validierung ohne zentralen Fork.
 
@@ -1328,6 +1450,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
+
+<a name="sf-035"></a>
 
 ### SF-035 — Schulungsfälle, Aufgaben und Erfolgskontrollen
 
@@ -1363,6 +1487,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-036"></a>
+
 ### SF-036 — Release, AppSource-/PTE-Eignung und Dokumentation
 
 **Status:** Offen  
@@ -1397,24 +1523,14 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
-## Ticketvorlage für zukünftige Änderungen
-
-### SF-XXX — Titel
-**Status:** Offen  
-**Priorität:** P0/P1/P2/P3  
-**Abhängigkeiten:** Konkrete Tickets  
-**Betroffene Module:** Nach realem Code prüfen  
-**Ziel:** ...  
-**Umfang / Nicht-Ziele:** ...  
-**Schritte:** [ ] Analyse [ ] Design [ ] Implementierung [ ] echte Tests [ ] Dokumentation  
-**Akzeptanz:** Nachweisbarer fachlicher Sollzustand, keine Regression  
-**Testprotokoll:** BC-Version, Umgebung, Inputs, Erwartung, tatsächliches Ergebnis, bekannte Grenzen  
-**Freigabe:** [ ] Menschlich bestätigt.
-
+<a name="sf-037"></a>
 
 ### SF-037 — Reparatur Vorlage → Start → Ergebnis (Nutzerauftrag 18.11.2026)
 
-**Status:** Zur Prüfung
+**Status:** Zur Prüfung  
+**Priorität:** P0  
+
+**Nutzerstand:** Vorlage und Lauf funktionieren nach Nutzerbericht wieder. Die Abnahme und die Stabilisierungskorrekturen [SF-038](#sf-038) bis [SF-042](#sf-042) bleiben davon getrennt.
 
 **Ausgangslage:** Playground-Partnerlauf 5/5 mit zwei Paketen fehlgeschlagen; frühester vollständiger Queuefehler fehlt. Aktueller Workspace einschließlich lokaler Starter-/Transfer-/Ready-/Identitätsfixes ist die Arbeitsgrundlage.
 
@@ -1425,3 +1541,204 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Akzeptanz:** Nutzervorgaben dieses Auftrags einschließlich 5/5, 12/7, negativer Setupfall, Sammeltransfer zwischen zwei Testfirmen, DE/EN und wiederholtes Laden nach Löschen/Archivieren. Lokale Builds sind keine BC-Abnahme.
 
 **Tests / Risiken / offene Anforderungen:** [Aktueller Prüfnachweis](docs/TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026) und [vereinfachte Testanleitung](docs/review/TESTANLEITUNG.md). Ursprüngliche CUSTOMER-Ursache ohne frühesten vollständigen Standardfehler oder freigegebene Reproduktion weiterhin **Zu prüfen**. Sandbox-/Queue-/Rechte-/Parallelitäts-/Installations-/Transferabnahme offen. Keine menschliche Abnahme behauptet.
+
+---
+
+<a name="sf-038"></a>
+
+### SF-038 — Realistische Kontenpläne und vollständige Buchungseinrichtung im Starterpfad
+
+**Status:** Zur Prüfung  
+**Priorität:** P0  
+**Abhängigkeiten:** SF-009, SF-017, SF-037  
+**Verantwortung / betroffene Module:** Finance, SetupManager, IndustryProfiles, ScenarioManagement  
+**Verantwortliche Person:** Zu prüfen
+
+**Ausgangslage / Problem:** In der gezeigten Testfirma stehen nur `BCSF-AP` und `BCSF-AR` im Kontenplan. Die beiden Konten mit Test-Bezeichnung ersetzen keinen für Buchungen und Auswertungen brauchbaren Kontenplan. SF-017 beschreibt bereits SKR03-/SKR04-Pakete. Zu prüfen ist, welcher Starter-, Einrichtungs- oder Schnellstartpfad solche Ersatzkonten anlegt und ob er den Paketvertrag umgeht.
+
+**Soll-Verhalten / technischer Arbeitsauftrag:** Einen gemeinsamen Finance-Einrichtungspfad nutzen. Passende vorhandene BC-Einrichtung vollständig prüfen und unverändert wiederverwenden oder in der freigegebenen Sandbox nach Vorschau und Bestätigung eines der versionierten lokalen SKR03-/SKR04-basierten Pakete anwenden. Fehlt die Einrichtung, soll die Vorlage eine klare Aktion zur passenden Einrichtung anbieten. Keine manuelle Einzelanlage von Sachkonten oder Gruppen als reguläre Startvoraussetzung.
+
+**Vorgehen (einzeln abzuarbeiten):**
+
+- [ ] Alle Schreibpfade für Konten und Gruppen vom Starter, Schnellstart, Assistenten und regulären Lauf bis Finance prüfen. Zwei-Konten-Fallbacks und Buchungsgruppen mit generischen Test-/Demo-Namen aus dem regulären Pfad entfernen.
+- [ ] Je Rahmen einen schlanken, belastbaren Kontenplan mit fachlichen Nummernbereichen, führenden Nullen, lesbaren Bezeichnungen, Gliederung und Klassifikation vorsehen. Mindestens Bank/Kasse, Forderungen, Verbindlichkeiten, Bestand, Vor-/Umsatzsteuer, Eigenkapital, Erlöse, Wareneinsatz und repräsentative Betriebskosten abdecken. Buchungs- und Summenkonten unterscheiden, Standard-Bilanz/GuV und freie Sachkontenbuchungen unterstützen.
+- [ ] Konsistente Zuordnung der Kontenrollen zu Debitoren-/Kreditoren-/Bank-/Lagerbuchungsgruppen sowie allgemeinen und MwSt.-Buchungskombinationen treffen, soweit für das Profil benötigt. Sachkontonummern nicht in einzelnen Generatoren hardcodieren. Validierung und Zuordnung im Paket bündeln.
+- [ ] Bezugsjahr, Version, Herkunft, tatsächlichen Kontenumfang und Änderungen je Paket dokumentieren. Vorhandene SF-017-Pakete weiterverwenden bzw. korrigieren. Wenn offizielle DATEV-Daten erwogen werden, verfügbare Bezugsquelle und Wiederverwendungsrechte vor Übernahme prüfen. Kein Scraping oder Live-Abruf als Laufzeitvoraussetzung. Selbst erstellte Teilpläne eindeutig als SKR03-/SKR04-basiert beschreiben, nicht als vollständigen offiziellen Kontenrahmen ausgeben.
+- [ ] Vorschau für Anlage, Wiederverwendung und Konflikte, Paketversion im Lauf-Snapshot sowie einen Umgang mit bestehenden Ersatzkonten dokumentieren. Keine bestehenden oder bebuchten Konten umbenennen, löschen oder umhängen. Bei Konflikten konkrete nächste Aktion anzeigen.
+
+**Akzeptanzkriterien:**
+
+- [ ] Je eine frische Sandbox-Firma für SKR03 und SKR04. Nach Auswahl und Anwendung zeigt der BC-Standardkontenplan eine nachvollziehbare Gliederung und alle vorgesehenen Kontenrollen. Zweite Anwendung erzeugt keine Duplikate. Weitere Sandbox mit passender vorhandener BC-Einrichtung bleibt unverändert.
+- [ ] Pro Paket einen manuellen Standard-Verkaufs-, Einkaufs- und Sachkontenbuchblattfall mit dokumentierten Soll-/Ist-Konten und Beträgen buchen. Bilanz und GuV mit gebuchten Beträgen und Summen abgleichen. Zulässige Standard-Sachkontenzeilen oder bereitgestellte Testartikel genügen, solange SF-019 noch nicht umgesetzt ist.
+- [ ] Fehlende Kontenrollen, Konflikte sowie Rollen ohne Schreibfreigabe werden vor unvollständiger Paket- oder Datenanlage abgefangen. Der reguläre Pfad legt keine Ersatzkonten `BCSF-AR`/`BCSF-AP` an.
+
+**Nicht-Ziele / Sicherheitsgrenzen:** Keine Produktivänderung, keine automatische Umstellung bestehender Buchungsdaten und keine Direktinserts in gebuchte Posten.
+
+**Risiken / Entscheidungen:** Lokalisierung und BC-Zielversion prüfen. Nicht jede Standardfirma benötigt dieselbe Konfiguration. Anwendbare und nicht unterstützte Fälle mit nächsten Schritten ausweisen.
+
+**Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+
+**Umsetzungsstand 18.11.2026:** Implementierung im aktuellen Workspace; [gemeinsamer Vertrag und Grenzen](docs/STABILIZATION_FINANCE_PARTNERS.md), [tatsächliche Prüfungen](docs/TESTS.md#sf-038--sf-039--lokaler-prüfnachweis-18112026). Keine Sandbox-Abnahme. Insbesondere Standardbuchungen, DE/EN-Partnerlauf und Kinddaten-/Recoveryfälle bleiben offen. Neue Paketversion 2.0.0; kein Zwei-Konten-Fallback, keine stille Migration alter Pakete.
+
+---
+
+<a name="sf-039"></a>
+
+### SF-039 — Realistische Geschäftspartner und nutzbare Partnerstammdaten
+
+**Status:** Zur Prüfung  
+**Priorität:** P0  
+**Abhängigkeiten:** SF-010, SF-011, SF-018, SF-038  
+**Verantwortung / betroffene Module:** DataGeneration, IndustryProfiles, Sales, Purchasing, Finance  
+**Verantwortliche Person:** Zu prüfen
+
+**Ausgangslage / Problem:** Der gezeigte Debitorenbestand wiederholt wenige Namen und Kontakte und enthält Bezeichnungen wie „Testbetrieb Nordlicht [1]“ und „Testperson Jona Kupferwald“. Auch Adressen, E-Mail-Adressen und Gruppen wirken nach Nutzerbericht wie Platzhalter. Damit lassen sich Schulungen, Demos und echte BC-Prozessprüfungen schlechter durchführen.
+
+**Soll-Verhalten / technischer Arbeitsauftrag:** Die vorhandenen Partnergeneratoren liefern natürlich wirkende, vollständig synthetische B2B-/B2C-Stammdaten. Fachliche Daten sind aufeinander abgestimmt und für die vorgesehenen Standardprozesse nutzbar. Die Kennzeichnung als generierter Datensatz bleibt technisch über Herkunft und Lauf-ID möglich, nicht über Präfixe in Fachfeldern.
+
+**Vorgehen (einzeln abzuarbeiten):**
+
+- [ ] Seed-Kataloge und Generatoren auf alle Platzhalterpfade prüfen. Plausible Personen wie „Jonas Schneider“ oder „Lea Müller“, fiktive Firmen mit passenden Rechtsformen und passende Ansprechpartner kombinieren. Variabilität nach Branche, Datensprache, Region und Zielmenge steuern. Keine eckigen Zählersuffixe oder künstlichen Test-/Demo-/Muster-Präfixe in Namen, Adressen, Kontakten, E-Mails und neu angelegten Buchungsgruppen. Fachlich legitime Kennzeichnung in App/Setup-Vorschau bleibt möglich.
+- [ ] Straße, Hausnummer, PLZ, Ort und Land konsistent kombinieren. Für E-Mails reservierte nicht zustellbare Domains benutzen. Bankverbindungen als zugeordnete BC-Standarddatensätze mit plausiblen Feldwerten, und für Bankformate mit der BC-Validierung kompatible synthetische Testwerte verwenden. Keine realen Empfänger, importierten Personendaten, Mailzustellungen, Bankübermittlungen oder produktiven Zahlungsexporte. Wenn keine sichere Bankkonfiguration verfügbar ist, klar melden und den betroffenen Zahlungsprozess nicht als bereit ausweisen.
+- [ ] Nach Profil und Partnerklasse passende Debitoren-Lieferadressen, Kreditoren-Bestelladressen, Kontakte, bevorzugte Bankverbindung soweit sinnvoll, Währung, Zahlungsbedingungen/-form, Buchungsgruppen, Steuerlogik und Dimensionen zuordnen. Relevante Felder über BC-Standardvalidierung und Nummernserien setzen. Keine fachfremden Einträge nur zur Erhöhung der Feldabdeckung.
+- [ ] Parent-/Child-Zuordnung, Herkunft, Wiederanlauf und Eindeutigkeit über stabile Schlüssel sicherstellen. Gleicher Seed und gleiche Regelversion ergeben gleiche fachliche Werte, ohne interne BC-Nummern mit Namen zu verwechseln. Alte Laufdaten und manuell gepflegte Stammwerte unverändert lassen.
+
+**Akzeptanzkriterien:**
+
+- [ ] Sichtprüfung eines gemischten DE-Laufs mit mindestens 50 Debitoren und 50 Kreditoren sowie eines EN-Profils. Keine generischen Platzhalter oder Zählersuffixe, keine kleine sich zyklisch wiederholende Namensauswahl, sinnvolle B2B-/B2C-Verteilung und Adresskonsistenz. Gleicher Seed reproduzierbar, anderer Seed mit plausibel verteilten Varianten.
+- [ ] Im BC-Standard lassen sich zu ausgewählten Partnern die vorgesehenen Liefer-/Bestelladressen und Bankverbindungen öffnen und in passenden Belegen bzw. Zahlungszeilen auswählen. Ein Standardeinkaufs- und ein Standardverkaufsbeleg übernehmen die korrekten Stammdatenwerte.
+- [ ] Fehlende Buchungsgruppen oder nicht valide Partner-/Kinddaten werden mit konkreter Ursache sichtbar. Wiederanlauf erzeugt keine doppelten Kinddatensätze oder verwaisten Referenzen.
+
+**Nicht-Ziele / Sicherheitsgrenzen:** Keine Nutzung realer Geschäftspartnerdaten, keine Massenbereinigung früherer Läufe, keine Einführung neuer Fachgeneratoren.
+
+**Risiken / Entscheidungen:** Synthetische Daten müssen unabhängig von der UI-Sprache steuerbar bleiben. Keine Zustellbarkeit für realistisch aussehende Adressen, Kontakt- oder Zahlungsdaten annehmen.
+
+**Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+
+**Umsetzungsstand 18.11.2026:** Implementierung im aktuellen Workspace; [gemeinsamer Vertrag und Grenzen](docs/STABILIZATION_FINANCE_PARTNERS.md), [tatsächliche Prüfungen](docs/TESTS.md#sf-038--sf-039--lokaler-prüfnachweis-18112026). Keine Sandbox-Abnahme. Insbesondere Standardbuchungen, DE/EN-Partnerlauf und Kinddaten-/Recoveryfälle bleiben offen. Neue Partnerregel-/Setupversion 2; alte Captures unverändert. Ohne freigegebenen synthetischen Bankdatensatz ausdrücklich keine Zahlungsbereitschaft.
+
+---
+
+<a name="sf-040"></a>
+
+### SF-040 — Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten
+
+**Status:** Offen  
+**Priorität:** P0  
+**Abhängigkeiten:** SF-007, SF-008, SF-009, SF-016, SF-038, SF-039  
+**Verantwortung / betroffene Module:** Core, ModuleRegistry, Planning, SetupManager, DataGeneration, ProcessEngine  
+**Verantwortliche Person:** Zu prüfen
+
+**Ausgangslage / Problem:** Das bloße Anlegen von Datensätzen belegt nicht, dass ein Mandant oder Szenario fachlich startbereit ist. Fehlende Referenzstämme und Buchungseinstellungen können erst beim Buchen auffallen.
+
+**Soll-Verhalten / technischer Arbeitsauftrag:** Für jedes BC-Fachmodul die im Szenario benötigten Stammdaten und Einrichtungen inventarisieren und nach Profil, Land, Modulen und Prozessumfang planen. Ausführung in fachlicher Reihenfolge: BC-Einrichtung prüfen/bereitstellen → Referenzstamm → Haupt- und abhängige Stammdaten → Buchungsbereitschaft prüfen → Belege → gebuchte Bewegungen. Ein Stammdatenlauf endet vor Belegen und Buchung.
+
+**Vorgehen (einzeln abzuarbeiten):**
+
+- [ ] Eine Modul- und Entitätsmatrix für BC pflegen. Pro Entität angeben: erforderlich/optional, BC-Quelle, Standardvalidierung, Eltern/Referenzen, nachgelagerte Verwendung, Status `Vorhanden` / `Generierbar` / `Geplant` / `Nicht unterstützt` und zugehöriges Ticket. Mindestens FI/Bank, Verkauf, Einkauf, Artikel/Lager, Logistik, Fertigung/Montage, Projekte, Service, Anlagen und Kontakte berücksichtigen. Fachlich nötige Stämme inventarisieren, keine pauschale Befüllung aller BC-Tabellen.
+- [ ] Für den aktuellen Stand die notwendigen Referenzen für Partner und Finance (Nummernserien, Länder/Regionen, Zahlungsbedingungen/-formen, Buchungsgruppen/-matrizen, erforderliche Währungen und Dimensionen) automatisiert prüfen und nur bei vorgesehener Sandbox-Einrichtung anlegen. Für spätere Entitäten z. B. Artikel, Einheiten, Preise, Lagerorte, Ressourcen, Stücklisten oder Serviceartikel Anforderungen in den zugehörigen Tickets nachziehen.
+- [ ] Preflight trennt „wird erzeugt und vorher validiert“, „bereits vorhanden“ sowie „fehlt/blockiert“ und nennt eine nächste Aktion. Relevante Voraussetzungen nach Anlage und vor der ersten abhängigen Beleg-/Buchungsaktion im Hintergrund erneut prüfen. Vorlage, Schnellstart, reguläre Queue und Fortsetzen verwenden dieselben fachlichen Regeln.
+- [ ] Validierungsvertrag und Ablauf im bestehenden Architektur-/Testbereich dokumentieren. Zum Beispiel Pflichtfeld-/Referenzmatrix, Abhängigkeitsreihenfolge und Soll-/Ist-Nachweise versionieren. Regeln nutzen die Registry und keine verteilten Einzelprüfungen ohne Begründung.
+
+**Akzeptanzkriterien:**
+
+- [ ] Startfähiger Partner-Stammdatenlauf erstellt alle für das Profil zugesagten Stämme und Beziehungen. Es entstehen keine Belege oder gebuchten Bewegungen.
+- [ ] Fehlt bei einem Bewegungsprofil z. B. die MwSt.-Kombination, der Lagerort oder ein erforderlicher Generator, nennt die Vorprüfung das konkrete Problem. Keine abhängige Beleganlage oder Buchung läuft darüber hinweg. Ein Stammdatenprofil ohne Lagerbedarf bleibt bei fehlendem optionalem Lagerort startfähig.
+- [ ] Fachliche Reihenfolge und Prüfung sind für vorhandene Generatoren in Sandbox nachgewiesen. Spätere Module haben dokumentierte Voraussetzungen und sind bis zu ihrer Umsetzung eindeutig als geplant oder nicht unterstützt ausgewiesen.
+
+**Nicht-Ziele / Sicherheitsgrenzen:** Keine neuen Branchen- oder Prozessgeneratoren zur Erfüllung dieses Tickets. Keine automatischen Buchungen ohne bestehende Freigabe und keine direkten Writes in gebuchte BC-Posten.
+
+**Risiken / Entscheidungen:** Die Matrix ist erweiterbar, aber für bereits unterstützte Entitäten verbindlich. Fehlen Setup oder Rechte, darf die App keine Startfähigkeit vortäuschen.
+
+**Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+
+---
+
+<a name="sf-041"></a>
+
+### SF-041 — Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns
+
+**Status:** Offen  
+**Priorität:** P0  
+**Abhängigkeiten:** SF-011, SF-014, SF-037  
+**Verantwortung / betroffene Module:** Monitoring, UI, ModuleRegistry, Sales, Purchasing, Finance, Inventory  
+**Verantwortliche Person:** Zu prüfen
+
+**Ausgangslage / Problem:** Der Laufmonitor zeigt heute vor allem technische Schritte. Auf einen Blick ist nicht erkennbar, was bereits erzeugt wurde, wo die Daten zu finden sind und welche Anzeige auch wirklich zur Zielseite führt.
+
+**Soll-Verhalten / technischer Arbeitsauftrag:** Einen Bereich **Daten im Mandanten** mit klaren fachlichen Gruppen neben **Vorlagen** und **Läufe** ergänzen. Jede sichtbare Kennzahl mit verfügbarer und autorisierter Zielseite öffnet genau die angezeigte Menge in der passenden BC-Standardliste. Technische Diagnose bleibt über den Lauf erreichbar, ohne die fachliche Übersicht zu dominieren.
+
+**Vorgehen (einzeln abzuarbeiten):**
+
+- [ ] Gruppen **Stammdaten**, **Verkauf**, **Einkauf** und **Bewegungsdaten** umsetzen. **Stammdaten** pro Entität zählen, z. B. Debitoren, Kreditoren, Kontakte, Liefer-/Bestelladressen, Partnerbankverbindungen, Sachkonten, Bankkonten, Artikel und Lagerorte. Fehlende Generatoren nicht als Nullausgabe tarnen.
+- [ ] **Verkauf** und **Einkauf** je relevante Standardbelegart abbilden, u. a. Angebote, Rahmenaufträge/-bestellungen, Aufträge/Bestellungen, Rechnungen, Gutschriften, Reklamationen und gebuchte Lieferungen/Eingänge, Rechnungen, Gutschriften und Rücksendungen. Ungebuchte Dokumente und gebuchte Dokumente separat zählen. Zählbasis sind Belegköpfe, keine Belegzeilen.
+- [ ] **Bewegungsdaten** für Sach-, Debitoren-, Kreditoren-, Bank-, MwSt.-, Artikel- und Wertposten nach Art ausweisen, soweit verfügbar. Beleg und Posten sind getrennte Kennzahlen und werden nicht zu einer vermeintlichen Gesamtzahl zusammenaddiert.
+- [ ] Skalierbare Gruppen für weitere BC-Module wie Finanzen/Bank, Lager/Logistik, Fertigung/Montage, Projekte, Service, Anlagen und CRM/Beziehungen vorsehen. Registrierung pro Entität mit Modul, Caption, Zählquelle, fachlichem Filter, Drilldown-Ziel, Berechtigungs- und Verfügbarkeitsregeln. Kerngruppen sichtbar, weitere Gruppen aufklappbar. Neue Module ergänzen ihre Registrierung statt das Dashboard zu duplizieren.
+- [ ] Standardansicht **Von Scenario Factory erzeugt** in der aktuellen Firma mit optionalem Lauf-Filter. **Gesamter Mandant** als separat auswählbaren, klar beschrifteten Umfang ohne Laufbindung anbieten. Vorhandene Live-Datensätze zählen, keine geplanten, doppelt protokollierten oder gelöschten Ergebnisse. Können Herkunft oder Filter nicht zuverlässig abgebildet werden, als nicht verfügbar kennzeichnen. Keine Drilldowns in ungefilterte Listen als Ersatz für einen gefilterten Wert.
+- [ ] BC-Sitzungssprache einheitlich für Dashboard, Aktionen, Tooltips, Fehler und Zielseitenbeschriftungen verwenden. Status klar unterscheiden: „0 Datensätze“, „Kein Generator verfügbar“ oder „Kein Zugriff“. Keine wirkungslosen Buttons. Zählung bedarfsgerecht laden, nicht bei jeder Aktualisierung alle Postentabellen vollständig lesen. Lade- und Aktualisierungszustand zeigen.
+
+**Akzeptanzkriterien:**
+
+- [ ] Nach einem Partnerlauf stimmen Dashboardzahlen für Partner und Kinder mit den gefilterten Standardlisten überein. Prüffall mit vorhandenen manuellen Daten und zwei Läufen zeigt korrekte Trennung der Ansichten und des Lauf-Filters.
+- [ ] Je eine Verkaufs-, Einkaufs- und Postenkennzahl ist mit vorhandenen Standarddaten in der Mandantenansicht nachgewiesen, unabhängig davon, ob der zugehörige Generator bereits existiert. In der generierten Ansicht erscheinen nur tatsächlich zugeordnete Datensätze.
+- [ ] Jeder verfügbare und berechtigte Zähler ist per Maus und Tastatur verständlich erreichbar. Bei fehlendem Standardlistenziel ist der Ausfall ausdrücklich sichtbar und für die nötige Alternative dokumentiert. Benutzer ohne Leserecht sehen keine Daten oder vertrauliche Zähler der Entität. Deutsche Sitzung zeigt keine unübersetzten englischen App-Texte.
+- [ ] Dashboard bleibt mit leerem Mandanten, reichlich vorhandenen Daten und mehreren sichtbaren Modulgruppen benutzbar. Aktualisierung nach Laufabschluss und nach zwischenzeitlicher Datenänderung geprüft; Laufzeiten und Umfang dokumentiert.
+
+**Nicht-Ziele / Sicherheitsgrenzen:** Statistik startet keine Generierung oder Buchung. Geplante Module erhalten keine erfundenen Datenquellen. Keine Berechtigungen über den Dashboardpfad umgehen.
+
+**Risiken / Entscheidungen:** Drilldowns für abhängige Entitäten und nicht zusammenhängende Datensätze mit Standardseiten, den realen BC-Symbolen und repräsentativer Filtergröße prüfen. Für große Datenmengen Strategie und Messung festhalten.
+
+**Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+
+---
+
+<a name="sf-042"></a>
+
+### SF-042 — Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben
+
+**Status:** Offen  
+**Priorität:** P0  
+**Abhängigkeiten:** SF-037, SF-038, SF-039, SF-040, SF-041  
+**Verantwortung / betroffene Module:** ScenarioManagement, Monitoring, BackgroundProcessing, Validation, Finance, Querschnitt  
+**Verantwortliche Person:** Zu prüfen
+
+**Ausgangslage / Problem:** Vorlage und Lauf funktionieren nach Nutzerbericht wieder. Das ist noch kein Nachweis dafür, dass ein neuer Nutzer von der Vorlage ohne Umwege zu brauchbaren Daten gelangt oder Fehler selbst einordnen kann. Der verbliebene Aufwand entsteht vor allem durch unklare Begriffe, viele technische Optionen und schwankende Datenqualität.
+
+**Soll-Verhalten / technischer Arbeitsauftrag:** Den vorhandenen Kernpfad stabilisieren und in einer frischen Sandbox abnehmen. Klarer Bedienweg: Vorlage auswählen → Voraussetzungen prüfen und bei Bedarf passende Einrichtung anbieten → Lauf im Hintergrund starten → Status ansehen → Daten öffnen. Erweiterte Einrichtung, Pakete, Checkpoints und technische Fehlerdetails bleiben erreichbar, stehen aber nicht im Standardpfad.
+
+**Vorgehen (einzeln abzuarbeiten):**
+
+- [ ] Standardweg mit wenigen eindeutigen Hauptaktionen prüfen und vereinfachen. Je Status die sinnvolle nächste Aktion prominent anbieten. Fehlertext nennt betroffene Entität, Ursache und mögliche nächste Aktion. Keine automatische Wiederholung eines ungeklärten Pakets. Vorlage und Daten bleiben nachvollziehbar verknüpft.
+- [ ] Ende-zu-Ende-Prüfung mit BC-Version, Lokalisierung, Umgebung, Rolle, Seed, Vorlage, erwartetem und tatsächlich erreichtem Ergebnis dokumentieren. Den realen Hintergrundlauf einschließlich mehrerer Pakete und Schließen der Sitzung nach Start prüfen. Die tatsächlich erzeugten Daten über den Dashboard-Drilldown im BC-Standard öffnen.
+- [ ] Regression von Startervorlagen, Sammeltransfer, Lösch-/Archivregeln und DE/EN anhand SF-037 prüfen. Beispieldaten dürfen bei korrekter deutscher UI weiterhin der bewusst gewählten Datensprache folgen.
+- [ ] Verbindliche Generatorregeln in `AGENTS.md` verlinken und an bestehender Stelle in Architektur-/Test-/Moduldokumentation festhalten. Mindestens Datenrealismus, Setup-/Stammreihenfolge, BC-Standardvalidierung und -buchung, Herkunft/Idempotenz, Modulstatistik und Drilldown, Sprachtrennung sowie die Nachweise je Modul dokumentieren. Kurze Einsteiger-Testanleitung unter dem bestehenden Testpfad nachführen.
+- [ ] Bei künftigen Tickets die Qualitätscheckliste als Vorbedingung und Abnahme übernehmen. Bei fehlender Generator- oder Setupabdeckung ein Folgeticket verlinken oder den Umfang konkret eingrenzen, nicht stillschweigend umgehen.
+
+**Akzeptanzkriterien:**
+
+- [ ] In frischer Sandbox schafft ein Anwender den Kernpfad anhand der Kurzanleitung ohne manuelles Anlegen einzelner benötigter Sachkonten und Buchungsgruppen. Zwei unterschiedlich dimensionierte Partnerläufe liefern die erwarteten Mengen und Beziehungen auch bei geschlossener Sitzung. Abschlussstatus und Dashboard stimmen mit BC-Daten überein.
+- [ ] Fehlendes Setup, fehlende Rechte und ein kontrollierter Batchfehler sind praktisch geprüft. Ein fehlgeschlagener Lauf zeigt einen verständlichen nächsten Schritt. Bei Wiederanlauf entstehen keine unbemerkten Duplikate. Nicht eindeutig fortsetzbare Arbeit bleibt sichtbar blockiert.
+- [ ] Die Abnahme enthält die fachlichen Nachweise aus SF-038 bis SF-041. Ungetestete Varianten stehen ausdrücklich als offen. Build, lokale Tests und Nutzerbericht sind getrennt von der realen Sandbox-Abnahme dokumentiert.
+- [ ] Menschliche Freigabe des P0-Stands liegt vor. Erst danach weitere Fachgeneratoren beginnen. Manuelle BC-Abnahmefälle sind ausreichend für den Kernpfad, ohne geplante Generatoren vorziehen zu müssen.
+
+**Nicht-Ziele / Sicherheitsgrenzen:** Kein Vorziehen von SF-019 oder weiteren Generatoren, keine pauschale Freigabe aller Branchenprofile, keine Änderung außerhalb des genehmigten Ticketumfangs.
+
+**Risiken / Entscheidungen:** Ein einzelner erfolgreicher Lauf genügt nicht für Wiederanlauf oder Datenqualität. Bei Wiederauftreten des Fehlers den ersten vollständigen Queue-Fehler mit Lauf-/Paketbezug dokumentieren.
+
+**Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+
+---
+
+## Ticketvorlage für zukünftige Änderungen
+
+### SF-XXX — Titel
+**Status:** Offen  
+**Priorität:** P0/P1/P2/P3  
+**Abhängigkeiten:** Konkrete Tickets  
+**Betroffene Module:** Nach realem Code prüfen  
+**Ziel:** ...  
+**Umfang / Nicht-Ziele:** ...  
+**Schritte:** [ ] Analyse [ ] Design [ ] Implementierung [ ] echte Tests [ ] Dokumentation  
+**Akzeptanz:** Nachweisbarer fachlicher Sollzustand, keine Regression. Bei Generatoren zusätzlich Qualitätsregeln und SF-042 berücksichtigen.  
+**Testprotokoll:** BC-Version, Umgebung, Inputs, Erwartung, tatsächliches Ergebnis, bekannte Grenzen  
+**Freigabe:** [ ] Menschlich bestätigt.

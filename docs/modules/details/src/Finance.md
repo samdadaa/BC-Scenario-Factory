@@ -57,3 +57,8 @@ Vorhandene AL-Objekte liegen unter `src/Finance/Codeunits/`. Zuordnung gemäß [
 ## SF-018 – 18.11.2026
 
 Partner-Capture-Subscriber liefert paketabhängige Gruppen und erfasste Standardnummernserien, Kontenzuordnungen, Zahlungsformeln und CRM-Bindungen. Keine neuen Konten oder Standardrechte, kein automatisches Apply. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.
+
+
+## SF-038
+
+Gemeinsamer Finance-Einstieg, neue Teilpakete 2.0.0 mit bestätigter Foundation, kein Zwei-Konten-Fallback. Altversion 1.0.0 bleibt unverändert. [Rollen und Abnahme](../../../STABILIZATION_FINANCE_PARTNERS.md). **Zur Prüfung**.

@@ -70,3 +70,8 @@ Ein Lauf mit ausschließlich positiven Customer-/Vendor-Zielen nutzt die konkret
 | Regression | Vertragsproben bleiben lesend und aus echten Plänen ausgeschlossen. Dokument-/Artikel-/Posting-/Bestandsläufe behalten fehlende Generator-/Setupblocker. Altsnapshots lesen, neue Partnerparameter und erfasste Paketidentität nicht rückwirkend verändern |
 
 Build, Quellprüfung und Übersetzungsabdeckung ersetzen diese BC-Laufzeitfälle nicht. Reale Sandbox-/Last-/Berechtigungs-/CRM-Abnahme und tatsächliche Zielversion bleiben **Zu prüfen**. Ergebnisse ausgeführter lokaler Prüfungen stehen in TESTS.md; SF-018 höchstens **Zur Prüfung**.
+
+
+## SF-039 – neue Captures
+
+Neue syntheticRules-/partnerSetup-Version 2 erweitert die bisherige Generatorbindung 1 um natürliche DE/EN-Katalogwerte, konsistente DE/GB-Adressen, optionale Währung/Zahlungsform/Dimensionen sowie registrierte Standard-Liefer-/Bestelladressen. Alte Snapshots bleiben Version 1. Partnerzahl und Artefaktzahl werden getrennt geprüft. Keine Bankdaten ohne freigegebenen synthetischen Datensatz; ausdrücklich keine Zahlungsbereitschaft. [Aktueller Vertrag](STABILIZATION_FINANCE_PARTNERS.md#sf-039--versionierte-partnerwerte).

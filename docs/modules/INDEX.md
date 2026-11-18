@@ -10,7 +10,7 @@
 | [ModuleRegistry](details/src/ModuleRegistry.md) | Kern | `src/ModuleRegistry/` | Vertrag/Katalog/Proben: 10 AL-Objekte, zur Prüfung |
 | [DependencyManager](details/src/DependencyManager.md) | Kern | `src/DependencyManager/` | Graph/Plan/Vorschau: 9 AL-Objekte, zur Prüfung |
 | [SetupManager](details/src/SetupManager.md) | Kern | `src/SetupManager/` | 4 AL-Objekte: temporärer Setup-Diff, Manager, Vorschau und Laufkarten-Erweiterung; zur Prüfung. |
-| [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | 7 AL-Objekte: Partnerregeln, Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. |
+| [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | 9 AL-Objekte: Partnerregeln/-katalog/-kinddaten, Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. |
 | [ProcessEngine](details/src/ProcessEngine.md) | Kern | `src/ProcessEngine/` | Geplant, ohne Code |
 | [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 17 AL-Objekte: Qualitätsabschluss, Ausführung, Queue und begrenzte Recovery mit Checkpoints/Steuerung; zur Prüfung. |
 | [Validation](details/src/Validation.md) | Kern | `src/Validation/` | 4 AL-Objekte: immutable Qualitätsbefunde, Manager, Severity und Ergebnisliste; zur Prüfung |
@@ -57,3 +57,8 @@ Eigener Scrollbereich und generierte deutsche UI-Fallback-Ressource im bestehend
 ## SF-037 – Partner-Normalpfad, 18.11.2026
 
 Aktueller Bestand: 129 AL-Dateien in 14 Modulen, zehn Module ohne AL-Code. ScenarioManagement jetzt 24 Objekte einschließlich Transfer und neuem Entfernt-Vermerk 90148, IndustryProfiles 4 einschließlich Starterkatalog/Install/Upgrade, Monitoring 20 einschließlich Quick Run und Szenarioaktionen, Finance 8 einschließlich Demo Partner Setup. Andere Modulbestände unverändert. Starterobjekte waren vor diesem Auftrag bereits im Workspace; nur 90148 ist in diesem Auftrag neu. [Vertrag](../STARTER_TEMPLATES.md), [tatsächliche Prüfungen](../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**, keine BC-Laufzeitabnahme.
+
+
+## SF-038 / SF-039 – Bestandserweiterung
+
+131 AL-Dateien in weiterhin 14 Modulen. Neu DataGeneration 90257 Partner Catalog und 90258 Partner Children. Finance-Bestand unverändert, 90408 dient jetzt dem gemeinsamen Paketfoundation-Vertrag. [Details](../STABILIZATION_FINANCE_PARTNERS.md). **Zur Prüfung**.

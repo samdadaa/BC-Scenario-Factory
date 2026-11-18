@@ -322,6 +322,185 @@ DE.update({
                                                                                  'Vorlage, damit die Historie erhalten bleibt.',
  'View Progress': 'Fortschritt ansehen'})
 
+# SF-038/SF-039: maintained German master mappings; compiler IDs come from the build.
+DE.update({'Cash': 'Kasse',
+ 'Create missing setup or fill empty number series bindings': 'Fehlende Einrichtung anlegen oder leere Nummernserienzuordnungen '
+                                                              'ergänzen',
+ 'Domestic trade 19%': 'Inlandshandel 19 %',
+ 'Domestic trade requires at least one unblocked posting combination with usable G/L accounts in this table. Exact document and tax combinations must also be reviewed before posting.': 'Für '
+                                                                                                                                                                                         'den '
+                                                                                                                                                                                         'Inlandshandel '
+                                                                                                                                                                                         'muss '
+                                                                                                                                                                                         'diese '
+                                                                                                                                                                                         'Tabelle '
+                                                                                                                                                                                         'mindestens '
+                                                                                                                                                                                         'eine '
+                                                                                                                                                                                         'ungesperrte '
+                                                                                                                                                                                         'Buchungskombination '
+                                                                                                                                                                                         'mit '
+                                                                                                                                                                                         'nutzbaren '
+                                                                                                                                                                                         'Sachkonten '
+                                                                                                                                                                                         'enthalten. '
+                                                                                                                                                                                         'Prüfen '
+                                                                                                                                                                                         'Sie '
+                                                                                                                                                                                         'vor '
+                                                                                                                                                                                         'einer '
+                                                                                                                                                                                         'Buchung '
+                                                                                                                                                                                         'zusätzlich '
+                                                                                                                                                                                         'die '
+                                                                                                                                                                                         'konkreten '
+                                                                                                                                                                                         'Beleg- '
+                                                                                                                                                                                         'und '
+                                                                                                                                                                                         'Steuerkombinationen.',
+ 'Explains why payment processes remain blocked without approved synthetic bank details.': 'Erläutert, warum Zahlungsprozesse '
+                                                                                           'ohne freigegebene synthetische '
+                                                                                           'Bankdaten gesperrt bleiben.',
+ 'Finance foundation %1 is missing, incompatible or not writable. Review setup and permissions before applying.': 'Die '
+                                                                                                                  'Finanzgrundlage '
+                                                                                                                  '%1 fehlt, ist '
+                                                                                                                  'inkompatibel '
+                                                                                                                  'oder nicht '
+                                                                                                                  'beschreibbar. '
+                                                                                                                  'Prüfen Sie '
+                                                                                                                  'vor dem '
+                                                                                                                  'Anwenden die '
+                                                                                                                  'Einrichtung '
+                                                                                                                  'und '
+                                                                                                                  'Berechtigungen.',
+ 'General Journal': 'Allgemeines Buchblatt',
+ 'Inventory accrual account': 'Lagerabgrenzungskonto',
+ 'Inventory interim account': 'Lagerzwischenkonto',
+ 'Locally authored SKR03/SKR04-based subset, reference year 2026. No official chart data is imported.': 'Lokal erstellter '
+                                                                                                        'Teilkontenplan auf '
+                                                                                                        'Basis von SKR03/SKR04, '
+                                                                                                        'Bezugsjahr 2026. Es '
+                                                                                                        'werden keine '
+                                                                                                        'offiziellen '
+                                                                                                        'Kontenrahmendaten '
+                                                                                                        'importiert.',
+ 'No approved synthetic bank dataset is configured. Payment-ready bank accounts and payment exports are not generated. Configure and verify bank data separately before any payment process.': 'Es '
+                                                                                                                                                                                               'ist '
+                                                                                                                                                                                               'kein '
+                                                                                                                                                                                               'freigegebener '
+                                                                                                                                                                                               'synthetischer '
+                                                                                                                                                                                               'Bankdatensatz '
+                                                                                                                                                                                               'eingerichtet. '
+                                                                                                                                                                                               'Es '
+                                                                                                                                                                                               'werden '
+                                                                                                                                                                                               'keine '
+                                                                                                                                                                                               'zahlungsfähigen '
+                                                                                                                                                                                               'Bankkonten '
+                                                                                                                                                                                               'oder '
+                                                                                                                                                                                               'Zahlungsexporte '
+                                                                                                                                                                                               'erzeugt. '
+                                                                                                                                                                                               'Richten '
+                                                                                                                                                                                               'Sie '
+                                                                                                                                                                                               'Bankdaten '
+                                                                                                                                                                                               'vor '
+                                                                                                                                                                                               'einem '
+                                                                                                                                                                                               'Zahlungsprozess '
+                                                                                                                                                                                               'gesondert '
+                                                                                                                                                                                               'ein '
+                                                                                                                                                                                               'und '
+                                                                                                                                                                                               'prüfen '
+                                                                                                                                                                                               'Sie '
+                                                                                                                                                                                               'diese.',
+ 'Open Generated Record': 'Erzeugten Datensatz öffnen',
+ 'Opens the exact partner, ship-to address or order address by its recorded stable identity.': 'Öffnet genau den zugeordneten '
+                                                                                               'Partner, die Lieferadresse oder '
+                                                                                               'die Bestelladresse anhand der '
+                                                                                               'gespeicherten stabilen '
+                                                                                               'Identität.',
+ 'Opens the shared finance preview. Apply a reviewed package explicitly, then select it for this template.': 'Öffnet die '
+                                                                                                             'gemeinsame '
+                                                                                                             'Finanzvorschau. '
+                                                                                                             'Wenden Sie ein '
+                                                                                                             'geprüftes Paket '
+                                                                                                             'ausdrücklich an '
+                                                                                                             'und wählen Sie es '
+                                                                                                             'für diese Vorlage '
+                                                                                                             'aus.',
+ 'Partner Currency': 'Partnerwährung',
+ 'Partner Global Dimension 1': 'Partner: Globale Dimension 1',
+ 'Partner Global Dimension 2': 'Partner: Globale Dimension 2',
+ 'Partner Payment Method': 'Partnerzahlungsform',
+ 'Partner catalog logical keys must be positive.': 'Logische Schlüssel im Partnerkatalog müssen positiv sein.',
+ 'Partner catalog version 2 supports address countries DE and GB. Configure a supported country instead of generating inconsistent addresses for %1.': 'Der '
+                                                                                                                                                       'Partnerkatalog '
+                                                                                                                                                       'Version '
+                                                                                                                                                       '2 '
+                                                                                                                                                       'unterstützt '
+                                                                                                                                                       'Adressen '
+                                                                                                                                                       'in '
+                                                                                                                                                       'DE '
+                                                                                                                                                       'und '
+                                                                                                                                                       'GB. '
+                                                                                                                                                       'Wählen '
+                                                                                                                                                       'Sie '
+                                                                                                                                                       'ein '
+                                                                                                                                                       'unterstütztes '
+                                                                                                                                                       'Land; '
+                                                                                                                                                       'für '
+                                                                                                                                                       '%1 '
+                                                                                                                                                       'werden '
+                                                                                                                                                       'keine '
+                                                                                                                                                       'inkonsistenten '
+                                                                                                                                                       'Adressen '
+                                                                                                                                                       'erzeugt.',
+ 'Partner generation requires effective read and write permissions for %1 before the batch starts.': 'Die Partnererzeugung '
+                                                                                                     'erfordert vor dem '
+                                                                                                     'Paketstart wirksame Lese- '
+                                                                                                     'und Schreibberechtigungen '
+                                                                                                     'für %1.',
+ 'Payment Readiness': 'Zahlungsbereitschaft',
+ 'Reuse existing setup': 'Vorhandene Einrichtung wiederverwenden',
+ 'Review Finance Setup': 'Finanzeinrichtung prüfen',
+ 'Review the finance package and confirm. Existing nonempty settings are retained.': 'Prüfen und bestätigen Sie das Finanzpaket. '
+                                                                                     'Vorhandene gefüllte Einstellungen bleiben '
+                                                                                     'erhalten.',
+ 'Specifies an existing currency. Blank uses local currency; a valid exchange rate is required.': 'Gibt eine vorhandene Währung '
+                                                                                                  'an. Leer verwendet die '
+                                                                                                  'Mandantenwährung; für '
+                                                                                                  'Fremdwährungen ist ein '
+                                                                                                  'gültiger Wechselkurs '
+                                                                                                  'erforderlich.',
+ 'Specifies an existing payment method. This does not make bank data ready for payments.': 'Gibt eine vorhandene Zahlungsform '
+                                                                                           'an. Bankdaten werden dadurch nicht '
+                                                                                           'für Zahlungen freigegeben.',
+ 'Specifies an existing value of the first global dimension. Blank leaves the dimension unset.': 'Gibt einen vorhandenen Wert '
+                                                                                                 'der ersten globalen Dimension '
+                                                                                                 'an. Leer lässt die Dimension '
+                                                                                                 'ungesetzt.',
+ 'Specifies an existing value of the second global dimension. Blank leaves the dimension unset.': 'Gibt einen vorhandenen Wert '
+                                                                                                  'der zweiten globalen '
+                                                                                                  'Dimension an. Leer lässt die '
+                                                                                                  'Dimension ungesetzt.',
+ 'Use %1 for this template? Version 2 packages also select their payment terms. Existing accounts, old runs and generated partners are retained.': '%1 '
+                                                                                                                                                   'für '
+                                                                                                                                                   'diese '
+                                                                                                                                                   'Vorlage '
+                                                                                                                                                   'verwenden? '
+                                                                                                                                                   'Pakete '
+                                                                                                                                                   'der '
+                                                                                                                                                   'Version '
+                                                                                                                                                   '2 '
+                                                                                                                                                   'wählen '
+                                                                                                                                                   'zusätzlich '
+                                                                                                                                                   'ihre '
+                                                                                                                                                   'Zahlungsbedingungen '
+                                                                                                                                                   'aus. '
+                                                                                                                                                   'Vorhandene '
+                                                                                                                                                   'Konten, '
+                                                                                                                                                   'alte '
+                                                                                                                                                   'Läufe '
+                                                                                                                                                   'und '
+                                                                                                                                                   'erzeugte '
+                                                                                                                                                   'Partner '
+                                                                                                                                                   'bleiben '
+                                                                                                                                                   'erhalten.'})
+
+DE['Configured partner dimensions require effective read and write permissions for default dimensions before generation.'] = 'Eingerichtete Partnerdimensionen erfordern vor der Erzeugung wirksame Lese- und Schreibberechtigungen für Vorgabedimensionen.'
+
 if __name__ == '__main__':
     generated = ET.parse(base.ROOT / f'{base.NAME}.g.xlf')
     sources = {base.source(u) for u in generated.iter(base.Q('trans-unit'))}

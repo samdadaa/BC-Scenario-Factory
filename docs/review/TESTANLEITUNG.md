@@ -1,6 +1,6 @@
 # Testanleitung – Vorlage wählen, starten, Ergebnis öffnen
 
-Stand: 18.11.2026, aktueller Repository-Workspace; Reparaturauftrag SF-037, **Zur Prüfung**. Keine ältere ZIP zurückkopieren. Die folgenden BC-Fälle sind noch nicht ausgeführt; lokale Nachweise stehen in [TESTS.md](../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026).
+Stand: 18.11.2026, aktueller Repository-Workspace; Reparaturaufträge SF-037 sowie ausdrücklich ausgewählte SF-038/SF-039, **Zur Prüfung**. Keine ältere ZIP zurückkopieren. Die folgenden BC-Fälle sind noch nicht ausgeführt; lokale Nachweise stehen in [TESTS.md](../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026).
 
 ## Vorbereitung und Paketstand
 
@@ -16,7 +16,7 @@ Stand: 18.11.2026, aktueller Repository-Workspace; Reparaturauftrag SF-037, **Zu
 ## T02 – Funktionstest 5/5
 
 1. In deutscher Sitzung **Allgemeines Unternehmen – Funktionstest: Debitoren und Kreditoren** auswählen. Auf der Karte Debitoren = 5, Kreditoren = 5, Paketgröße = 5 prüfen. Nur positive Partnerziele, Modus Einrichtung/Stammdaten.
-2. **Partnerszenario ausführen** wählen und den Dialog lesen/bestätigen. Für die reservierten Demo-Codes werden fehlende Minimalwerte ausschließlich nach dieser Bestätigung ergänzt. Bestehende Standardeinrichtung wird nicht still ersetzt. Keine Buchungen freigeben.
+2. **Partnerszenario ausführen** wählen und den Dialog lesen/bestätigen. Fehlende Finanzeinrichtung zuerst über **Finanzeinrichtung prüfen → SKR03/SKR04 → Vorschau → Testpaket anwenden** gesondert bestätigen. Es gibt keinen Zwei-Konten-Fallback mehr. Bestehende Standardeinrichtung wird nicht still ersetzt. Keine Buchungen freigeben.
 3. Auf der automatisch geöffneten Laufkarte den aktuellen Ausführungsstatus und **Fortschritt ansehen** verwenden. Plan, Queue und Checkpoints nicht manuell bedienen. Der Browser muss für den Hintergrundlauf nicht offen bleiben. Die Seite bei Bedarf aktualisieren.
 4. Erwartung nach tatsächlichem Queueabschluss: **2 von 2** Paketen bestätigt, **5 Debitoren**, **5 Kreditoren**, Abschlussprüfung **Bestanden**, Status **Abgeschlossen**. Kein Sachposten.
 5. Mengenlinks öffnen nur diese 5/5 Partner. **Ergebnisse öffnen → Erzeugten Partner öffnen** öffnet exakt den registrierten Standarddatensatz. Keine ungefilterte Liste als Ergebnis akzeptieren.
@@ -54,3 +54,30 @@ Eine unbenutzte Vorlage und eine Vorlage mit erfasstem Lauf markieren → **Ausg
 ## Tatsächliche Ergebnisse dieser Bearbeitung
 
 Lokaler Build-/Übersetzungs-/Dashboard- und Paketnachweis: [TESTS.md](../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **T01–T07 in Business Central nicht ausgeführt:** kein nutzbarer autorisierter Browser-/Sandboxzugriff in dieser Sitzung. Installation, 5/5, 12/7, frische Demo-Minimaleinrichtung, negativer Setupfall, firmenübergreifender Transfer und native Sprach-/Archiv-/Parallelitätsprüfung bleiben offen. Kein erfolgreicher BC-Lauf aus Quellprüfung abgeleitet.
+
+## Ergänzung – JSON-Fehler beim ersten Paket
+
+Für die Meldung „Die Daten stellen kein gültiges JSON-Token dar.“ enthält das neue JSON-Fix-Paket eine Korrektur am Checkpoint-BLOB-Lesepfad. Nach Installation des vollständigen Pakets einen **neuen**, ausdrücklich freigegebenen kleinen Partnerlauf prüfen. Erwartet: erster Paketabschluss, automatischer Nachfolger und Abschlussprüfung können gespeicherte Checkpoints erneut lesen. Einen alten Lauf mit unsicherem Claim nicht neu starten. Der genaue Screenshot-Stack und die BC-Abnahme bleiben getrennte Nachweise; siehe [Prüfprotokoll](../TESTS.md#sf-037--nachtrag-zum-json-fehler-im-partnerlauf).
+
+
+## SF-038/SF-039 – noch offene BC-Abnahme
+
+Aktueller [Vertrag mit Rollen und Versionsgrenzen](../STABILIZATION_FINANCE_PARTNERS.md). Alle folgenden Fälle sind **nicht ausgeführt**. Drei getrennte Testfirmen nutzen: unbebucht für SKR03, unbebucht für SKR04, passende vorhandene eigene Einrichtung. Vorher installierte App-ID/Version und konkretes Paket dokumentieren. Keine Produktionsfirma und keine vorhandenen Laufdaten bereinigen.
+
+| Fall | Schritte | Soll / Nachweis |
+| --- | --- | --- |
+| F38-01 | Neue Starter laden, Karte → Finanzeinrichtung prüfen, SKR03 bzw. SKR04 wählen. Vorschau abbrechen. Erneut öffnen und Paket ausdrücklich anwenden. | Abbruch schreibt keine Standarddaten. Nach Apply 15 Postingkonten + 3 Summenkonten, korrekte Rollen/Kategorien/Bilanz-GuV; 0800 mit führender Null. INLAND03/04 in allen vorgesehenen Gruppen. Kein neues BCSF-AR/AP. |
+| F38-02 | Dieselbe Anwendung wiederholen; anschließend vorhandene Einrichtung prüfen, alten Paketbestand 1.0.0 separat öffnen. | Keine Duplikate, keine Umbenennung/Umhängung. Vorhandene nichtleere Nummernserien unverändert. Version 1 bleibt 1 und erhält keine stille Version-2-Migration. Ein Wechsel des bereits angewendeten Rahmens blockiert. |
+| F38-03 | In jeder neuen Firma Standard-Verkaufsrechnung: Sachkonto 8400/4400, netto 100 EUR, 19 %; Einkaufsrechnung: 3400/5400, netto 50 EUR, 19 %. Danach Fibu-Buchblatt: Bank 1200/1800 gegen Eigenkapital 0800/2900, 1.000 EUR. Beleg-/Buchungsnummern und Soll/Ist sichern. | Verkauf: Forderung +119, Erlös −100, USt −19. Einkauf: Einkauf +50, VSt +9,50, Verbindlichkeit −59,50. Journal: Bank +1.000, Eigenkapital −1.000. Keine direkten Ledger-Inserts. |
+| F38-04 | SF03-BS/PL bzw. SF04-BS/PL mit dem passenden Datumsfilter öffnen. | Ohne sonstige Buchungen: Aktiva 1.128,50; Verbindlichkeiten −59,50, USt −19, Kapital −1.000, laufendes Ergebnis −50; Passiva inkl. Ergebnis −1.128,50. GuV Erlöse −100, Wareneinkauf +50, Ergebnis −50. Vorzeichen und Berichtssummen gegen Standardposten abgleichen. |
+| F38-05 | Vor Apply Konto/Gruppe inkompatibel vorbelegen, Rechte entziehen, ungültige vorhandene Serie und fehlende Pflichtgrundlage prüfen. | Konkreter Blocker vor Teilanlage; bestehende Daten bleiben erhalten. In bebuchter Firma keine fehlenden Paketdaten ergänzen. Fremde Standardtrigger und Commit-Sperre gesondert prüfen. |
+| F39-01 | Neue Vorlage 50 Debitoren/50 Kreditoren, Paketgröße 5, DE, gemischter B2B/B2C-Anteil. UI starten und Queue arbeiten lassen. Zweiter neuer Lauf gleicher Seed, dann anderer Seed. | 50/50 primäre Partner, 20 bestätigte Pakete, abgeschlossene Pflichtprüfung. Natürliche Namen/Ansprechpartner, keine Präfixe/Zählersuffixe. Fachwerte je logischem Schlüssel reproduzierbar; BC-Nummern dürfen abweichen. Vorlagen-/Laufkarten-Vorschau zeigt dieselben neuen Namenswerte, historische Vorschau bleibt erhalten. Andere Seeds variieren. |
+| F39-02 | EN-Datensprache bei unveränderter DE-Sitzung; anschließend EN-Sitzung. GB nur mit geeigneter eigener Einrichtung, keine SKR-Auslandssteuerzusage. | Namen/Tätigkeiten folgen Datensprache, Oberfläche Sitzungssprache; PLZ/Ort/Land/Rechtsform bleiben konsistent. Unbekanntes Land blockiert vor Partneranlage. |
+| F39-03 | Ergebniszuordnungen und Standardpartner öffnen. B2B-Debitor: DELIVERY; B2C: keine unnötige zweite Adresse; Kreditor: ORDER. Standardverkaufs-/Einkaufsbeleg anlegen und Adresse auswählen. | Kinddatensätze haben eigene SystemId, korrekte Parent Entry Id, denselben Lauf/Batch und logischen Schlüssel. Artikel-/Beleggeneratoren bleiben nicht verfügbar. Standardbelege übernehmen die ausgewählten Adressen und Partnerwerte. |
+| F39-04 | Vorhandene Währung mit Kurs, Zahlungsform und zwei globale Dimensionen setzen; Belegübernahme prüfen. Je fehlenden Kurs/gesperrten Dimensionswert/fehlende Default-Dimension-Schreibrechte negativ testen. | Lesende Vorprüfung blockiert ungültige Werte. Standard-Dimensionsvalidierung erfolgt nach Partnerinsert und speichert Vorgabedimensionen. Ein Paketfehler verwirft alle Partner-/Kinddaten dieses Pakets; keine Wiederholung eines unsicheren Claims. |
+| F39-05 | Firma mit vorhandener Marketingintegration, dann Firma ohne Integration prüfen. | Vorhandene Kontaktintegration und Nummernserien bleiben erhalten; Rechte-/Konfigurationsabweichungen blockieren vorab. Ohne CRM-Integration werden Ansprechpartnerfelder befüllt, keine selbständige CRM-Integration eingeschaltet. Standardkontakte separat prüfen. |
+| F39-06 | Karte/Assistent → Zahlungsbereitschaft lesen; Bank-/Zahlungsfall bewerten. | Ohne freigegebenen synthetischen Bankdatensatz keine Partnerbankdaten, keine bevorzugte Bank, keine behauptete Zahlungsbereitschaft und kein Zahlungsexport. Bankprozessabnahme bleibt offen. |
+| F39-07 | Zwei Vorlagen mit verschiedenen optionalen Währungs-/Zahlungs-/Dimensionscodes gemeinsam exportieren und in andere Firma importieren; zusätzlich alte Schema-1-Datei ohne diese Felder. | Neue GUIDs, Module/Mengen/Einstellungen erhalten, alte Dateien lesbar, konkrete fehlende Referenzcodes. Kein Lauf und keine Standarddaten werden durch den Import erzeugt. |
+| F39-08 | Neuer Mehrpaketlauf 12/7, Paketgröße 5; kontrollierter Fehler nach einem erfolgreich bestätigten Paket; Recovery/Abschluss prüfen. Alten Version-1-Lauf öffnen. | 5 Pakete; bestätigte Einheiten und Kindartefakte getrennt. Keine doppelten Partner/Kinder, kein blinder Retry und kein Überschreiben alter Fachwerte. Ursprüngliche Paketfehler direkt erreichbar. |
+
+Kürzester Normalpfad bei vorbereiteter Firma: **Vorlage wählen → Partnerszenario ausführen → Ergebnisse öffnen**. Einmalige neue Finance-Grundlage: **Finanzeinrichtung prüfen → Rahmen wählen → Vorschau → Testpaket anwenden**. Alte Vorlagen/Pakete werden dabei nicht automatisch migriert.

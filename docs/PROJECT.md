@@ -133,3 +133,8 @@ Pflichtabschluss, append-only Befunde und versionierte SKR03-/SKR04-Testeinricht
 ## Aktueller Reparaturauftrag SF-037 – 18.11.2026
 
 Grundlage ist der aktuelle Workspace einschließlich bereits vorhandener Starter-, Schnellstart-, Transfer- und Zustandsfixes. App-ID/Version 1.0.1.0, Application 28.0, Runtime 17 und Dependencies [] bleiben erhalten. Gegen die vorhandenen BC-28.5-/DE-Symbole gebaut; keine Aussage über den tatsächlich installierten Playground-Paketstand. Additive Scenario.Archived und Tabelle 90148 für entfernte Vorlagen. Aktueller Bestand und lokale Nachweise: [TESTS.md](TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). Native BC-/Installations-/Queue-/Transferabnahme offen; keine menschliche Abnahme.
+
+
+## SF-038 / SF-039 – aktueller Bestand
+
+Manifest unverändert 1.0.1.0, Application 28, Runtime 17. Aktuell 131 AL-Dateien; neue interne DataGeneration-Codeunits 90257/90258. Finance-Paketneuanlage 2.0.0, neue Partnerregel-/Setupversion 2; historische Versionen bleiben erhalten. [Vertrag und Grenzen](STABILIZATION_FINANCE_PARTNERS.md). Status **Zur Prüfung**, kein Deployment oder BC-Abnahmenachweis.

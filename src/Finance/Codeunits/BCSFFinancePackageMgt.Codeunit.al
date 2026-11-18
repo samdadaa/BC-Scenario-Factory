@@ -4,6 +4,7 @@ using BCScenarioFactory.Core;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.SetupManager;
+using Microsoft.Bank.BankAccount;
 using Microsoft.CRM.Setup;
 using Microsoft.Finance.FinancialReports;
 using Microsoft.Finance.GeneralLedger.Account;
@@ -25,6 +26,76 @@ codeunit 90400 "BCSF Finance Package Mgt"
 {
     Access = Internal;
     Permissions = tabledata "BCSF Finance Package" = I;
+
+    procedure ConfigureScenario(var Scenario: Record "BCSF Scenario"): Boolean
+    var
+        TempDiff: Record "BCSF Setup Diff" temporary;
+        Packages: Codeunit "BCSF Finance Package Mgt";
+        Selection: Page "BCSF Finance Selection";
+        FinancePreviewPage: Page "BCSF Finance Preview";
+        PackageMode: Enum "BCSF Finance Mode";
+        ReviewedRevision: Integer;
+    begin
+        ReviewedRevision := Scenario.Revision;
+        Selection.SetMode(Scenario."Finance Mode");
+        if Selection.RunModal() <> Action::OK then
+            exit(false);
+        PackageMode := Selection.GetMode();
+        FinancePreviewPage.SetMode(PackageMode);
+        FinancePreviewPage.RunModal();
+        if PackageMode = "BCSF Finance Mode"::Existing then begin
+            if not Packages.Preview(PackageMode, TempDiff) then
+                exit(false);
+        end else
+            if Packages.GetAppliedMode() <> PackageMode then
+                exit(false);
+        if Scenario."Finance Mode" <> PackageMode then begin
+            if not Confirm(UsePackageQst, false, Format(PackageMode)) then
+                exit(false);
+            Scenario.LockTable();
+            Scenario.Get(Scenario."Scenario Id");
+            Scenario.TestField(Revision, ReviewedRevision);
+            Scenario.Validate("Finance Mode", PackageMode);
+            if (PackageMode <> PackageMode::Existing) and (GetVersion(PackageMode) = VersionTok) then begin
+                Scenario."Cash Terms Code" := 'NET00';
+                Scenario."Small Terms Code" := 'NET14';
+                Scenario."Medium Terms Code" := 'NET30';
+                Scenario."Large Terms Code" := 'NET60';
+            end;
+            Scenario.Modify(true);
+            Scenario.Get(Scenario."Scenario Id");
+        end;
+        exit(true);
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Scenario Manager", 'OnConfigureFinance', '', false, false)]
+    local procedure ConfigureRequested(ScenarioId: Guid)
+    var
+        Scenario: Record "BCSF Scenario";
+    begin
+        Scenario.Get(ScenarioId);
+        if not ConfigureScenario(Scenario) then
+            exit;
+    end;
+
+    procedure GetVersion(Mode: Enum "BCSF Finance Mode"): Code[20]
+    var
+        Package: Record "BCSF Finance Package";
+    begin
+        if Package.Get(PackageKeyTok) then
+            if Package.Mode = Mode then
+                exit(Package.Version);
+        exit(VersionTok);
+    end;
+
+    procedure GetAppliedMode(): Enum "BCSF Finance Mode"
+    var
+        Package: Record "BCSF Finance Package";
+    begin
+        if Package.Get(PackageKeyTok) then
+            exit(Package.Mode);
+        exit("BCSF Finance Mode"::Existing);
+    end;
 
     procedure Preview(Mode: Enum "BCSF Finance Mode"; var TempDiff: Record "BCSF Setup Diff" temporary): Boolean
     var
@@ -68,9 +139,15 @@ codeunit 90400 "BCSF Finance Package Mgt"
     begin
         case Mode of
             Mode::SKR03:
-                exit('BCSF03');
+                if GetVersion(Mode) = '1.0.0' then
+                    exit('BCSF03')
+                else
+                    exit('INLAND03');
             Mode::SKR04:
-                exit('BCSF04');
+                if GetVersion(Mode) = '1.0.0' then
+                    exit('BCSF04')
+                else
+                    exit('INLAND04');
             else
                 exit('');
         end;
@@ -89,13 +166,14 @@ codeunit 90400 "BCSF Finance Package Mgt"
         AllowCreate: Boolean;
     begin
         if not Write then
-            CheckFoundation(EffectiveDate, Mode <> Mode::Existing, TempDiff);
+            if (Mode = Mode::Existing) or (GetVersion(Mode) = '1.0.0') then
+                CheckFoundation(EffectiveDate, Mode <> Mode::Existing, TempDiff);
         if Mode = Mode::Existing then begin
             CheckExisting(TempDiff);
             exit;
         end;
         if not Write then
-            SetupManager.AddFinding(TempDiff, StrSubstNo(PackageLbl, Format(Mode), 2026, VersionTok), false, SourceLbl, TestOnlyLbl);
+            SetupManager.AddFinding(TempDiff, StrSubstNo(PackageLbl, Format(Mode), 2026, GetVersion(Mode)), false, SourceLbl, TestOnlyLbl);
         Package.SecurityFiltering(SecurityFilter::Disallowed);
         Inventory.SecurityFiltering(SecurityFilter::Disallowed);
         Location.SecurityFiltering(SecurityFilter::Disallowed);
@@ -110,7 +188,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
             Ledger.LockTable();
         AllowCreate := Ledger.IsEmpty();
         if Package.Get(PackageKeyTok) then begin
-            if (Package.Mode <> Mode) or (Package."Reference Year" <> 2026) or (Package.Version <> VersionTok) then begin
+            if (Package.Mode <> Mode) or (Package."Reference Year" <> 2026) or not (Package.Version in ['1.0.0', VersionTok]) then begin
                 if Write then
                     Error(ApplyBlockedErr);
                 SetupManager.AddFinding(TempDiff, Format(Mode), true, DifferentPackageLbl, ResolveLbl);
@@ -132,12 +210,14 @@ codeunit 90400 "BCSF Finance Package Mgt"
             else
                 Error(ApplyBlockedErr);
         end;
-        BuildAccounts(Mode, AccountNos, Write, AllowCreate, TempDiff);
+        if GetVersion(Mode) <> '1.0.0' then
+            BuildFoundation(EffectiveDate, Write, AllowCreate, TempDiff);
         VATBusiness(GroupCode, Write, AllowCreate, TempDiff);
         VATProduct(GroupCode, Write, AllowCreate, TempDiff);
         GenBusiness(GroupCode, Write, AllowCreate, TempDiff);
         GenProduct(GroupCode, Write, AllowCreate, TempDiff);
         InventoryGroup(GroupCode, Write, AllowCreate, TempDiff);
+        BuildAccounts(Mode, AccountNos, Write, AllowCreate, TempDiff);
         CustomerGroup(GroupCode, AccountNos.Get('AR'), Write, AllowCreate, TempDiff);
         VendorGroup(GroupCode, AccountNos.Get('AP'), Write, AllowCreate, TempDiff);
         VATMatrix(GroupCode, AccountNos.Get('INPUTVAT'), AccountNos.Get('OUTPUTVAT'), Write, AllowCreate, TempDiff);
@@ -155,7 +235,16 @@ codeunit 90400 "BCSF Finance Package Mgt"
                         InventoryMatrix(Location.Code, GroupCode, AccountNos.Get('STOCK'), AccountNos.Get('INTERIMSTOCK'), Write, AllowCreate, TempDiff);
                     until Location.Next() = 0;
             end;
+        if GetVersion(Mode) <> '1.0.0' then
+            BankGroup(GroupCode, AccountNos.Get('BANK'), Write, AllowCreate, TempDiff);
         BuildReports(ReportPrefix, AccountNos, Write, AllowCreate, TempDiff);
+        if Write and (GetVersion(Mode) <> '1.0.0') then begin
+            TempDiff.Reset();
+            TempDiff.DeleteAll();
+            CheckFoundation(EffectiveDate, true, TempDiff);
+            if SetupManager.HasBlockers(TempDiff) then
+                Error(ApplyBlockedErr);
+        end;
     end;
 
     local procedure BuildAccounts(Mode: Enum "BCSF Finance Mode"; var Nos: Dictionary of [Code[20], Code[20]]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
@@ -175,20 +264,34 @@ codeunit 90400 "BCSF Finance Package Mgt"
         AddAccount(Mode, Nos, 'EQUITY', '0800', '2900', EquityLbl, "G/L Account Category"::Equity,
           true, Write, AllowCreate, TempDiff);
         AddAccount(Mode, Nos, 'SALES', '8400', '4400', SalesLbl, "G/L Account Category"::Income,
-          false, Write, AllowCreate, TempDiff);
+          GetVersion(Mode) <> '1.0.0', Write, AllowCreate, TempDiff);
         AddAccount(Mode, Nos, 'PURCHASES', '3400', '5400', PurchasesLbl, "G/L Account Category"::"Cost of Goods Sold",
-          false, Write, AllowCreate, TempDiff);
+          GetVersion(Mode) <> '1.0.0', Write, AllowCreate, TempDiff);
         AddAccount(Mode, Nos, 'COST', '3960', '5880', CostLbl, "G/L Account Category"::"Cost of Goods Sold",
           false, Write, AllowCreate, TempDiff);
         AddAccount(Mode, Nos, 'EXPENSE', '4900', '6300', ExpenseLbl, "G/L Account Category"::Expense,
           true, Write, AllowCreate, TempDiff);
         AddAccount(Mode, Nos, 'OFFICE', '4930', '6815', OfficeLbl, "G/L Account Category"::Expense,
           true, Write, AllowCreate, TempDiff);
-        AddAccount(Mode, Nos, 'INTERIMSTOCK', 'BCSF-INT', 'BCSF-INT', InterimStockLbl, "G/L Account Category"::Assets,
+        if GetVersion(Mode) = '1.0.0' then begin
+            AddAccount(Mode, Nos, 'INTERIMSTOCK', 'BCSF-INT', 'BCSF-INT', InterimStockLbl, "G/L Account Category"::Assets,
           false, Write, AllowCreate, TempDiff);
-        AddAccount(Mode, Nos, 'ACCRUAL', 'BCSF-ACCR', 'BCSF-ACCR', AccrualLbl, "G/L Account Category"::Liabilities,
+            AddAccount(Mode, Nos, 'ACCRUAL', 'BCSF-ACCR', 'BCSF-ACCR', AccrualLbl, "G/L Account Category"::Liabilities,
           false, Write, AllowCreate, TempDiff);
-
+        end else begin
+            AddAccount(Mode, Nos, 'INTERIMSTOCK', '3970', '1190', InterimStockLbl, "G/L Account Category"::Assets,
+                false, Write, AllowCreate, TempDiff);
+            AddAccount(Mode, Nos, 'ACCRUAL', '1790', '3390', AccrualLbl, "G/L Account Category"::Liabilities,
+                false, Write, AllowCreate, TempDiff);
+            AddAccount(Mode, Nos, 'CASH', '1000', '1600', CashLbl, "G/L Account Category"::Assets,
+                true, Write, AllowCreate, TempDiff);
+            TotalAccount('1998', AssetsLbl, Nos.Get('BANK') + '|' + Nos.Get('CASH') + '|' + Nos.Get('AR') + '|' + Nos.Get('STOCK') + '|' + Nos.Get('INTERIMSTOCK') + '|' + Nos.Get('INPUTVAT'),
+                "G/L Account Category"::Assets, Write, AllowCreate, TempDiff);
+            TotalAccount('3998', LiabEquityLbl, Nos.Get('AP') + '|' + Nos.Get('OUTPUTVAT') + '|' + Nos.Get('ACCRUAL') + '|' + Nos.Get('EQUITY'),
+                "G/L Account Category"::Liabilities, Write, AllowCreate, TempDiff);
+            TotalAccount('9998', ProfitLbl, Nos.Get('SALES') + '|' + Nos.Get('PURCHASES') + '|' + Nos.Get('COST') + '|' + Nos.Get('EXPENSE') + '|' + Nos.Get('OFFICE'),
+                "G/L Account Category"::Income, Write, AllowCreate, TempDiff);
+        end;
     end;
 
     local procedure AddAccount(Mode: Enum "BCSF Finance Mode"; var Nos: Dictionary of [Code[20], Code[20]]; RoleCode: Code[20]; SKR03No: Code[20]; SKR04No: Code[20]; AccountName: Text[100]; Category: Enum "G/L Account Category"; Direct: Boolean; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
@@ -210,6 +313,14 @@ codeunit 90400 "BCSF Finance Package Mgt"
             Expected."Income/Balance" := Expected."Income/Balance"::"Income Statement"
         else
             Expected."Income/Balance" := Expected."Income/Balance"::"Balance Sheet";
+        if (GetVersion(Mode) <> '1.0.0') and (RoleCode in ['SALES', 'PURCHASES']) then begin
+            Expected."Gen. Prod. Posting Group" := GetTestPostingGroup(Mode);
+            Expected."VAT Prod. Posting Group" := GetTestPostingGroup(Mode);
+            if RoleCode = 'SALES' then
+                Expected."Gen. Posting Type" := Expected."Gen. Posting Type"::Sale
+            else
+                Expected."Gen. Posting Type" := Expected."Gen. Posting Type"::Purchase;
+        end;
         MatchFields.Add(Expected.FieldNo("Account Type"));
         MatchFields.Add(Expected.FieldNo("Account Category"));
         MatchFields.Add(Expected.FieldNo("Income/Balance"));
@@ -224,8 +335,59 @@ codeunit 90400 "BCSF Finance Package Mgt"
         if NeedsInsert(Expected, MatchFields, Write, AllowCreate, TempDiff)
         then begin
             Expected.Validate(Name, AccountName);
+            if (GetVersion(Mode) <> '1.0.0') and (RoleCode in ['SALES', 'PURCHASES']) then begin
+                Expected.Validate("Gen. Prod. Posting Group", GetTestPostingGroup(Mode));
+                Expected.Validate("VAT Prod. Posting Group", GetTestPostingGroup(Mode));
+            end;
             Expected.Insert(true);
         end;
+    end;
+
+    local procedure TotalAccount(No: Code[20]; Name: Text[100]; Totaling: Text[250]; Category: Enum "G/L Account Category"; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+    var
+        Expected: Record "G/L Account";
+        MatchFields: List of [Integer];
+    begin
+        Expected.Init();
+        Expected."No." := No;
+        Expected.Name := Name;
+        Expected."Account Type" := Expected."Account Type"::Total;
+        Expected.Totaling := Totaling;
+        Expected."Direct Posting" := false;
+        Expected."Account Category" := Category;
+        if Category = Category::Income then
+            Expected."Income/Balance" := Expected."Income/Balance"::"Income Statement"
+        else
+            Expected."Income/Balance" := Expected."Income/Balance"::"Balance Sheet";
+        MatchFields.Add(Expected.FieldNo("Account Type"));
+        MatchFields.Add(Expected.FieldNo(Totaling));
+        MatchFields.Add(Expected.FieldNo("Direct Posting"));
+        MatchFields.Add(Expected.FieldNo("Income/Balance"));
+        MatchFields.Add(Expected.FieldNo("Account Category"));
+        if NeedsInsert(Expected, MatchFields, Write, AllowCreate, TempDiff) then begin
+            Expected.Validate(Totaling, Totaling);
+            Expected.Insert(true);
+        end;
+    end;
+
+    local procedure BankGroup(Code: Code[20]; AccountNo: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+    var
+        Expected: Record "Bank Account Posting Group";
+        MatchFields: List of [Integer];
+    begin
+        Expected.Init();
+        Expected.Code := Code;
+        Expected."G/L Account No." := AccountNo;
+        MatchFields.Add(Expected.FieldNo("G/L Account No."));
+        if NeedsInsert(Expected, MatchFields, Write, AllowCreate, TempDiff) then
+            Expected.Insert(true);
+    end;
+
+    local procedure BuildFoundation(EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+    var
+        Foundation: Codeunit "BCSF Demo Partner Setup";
+    begin
+        Foundation.Prepare(EffectiveDate, Write, AllowCreate, TempDiff);
     end;
 
     local procedure VATBusiness(GroupCode: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
@@ -561,7 +723,10 @@ codeunit 90400 "BCSF Finance Package Mgt"
         ColumnLine(PLCol, false, Write, AllowCreate, TempDiff);
         RowHeader(BS, BalanceLbl, Write, AllowCreate, TempDiff);
         RowHeader(PL, IncomeLbl, Write, AllowCreate, TempDiff);
-        ReportLine(BS, 10000, 'BANK', BankLbl, Nos.Get('BANK'), false, Write, AllowCreate, TempDiff);
+        if Nos.ContainsKey('CASH') then
+            ReportLine(BS, 10000, 'BANK', BankLbl, Nos.Get('BANK') + '|' + Nos.Get('CASH'), false, Write, AllowCreate, TempDiff)
+        else
+            ReportLine(BS, 10000, 'BANK', BankLbl, Nos.Get('BANK'), false, Write, AllowCreate, TempDiff);
         ReportLine(BS, 20000, 'AR', ReceivableLbl, Nos.Get('AR'), false, Write, AllowCreate, TempDiff);
         ReportLine(BS, 30000, 'STOCK', StockLbl, Nos.Get('STOCK') + '|' + Nos.Get('INTERIMSTOCK'), false, Write, AllowCreate, TempDiff);
         ReportLine(BS, 40000, 'INVAT', InputVATLbl, Nos.Get('INPUTVAT'), false, Write, AllowCreate, TempDiff);
@@ -609,7 +774,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
         end;
     end;
 
-    local procedure NeedsInsert(ExpectedRow: Variant; MatchFields: List of [Integer]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary): Boolean
+    internal procedure NeedsInsert(ExpectedRow: Variant; MatchFields: List of [Integer]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary): Boolean
     var
         SetupManager: Codeunit "BCSF Setup Manager";
         Expected: RecordRef;
@@ -770,6 +935,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
         CheckPresence(VATSetup.TableCaption(), VATSetup.ReadPermission() and not VATSetup.IsEmpty(), TempDiff);
         CheckPresence(InventorySetup.TableCaption(), InventorySetup.ReadPermission() and not InventorySetup.IsEmpty(), TempDiff);
         FinanceCheck.Inspect(true, true, TempDiff);
+        FinanceCheck.InspectTradeSetup(TempDiff);
     end;
 
     local procedure CheckPresence(Requirement: Text; Ready: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
@@ -878,23 +1044,34 @@ codeunit 90400 "BCSF Finance Package Mgt"
         Contract: Codeunit "BCSF Contract JSON";
         Mode: Enum "BCSF Finance Mode";
         Token: JsonToken;
+        Settings: JsonObject;
     begin
         if not Context.Get('financeMode', Token) then
             exit;
         Mode := "BCSF Finance Mode".FromInteger(Token.AsValue().AsInteger());
-        if Mode = Mode::Existing then
-            exit;
-        if not Package.Get(PackageKeyTok) then begin
-            SetupManager.AddFinding(TempDiff, Format(Mode), true, NotAppliedErr, ResolveLbl);
-            exit;
+        if Mode = Mode::Existing then begin
+            // Historical version-1 captures keep their original prerequisites.
+            if not Context.Get('partnerSetup', Token) then
+                exit;
+            Settings := Token.AsObject();
+            if Contract.GetInteger(Settings, 'version') <> 2 then
+                exit;
+            Inspect(Mode, EffectiveDate, false, TempPackageDiff);
+        end else begin
+            if not Package.Get(PackageKeyTok) then begin
+                SetupManager.AddFinding(TempDiff, Format(Mode), true, NotAppliedErr, ResolveLbl);
+                exit;
+            end;
+            if (Package.Mode <> Mode) or (Package."Reference Year" <> Contract.GetInteger(Context, 'financeYear')) or
+              (Package.Version <> Contract.GetCode(Context, 'financeVersion'))
+            then begin
+                SetupManager.AddFinding(TempDiff, Format(Mode), true, DifferentPackageLbl, ResolveLbl);
+                exit;
+            end;
+            Inspect(Mode, EffectiveDate, false, TempPackageDiff);
+            if Package.Version <> '1.0.0' then
+                CheckFoundation(EffectiveDate, true, TempPackageDiff);
         end;
-        if (Package.Mode <> Mode) or (Package."Reference Year" <> Contract.GetInteger(Context, 'financeYear')) or
-          (Package.Version <> Contract.GetCode(Context, 'financeVersion'))
-        then begin
-            SetupManager.AddFinding(TempDiff, Format(Mode), true, DifferentPackageLbl, ResolveLbl);
-            exit;
-        end;
-        Inspect(Mode, EffectiveDate, false, TempPackageDiff);
         if TempPackageDiff.FindSet() then
             repeat
                 if TempPackageDiff.Blocked or (TempPackageDiff.Finding = CreateLbl) then
@@ -945,10 +1122,11 @@ codeunit 90400 "BCSF Finance Package Mgt"
     end;
 
     var
+        UsePackageQst: Label 'Use %1 for this template? Version 2 packages also select their payment terms. Existing accounts, old runs and generated partners are retained.', Comment = '%1 = selected finance package';
         PackageKeyTok: Label 'APPLIED', Locked = true;
-        VersionTok: Label '1.0.0', Locked = true;
+        VersionTok: Label '2.0.0', Locked = true;
         PackageLbl: Label '%1 / reference year %2 / package version %3', Comment = '%1 = package name, %2 = reference year, %3 = package version';
-        SourceLbl: Label 'Based on DATEV standard charts 2026 (SKR03 article 11174, SKR04 article 11175).';
+        SourceLbl: Label 'Locally authored SKR03/SKR04-based subset, reference year 2026. No official chart data is imported.';
         TestOnlyLbl: Label 'For sandbox trade tests only. This is not a complete DATEV chart or statutory report.';
         PermissionLbl: Label 'Required standard read or write permission is missing.';
         ResolveLbl: Label 'Review the standard BC setup or permissions before applying. No existing setup will be overwritten.';
@@ -964,13 +1142,14 @@ codeunit 90400 "BCSF Finance Package Mgt"
         ExtraLinesLbl: Label 'The report definition contains additional rows or columns outside the package.';
         MissingFoundationLbl: Label 'Required standard setup is missing, not visible or not usable on the selected date.';
         NotAppliedErr: Label 'Apply the selected finance test package in this company before capturing the run.';
-        TestGroupLbl: Label 'Scenario Factory domestic 19% test setup';
+        TestGroupLbl: Label 'Domestic trade 19%';
         AssetsLbl: Label 'Total Assets';
         LiabEquityLbl: Label 'Total Liabilities and Equity';
         ProfitLbl: Label 'Result (credit balance is negative)';
         BalanceLbl: Label 'Scenario Factory Test Balance Sheet';
         IncomeLbl: Label 'Scenario Factory Test Income Statement';
         AmountLbl: Label 'Actual Amount';
+        CashLbl: Label 'Cash';
         BankLbl: Label 'Bank';
         ReceivableLbl: Label 'Trade Receivables';
         PayableLbl: Label 'Trade Payables';
@@ -983,6 +1162,6 @@ codeunit 90400 "BCSF Finance Package Mgt"
         CostLbl: Label 'Merchandise Cost and Stock Change';
         ExpenseLbl: Label 'Other Operating Expense';
         OfficeLbl: Label 'Office Supplies';
-        InterimStockLbl: Label 'Test Inventory Interim';
-        AccrualLbl: Label 'Test Inventory Accrual';
+        InterimStockLbl: Label 'Inventory interim account';
+        AccrualLbl: Label 'Inventory accrual account';
 }

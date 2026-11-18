@@ -64,6 +64,7 @@ codeunit 90250 "BCSF Seed Engine"
   procedure BuildValues(Context: JsonObject; EntityCode: Code[30]; LogicalKey: Text): JsonObject
   var
     Contract: Codeunit "BCSF Contract JSON";
+    Catalog: Codeunit "BCSF Partner Catalog";
     Token: JsonToken;
     Rules: JsonObject;
     Result: JsonObject;
@@ -93,7 +94,7 @@ codeunit 90250 "BCSF Seed Engine"
     if not Context.Get('syntheticRules', Token) then
       Error(RulesErr);
     Rules := Token.AsObject();
-    if (Contract.GetInteger(Rules, 'version') <> 1) or (Contract.GetInteger(Context, 'nameCatalogVersion') <> 1) then
+    if not (Contract.GetInteger(Rules, 'version') in [1, 2]) or (Contract.GetInteger(Context, 'nameCatalogVersion') <> 1) then
       Error(RulesErr);
     SmallPercent := Contract.GetInteger(Rules, 'smallPercent');
     MediumPercent := Contract.GetInteger(Rules, 'mediumPercent');
@@ -140,8 +141,19 @@ codeunit 90250 "BCSF Seed Engine"
     Result.Add('unitPrice', Price);
     Result.Add('date', Format(SampledDate, 0, 9));
     Result.Add('seedEngineVersion', 1);
-    Result.Add('rulesVersion', 1);
+    Result.Add('rulesVersion', Contract.GetInteger(Rules, 'version'));
+    if Contract.GetInteger(Rules, 'version') = 2 then
+      Catalog.ApplyNames(Context, EntityCode, EvaluateKey(LogicalKey), Result);
     exit(Result);
+  end;
+
+  local procedure EvaluateKey(Value: Text): Integer
+  var
+    LogicalNumber: Integer;
+  begin
+    if not Evaluate(LogicalNumber, Value, 9) or (LogicalNumber <= 0) then
+      Error(InputErr);
+    exit(LogicalNumber);
   end;
 
   local procedure CheckPriceRange(Rules: JsonObject; ClassCode: Text)

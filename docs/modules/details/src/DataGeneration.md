@@ -57,3 +57,8 @@ Vorhandene AL-Objekte liegen unter `src/DataGeneration/Codeunits/`, `src/DataGen
 ## SF-018 – 18.11.2026
 
 Neue Codeunit 90256 Partner Rules: gemeinsame versionierte Partnerwerte, lesende Setup-/Seedprüfung, Batchplanung und Snapshot-/Ergebnisvertrag. Keine direkte Lifecycle-/BackgroundProcessing-Rückreferenz; Pflichtsubscriber prüft Ausführungsbesitz. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.
+
+
+## SF-039
+
+Neu 90257 Partner Catalog und 90258 Partner Children: versionierte natürliche Werte und Standard-Liefer-/Bestelladressen mit Parent-Herkunft. [Vertrag](../../../STABILIZATION_FINANCE_PARTNERS.md). Kein neuer Fachgenerator, alte Regelversion erhalten. **Zur Prüfung**.

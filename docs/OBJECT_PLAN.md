@@ -325,3 +325,13 @@ Monitoring referenziert IndustryProfiles und Finance für diese Bedienaktionen. 
 | 90148 | Table | BCSF Removed Template | `src/ScenarioManagement/Tables/BCSFRemovedTemplate.Table.al` | Firmenbezogener Entfernt-Vermerk; normaler Starterseed darf absichtliche Entfernung nicht rückgängig machen |
 
 90148 liegt im bestehenden ScenarioManagement-Block 90125–90149; vor Anlage keine lokale Objekt-/Planbelegung gefunden. Keine weiteren Objekt-IDs reserviert, keine Standarddaten oder historischen Laufdaten migriert. Lifecycle-Subscriber sichern Insert/Modify/Delete/Rename auch ohne Tabellentrigger.
+
+
+## SF-039 – zusätzlich belegte IDs, 18.11.2026
+
+| Modul | ID | Typ | Objekt | Datei |
+| --- | --- | --- | --- | --- |
+| DataGeneration | 90257 | Codeunit | BCSF Partner Catalog | `src/DataGeneration/Codeunits/BCSFPartnerCatalog.Codeunit.al` |
+| DataGeneration | 90258 | Codeunit | BCSF Partner Children | `src/DataGeneration/Codeunits/BCSFPartnerChildren.Codeunit.al` |
+
+Beide vor Anlage im aktuellen Code und Objektplan frei; innerhalb des bestehenden Modulblocks 90250–90274. 131 AL-Dateien insgesamt. Keine neuen Generatorbindungen oder Testobjekte. **Zur Prüfung**.

@@ -1328,6 +1328,21 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Generated Record - Field Table Id - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2908806019 - NamedType 1813582007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner catalog version 2 supports address countries DE and GB. Configure a supported country instead of generating inconsistent addresses for %1.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = country code</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Catalog - NamedType CountryErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2908806019 - NamedType 3720241846" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner catalog logical keys must be positive.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Catalog - NamedType KeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 722757707 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner generation requires effective read and write permissions for %1 before the batch starts.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = child table caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Children - NamedType PermissionErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1086369249 - NamedType 1219310954" size-unit="char" translate="yes" xml:space="preserve">
           <source>The configured standard contact integration requires read and write permissions for contacts and contact business relations.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -1337,6 +1352,11 @@
           <source>The current SKR test packages support domestic German partners only. Select country code DE or use explicitly configured existing setup.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Rules - NamedType CountryErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1086369249 - NamedType 2118404970" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Configured partner dimensions require effective read and write permissions for default dimensions before generation.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Partner Rules - NamedType DimensionPermissionErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1086369249 - NamedType 3497246601" size-unit="char" translate="yes" xml:space="preserve">
           <source>Partner generation requires the unchanged captured configuration and its currently owned job-queue batch. Do not replay uncertain work.</source>
@@ -1414,12 +1434,12 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Action CheckIdentity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2002769295 - Action 2826429286 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Opens the exact customer or vendor by its recorded stable identity.</source>
+          <source>Opens the exact partner, ship-to address or order address by its recorded stable identity.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Action OpenPartner - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 2002769295 - Action 2826429286 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Open Generated Partner</source>
+          <source>Open Generated Record</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Action OpenPartner - Property Caption</note>
         </trans-unit>
@@ -1823,43 +1843,38 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Finance Package - Field Version - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3327067986 - NamedType 1342218725" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The existing setup conflicts with the reserved partner demo setup. Select compatible existing settings instead.</source>
+        <trans-unit id="Codeunit 3327067986 - NamedType 3621259247" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Finance foundation %1 is missing, incompatible or not writable. Review setup and permissions before applying.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = setup requirement</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType BlockedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 3764383116" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the finance package and confirm. Existing nonempty settings are retained.</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ConflictErr</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ConfirmLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 1288870255" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create missing setup or fill empty number series bindings</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType FillLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3327067986 - NamedType 2234300843" size-unit="char" translate="yes" xml:space="preserve">
           <source>Germany</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType GermanyLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3327067986 - NamedType 3283068911" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Scenario Factory Partner Test</source>
+        <trans-unit id="Codeunit 3327067986 - NamedType 2897994277" size-unit="char" translate="yes" xml:space="preserve">
+          <source>General Journal</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType GroupLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType JournalLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3327067986 - NamedType 416938829" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Scenario Factory Test Payables</source>
+        <trans-unit id="Codeunit 3327067986 - NamedType 2052233330" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reuse existing setup</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType PayablesLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3327067986 - NamedType 546602968" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Partner demo setup can only be prepared in a sandbox test company without G/L entries.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType PostedErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3327067986 - NamedType 3042025655" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Scenario Factory Test Receivables</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ReceivablesLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3327067986 - NamedType 4032538393" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Scenario Factory test terms %1</source>
-          <note from="Developer" annotates="general" priority="2">%1 = due date formula</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType TermsLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ReuseLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 4291717659" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Test Inventory Accrual</source>
+          <source>Inventory accrual account</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType AccrualLbl</note>
         </trans-unit>
@@ -1892,6 +1907,11 @@
           <source>Bank</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType BankLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2902468460 - NamedType 535033205" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cash</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType CashLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 4087415185" size-unit="char" translate="yes" xml:space="preserve">
           <source>Setup changed since review. %1 has a conflict in field %2. No package changes were kept.</source>
@@ -1944,7 +1964,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType InputVATLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 2687753814" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Test Inventory Interim</source>
+          <source>Inventory interim account</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType InterimStockLbl</note>
         </trans-unit>
@@ -2029,7 +2049,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType SalesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 1895768393" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Based on DATEV standard charts 2026 (SKR03 article 11174, SKR04 article 11175).</source>
+          <source>Locally authored SKR03/SKR04-based subset, reference year 2026. No official chart data is imported.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType SourceLbl</note>
         </trans-unit>
@@ -2039,7 +2059,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType StockLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 2907800333" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Scenario Factory domestic 19% test setup</source>
+          <source>Domestic trade 19%</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType TestGroupLbl</note>
         </trans-unit>
@@ -2047,6 +2067,11 @@
           <source>For sandbox trade tests only. This is not a complete DATEV chart or statutory report.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType TestOnlyLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2902468460 - NamedType 3505229649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use %1 for this template? Version 2 packages also select their payment terms. Existing accounts, old runs and generated partners are retained.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = selected finance package</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType UsePackageQst</note>
         </trans-unit>
         <trans-unit id="Codeunit 3024334983 - NamedType 3552262928" size-unit="char" translate="yes" xml:space="preserve">
           <source>Review the exact posting group and account in BC. Retain unrelated configuration; obtain approval before changes and rerun preflight.</source>
@@ -2062,6 +2087,11 @@
           <source>This candidate references an empty, missing, blocked or non-posting G/L account. It must not be selected.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Setup Check - NamedType InvalidAccountLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3024334983 - NamedType 919568467" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Domestic trade requires at least one unblocked posting combination with usable G/L accounts in this table. Exact document and tax combinations must also be reviewed before posting.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Setup Check - NamedType MatrixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3024334983 - NamedType 554676818" size-unit="char" translate="yes" xml:space="preserve">
           <source>No visible posting group has a usable receivables or payables account. Execution is blocked.</source>
@@ -3342,11 +3372,6 @@
           <source>Start this captured partner run after rechecking its setup and permissions? Test generation will be enabled. Existing or uncertain batches are not repeated.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Quick Scenario Run - NamedType CapturedQst</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2935868274 - NamedType 3824323543" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Start %1 in company %2? This prepares missing demo partner setup and enables test data generation in the company. No posting is approved.</source>
-          <note from="Developer" annotates="general" priority="2">%1 = scenario description, %2 = company</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Quick Scenario Run - NamedType DemoQst</note>
         </trans-unit>
         <trans-unit id="Codeunit 2935868274 - NamedType 2102399103" size-unit="char" translate="yes" xml:space="preserve">
           <source>Start %1 in company %2 using its existing BC setup? This enables test data generation in the company. No posting is approved.</source>
@@ -4828,6 +4853,46 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Country Code - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 712706256 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies an existing currency. Blank uses local currency; a valid exchange rate is required.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Currency Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 712706256 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner Currency</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Currency Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 79074009 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies an existing value of the first global dimension. Blank leaves the dimension unset.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Dimension 1 - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 79074009 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner Global Dimension 1</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Dimension 1 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3736344688 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies an existing value of the second global dimension. Blank leaves the dimension unset.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Dimension 2 - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3736344688 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner Global Dimension 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Dimension 2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 4201318885 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies an existing payment method. This does not make bank data ready for payments.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Payment Method - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 4201318885 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner Payment Method</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Payment Method - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 3536643086 - Field 3206867468 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the highest process mode allowed for entity targets.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -5348,6 +5413,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 3114165994 - NamedType 2426652122" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No approved synthetic bank dataset is configured. Payment-ready bank accounts and payment exports are not generated. Configure and verify bank data separately before any payment process.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - NamedType BankNoticeLbl</note>
+        </trans-unit>
         <trans-unit id="Page 3114165994 - Control 2445482498 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>General</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -5408,6 +5478,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control PartnerGeneration - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 2651274478 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explains why payment processes remain blocked without approved synthetic bank details.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control PaymentReadiness - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 2651274478 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment Readiness</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control PaymentReadiness - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 3114165994 - Control 1987575564 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Planning Minimums</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -5462,6 +5542,16 @@
           <source>Capture Run Snapshot</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action CaptureRun - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Action 78732012 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens the shared finance preview. Apply a reviewed package explicitly, then select it for this template.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action ConfigureFinance - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Action 78732012 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review Finance Setup</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action ConfigureFinance - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3114165994 - Action 3113347229 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates an independent copy of this template, including modules and targets.</source>
@@ -5608,6 +5698,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1115899955 - NamedType 2426652122" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No approved synthetic bank dataset is configured. Payment-ready bank accounts and payment exports are not generated. Configure and verify bank data separately before any payment process.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - NamedType BankNoticeLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1115899955 - NamedType 2908045685" size-unit="char" translate="yes" xml:space="preserve">
           <source>Capture a run in the final wizard step before reviewing or scheduling it.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -5682,6 +5777,16 @@
           <source>Synthetic Partners</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Control PartnerGeneration - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1115899955 - Control 2651274478 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explains why payment processes remain blocked without approved synthetic bank details.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Control PaymentReadiness - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1115899955 - Control 2651274478 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment Readiness</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Control PaymentReadiness - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1115899955 - Control 3186922843 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>4. Process Scope</source>
@@ -5767,6 +5872,16 @@
           <source>Close</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Action CloseWizard - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1115899955 - Action 78732012 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens the shared finance preview. Apply a reviewed package explicitly, then select it for this template.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Action ConfigureFinance - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1115899955 - Action 78732012 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review Finance Setup</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Wizard - Action ConfigureFinance - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1115899955 - Action 1235620153 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Saves the template and continues to the next step without starting work.</source>

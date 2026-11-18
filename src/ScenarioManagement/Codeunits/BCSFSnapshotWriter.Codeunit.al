@@ -143,7 +143,7 @@ codeunit 90144 "BCSF Snapshot Writer"
   var
     Settings: JsonObject;
   begin
-    Settings.Add('version', 1);
+    Settings.Add('version', 2);
     Settings.Add('countryCode', Scenario."Partner Country Code");
     Settings.Add('customerPostingGroup', Scenario."Customer Posting Group");
     Settings.Add('vendorPostingGroup', Scenario."Vendor Posting Group");
@@ -158,6 +158,11 @@ codeunit 90144 "BCSF Snapshot Writer"
     Settings.Add('mediumCreditLimit', Scenario."Medium Credit Limit");
     Settings.Add('largeCreditLimit', Scenario."Large Credit Limit");
     Settings.Add('b2cCreditLimit', Scenario."B2C Credit Limit");
+    Settings.Add('currencyCode', Scenario."Partner Currency Code");
+    Settings.Add('paymentMethod', Scenario."Partner Payment Method");
+    Settings.Add('dimension1', Scenario."Partner Dimension 1");
+    Settings.Add('dimension2', Scenario."Partner Dimension 2");
+    Settings.Add('paymentReady', false);
     OnCapturePartnerSetup(Scenario."Finance Mode", Settings);
     exit(Settings);
   end;

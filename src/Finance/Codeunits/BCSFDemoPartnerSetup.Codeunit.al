@@ -1,263 +1,286 @@
 namespace BCScenarioFactory.Finance;
 
-using BCScenarioFactory.Core;
-using BCScenarioFactory.Lifecycle;
-using BCScenarioFactory.ScenarioManagement;
+using BCScenarioFactory.SetupManager;
 using Microsoft.CRM.Setup;
-using Microsoft.Finance.GeneralLedger.Account;
-using Microsoft.Finance.GeneralLedger.Ledger;
+using Microsoft.Finance.GeneralLedger.Journal;
 using Microsoft.Finance.GeneralLedger.Setup;
-using Microsoft.Finance.VAT.Setup;
 using Microsoft.Foundation.Address;
+using Microsoft.Foundation.AuditCodes;
 using Microsoft.Foundation.NoSeries;
 using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Setup;
 using Microsoft.Purchases.Setup;
-using Microsoft.Purchases.Vendor;
-using Microsoft.Sales.Customer;
 using Microsoft.Sales.Setup;
 
 codeunit 90408 "BCSF Demo Partner Setup"
 {
   Access = Internal;
 
-  procedure UsesDemoSetup(Scenario: Record "BCSF Scenario"): Boolean
-  begin
-    exit((Scenario."Finance Mode" = "BCSF Finance Mode"::Existing) and
-      (Scenario."Partner Country Code" = 'DE') and
-      (Scenario."Customer Posting Group" = 'BCSF-DEMO') and
-      (Scenario."Vendor Posting Group" = 'BCSF-DEMO') and
-      (Scenario."Gen. Bus. Posting Group" = 'BCSF-DEMO') and
-      (Scenario."VAT Bus. Posting Group" = 'BCSF-DEMO') and
-      (Scenario."Cash Terms Code" = 'BCSF-0D') and (Scenario."Small Terms Code" = 'BCSF-14D') and
-      (Scenario."Medium Terms Code" = 'BCSF-30D') and (Scenario."Large Terms Code" = 'BCSF-60D'));
-  end;
-
-  /// <summary>Fills minimal partner-only prerequisites after an explicit UI confirmation.</summary>
+  /// <summary>Foundation of the explicitly reviewed finance package. Never creates substitute G/L accounts.</summary>
   [CommitBehavior(CommitBehavior::Error)]
-  procedure EnsureSetup(Scenario: Record "BCSF Scenario")
+  procedure Prepare(EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
   var
-    Setup: Record "BCSF Factory Setup";
-    Ledger: Record "G/L Entry";
-    Guard: Codeunit "BCSF Environment Guard";
-  begin
-    if not UsesDemoSetup(Scenario) then
-      Error(ConflictErr);
-    Guard.EnsureCanConfigure(Scenario.CurrentCompany());
-    Setup.LockTable();
-    Setup.Get(Setup.GetSetupKey());
-    Ledger.SecurityFiltering(SecurityFilter::Disallowed);
-    Ledger.LockTable();
-    if not Ledger.IsEmpty() then
-      Error(PostedErr);
-    EnsureFoundation();
-    EnsureTerms('BCSF-0D', '<0D>');
-    EnsureTerms('BCSF-14D', '<14D>');
-    EnsureTerms('BCSF-30D', '<30D>');
-    EnsureTerms('BCSF-60D', '<60D>');
-    EnsureAccount('BCSF-AR', ReceivablesLbl, "G/L Account Category"::Assets);
-    EnsureAccount('BCSF-AP', PayablesLbl, "G/L Account Category"::Liabilities);
-    EnsureGroups();
-    EnsureSeriesAndBindings();
-  end;
-
-  local procedure EnsureFoundation()
-  var
-    Country: Record "Country/Region";
-    GeneralLedger: Record "General Ledger Setup";
-    Marketing: Record "Marketing Setup";
-  begin
-    Country.SecurityFiltering(SecurityFilter::Disallowed);
-    Country.LockTable();
-    if not Country.Get('DE') then begin
-      Country.Init();
-      Country.Code := 'DE';
-      Country.Name := GermanyLbl;
-      Country.Insert(true);
-    end;
-    GeneralLedger.SecurityFiltering(SecurityFilter::Disallowed);
-    GeneralLedger.LockTable();
-    if not GeneralLedger.Get() then begin
-      GeneralLedger.Init();
-      GeneralLedger."Amount Rounding Precision" := 0.01;
-      GeneralLedger.Insert(true);
-    end;
-    Marketing.SecurityFiltering(SecurityFilter::Disallowed);
-    Marketing.LockTable();
-    if not Marketing.Get() then begin
-      Marketing.Init();
-      Marketing.Insert(true);
-    end;
-  end;
-
-  local procedure EnsureTerms(CodeValue: Code[10]; Formula: Text)
-  var
-    Terms: Record "Payment Terms";
-    Due: DateFormula;
-  begin
-    Evaluate(Due, Formula);
-    Terms.SecurityFiltering(SecurityFilter::Disallowed);
-    Terms.LockTable();
-    if Terms.Get(CodeValue) then begin
-      Terms.TestField("Due Date Calculation", Due);
-      Terms.TestField("Discount %", 0);
-      exit;
-    end;
-    Terms.Init();
-    Terms.Code := CodeValue;
-    Terms.Description := CopyStr(StrSubstNo(TermsLbl, Formula), 1, MaxStrLen(Terms.Description));
-    Terms."Due Date Calculation" := Due;
-    Terms.Insert(true);
-  end;
-
-  local procedure EnsureAccount(No: Code[20]; AccountName: Text[100]; Category: Enum "G/L Account Category")
-  var
-    Account: Record "G/L Account";
-  begin
-    Account.SecurityFiltering(SecurityFilter::Disallowed);
-    Account.LockTable();
-    if Account.Get(No) then begin
-      Account.TestField("Account Type", Account."Account Type"::Posting);
-      Account.TestField("Account Category", Category);
-      Account.TestField("Income/Balance", Account."Income/Balance"::"Balance Sheet");
-      Account.TestField(Blocked, false);
-      Account.TestField("Direct Posting", false);
-      exit;
-    end;
-    Account.Init();
-    Account."No." := No;
-    Account.Validate(Name, AccountName);
-    Account."Account Type" := Account."Account Type"::Posting;
-    Account."Account Category" := Category;
-    Account."Income/Balance" := Account."Income/Balance"::"Balance Sheet";
-    Account."Direct Posting" := false;
-    Account.Insert(true);
-  end;
-
-  local procedure EnsureGroups()
-  var
-    GeneralGroup: Record "Gen. Business Posting Group";
-    VATGroup: Record "VAT Business Posting Group";
-    CustomerGroup: Record "Customer Posting Group";
-    VendorGroup: Record "Vendor Posting Group";
-  begin
-    GeneralGroup.SecurityFiltering(SecurityFilter::Disallowed);
-    GeneralGroup.LockTable();
-    if not GeneralGroup.Get('BCSF-DEMO') then begin
-      GeneralGroup.Init();
-      GeneralGroup.Code := 'BCSF-DEMO';
-      GeneralGroup.Description := GroupLbl;
-      GeneralGroup.Insert(true);
-    end;
-    VATGroup.SecurityFiltering(SecurityFilter::Disallowed);
-    VATGroup.LockTable();
-    if not VATGroup.Get('BCSF-DEMO') then begin
-      VATGroup.Init();
-      VATGroup.Code := 'BCSF-DEMO';
-      VATGroup.Description := GroupLbl;
-      VATGroup.Insert(true);
-    end;
-    CustomerGroup.SecurityFiltering(SecurityFilter::Disallowed);
-    CustomerGroup.LockTable();
-    if CustomerGroup.Get('BCSF-DEMO') then
-      CustomerGroup.TestField("Receivables Account", 'BCSF-AR')
-    else begin
-      CustomerGroup.Init();
-      CustomerGroup.Code := 'BCSF-DEMO';
-      CustomerGroup.Description := GroupLbl;
-      CustomerGroup."View All Accounts on Lookup" := true;
-      CustomerGroup.Validate("Receivables Account", 'BCSF-AR');
-      CustomerGroup.Insert(true);
-    end;
-    VendorGroup.SecurityFiltering(SecurityFilter::Disallowed);
-    VendorGroup.LockTable();
-    if VendorGroup.Get('BCSF-DEMO') then
-      VendorGroup.TestField("Payables Account", 'BCSF-AP')
-    else begin
-      VendorGroup.Init();
-      VendorGroup.Code := 'BCSF-DEMO';
-      VendorGroup.Description := GroupLbl;
-      VendorGroup."View All Accounts on Lookup" := true;
-      VendorGroup.Validate("Payables Account", 'BCSF-AP');
-      VendorGroup.Insert(true);
-    end;
-  end;
-
-  local procedure EnsureSeriesAndBindings()
-  var
+    GL: Record "General Ledger Setup";
     Sales: Record "Sales & Receivables Setup";
     Purchases: Record "Purchases & Payables Setup";
+    Inventory: Record "Inventory Setup";
+    Location: Record Location;
+    Marketing: Record "Marketing Setup";
+    Country: Record "Country/Region";
+    Journal: Record "Gen. Journal Template";
+    SourceSetup: Record "Source Code Setup";
+    Packages: Codeunit "BCSF Finance Package Mgt";
+    Manager: Codeunit "BCSF Setup Manager";
+    Fields: List of [Integer];
   begin
+    GL.Init();
+    GL."Amount Rounding Precision" := 0.01;
+    GL."LCY Code" := 'EUR';
+    if Packages.NeedsInsert(GL, Fields, Write, AllowCreate, TempDiff) then
+      GL.Insert(true);
+    GL.SecurityFiltering(SecurityFilter::Disallowed);
+    if GL.Get() then
+      if (GL."Amount Rounding Precision" <= 0) or (GL."LCY Code" = '') or
+        ((GL."Allow Posting From" <> 0D) and (EffectiveDate < GL."Allow Posting From")) or
+        ((GL."Allow Posting To" <> 0D) and (EffectiveDate > GL."Allow Posting To")) then
+        Block(GL.TableCaption(), Write, TempDiff);
+    Country.Init();
+    Country.Code := 'DE';
+    Country.Name := GermanyLbl;
+    if Packages.NeedsInsert(Country, Fields, Write, AllowCreate, TempDiff) then
+      Country.Insert(true);
+    Marketing.Init();
+    if Packages.NeedsInsert(Marketing, Fields, Write, AllowCreate, TempDiff) then
+      Marketing.Insert(true);
+    Sales.Init();
+    Sales."Customer Nos." := 'CUSTOMER';
+    Sales."Invoice Nos." := 'SALES-INV';
+    Sales."Posted Invoice Nos." := 'SALES-POST';
+    Sales."Posted Shipment Nos." := 'SHIPMENT';
+    Fields.Add(Sales.FieldNo("Customer Nos."));
+    Fields.Add(Sales.FieldNo("Invoice Nos."));
+    Fields.Add(Sales.FieldNo("Posted Invoice Nos."));
+    Fields.Add(Sales.FieldNo("Posted Shipment Nos."));
+    SetupRow(Sales, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
     Sales.SecurityFiltering(SecurityFilter::Disallowed);
-    Sales.LockTable();
-    if not Sales.Get() then begin
-      Sales.Init();
-      EnsureSeries('BCSF-CUST', 'SF-C-000001', 'SF-C-999999');
-      Sales.Validate("Customer Nos.", 'BCSF-CUST');
-      Sales.Insert(true);
-    end else
-      if Sales."Customer Nos." = '' then begin
-        EnsureSeries('BCSF-CUST', 'SF-C-000001', 'SF-C-999999');
-        Sales.Validate("Customer Nos.", 'BCSF-CUST');
-        Sales.Modify(true);
-      end;
+    if Sales.Get() then
+      if Sales."Invoice Rounding" then
+        Block(Sales.TableCaption() + ' / ' + Sales.FieldCaption("Invoice Rounding"), Write, TempDiff);
+    Clear(Fields);
+    Purchases.Init();
+    Purchases."Vendor Nos." := 'VENDOR';
+    Purchases."Invoice Nos." := 'PURCH-INV';
+    Purchases."Posted Invoice Nos." := 'PURCH-POST';
+    Purchases."Posted Receipt Nos." := 'RECEIPT';
+    Fields.Add(Purchases.FieldNo("Vendor Nos."));
+    Fields.Add(Purchases.FieldNo("Invoice Nos."));
+    Fields.Add(Purchases.FieldNo("Posted Invoice Nos."));
+    Fields.Add(Purchases.FieldNo("Posted Receipt Nos."));
+    SetupRow(Purchases, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
     Purchases.SecurityFiltering(SecurityFilter::Disallowed);
-    Purchases.LockTable();
-    if not Purchases.Get() then begin
-      Purchases.Init();
-      EnsureSeries('BCSF-VEND', 'SF-V-000001', 'SF-V-999999');
-      Purchases.Validate("Vendor Nos.", 'BCSF-VEND');
-      Purchases.Insert(true);
-    end else
-      if Purchases."Vendor Nos." = '' then begin
-        EnsureSeries('BCSF-VEND', 'SF-V-000001', 'SF-V-999999');
-        Purchases.Validate("Vendor Nos.", 'BCSF-VEND');
-        Purchases.Modify(true);
+    if Purchases.Get() then
+      if Purchases."Invoice Rounding" then
+        Block(Purchases.TableCaption() + ' / ' + Purchases.FieldCaption("Invoice Rounding"), Write, TempDiff);
+    Clear(Fields);
+    Inventory.Init();
+    Inventory."Item Nos." := 'ITEM';
+    Fields.Add(Inventory.FieldNo("Item Nos."));
+    SetupRow(Inventory, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
+    Inventory.SecurityFiltering(SecurityFilter::Disallowed);
+    Location.SecurityFiltering(SecurityFilter::Disallowed);
+    if Inventory.Get() then
+      if Inventory."Location Mandatory" then begin
+        Location.SetRange("Use As In-Transit", false);
+        if Location.IsEmpty() then
+          Block(Location.TableCaption(), Write, TempDiff);
       end;
+    Terms('NET00', '<0D>', Write, AllowCreate, TempDiff);
+    Terms('NET14', '<14D>', Write, AllowCreate, TempDiff);
+    Terms('NET30', '<30D>', Write, AllowCreate, TempDiff);
+    Terms('NET60', '<60D>', Write, AllowCreate, TempDiff);
+    Clear(Fields);
+    SourceSetup.Init();
+    SourceSetup.Sales := 'SALES';
+    SourceSetup.Purchases := 'PURCHASES';
+    SourceSetup."General Journal" := 'GENERAL';
+    Clear(Fields);
+    Fields.Add(SourceSetup.FieldNo(Sales));
+    Fields.Add(SourceSetup.FieldNo(Purchases));
+    Fields.Add(SourceSetup.FieldNo("General Journal"));
+    SetupRow(SourceSetup, Fields, false, EffectiveDate, Write, AllowCreate, TempDiff);
+    Clear(Fields);
+    Journal.SetRange(Type, Journal.Type::General);
+    if Journal.IsEmpty() then begin
+      Journal.Reset();
+      Journal.Init();
+      Journal.Name := 'GENERAL';
+      Journal.Description := JournalLbl;
+      Journal.Type := Journal.Type::General;
+      if SourceSetup.Get() then
+        Journal."Source Code" := SourceSetup."General Journal";
+      if not Write then
+        if Journal."Source Code" = '' then
+          Journal."Source Code" := 'GENERAL';
+      Fields.Add(Journal.FieldNo(Type));
+      if Packages.NeedsInsert(Journal, Fields, Write, AllowCreate, TempDiff) then
+        Journal.Insert(true);
+    end else
+      Manager.AddFinding(TempDiff, Journal.TableCaption(), false, ReuseLbl, ReuseLbl);
   end;
 
-  local procedure EnsureSeries(CodeValue: Code[20]; FirstNo: Code[20]; LastNo: Code[20])
+  local procedure SetupRow(ExpectedRow: Variant; SeriesFields: List of [Integer]; NumberSeries: Boolean; EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
   var
     Series: Record "No. Series";
-    SeriesLine: Record "No. Series Line";
-    ExistingLine: Record "No. Series Line";
+    Manager: Codeunit "BCSF Setup Manager";
+    NoSeries: Codeunit "No. Series";
+    Expected: RecordRef;
+    Actual: RecordRef;
+    ExpectedField: FieldRef;
+    ActualField: FieldRef;
+    FieldNo: Integer;
+    Code: Code[20];
+    Missing: Boolean;
+    Changed: Boolean;
   begin
-    Series.SecurityFiltering(SecurityFilter::Disallowed);
-    SeriesLine.SecurityFiltering(SecurityFilter::Disallowed);
-    ExistingLine.SecurityFiltering(SecurityFilter::Disallowed);
-    Series.LockTable();
-    SeriesLine.LockTable();
-    if Series.Get(CodeValue) then begin
-      Series.TestField("Default Nos.", true);
-      ExistingLine.SetRange("Series Code", CodeValue);
-      if (ExistingLine.Count() <> 1) or not SeriesLine.Get(CodeValue, 10000) then
-        Error(ConflictErr);
-      SeriesLine.TestField("Starting No.", FirstNo);
-      SeriesLine.TestField("Ending No.", LastNo);
-      SeriesLine.TestField("Increment-by No.", 1);
-      SeriesLine.TestField(Open, true);
+    Expected.GetTable(ExpectedRow);
+    Actual.Open(Expected.Number());
+    Actual.SecurityFiltering(SecurityFilter::Disallowed);
+    if Write then
+      Actual.LockTable();
+    if not Actual.ReadPermission() then begin
+      Block(Actual.Caption(), Write, TempDiff);
       exit;
     end;
-    Series.Init();
-    Series.Code := CodeValue;
-    Series.Description := GroupLbl;
-    Series."Default Nos." := true;
-    Series.Insert(true);
-    SeriesLine.Init();
-    SeriesLine."Series Code" := CodeValue;
-    SeriesLine."Line No." := 10000;
-    SeriesLine.Validate("Starting No.", FirstNo);
-    SeriesLine.Validate("Ending No.", LastNo);
-    SeriesLine.Validate("Increment-by No.", 1);
-    SeriesLine.Open := true;
-    SeriesLine.Insert(true);
+    Missing := not Actual.Get(Expected.RecordId());
+    if Missing then
+      Actual := Expected.Duplicate();
+    foreach FieldNo in SeriesFields do begin
+      ExpectedField := Expected.Field(FieldNo);
+      ActualField := Actual.Field(FieldNo);
+      Code := CopyStr(Format(ActualField.Value), 1, MaxStrLen(Code));
+      if Missing or (Code = '') then begin
+        Code := CopyStr(Format(ExpectedField.Value), 1, MaxStrLen(Code));
+        if NumberSeries then
+          EnsureSeries(Code, Write, AllowCreate, TempDiff)
+        else
+          EnsureSourceCode(Code, Write, AllowCreate, TempDiff);
+        if Write then
+          ActualField.Validate(Code);
+        Changed := true;
+      end else
+      if NumberSeries then begin
+        Series.SecurityFiltering(SecurityFilter::Disallowed);
+        if not Series.Get(Code) then
+          Block(ActualField.Caption() + ' / ' + Code, Write, TempDiff)
+        else begin
+          if not Series."Default Nos." then
+            Block(ActualField.Caption() + ' / ' + Code, Write, TempDiff);
+          if NoSeries.PeekNextNo(Code, EffectiveDate) = '' then
+            Block(ActualField.Caption() + ' / ' + Code, Write, TempDiff);
+        end;
+      end else
+        CheckSourceCode(Code, Write, TempDiff);
+    end;
+    if Changed then begin
+      if not AllowCreate or not Actual.WritePermission() then begin
+        Block(Actual.Caption(), Write, TempDiff);
+        exit;
+      end;
+      if Write then begin
+        if Missing then
+          Actual.Insert(true)
+        else
+          Actual.Modify(true);
+      end else
+        Manager.AddFinding(TempDiff, Actual.Caption(), false, FillLbl, ConfirmLbl);
+    end;
+    Actual.Close();
+    Expected.Close();
+  end;
+
+  local procedure EnsureSourceCode(Code: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    Expected: Record "Source Code";
+    Packages: Codeunit "BCSF Finance Package Mgt";
+    Fields: List of [Integer];
+  begin
+    Expected.Init();
+    Expected.Code := CopyStr(Code, 1, MaxStrLen(Expected.Code));
+    Expected.Description := CopyStr(Code, 1, MaxStrLen(Expected.Description));
+    if Packages.NeedsInsert(Expected, Fields, Write, AllowCreate, TempDiff) then
+      Expected.Insert(true);
+  end;
+
+  local procedure CheckSourceCode(Code: Code[20]; Write: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    Source: Record "Source Code";
+  begin
+    Source.SecurityFiltering(SecurityFilter::Disallowed);
+    if not Source.Get(Code) then
+      Block(Source.TableCaption() + ' / ' + Code, Write, TempDiff);
+  end;
+
+  local procedure EnsureSeries(Code: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    Expected: Record "No. Series";
+    Line: Record "No. Series Line";
+    Packages: Codeunit "BCSF Finance Package Mgt";
+    Fields: List of [Integer];
+  begin
+    Expected.Init();
+    Expected.Code := Code;
+    Expected.Description := Code;
+    Expected."Default Nos." := true;
+    Fields.Add(Expected.FieldNo("Default Nos."));
+    if Packages.NeedsInsert(Expected, Fields, Write, AllowCreate, TempDiff) then
+      Expected.Insert(true);
+    Clear(Fields);
+    Line.Init();
+    Line."Series Code" := Code;
+    Line."Line No." := 10000;
+    Line."Starting No." := CopyStr(Code + '-000001', 1, MaxStrLen(Line."Starting No."));
+    Line."Ending No." := CopyStr(Code + '-999999', 1, MaxStrLen(Line."Ending No."));
+    Line."Increment-by No." := 1;
+    Line.Open := true;
+    Fields.Add(Line.FieldNo("Starting No."));
+    Fields.Add(Line.FieldNo("Ending No."));
+    Fields.Add(Line.FieldNo("Increment-by No."));
+    Fields.Add(Line.FieldNo(Open));
+    if Packages.NeedsInsert(Line, Fields, Write, AllowCreate, TempDiff) then
+      Line.Insert(true);
+  end;
+
+  local procedure Terms(Code: Code[10]; Formula: Text; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    Expected: Record "Payment Terms";
+    Packages: Codeunit "BCSF Finance Package Mgt";
+    Fields: List of [Integer];
+  begin
+    Expected.Init();
+    Expected.Code := Code;
+    Evaluate(Expected."Due Date Calculation", Formula);
+    Expected.Description := Code;
+    Fields.Add(Expected.FieldNo("Due Date Calculation"));
+    Fields.Add(Expected.FieldNo("Discount %"));
+    if Packages.NeedsInsert(Expected, Fields, Write, AllowCreate, TempDiff) then
+      Expected.Insert(true);
+  end;
+
+  local procedure Block(Requirement: Text; Write: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    Manager: Codeunit "BCSF Setup Manager";
+  begin
+    if Write then
+      Error(BlockedErr, Requirement);
+    Manager.AddFinding(TempDiff, Requirement, true, StrSubstNo(BlockedErr, Requirement), ConfirmLbl);
   end;
 
   var
-    ConflictErr: Label 'The existing setup conflicts with the reserved partner demo setup. Select compatible existing settings instead.';
-    PostedErr: Label 'Partner demo setup can only be prepared in a sandbox test company without G/L entries.';
     GermanyLbl: Label 'Germany';
-    TermsLbl: Label 'Scenario Factory test terms %1', Comment = '%1 = due date formula';
-    ReceivablesLbl: Label 'Scenario Factory Test Receivables';
-    PayablesLbl: Label 'Scenario Factory Test Payables';
-    GroupLbl: Label 'Scenario Factory Partner Test';
+    JournalLbl: Label 'General Journal';
+    FillLbl: Label 'Create missing setup or fill empty number series bindings';
+    ConfirmLbl: Label 'Review the finance package and confirm. Existing nonempty settings are retained.';
+    ReuseLbl: Label 'Reuse existing setup';
+    BlockedErr: Label 'Finance foundation %1 is missing, incompatible or not writable. Review setup and permissions before applying.', Comment = '%1 = setup requirement';
 }

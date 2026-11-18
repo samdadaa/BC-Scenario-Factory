@@ -51,3 +51,7 @@ Der frühere Claim-Commit bleibt erhalten; hinzu kommt ausschließlich der absic
 ## Prüfung
 
 Lokaler Cloud-Build mit CodeCop/UICop, Übersetzungsprüfung und statische Guard-/ID-/Scopeprüfungen werden in [TESTS.md](TESTS.md) protokolliert. Unterbrechungen während tatsächlicher Datenerstellung oder Buchung wurden mangels freigegebener BC-Laufzeit und echter Generatoren nicht simuliert. Die konkrete Fault-/Parallelitätsmatrix steht dort als offen. Keine neue Test-App oder Testobjekte, kein Deployment. Status SF-013: **Zur Prüfung**.
+
+## SF-037 – Checkpoint-BLOB und JSON-Lesepfad
+
+Gespeicherte Ergebnis-BLOBs werden nach `Get()` explizit mit `CalcFields` geladen. `ReadStoredResult` übernimmt Laden und Lesen; `VerifyCheckpoint` lädt vor dem gemeinsamen Validator. `ReadResult` ist dagegen der Leser des aktuellen Speicherinhalts, damit der Insert-Validator einen noch nicht gespeicherten Checkpoint prüfen kann. Reconciliation und Abschlussprüfung verwenden den gespeicherten Leser. Leere/ungültige JSON-Ergebnisse bleiben mit paketbezogener Fehlermeldung blockiert. Die Trennung ändert weder die atomare Ergebnis-/Checkpointgrenze noch die Wiederanlaufberechtigung. [Nachweis und offene BC-Fälle](TESTS.md#sf-037--nachtrag-zum-json-fehler-im-partnerlauf).

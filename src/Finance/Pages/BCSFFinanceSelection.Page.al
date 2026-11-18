@@ -20,6 +20,11 @@ page 90404 "BCSF Finance Selection"
         }
     }
 
+    internal procedure SetMode(NewMode: Enum "BCSF Finance Mode")
+    begin
+        Mode := NewMode;
+    end;
+
     internal procedure GetMode(): Enum "BCSF Finance Mode"
     begin
         exit(Mode);

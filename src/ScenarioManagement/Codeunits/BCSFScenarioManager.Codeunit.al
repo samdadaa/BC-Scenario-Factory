@@ -99,6 +99,16 @@ codeunit 90130 "BCSF Scenario Manager"
       until Selection.Next() = 0;
   end;
 
+  procedure ConfigureFinance(ScenarioId: Guid)
+  begin
+    OnConfigureFinance(ScenarioId);
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnConfigureFinance(ScenarioId: Guid)
+  begin
+  end;
+
   procedure CreateScenario(): Guid
   var
     Scenario: Record "BCSF Scenario";
@@ -268,16 +278,56 @@ codeunit 90130 "BCSF Scenario Manager"
     end;
   end;
 
+  procedure GetScenarioLanguagePreview(Scenario: Record "BCSF Scenario"; var CustomerName: Text[100]; var VendorName: Text[100]; var ItemName: Text[100])
+  var
+    Languages: Codeunit "BCSF Language Mgt";
+    Context: JsonObject;
+    Settings: JsonObject;
+  begin
+    // Read-only name preview; no snapshot, standard record or execution identity is persisted.
+    Context.Add('schemaVersion', 1);
+    Context.Add('runId', Format(Scenario."Scenario Id"));
+    Context.Add('companyName', CompanyName());
+    Context.Add('dataLanguage', Languages.ResolveDataLanguage(Scenario."Data Language").AsInteger());
+    Context.Add('seed', Scenario.Seed);
+    Context.Add('processMode', Scenario."Process Mode".AsInteger());
+    Context.Add('nameCatalogVersion', 1);
+    Context.Add('seedEngineVersion', 1);
+    Context.Add('batchSize', 1);
+    Context.Add('maximumBatchSize', 1);
+    Context.Add('maximumRecordsPerEntity', 1);
+    Context.Add('profileCode', Scenario."Profile Code");
+    Context.Add('profileVersion', Scenario."Profile Version");
+    Settings.Add('countryCode', Scenario."Partner Country Code");
+    Settings.Add('b2cPercent', Scenario."B2C Percent");
+    Context.Add('partnerSetup', Settings);
+    OnPreviewPartnerNames(Context, CustomerName, VendorName, ItemName);
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnPreviewPartnerNames(Context: JsonObject; var CustomerName: Text[100]; var VendorName: Text[100]; var ItemName: Text[100])
+  begin
+  end;
+
   procedure GetRunLanguagePreview(RunId: Guid; var CustomerName: Text[100]; var VendorName: Text[100]; var ItemName: Text[100])
   var
     Header: Record "BCSF Run Header";
     Languages: Codeunit "BCSF Language Mgt";
     Payload: JsonObject;
     Token: JsonToken;
+    Rules: JsonObject;
     CatalogVersion: Integer;
   begin
     Header.Get(RunId);
     ReadSnapshot(RunId, Payload);
+    if Payload.Get('syntheticRules', Token) then begin
+      Rules := Token.AsObject();
+      Rules.Get('version', Token);
+      if Token.AsValue().AsInteger() = 2 then begin
+        OnPreviewPartnerNames(Payload, CustomerName, VendorName, ItemName);
+        exit;
+      end;
+    end;
     Payload.Get('nameCatalogVersion', Token);
     CatalogVersion := Token.AsValue().AsInteger();
     CustomerName := Languages.GetSyntheticName('CUSTOMER', 1, Header."Data Language", CatalogVersion);

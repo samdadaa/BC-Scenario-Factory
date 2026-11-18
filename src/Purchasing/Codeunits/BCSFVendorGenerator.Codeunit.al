@@ -44,9 +44,13 @@ codeunit 90450 "BCSF Vendor Generator" implements "BCSF Generator"
   var
     Partner: Record Vendor;
     Rules: Codeunit "BCSF Partner Rules";
+    Children: Codeunit "BCSF Partner Children";
+    Contract: Codeunit "BCSF Contract JSON";
   begin
     Rules.CheckTarget(Context, Target, 'VENDOR', 'PURCHASING');
     Rules.CheckSetup(Context, 'VENDOR');
+    if Contract.GetInteger(Rules.ReadSettings(Context), 'version') = 2 then
+      Children.CheckPermissions(false);
     Partner.SecurityFiltering(SecurityFilter::Disallowed);
     if not Partner.ReadPermission() or not Partner.WritePermission() then
       Error(PermissionErr);
@@ -94,12 +98,14 @@ codeunit 90450 "BCSF Vendor Generator" implements "BCSF Generator"
     Partner: Record Vendor;
     Rules: Codeunit "BCSF Partner Rules";
     Registry: Codeunit "BCSF Record Registry";
+    Children: Codeunit "BCSF Partner Children";
     Contract: Codeunit "BCSF Contract JSON";
     NoSeries: Codeunit "No. Series";
     Settings: JsonObject;
     Values: JsonObject;
     BaseDate: Date;
     NoParent: Guid;
+    ParentId: Guid;
   begin
     Settings := Rules.ReadSettings(Context);
     Values := Rules.BuildValues(Context, 'VENDOR', LogicalKey);
@@ -125,8 +131,21 @@ codeunit 90450 "BCSF Vendor Generator" implements "BCSF Generator"
     Partner.Validate("Partner Type", Partner."Partner Type"::Company);
     // Contact.OnValidate can Modify an already stored record. Supply the synthetic contact to the standard insert instead.
     Partner.Contact := CopyStr(Contract.GetText(Values, 'contact'), 1, MaxStrLen(Partner.Contact));
+    if Contract.GetInteger(Settings, 'version') = 2 then begin
+      Partner.Validate("Currency Code", CopyStr(Contract.GetText(Settings, 'currencyCode'), 1, MaxStrLen(Partner."Currency Code")));
+      Partner.Validate("Payment Method Code", CopyStr(Contract.GetText(Settings, 'paymentMethod'), 1, MaxStrLen(Partner."Payment Method Code")));
+    end;
     Partner.Insert(true);
-    Registry.RegisterResult(RunId, 'VENDOR', LogicalKey, 'VENDOR', BatchId, Partner.RecordId(), NoParent);
+    // Standard dimension validation saves Default Dimension and calls Modify; the partner must already exist.
+    if Contract.GetInteger(Settings, 'version') = 2 then begin
+      if Contract.GetText(Settings, 'dimension1') <> '' then
+        Partner.Validate("Global Dimension 1 Code", CopyStr(Contract.GetText(Settings, 'dimension1'), 1, MaxStrLen(Partner."Global Dimension 1 Code")));
+      if Contract.GetText(Settings, 'dimension2') <> '' then
+        Partner.Validate("Global Dimension 2 Code", CopyStr(Contract.GetText(Settings, 'dimension2'), 1, MaxStrLen(Partner."Global Dimension 2 Code")));
+    end;
+    ParentId := Registry.RegisterResult(RunId, 'VENDOR', LogicalKey, 'VENDOR', BatchId, Partner.RecordId(), NoParent);
+    if Contract.GetInteger(Settings, 'version') = 2 then
+        Children.CreateVendor(Context, Partner, RunId, BatchId, LogicalKey, ParentId);
   end;
 
   procedure ValidateOutput(Context: JsonObject; Target: JsonObject; Batch: JsonObject; Result: JsonObject; var Findings: JsonArray)
@@ -135,11 +154,13 @@ codeunit 90450 "BCSF Vendor Generator" implements "BCSF Generator"
     Entry: Record "BCSF Generated Record";
     Rules: Codeunit "BCSF Partner Rules";
     Contract: Codeunit "BCSF Contract JSON";
+    Children: Codeunit "BCSF Partner Children";
     Settings: JsonObject;
     Values: JsonObject;
     RunId: Guid;
     BatchId: Guid;
     LogicalKey: Integer;
+    ExpectedArtifacts: Integer;
   begin
     Clear(Findings);
     Rules.CheckTarget(Context, Target, 'VENDOR', 'PURCHASING');
@@ -157,6 +178,11 @@ codeunit 90450 "BCSF Vendor Generator" implements "BCSF Generator"
       Entry.TestField("Generator Version", '1');
       Partner.GetBySystemId(Entry."Record SystemId");
       Values := Rules.BuildValues(Context, 'VENDOR', LogicalKey);
+      ExpectedArtifacts += 1;
+      if Contract.GetInteger(Settings, 'version') = 2 then begin
+          Children.CheckVendor(Context, Partner, RunId, BatchId, LogicalKey, Entry."Entry Id");
+          ExpectedArtifacts += 1;
+        end;
       Partner.TestField(Name, Contract.GetText(Values, 'name'));
       Partner.TestField(Contact, Contract.GetText(Values, 'contact'));
       Partner.TestField(Address, Contract.GetText(Values, 'address'));
@@ -171,13 +197,19 @@ codeunit 90450 "BCSF Vendor Generator" implements "BCSF Generator"
       Partner.TestField("Payment Terms Code", Contract.GetCode(Values, 'paymentTerms'));
       Partner.TestField(Priority, Contract.GetInteger(Values, 'priority'));
       Partner.TestField(Blocked, Partner.Blocked::" ");
+      if Contract.GetInteger(Settings, 'version') = 2 then begin
+        Partner.TestField("Currency Code", Contract.GetText(Settings, 'currencyCode'));
+        Partner.TestField("Payment Method Code", Contract.GetText(Settings, 'paymentMethod'));
+        Partner.TestField("Global Dimension 1 Code", Contract.GetText(Settings, 'dimension1'));
+        Partner.TestField("Global Dimension 2 Code", Contract.GetText(Settings, 'dimension2'));
+      end;
       Partner.TestField("Phone No.", '');
       Partner.TestField("VAT Registration No.", '');
       Partner.TestField("Partner Type", Partner."Partner Type"::Company);
     end;
     Entry.Reset();
     Entry.SetRange("Batch Id", BatchId);
-    if Entry.Count() <> Contract.GetInteger(Result, 'createdRecords') then
+    if (Entry.Count() <> Contract.GetInteger(Result, 'createdRecords')) or (Entry.Count() <> ExpectedArtifacts) then
       Error(ReplayErr);
   end;
 

@@ -2,9 +2,12 @@ namespace BCScenarioFactory.DataGeneration;
 
 using BCScenarioFactory.Core;
 using BCScenarioFactory.ScenarioManagement;
+using Microsoft.Bank.BankAccount;
 using Microsoft.CRM.BusinessRelation;
 using Microsoft.CRM.Contact;
 using Microsoft.CRM.Setup;
+using Microsoft.Finance.Currency;
+using Microsoft.Finance.Dimension;
 using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Setup;
@@ -28,7 +31,7 @@ codeunit 90256 "BCSF Partner Rules"
     if not Context.Get('partnerSetup', Token) then
       Error(SettingsErr);
     Settings := Token.AsObject();
-    if Contract.GetInteger(Settings, 'version') <> 1 then
+    if not (Contract.GetInteger(Settings, 'version') in [1, 2]) then
       Error(SettingsErr);
     exit(Settings);
   end;
@@ -74,6 +77,8 @@ codeunit 90256 "BCSF Partner Rules"
     VATGroup.Get(Contract.GetCode(Settings, 'vatBusPostingGroup'));
     if not Evaluate(BaseDate, Contract.GetText(Context, 'startingDate'), 9) or (BaseDate = 0D) then
       Error(SettingsErr);
+    if Contract.GetInteger(Settings, 'version') = 2 then
+      CheckOptions(Context, Settings, EntityCode, BaseDate);
     ConsumerPercent := Contract.GetInteger(Settings, 'b2cPercent');
     if (ConsumerPercent < 0) or (ConsumerPercent > 100) or
       (GetDecimal(Settings, 'smallCreditLimit') < 0) or (GetDecimal(Settings, 'mediumCreditLimit') < 0) or
@@ -106,6 +111,51 @@ codeunit 90256 "BCSF Partner Rules"
     Account.TestField("Direct Posting", false);
     // Also checks captured seed/rule/catalog versions before any standard number is consumed.
     Seed.BuildValues(Context, EntityCode, '1');
+  end;
+
+  local procedure CheckOptions(Context: JsonObject; Settings: JsonObject; EntityCode: Code[30]; BaseDate: Date)
+  var
+    Currency: Record Currency;
+    Rate: Record "Currency Exchange Rate";
+    PaymentMethod: Record "Payment Method";
+    Dimension: Record "Dimension Value";
+    DefaultDimension: Record "Default Dimension";
+    GL: Record "General Ledger Setup";
+    Catalog: Codeunit "BCSF Partner Catalog";
+    Contract: Codeunit "BCSF Contract JSON";
+    Code: Code[20];
+    No: Integer;
+  begin
+    Catalog.AddressValues(Context, EntityCode, 1, 'REGISTERED');
+    Currency.SecurityFiltering(SecurityFilter::Disallowed);
+    Rate.SecurityFiltering(SecurityFilter::Disallowed);
+    Code := CopyStr(Contract.GetText(Settings, 'currencyCode'), 1, MaxStrLen(Code));
+    if Code <> '' then begin
+      Currency.Get(Code);
+      if Rate.ExchangeRate(BaseDate, CopyStr(Code, 1, 10)) <= 0 then
+        Error(SettingsErr);
+    end;
+    PaymentMethod.SecurityFiltering(SecurityFilter::Disallowed);
+    Code := CopyStr(Contract.GetText(Settings, 'paymentMethod'), 1, MaxStrLen(Code));
+    if Code <> '' then
+      PaymentMethod.Get(Code);
+    GL.SecurityFiltering(SecurityFilter::Disallowed);
+    GL.Get();
+    Dimension.SecurityFiltering(SecurityFilter::Disallowed);
+    DefaultDimension.SecurityFiltering(SecurityFilter::Disallowed);
+    for No := 1 to 2 do begin
+      Code := CopyStr(Contract.GetText(Settings, 'dimension' + Format(No, 0, 9)), 1, MaxStrLen(Code));
+      if Code <> '' then begin
+        if not DefaultDimension.ReadPermission() or not DefaultDimension.WritePermission() then
+          Error(DimensionPermissionErr);
+        if No = 1 then
+          Dimension.Get(GL."Global Dimension 1 Code", Code)
+        else
+          Dimension.Get(GL."Global Dimension 2 Code", Code);
+        Dimension.TestField(Blocked, false);
+        Dimension.TestField("Dimension Value Type", Dimension."Dimension Value Type"::Standard);
+      end;
+    end;
   end;
 
   local procedure CheckContactSetup(Settings: JsonObject; EntityCode: Code[30])
@@ -185,10 +235,12 @@ codeunit 90256 "BCSF Partner Rules"
   procedure BuildValues(Context: JsonObject; EntityCode: Code[30]; LogicalKey: Integer): JsonObject
   var
     Seed: Codeunit "BCSF Seed Engine";
+    Catalog: Codeunit "BCSF Partner Catalog";
     Contract: Codeunit "BCSF Contract JSON";
     Settings: JsonObject;
     Values: JsonObject;
     Result: JsonObject;
+    Address: JsonObject;
     KeyText: Text;
     ClassCode: Text;
     City: Text;
@@ -244,6 +296,13 @@ codeunit 90256 "BCSF Partner Rules"
     Result.Add('creditLimit', CreditLimit);
     Result.Add('consumer', Consumer);
     Result.Add('priority', Priority);
+    if Contract.GetInteger(Settings, 'version') = 2 then begin
+      Result.Replace('email', Catalog.Email(Name));
+      Address := Catalog.AddressValues(Context, EntityCode, LogicalKey, 'REGISTERED');
+      Result.Replace('city', Contract.GetText(Address, 'city'));
+      Result.Replace('postCode', Contract.GetText(Address, 'postCode'));
+      Result.Replace('address', Contract.GetText(Address, 'address'));
+    end;
     exit(Result);
   end;
 
@@ -319,7 +378,9 @@ codeunit 90256 "BCSF Partner Rules"
 
   procedure MakeResult(Context: JsonObject; Batch: JsonObject; GeneratorCode: Code[30]; var Result: JsonObject)
   var
+    Entry: Record "BCSF Generated Record";
     Contract: Codeunit "BCSF Contract JSON";
+    BatchId: Guid;
     Units: Integer;
   begin
     Units := Contract.GetInteger(Batch, 'lastKey') - Contract.GetInteger(Batch, 'firstKey') + 1;
@@ -328,7 +389,13 @@ codeunit 90256 "BCSF Partner Rules"
     Result.Add('runId', Contract.GetText(Context, 'runId'));
     Result.Add('batchKey', Contract.GetText(Batch, 'batchKey'));
     Result.Add('processedUnits', Units);
-    Result.Add('createdRecords', Units);
+    if Contract.GetInteger(ReadSettings(Context), 'version') = 2 then begin
+      if not Evaluate(BatchId, Contract.GetText(Context, 'batchId')) then
+        Error(ExecutionErr);
+      Entry.SetRange("Batch Id", BatchId);
+      Result.Add('createdRecords', Entry.Count());
+    end else
+      Result.Add('createdRecords', Units);
     Result.Add('dataLanguage', Contract.GetInteger(Context, 'dataLanguage'));
     Result.Add('completed', true);
     Result.Add('contractProbe', false);
@@ -344,13 +411,16 @@ codeunit 90256 "BCSF Partner Rules"
     if (Contract.GetText(Result, 'generatorCode') <> GeneratorCode) or
       (Contract.GetText(Result, 'runId') <> Contract.GetText(Context, 'runId')) or
       (Contract.GetText(Result, 'batchKey') <> Contract.GetText(Batch, 'batchKey')) or
-      (Contract.GetInteger(Result, 'processedUnits') <> Units) or (Contract.GetInteger(Result, 'createdRecords') <> Units) or
+      (Contract.GetInteger(Result, 'processedUnits') <> Units) or
+      (Contract.GetInteger(Result, 'createdRecords') < Units) or
+      ((Contract.GetInteger(ReadSettings(Context), 'version') = 1) and (Contract.GetInteger(Result, 'createdRecords') <> Units)) or
       (Contract.GetInteger(Result, 'dataLanguage') <> Contract.GetInteger(Context, 'dataLanguage')) or
       not Contract.GetBoolean(Result, 'completed') or Contract.GetBoolean(Result, 'contractProbe') then
       Error(ExecutionErr);
   end;
 
   var
+    DimensionPermissionErr: Label 'Configured partner dimensions require effective read and write permissions for default dimensions before generation.';
     ContactPermissionErr: Label 'The configured standard contact integration requires read and write permissions for contacts and contact business relations.';
     CountryErr: Label 'The current SKR test packages support domestic German partners only. Select country code DE or use explicitly configured existing setup.';
     SettingsErr: Label 'Capture a new run with partner settings version 1, existing country and posting groups, usable number series, payment terms and nonnegative credit limits.';

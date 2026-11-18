@@ -40,13 +40,15 @@ page 90254 "BCSF Generated Records"
       action(OpenPartner)
       {
         ApplicationArea = All;
-        Caption = 'Open Generated Partner';
-        ToolTip = 'Opens the exact customer or vendor by its recorded stable identity.';
+        Caption = 'Open Generated Record';
+        ToolTip = 'Opens the exact partner, ship-to address or order address by its recorded stable identity.';
         Image = View;
         trigger OnAction()
         var
           Customer: Record Customer;
           Vendor: Record Vendor;
+          ShipTo: Record "Ship-to Address";
+          OrderAddress: Record "Order Address";
         begin
           case Rec."Table Id" of
             Database::Customer:
@@ -58,6 +60,16 @@ page 90254 "BCSF Generated Records"
               begin
                 Vendor.GetBySystemId(Rec."Record SystemId");
                 Page.Run(Page::"Vendor Card", Vendor);
+              end;
+            Database::"Ship-to Address":
+              begin
+                ShipTo.GetBySystemId(Rec."Record SystemId");
+                Page.Run(Page::"Ship-to Address", ShipTo);
+              end;
+            Database::"Order Address":
+              begin
+                OrderAddress.GetBySystemId(Rec."Record SystemId");
+                Page.Run(Page::"Order Address", OrderAddress);
               end;
             else Message(MissingLbl);
           end;

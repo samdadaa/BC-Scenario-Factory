@@ -115,3 +115,8 @@ In der freigegebenen Playground-Sandbox werden bei Installation/Upgrade Startvor
 **Scenario-Factory-Szenarien → Startvorlagen laden → Partner-Vorlage wählen → Partnerszenario ausführen → bestätigen → Ergebnisse öffnen.** Queue, Plan und Checkpoints werden intern bedient. Die Laufkarte zeigt den aktuellen Ausführungsstatus, bestätigte Pakete, Abschlussprüfung und genau diesem Lauf zugeordnete Partner. Bei Fehlern führt **Fehler anzeigen** zum ursprünglichen Standardprotokoll bzw. zum fehlenden Nachweis. Technische Aktionen liegen unter **Diagnose**.
 
 Startvorlagen werden ausschließlich über die UI geladen, nicht beim Publishing. Unveränderte Standardnamen wechseln mit der Sitzungssprache; eigene Namen bleiben erhalten. Ausgewählte unbenutzte Vorlagen können gelöscht, verwendete archiviert werden. Erneutes Laden holt absichtlich entfernte/archivierte Starter nicht zurück. [Aktuelle Testanleitung](docs/review/TESTANLEITUNG.md), [echte lokale Prüfungen und offene Sandboxfälle](docs/TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). Status **Zur Prüfung**.
+
+
+## SF-038 / SF-039 – aktueller Reparaturstand
+
+Gemeinsamer bestätigter Finance-Pfad ohne Zwei-Konten-Fallback, neue SKR-Teilpakete 2.0.0 und versionierte natürliche Partnerwerte einschließlich Liefer-/Bestelladressen sind implementiert, **Zur Prüfung**. Alte Pakete/Läufe werden nicht migriert. Zahlungsbereitschaft ohne freigegebene synthetische Bankdaten bleibt gesperrt. [Umfang und Grenzen](docs/STABILIZATION_FINANCE_PARTNERS.md), [Prüfanleitung](docs/review/TESTANLEITUNG.md).

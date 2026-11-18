@@ -62,15 +62,13 @@ codeunit 90367 "BCSF Quick Scenario Run"
 
   procedure RunScenario(Scenario: Record "BCSF Scenario"): Guid
   var
-    DemoSetup: Codeunit "BCSF Demo Partner Setup";
     Manager: Codeunit "BCSF Scenario Manager";
     Approval: Text;
   begin
     CheckTargets(Scenario);
-    if DemoSetup.UsesDemoSetup(Scenario) then
-      Approval := DemoQst
-    else
-      Approval := ExistingQst;
+    if not PrepareFinance(Scenario) then
+      exit(EmptyId());
+    Approval := ExistingQst;
     if not Confirm(Approval, false, Manager.GetDisplayName(Scenario), CompanyName()) then
       exit(EmptyId());
     exit(StartConfirmed(Scenario."Scenario Id", Scenario.Revision));
@@ -82,7 +80,6 @@ codeunit 90367 "BCSF Quick Scenario Run"
     Scenario: Record "BCSF Scenario";
     Setup: Record "BCSF Factory Setup";
     SetupMgt: Codeunit "BCSF Setup Management";
-    DemoSetup: Codeunit "BCSF Demo Partner Setup";
     Guard: Codeunit "BCSF Environment Guard";
     Snapshot: Codeunit "BCSF Snapshot Writer";
     Plan: Codeunit "BCSF Plan Writer";
@@ -96,8 +93,7 @@ codeunit 90367 "BCSF Quick Scenario Run"
     CheckTargets(Scenario);
     SetupMgt.InitializeSetup();
     Guard.EnsureCanConfigure(Scenario.CurrentCompany());
-    if DemoSetup.UsesDemoSetup(Scenario) then
-      DemoSetup.EnsureSetup(Scenario);
+
     Setup.LockTable();
     Setup.Get(Setup.GetSetupKey());
     if not Setup."Generation Enabled" then begin
@@ -109,6 +105,17 @@ codeunit 90367 "BCSF Quick Scenario Run"
     Dispatcher.Prepare(RunId);
     Dispatcher.Schedule(RunId, CurrentDateTime());
     exit(RunId);
+  end;
+
+  procedure PrepareFinance(var Scenario: Record "BCSF Scenario"): Boolean
+  var
+    Packages: Codeunit "BCSF Finance Package Mgt";
+  begin
+    if (Scenario."Finance Mode" = "BCSF Finance Mode"::Existing) and (Scenario."Customer Posting Group" <> 'BCSF-DEMO') then
+      exit(true);
+    if (Scenario."Finance Mode" = Packages.GetAppliedMode()) and (Scenario."Finance Mode" <> "BCSF Finance Mode"::Existing) then
+      exit(true);
+    exit(Packages.ConfigureScenario(Scenario));
   end;
 
   local procedure CheckTargets(Scenario: Record "BCSF Scenario")
@@ -141,6 +148,5 @@ codeunit 90367 "BCSF Quick Scenario Run"
   var
     CapturedQst: Label 'Start this captured partner run after rechecking its setup and permissions? Test generation will be enabled. Existing or uncertain batches are not repeated.';
     PartnerOnlyErr: Label 'Quick run supports only customer and vendor master data. Use guided planning to inspect other templates.';
-    DemoQst: Label 'Start %1 in company %2? This prepares missing demo partner setup and enables test data generation in the company. No posting is approved.', Comment = '%1 = scenario description, %2 = company';
     ExistingQst: Label 'Start %1 in company %2 using its existing BC setup? This enables test data generation in the company. No posting is approved.', Comment = '%1 = scenario description, %2 = company';
 }

@@ -47,3 +47,8 @@ Vorhandene Objekte liegen in Codeunits/ und EnumExtensions/; der Modulmarker ble
 ## SF-018 – 18.11.2026
 
 90450 Vendor Generator und 90452 Vendor Binding: synthetische Firmenkreditoren, Klassenbedingungen/-prioritäten, explizite Gruppen, Standard-Validate/Insert und Herkunft/Outputvalidierung. Keine Einkaufsbelege. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.
+
+
+## SF-039
+
+Vendor Generator unterstützt neue Regel-/Setupversion 2, optional validierte Einstellungen und registrierte Bestelladressen. [Vertrag](../../../STABILIZATION_FINANCE_PARTNERS.md). **Zur Prüfung**.
