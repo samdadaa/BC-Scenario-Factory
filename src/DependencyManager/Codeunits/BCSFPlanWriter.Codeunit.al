@@ -72,11 +72,18 @@ codeunit 90204 "BCSF Plan Writer"
     Step.SetRange("Run Id", RunId);
     if Step.IsEmpty() then
       Error(MissingPlanErr);
+    // Give an actual target's blocker priority over the generic external planning barrier.
+    Step.SetRange("External Check", false);
+    Step.SetFilter(Issue, '<>%1', "BCSF Plan Issue"::None);
+    if Step.FindFirst() then
+      CheckSavedIssue(Step, Planner);
+    Step.SetRange(Issue);
+    Step.SetRange("External Check");
     if Step.FindSet() then
       repeat
         Step.TestField("Plan Version", 1);
         if Step.Issue <> "BCSF Plan Issue"::None then
-          Error(BlockedErr, Step."Node Code", Planner.GetIssueText(Step.Issue, Step."Reference Code"));
+          CheckSavedIssue(Step, Planner);
         if Step."External Check" then
           Error(ExternalErr);
         Registry.Resolve(Step."Generator Code", Step."Entity Code", TempCapability);
@@ -88,6 +95,38 @@ codeunit 90204 "BCSF Plan Writer"
           Error(VersionErr);
       until Step.Next() = 0;
     OnBeforeRunStart(RunId);
+  end;
+
+  local procedure CheckSavedIssue(Step: Record "BCSF Run Step"; Planner: Codeunit "BCSF Dependency Planner")
+  begin
+    Step.TestField("Plan Version", 1);
+    if Step.Issue = "BCSF Plan Issue"::Prerequisite then
+      ExplainSavedPrerequisite(Step);
+    Error(BlockedErr, Step."Node Code", Planner.GetIssueText(Step.Issue, Step."Reference Code"));
+  end;
+
+  local procedure ExplainSavedPrerequisite(Step: Record "BCSF Run Step")
+  var
+    TempCapability: Record "BCSF Generator Registry" temporary;
+    Manager: Codeunit "BCSF Scenario Manager";
+    Registry: Codeunit "BCSF Generator Registry Mgt";
+    Generator: Interface "BCSF Generator";
+    Context: JsonObject;
+    Target: JsonObject;
+  begin
+    Generator := Registry.Resolve(Step."Generator Code", Step."Entity Code", TempCapability);
+    if TempCapability."Contract Probe" or (TempCapability.Version <> Step."Generator Version") or
+      (TempCapability."Contract Version" <> Step."Contract Version") or
+      (TempCapability."Module Code" <> Step."Module Code") or not Registry.SupportsMode(TempCapability, Step."Process Mode")
+    then
+      Error(VersionErr);
+    Manager.ReadSnapshot(Step."Run Id", Context);
+    Target.Add('entityCode', Step."Entity Code");
+    Target.Add('moduleCode', Step."Module Code");
+    Target.Add('quantity', Step."Work Units");
+    Target.Add('processMode', Step."Process Mode".AsInteger());
+    Registry.RequirePrerequisites(Generator, Context, Target);
+    // A corrected requirement cannot thaw an immutable blocked plan.
   end;
 
   local procedure FillStep(RunId: Guid; Node: Record "BCSF Plan Node" temporary; var Step: Record "BCSF Run Step")

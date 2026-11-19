@@ -57,3 +57,8 @@ Bestehender Paket-Inspektionsvertrag wird durch Finance implementiert; sämtlich
 ## SF-018 – 18.11.2026
 
 Für reine Customer-/Vendor-Ziele konkrete echte Prerequisites und temporäre Detailbefunde statt pauschalem zukünftigen Bindungsblocker. Andere Prozessgates unverändert. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.
+
+
+## SF-040 – Stammdatenbasis und Startprüfung
+
+Die [Modulmatrix und der Startvertrag](../../../MASTER_DATA_READINESS.md) sind maßgeblich für die gemeinsamen, lesenden Prüfungen vor Queue-Ausführung und Fortsetzen. Keine zusätzlichen Schemaobjekte.

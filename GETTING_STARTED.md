@@ -71,3 +71,5 @@ Zuerst AGENT_INITIALIZATION.md, docs/modules/DISCOVERY.md und docs/GAPS.md lesen
 - Beginne mit `TODO.md` (ID-/Publisher-/Sandbox-Entscheidung zuerst). **Keine neuen AL-Objekte oder Tests vor Auswahl und ausdrücklicher Freigabe eines Tickets.**
 - Relevante zusätzliche Dokumente: `docs/REQUIREMENTS.md`, `docs/SCENARIOS.md`, `docs/DATA_MODEL.md`, `docs/BACKGROUND_PROCESSING.md`, `docs/UI_WORKFLOWS.md`, `docs/DECISIONS.md`.
 - XERJ wird ausschließlich lokal für Codex erprobt und nicht mit BC verbunden.
+
+Für SF-040 siehe [Stammdatenbasis, Einrichtungsvorprüfung und Sandbox-Testfälle](docs/MASTER_DATA_READINESS.md).

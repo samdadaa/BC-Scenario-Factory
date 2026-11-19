@@ -29,15 +29,23 @@ codeunit 90226 "BCSF Setup Manager"
   var
     Header: Record "BCSF Run Header";
     TempTargets: Record "BCSF Data Target" temporary;
+    TempModules: Record "BCSF Scenario Module" temporary;
     LedgerSetup: Record "General Ledger Setup";
     InventorySetup: Record "Inventory Setup";
+    Location: Record Location;
     Manager: Codeunit "BCSF Scenario Manager";
+    Policy: Codeunit "BCSF Scenario Policy";
     Context: JsonObject;
     NeedSales: Boolean;
     NeedPurchases: Boolean;
     NeedItems: Boolean;
     Posting: Boolean;
     PartnersOnly: Boolean;
+    NeedDocuments: Boolean;
+    WarehouseRequired: Boolean;
+    UnpostedCount: Integer;
+    PostedCount: Integer;
+    PartialCount: Integer;
   begin
     TempDiff.Reset();
     TempDiff.DeleteAll();
@@ -46,6 +54,7 @@ codeunit 90226 "BCSF Setup Manager"
     if Header."Company Name" <> CompanyName() then
       Error(CompanyErr);
     Manager.LoadFrozenTargets(RunId, TempTargets);
+    Manager.LoadFrozenModules(RunId, TempModules);
     PartnersOnly := true;
     TempTargets.SetFilter(Quantity, '>0');
     if TempTargets.FindSet() then
@@ -53,97 +62,145 @@ codeunit 90226 "BCSF Setup Manager"
         PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]);
         NeedSales := NeedSales or (TempTargets.Module = "BCSF Module Type"::Sales);
         NeedPurchases := NeedPurchases or (TempTargets.Module = "BCSF Module Type"::Purchasing);
-        NeedItems := NeedItems or (TempTargets.Entity = "BCSF Entity Type"::Item) or
-          not (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]);
-        Posting := Posting or (TempTargets."Posted Percent" > 0) or (TempTargets."Partial Percent" > 0);
-        CheckTargetSeries(TempTargets, Header."Starting Date", TempDiff);
+        NeedDocuments := NeedDocuments or Policy.IsDocument(TempTargets.Entity);
+        NeedItems := NeedItems or (TempTargets.Entity = "BCSF Entity Type"::Item) or Policy.IsDocument(TempTargets.Entity);
+        Policy.GetDistribution(TempTargets, UnpostedCount, PostedCount, PartialCount);
+        Posting := Posting or (PostedCount > 0) or (PartialCount > 0);
+        // The executable partner generators validate their exact frozen series, not an unrelated default.
+        if not (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]) then
+          CheckTargetSeries(TempTargets, Header."Starting Date", (PostedCount > 0) or (PartialCount > 0), TempDiff);
       until TempTargets.Next() = 0;
     if CheckTable(Database::"General Ledger Setup", false, TempDiff) then begin
       LedgerSetup.FindFirst();
       CheckCondition(LedgerSetup.TableCaption() + ' / ' + LedgerSetup.FieldCaption("Amount Rounding Precision"),
         LedgerSetup."Amount Rounding Precision" > 0, TempDiff);
-      CheckDimension(LedgerSetup."Global Dimension 1 Code", LedgerSetup.FieldCaption("Global Dimension 1 Code"), TempDiff);
-      CheckDimension(LedgerSetup."Global Dimension 2 Code", LedgerSetup.FieldCaption("Global Dimension 2 Code"), TempDiff);
-      CheckDimension(LedgerSetup."Shortcut Dimension 3 Code", LedgerSetup.FieldCaption("Shortcut Dimension 3 Code"), TempDiff);
-      CheckDimension(LedgerSetup."Shortcut Dimension 4 Code", LedgerSetup.FieldCaption("Shortcut Dimension 4 Code"), TempDiff);
-      CheckDimension(LedgerSetup."Shortcut Dimension 5 Code", LedgerSetup.FieldCaption("Shortcut Dimension 5 Code"), TempDiff);
-      CheckDimension(LedgerSetup."Shortcut Dimension 6 Code", LedgerSetup.FieldCaption("Shortcut Dimension 6 Code"), TempDiff);
-      CheckDimension(LedgerSetup."Shortcut Dimension 7 Code", LedgerSetup.FieldCaption("Shortcut Dimension 7 Code"), TempDiff);
-      CheckDimension(LedgerSetup."Shortcut Dimension 8 Code", LedgerSetup.FieldCaption("Shortcut Dimension 8 Code"), TempDiff);
+      if not PartnersOnly then begin
+        CheckDimension(LedgerSetup."Global Dimension 1 Code", LedgerSetup.FieldCaption("Global Dimension 1 Code"), TempDiff);
+        CheckDimension(LedgerSetup."Global Dimension 2 Code", LedgerSetup.FieldCaption("Global Dimension 2 Code"), TempDiff);
+        CheckDimension(LedgerSetup."Shortcut Dimension 3 Code", LedgerSetup.FieldCaption("Shortcut Dimension 3 Code"), TempDiff);
+        CheckDimension(LedgerSetup."Shortcut Dimension 4 Code", LedgerSetup.FieldCaption("Shortcut Dimension 4 Code"), TempDiff);
+        CheckDimension(LedgerSetup."Shortcut Dimension 5 Code", LedgerSetup.FieldCaption("Shortcut Dimension 5 Code"), TempDiff);
+        CheckDimension(LedgerSetup."Shortcut Dimension 6 Code", LedgerSetup.FieldCaption("Shortcut Dimension 6 Code"), TempDiff);
+        CheckDimension(LedgerSetup."Shortcut Dimension 7 Code", LedgerSetup.FieldCaption("Shortcut Dimension 7 Code"), TempDiff);
+        CheckDimension(LedgerSetup."Shortcut Dimension 8 Code", LedgerSetup.FieldCaption("Shortcut Dimension 8 Code"), TempDiff);
+      end;
       if Posting then
         CheckCondition(LedgerSetup.TableCaption() + ' / ' + LedgerSetup.FieldCaption("Allow Posting From"),
           ((LedgerSetup."Allow Posting From" = 0D) or (Header."Starting Date" >= LedgerSetup."Allow Posting From")) and
           ((LedgerSetup."Allow Posting To" = 0D) or (Header."Ending Date" <= LedgerSetup."Allow Posting To")), TempDiff);
     end;
-    if NeedSales then begin
-      CheckTable(Database::"Customer Posting Group", false, TempDiff);
-      CheckTable(Database::Customer, true, TempDiff);
-    end;
-    if NeedPurchases then begin
-      CheckTable(Database::"Vendor Posting Group", false, TempDiff);
-      CheckTable(Database::Vendor, true, TempDiff);
-    end;
-    if NeedSales or NeedPurchases then
-      CheckTable(Database::"Payment Terms", false, TempDiff);
     if NeedItems then begin
       CheckTable(Database::"Inventory Setup", false, TempDiff);
       CheckTable(Database::"Inventory Posting Group", false, TempDiff);
-      CheckTable(Database::Item, true, TempDiff);
+      WarehouseRequired := HasWarehouseScope(TempModules);
+      if WarehouseRequired then
+        CheckTable(Database::"Warehouse Setup", false, TempDiff);
+      InventorySetup.SecurityFiltering(SecurityFilter::Filtered);
       if InventorySetup.ReadPermission() then
         if InventorySetup.FindFirst() then
-          if InventorySetup."Location Mandatory" then
-            CheckTable(Database::Location, false, TempDiff);
+          WarehouseRequired := WarehouseRequired or InventorySetup."Location Mandatory";
+      if WarehouseRequired then begin
+        Location.SecurityFiltering(SecurityFilter::Filtered);
+        Location.SetRange("Use As In-Transit", false);
+        if Location.ReadPermission() then
+          CheckCondition(Location.TableCaption(), not Location.IsEmpty(), TempDiff)
+        else
+          AddFinding(TempDiff, Location.TableCaption(), true, ReadPermissionLbl, PermissionActionLbl);
+      end;
     end;
-    if (NeedSales or NeedPurchases or NeedItems) and not PartnersOnly then begin
-      CheckTable(Database::"General Posting Setup", false, TempDiff);
-      CheckTable(Database::"VAT Posting Setup", false, TempDiff);
+    if NeedDocuments then begin
+      CheckPostingCandidates(Context, TempDiff);
+      OnInspectFinance(NeedSales, NeedPurchases, TempDiff);
     end;
-    // Warehouse is only mandatory when explicitly enabled in the captured module selection.
-    CheckWarehouse(RunId, TempDiff);
-    OnInspectFinance(NeedSales, NeedPurchases, TempDiff);
     OnInspectFinancePackage(Context, Header."Starting Date", TempDiff);
-    // Presence is never evidence that a particular generator's posting combination is valid.
-    if not PartnersOnly or not CheckPartnerBindings(Context, TempTargets, TempDiff) then
+    CheckGeneratorBindings(Context, TempTargets, TempModules, TempDiff);
+    // Planning-only profiles do not get a green setup report merely because broad candidates exist.
+    if not PartnersOnly then
       AddFinding(TempDiff, BindingLbl, true, BindingFindingLbl, BindingActionLbl);
     exit(not HasBlockers(TempDiff));
   end;
 
-  local procedure CheckPartnerBindings(Context: JsonObject; var TempTargets: Record "BCSF Data Target" temporary; var TempDiff: Record "BCSF Setup Diff" temporary): Boolean
+  local procedure CheckPostingCandidates(Context: JsonObject; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    GeneralMatrix: Record "General Posting Setup";
+    VATMatrix: Record "VAT Posting Setup";
+    Contract: Codeunit "BCSF Contract JSON";
+    Token: JsonToken;
+    Settings: JsonObject;
+    GroupCode: Code[20];
+  begin
+    GeneralMatrix.SecurityFiltering(SecurityFilter::Filtered);
+    VATMatrix.SecurityFiltering(SecurityFilter::Filtered);
+    GeneralMatrix.SetRange(Blocked, false);
+    VATMatrix.SetRange(Blocked, false);
+    if Context.Get('partnerSetup', Token) then begin
+      Settings := Token.AsObject();
+      GroupCode := CopyStr(Contract.GetCode(Settings, 'genBusPostingGroup'), 1, MaxStrLen(GroupCode));
+      if GroupCode <> '' then
+        GeneralMatrix.SetRange("Gen. Bus. Posting Group", GroupCode);
+      GroupCode := CopyStr(Contract.GetCode(Settings, 'vatBusPostingGroup'), 1, MaxStrLen(GroupCode));
+      if GroupCode <> '' then
+        VATMatrix.SetRange("VAT Bus. Posting Group", GroupCode);
+    end;
+    if GeneralMatrix.ReadPermission() then
+      CheckCondition(GeneralMatrix.TableCaption(), not GeneralMatrix.IsEmpty(), TempDiff)
+    else
+      AddFinding(TempDiff, GeneralMatrix.TableCaption(), true, ReadPermissionLbl, PermissionActionLbl);
+    if VATMatrix.ReadPermission() then
+      CheckCondition(VATMatrix.TableCaption(), not VATMatrix.IsEmpty(), TempDiff)
+    else
+      AddFinding(TempDiff, VATMatrix.TableCaption(), true, ReadPermissionLbl, PermissionActionLbl);
+  end;
+
+  local procedure CheckGeneratorBindings(Context: JsonObject; var TempTargets: Record "BCSF Data Target" temporary; var TempModules: Record "BCSF Scenario Module" temporary; var TempDiff: Record "BCSF Setup Diff" temporary)
   var
     TempCapability: Record "BCSF Generator Registry" temporary;
     Registry: Codeunit "BCSF Generator Registry Mgt";
+    Planner: Codeunit "BCSF Dependency Planner";
     Policy: Codeunit "BCSF Scenario Policy";
     Contract: Codeunit "BCSF Contract JSON";
     Generator: Interface "BCSF Generator";
     Target: JsonObject;
     Findings: JsonArray;
     Token: JsonToken;
-    Valid: Boolean;
+    EntityCode: Code[30];
+    ModuleCode: Code[30];
   begin
-    Valid := true;
     TempTargets.Reset();
     TempTargets.SetFilter(Quantity, '>0');
-    if TempTargets.IsEmpty() then
-      exit(false);
-    if TempTargets.FindSet() then
-      repeat
-        if not Registry.SelectForTarget(Policy.GetEntityCode(TempTargets.Entity), TempTargets."Process Mode", false, TempCapability) then
-          exit(false);
-        if not (TempCapability."Generator Code" in ['CUSTOMER', 'VENDOR']) then
-          exit(false);
-        Clear(Target);
-        Target.Add('entityCode', Policy.GetEntityCode(TempTargets.Entity));
-        Target.Add('moduleCode', Policy.GetModuleCode(TempTargets.Module));
-        Target.Add('quantity', TempTargets.Quantity);
-        Target.Add('processMode', TempTargets."Process Mode".AsInteger());
-        Generator := Registry.Resolve(TempCapability."Generator Code", TempCapability."Entity Code", TempCapability);
-        Generator.CheckPrerequisites(Contract.Clone(Context), Target, Findings);
-        foreach Token in Findings do begin
-          AddFinding(TempDiff, TempCapability.Name, true, Contract.GetText(Token.AsObject(), 'message'), BindingActionLbl);
-          Valid := false;
-        end;
-      until TempTargets.Next() = 0;
-    exit(Valid);
+    if not TempTargets.FindSet() then begin
+      AddFinding(TempDiff, BindingLbl, true, TargetErr, BindingActionLbl);
+      exit;
+    end;
+    repeat
+      EntityCode := Policy.GetEntityCode(TempTargets.Entity);
+      ModuleCode := Policy.GetModuleCode(TempTargets.Module);
+      if not Planner.IsModuleEnabled(TempModules, ModuleCode) then
+        AddFinding(TempDiff, Format(TempTargets.Entity), true, TargetErr, BindingActionLbl)
+      else
+        if Registry.SelectForTarget(EntityCode, TempTargets."Process Mode", false, TempCapability) then
+          if (TempCapability."Module Code" <> ModuleCode) or
+            (Contract.GetInteger(Context, 'batchSize') > TempCapability."Maximum Batch Size")
+          then
+            AddFinding(TempDiff, Format(TempTargets.Entity), true, TargetErr, BindingActionLbl)
+          else begin
+            Clear(Target);
+            Target.Add('entityCode', EntityCode);
+            Target.Add('moduleCode', ModuleCode);
+            Target.Add('quantity', TempTargets.Quantity);
+            Target.Add('processMode', TempTargets."Process Mode".AsInteger());
+            Generator := Registry.Resolve(TempCapability."Generator Code", EntityCode, TempCapability);
+            Clear(Findings);
+            Generator.CheckPrerequisites(Contract.Clone(Context), Contract.Clone(Target), Findings);
+            if Findings.Count() = 0 then
+              AddFinding(TempDiff, TempCapability.Name, false, GeneratorReadyLbl, GeneratorActionLbl)
+            else
+              foreach Token in Findings do
+                AddFinding(TempDiff, TempCapability.Name, true, Contract.GetText(Token.AsObject(), 'message'), BindingActionLbl);
+          end
+        else
+          AddFinding(TempDiff, Format(TempTargets.Entity), true, MissingGeneratorLbl, BindingActionLbl);
+    until TempTargets.Next() = 0;
   end;
 
   [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Plan Writer", 'OnBeforeRunStart', '', false, false)]
@@ -154,8 +211,9 @@ codeunit 90226 "BCSF Setup Manager"
     if not BuildFromRun(RunId, TempDiff) then begin
       TempDiff.Reset();
       TempDiff.SetRange(Blocked, true);
-      TempDiff.FindFirst();
-      Error(BlockedErr, TempDiff.Requirement, TempDiff.Finding, TempDiff.Action);
+      if TempDiff.FindFirst() then
+        Error(BlockedErr, TempDiff.Requirement, TempDiff.Finding, TempDiff.Action);
+      Error(TargetErr);
     end;
   end;
 
@@ -215,19 +273,15 @@ codeunit 90226 "BCSF Setup Manager"
     CheckCondition(Requirement, Valid, TempDiff);
   end;
 
-  local procedure CheckWarehouse(RunId: Guid; var TempDiff: Record "BCSF Setup Diff" temporary)
-  var
-    TempModules: Record "BCSF Scenario Module" temporary;
-    Manager: Codeunit "BCSF Scenario Manager";
+  local procedure HasWarehouseScope(var TempModules: Record "BCSF Scenario Module" temporary): Boolean
   begin
-    Manager.LoadFrozenModules(RunId, TempModules);
+    TempModules.Reset();
     TempModules.SetRange(Module, "BCSF Module Type"::Warehouse);
     TempModules.SetRange(Enabled, true);
-    if not TempModules.IsEmpty() then
-      CheckTable(Database::"Warehouse Setup", false, TempDiff);
+    exit(not TempModules.IsEmpty());
   end;
 
-  local procedure CheckTargetSeries(Target: Record "BCSF Data Target" temporary; StartingDate: Date; var TempDiff: Record "BCSF Setup Diff" temporary)
+  local procedure CheckTargetSeries(Target: Record "BCSF Data Target" temporary; StartingDate: Date; Posting: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
   var
     SalesSetup: Record "Sales & Receivables Setup";
     PurchaseSetup: Record "Purchases & Payables Setup";
@@ -299,7 +353,7 @@ codeunit 90226 "BCSF Setup Manager"
       else Error(TargetErr);
     end;
     CheckSeries(TableId, FieldNo, StartingDate, TempDiff);
-    if (Target."Posted Percent" > 0) or (Target."Partial Percent" > 0) then begin
+    if Posting then begin
       if PostedFieldNo <> 0 then
         CheckSeries(TableId, PostedFieldNo, StartingDate, TempDiff);
       if ReceiptFieldNo <> 0 then
@@ -382,15 +436,18 @@ codeunit 90226 "BCSF Setup Manager"
   var
     BlockedErr: Label 'Cannot start: %1. %2 %3', Comment = '%1 = requirement, %2 = reason, %3 = next action';
     CompanyErr: Label 'Review this run in its captured company.';
-    TargetErr: Label 'The captured entity is not supported by setup preflight.';
+    TargetErr: Label 'No eligible work or the captured module, entity or batch size is incompatible.';
+    MissingGeneratorLbl: Label 'No executable generator for the selected process mode. This target remains planning-only.';
+    GeneratorReadyLbl: Label 'Will be generated. Current generator prerequisites passed.';
+    GeneratorActionLbl: Label 'The background job checks these prerequisites again before writing records.';
     ReadPermissionLbl: Label 'Read permission is missing.';
     WritePermissionLbl: Label 'Effective write permission checked; no write was attempted.';
     PermissionActionLbl: Label 'Have an administrator review the required permissions, license and security filters. No rights are elevated.';
-    AvailableLbl: Label 'Visible prerequisite found. Generator-specific validation is still required.';
+    AvailableLbl: Label 'Already present. Exact generator prerequisites are checked separately.';
     NoChangeLbl: Label 'Retain existing setup.';
     MissingLbl: Label 'Required setup is missing, blocked, outside the date range or not visible.';
     ReviewActionLbl: Label 'Review this requirement in standard BC setup. Obtain explicit approval before any manual change, then rerun preflight.';
     BindingLbl: Label 'Generator-specific setup bindings';
     BindingFindingLbl: Label 'Posting group combinations, accounts, tax context, dimension values, stock and posting permissions are not yet validated for a real generator.';
-    BindingActionLbl: Label 'Keep execution blocked until the selected generator validates its exact setup and effective execution permissions. Acknowledge no automatic setup change.';
+    BindingActionLbl: Label 'Review the named prerequisite and capture a new run after correction. Use partner master data only if the selected process has no executable generator.';
 }

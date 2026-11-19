@@ -573,3 +573,17 @@ Stand 19.11.2026, Quellversion 1.0.2.0, Status **Zur Prüfung**.
 | AL-Compiler und reale Sandbox | Offen. Der Mac-Compiler aus den alten Build-Protokollen und ein passender .NET-/AL-Compiler sind hier nicht verfügbar. Keine aktuelle Paketkompilierung, Installation, BC-Initialisierung, Standardbuchung oder echte Job-Queue-Ausführung. Keine App-Datei als neu gebaut ausgegeben. |
 
 Nächster Schritt: AL-Paket mit den Symbolen der tatsächlichen Ziel-Sandbox bauen und die [Sandbox-Abnahme](COMPANY_INITIALIZATION.md#sandbox-abnahme) durchführen. Falls der Compiler beim Erzeugen der XLIFF-Datei eine Differenz meldet, zuerst `python3 Translations/sync_starter_translations.py` gegen die neu erzeugten IDs ausführen und erneut bauen. Ohne Fachabnahme bleiben SF-038, SF-039 und SF-043 **Zur Prüfung**.
+
+## SF-040 – Stammdatenbasis und Startbereitschaft
+
+Stand 19.11.2026, Quellversion 1.0.3.0, **Zur Prüfung**.
+
+| Prüfung | Ergebnis |
+| --- | --- |
+| Quellvergleich mit BC Scenario Factory(6) | PASS: 120 vorhandene AL-Objekte, davon sechs Codeunits geändert. Keine Objekt-/Feld-ID, Tabellenstruktur, App-ID oder Runtime geändert. Version 1.0.3.0. Keine .gitkeep-Dateien unter src. |
+| Statische Prüfung der Ausführungspfade | PASS: Lager-/Belegprüfungen nach Bedarf, Generatorwahl aus Registry mit aktivem Modul, Vorprüfung schreibt nur in vorhandene temporäre Prüfzeilen, unveränderliche Blocker bleiben gesperrt. Dispatcher, Worker und Wiederaufnahme verwenden den bestehenden gemeinsamen Ausführungscheck vor Fachschreibzugriffen. |
+| Übersetzungen und vorhandene JS-Ressourcen | PASS: mitgeliefertes Compiler-Generat mit 1.142 IDs synchronisiert, einschließlich geänderter Texte mit bereits bekannten IDs. Dashboard-Fallback und JS-Syntax geprüft. Vier neue AL-Labels sind im Übersetzungsskript hinterlegt; ihre Compiler-IDs entstehen erst im nächsten Build. |
+| Partnerkatalog | PASS: vorhandener lokaler Katalog-/Datencheck. Keine echte BC-Partneranlage ausgeführt. |
+| AL-Build und BC-Sandbox | Offen: kein verfügbarer AL-Compiler oder angebundener Sandbox-Mandant. Keine .app gebaut oder veröffentlicht. Der lokale XERJ-Endpunkt war hier nicht erreichbar; Grundlage war der mitgelieferte Quellstand. |
+
+Für Abnahme und Fehlerfälle siehe [Stammdatenbasis und Startbereitschaft](MASTER_DATA_READINESS.md#abnahme-in-zwei-kleinen-sandbox-läufen). Nach dem ersten AL-Build mit deinen Sandbox-Symbolen `python3 Translations/sync_starter_translations.py` und `python3 scripts/check_translations.py` ausführen und vor der Veröffentlichung erneut bauen. SF-041 wurde nicht vorgezogen.

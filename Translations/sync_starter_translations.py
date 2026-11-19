@@ -675,6 +675,67 @@ DE.update({'Setup': 'Einrichtung','%1 blocking findings prevent applying this se
                                                                                                                                          'Einrichtung '
                                                                                                                                          'an.'})
 
+SF040_DE = {'No eligible work or the captured module, entity or batch size is incompatible.': 'Keine ausführbare Arbeit oder '
+                                                                                   'unpassendes Modul, unpassende '
+                                                                                   'Entität oder Paketgröße im '
+                                                                                   'erfassten Lauf.',
+ 'No executable generator for the selected process mode. This target remains planning-only.': 'Kein ausführbarer '
+                                                                                              'Generator für '
+                                                                                              'diesen '
+                                                                                              'Prozessmodus. Das '
+                                                                                              'Ziel bleibt auf '
+                                                                                              'die Planung '
+                                                                                              'beschränkt.',
+ 'Will be generated. Current generator prerequisites passed.': 'Wird erzeugt. Die aktuellen '
+                                                               'Generatorvoraussetzungen sind erfüllt.',
+ 'The background job checks these prerequisites again before writing records.': 'Der Hintergrundjob prüft die '
+                                                                                'Voraussetzungen vor dem '
+                                                                                'Schreiben erneut.',
+ 'Already present. Exact generator prerequisites are checked separately.': 'Bereits vorhanden. Die konkreten '
+                                                                           'Generatorvoraussetzungen werden '
+                                                                           'separat geprüft.',
+ 'Review the named prerequisite and capture a new run after correction. Use partner master data only if the selected process has no executable generator.': 'Prüfe '
+                                                                                                                                                            'die '
+                                                                                                                                                            'genannte '
+                                                                                                                                                            'Voraussetzung '
+                                                                                                                                                            'und '
+                                                                                                                                                            'erfasse '
+                                                                                                                                                            'nach '
+                                                                                                                                                            'der '
+                                                                                                                                                            'Korrektur '
+                                                                                                                                                            'einen '
+                                                                                                                                                            'neuen '
+                                                                                                                                                            'Lauf. '
+                                                                                                                                                            'Ohne '
+                                                                                                                                                            'passenden '
+                                                                                                                                                            'Generator '
+                                                                                                                                                            'ist '
+                                                                                                                                                            'nur '
+                                                                                                                                                            'die '
+                                                                                                                                                            'Partnerstammdatenanlage '
+                                                                                                                                                            'möglich.',
+ 'The saved plan for generator %1 contains a prerequisite blocker. Review setup and capture a new run after correction.': 'Der '
+                                                                                                                          'gespeicherte '
+                                                                                                                          'Plan '
+                                                                                                                          'für '
+                                                                                                                          'Generator '
+                                                                                                                          '%1 '
+                                                                                                                          'enthält '
+                                                                                                                          'einen '
+                                                                                                                          'Blocker. '
+                                                                                                                          'Prüfe '
+                                                                                                                          'die '
+                                                                                                                          'Einrichtung '
+                                                                                                                          'und '
+                                                                                                                          'erfasse '
+                                                                                                                          'nach '
+                                                                                                                          'der '
+                                                                                                                          'Korrektur '
+                                                                                                                          'einen '
+                                                                                                                          'neuen '
+                                                                                                                          'Lauf.',
+ 'Start blocked for %1: %2': 'Start für %1 blockiert: %2'}
+
 if __name__ == '__main__':
     generated = ET.parse(base.ROOT / f'{base.NAME}.g.xlf')
     sources = {base.source(u) for u in generated.iter(base.Q('trans-unit'))}
@@ -682,5 +743,6 @@ if __name__ == '__main__':
         raise SystemExit('Build the current AL sources first. Starter-template compiler IDs are missing. No files were changed.')
     DE.update({'Company Setup': 'Mandanteneinrichtung', 'Initialize Company': 'Mandant initialisieren', 'Choose the chart of accounts and prepare this sandbox company once. Does not post documents.': 'Wählt den Kontenplan und richtet diesen Sandbox-Mandanten einmalig ein. Bucht keine Belege.', 'Which chart of accounts should %1 use? This prepares the sandbox company and enables test data generation. Posting remains disabled for a new company.': 'Welchen Kontenplan soll %1 verwenden? Damit wird der Sandbox-Mandant eingerichtet und die Datengenerierung aktiviert. In einem neuen Mandanten bleibt das Buchen deaktiviert.', 'Company setup could not be completed. Review setup and permissions for the current sandbox company.': 'Die Mandanteneinrichtung konnte nicht abgeschlossen werden. Prüfen Sie Einrichtung und Berechtigungen im aktuellen Sandbox-Mandanten.', 'Company setup stopped at %1. %2 %3': 'Die Mandanteneinrichtung wurde bei %1 gestoppt. %2 %3', 'The chart of accounts captured for this run is not initialized in the current company.': 'Der für diesen Lauf erfasste Kontenplan ist im aktuellen Mandanten nicht eingerichtet.', 'Open Scenario Factory Setup and choose Initialize Company in the approved sandbox and test company.': 'Öffnen Sie die Scenario-Factory-Einrichtung und wählen Sie „Mandant initialisieren“ in der freigegebenen Sandbox und Testfirma.', 'Start this captured partner run after rechecking its setup and permissions? Existing or uncertain batches are not repeated.': 'Diesen erfassten Partnerlauf nach Prüfung von Einrichtung und Berechtigungen starten? Bestehende oder unklare Pakete werden nicht wiederholt.', 'Quick run supports only customer and vendor master data. This template depends on generators that are not available yet.': 'Der Vorlagenstart unterstützt derzeit nur Debitoren und Kreditoren. Für diese Vorlage fehlen noch Generatoren.', 'Run Template': 'Vorlage ausführen', "Starts the selected template in the background using this company's initialized setup.": 'Startet die ausgewählte Vorlage mit der Einrichtung dieses Mandanten im Hintergrund.', 'Starts the selected template in the background using the initialized company setup.': 'Startet die ausgewählte Vorlage mit der Mandanteneinrichtung im Hintergrund.', 'Shows current persisted execution status, independently of the captured initial status.': 'Zeigt den aktuellen gespeicherten Laufstatus unabhängig vom erfassten Anfangsstatus.', 'Opens the available scenario templates.': 'Öffnet die verfügbaren Szenariovorlagen.', 'Cannot start: %1. %2 %3': 'Start nicht möglich bei %1. %2 %3', 'Have an administrator review effective table permissions and license rights in this test company. Scenario Factory does not grant standard setup permissions. Run Initialize Company again after correction.': 'Lassen Sie die effektiven Tabellen- und Lizenzrechte in dieser Testfirma prüfen. Scenario Factory vergibt keine Standardrechte. Wählen Sie nach der Korrektur erneut „Mandant initialisieren“.', 'Company Initialized': 'Mandant initialisiert'})
     DE['Up to 25 recent runs. Open the run monitor for full history.'] = 'Bis zu 25 aktuelle Läufe. Die vollständige Historie findest du im Laufmonitor.'
+    DE.update(SF040_DE)
     base.DE.update(DE)
     base.sync()

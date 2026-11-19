@@ -65,3 +65,8 @@ Vorhandene AL-Objekte liegen unter `src/ModuleRegistry/Codeunits/`, `src/ModuleR
 ## SF-018 – 18.11.2026
 
 Katalog enthält über neue Fachmodul-EnumExtensions zusätzlich zwei echte Partnergeneratoren. Zentrale Registry und beide lesenden Vertragsproben unverändert; keine Rückimports auf Sales/Purchasing. [Vertrag](../../../PARTNER_GENERATION.md), [lokale Nachweise](../../../TESTS.md#sf-018--lokaler-prüfnachweis-18112026). **Zur Prüfung**, tatsächliche BC-Abnahme offen.
+
+
+## SF-040 – Stammdatenbasis und Startprüfung
+
+Die [Modulmatrix und der Startvertrag](../../../MASTER_DATA_READINESS.md) sind maßgeblich für die gemeinsamen, lesenden Prüfungen vor Queue-Ausführung und Fortsetzen. Keine zusätzlichen Schemaobjekte.

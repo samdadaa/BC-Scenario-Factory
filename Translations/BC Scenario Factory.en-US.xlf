@@ -1984,8 +1984,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dependency Planner - NamedType NoBlockerLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2136343635 - NamedType 2147065720" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Generator %1 reported an unmet prerequisite.</source>
-          <target state="translated">Generator %1 reported an unmet prerequisite.</target>
+          <source>The saved plan for generator %1 contains a prerequisite blocker. Review setup and capture a new run after correction.</source>
+          <target state="translated">The saved plan for generator %1 contains a prerequisite blocker. Review setup and capture a new run after correction.</target>
           <note from="Developer" annotates="general" priority="2">%1 = generator code</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dependency Planner - NamedType PrerequisiteLbl</note>
         </trans-unit>
@@ -3992,66 +3992,6 @@
           <target state="translated">Scenario Factory</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Factory - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 260213585 - Action 2243748878 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Opens batches, standard queue diagnostics and guarded recovery actions.</source>
-          <target state="translated">Opens batches, standard queue diagnostics and guarded recovery actions.</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Batches - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 260213585 - Action 2243748878 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Batches and Recovery</source>
-          <target state="translated">Batches and Recovery</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Batches - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 260213585 - Action 4169195256 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Opens the complete Scenario Factory workspace.</source>
-          <target state="translated">Opens the complete Scenario Factory workspace.</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Dashboard - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 260213585 - Action 4169195256 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Dashboard</source>
-          <target state="translated">Dashboard</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Dashboard - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 260213585 - Action 3679243899 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Opens persisted execution states.</source>
-          <target state="translated">Opens persisted execution states.</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Executions - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 260213585 - Action 3679243899 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Executions</source>
-          <target state="translated">Executions</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Executions - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 260213585 - Action 2916575836 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Opens available generator capabilities and the contract check.</source>
-          <target state="translated">Opens available generator capabilities and the contract check.</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Generators - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 260213585 - Action 2916575836 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Generator Catalog</source>
-          <target state="translated">Generator Catalog</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Generators - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 260213585 - Action 14793010 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Opens the provenance registry for generated artifacts.</source>
-          <target state="translated">Opens the provenance registry for generated artifacts.</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Records - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 260213585 - Action 14793010 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Generated Records</source>
-          <target state="translated">Generated Records</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Records - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 260213585 - Action 1100388846 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Opens captured run configurations and all run-specific planning and execution actions.</source>
@@ -6670,14 +6610,14 @@
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Setup Diff - Field Requirement - Property Caption</note>
         </trans-unit>
         <trans-unit id="Codeunit 1274448356 - NamedType 2251788189" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Visible prerequisite found. Generator-specific validation is still required.</source>
-          <target state="translated">Visible prerequisite found. Generator-specific validation is still required.</target>
+          <source>Already present. Exact generator prerequisites are checked separately.</source>
+          <target state="translated">Already present. Exact generator prerequisites are checked separately.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Setup Manager - NamedType AvailableLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1274448356 - NamedType 2486993295" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Keep execution blocked until the selected generator validates its exact setup and effective execution permissions. Acknowledge no automatic setup change.</source>
-          <target state="translated">Keep execution blocked until the selected generator validates its exact setup and effective execution permissions. Acknowledge no automatic setup change.</target>
+          <source>Review the named prerequisite and capture a new run after correction. Use partner master data only if the selected process has no executable generator.</source>
+          <target state="translated">Review the named prerequisite and capture a new run after correction. Use partner master data only if the selected process has no executable generator.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Setup Manager - NamedType BindingActionLbl</note>
         </trans-unit>
@@ -6736,8 +6676,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Setup Manager - NamedType ReviewActionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1274448356 - NamedType 3123911384" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The captured entity is not supported by setup preflight.</source>
-          <target state="translated">The captured entity is not supported by setup preflight.</target>
+          <source>No eligible work or the captured module, entity or batch size is incompatible.</source>
+          <target state="translated">No eligible work or the captured module, entity or batch size is incompatible.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Setup Manager - NamedType TargetErr</note>
         </trans-unit>

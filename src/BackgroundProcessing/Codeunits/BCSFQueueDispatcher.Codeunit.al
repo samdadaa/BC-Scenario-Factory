@@ -143,7 +143,6 @@ codeunit 90302 "BCSF Queue Dispatcher"
     Generator: Interface "BCSF Generator";
     Target: JsonObject;
     Planned: JsonArray;
-    Findings: JsonArray;
     Token: JsonToken;
     Item: JsonObject;
     FirstKey: Integer;
@@ -156,9 +155,7 @@ codeunit 90302 "BCSF Queue Dispatcher"
     Generator := Registry.Resolve(Step."Generator Code", Step."Entity Code", TempCapability);
     if TempCapability."Contract Probe" or (TempCapability.Version <> Step."Generator Version") then
       Error(PlanErr);
-    Generator.CheckPrerequisites(Contract.Clone(Context), Contract.Clone(Target), Findings);
-    if Findings.Count() <> 0 then
-      Error(PlanErr);
+    Registry.RequirePrerequisites(Generator, Context, Target);
     FirstKey := 1;
     while not Done do begin
       Clear(Planned);

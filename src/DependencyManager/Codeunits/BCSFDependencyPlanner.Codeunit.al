@@ -306,5 +306,5 @@ codeunit 90201 "BCSF Dependency Planner"
     CycleLbl: Label 'Node %1 is cyclic or depends on a cyclic prerequisite.', Comment = '%1 = node code';
     ExternalLbl: Label 'External prerequisite %1 has not been verified. No setup, reference or stock success is assumed.', Comment = '%1 = external prerequisite';
     TestOnlyLbl: Label 'Generator %1 is a read-only contract probe and cannot generate business data.', Comment = '%1 = generator code';
-    PrerequisiteLbl: Label 'Generator %1 reported an unmet prerequisite.', Comment = '%1 = generator code';
+    PrerequisiteLbl: Label 'The saved plan for generator %1 contains a prerequisite blocker. Review setup and capture a new run after correction.', Comment = '%1 = generator code';
 }

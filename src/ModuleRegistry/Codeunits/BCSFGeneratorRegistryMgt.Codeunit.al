@@ -132,6 +132,24 @@ codeunit 90177 "BCSF Generator Registry Mgt"
       Error(PrerequisiteErr);
   end;
 
+  /// <summary>Uses the same read-only contract in foreground and background and keeps the concrete blocker.</summary>
+  procedure RequirePrerequisites(Generator: Interface "BCSF Generator"; Context: JsonObject; Target: JsonObject)
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+    Findings: JsonArray;
+    Item: JsonToken;
+    MessageText: Text;
+  begin
+    Generator.CheckPrerequisites(Contract.Clone(Context), Contract.Clone(Target), Findings);
+    if Findings.Count() = 0 then
+      exit;
+    Findings.Get(0, Item);
+    MessageText := Contract.GetText(Item.AsObject(), 'message');
+    if MessageText = '' then
+      Error(PrerequisiteErr);
+    Error(PrerequisiteDetailErr, Contract.GetCode(Target, 'entityCode'), MessageText);
+  end;
+
   local procedure ValidateCapability(TempCapability: Record "BCSF Generator Registry" temporary)
   begin
     TempCapability.TestField("Generator Code");
@@ -157,5 +175,6 @@ codeunit 90177 "BCSF Generator Registry Mgt"
     UnavailableErr: Label 'Generator %1 is not available in the current compiled catalog.', Comment = '%1 = generator code';
     AmbiguousErr: Label 'More than one generator matches entity %1. Resolve the capability conflict before planning.', Comment = '%1 = entity code';
     ProbeOnlyErr: Label 'This entry point only executes read-only contract probes. Real generation requires a verified run plan and worker.';
+    PrerequisiteDetailErr: Label 'Start blocked for %1: %2', Comment = '%1 = entity code, %2 = concrete prerequisite finding';
     PrerequisiteErr: Label 'The generator prerequisite or result validation reported a blocker.';
 }

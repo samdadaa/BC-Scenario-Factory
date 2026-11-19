@@ -165,3 +165,8 @@ Statushistorie protokolliert jeden persistierten operativen Übergang einschlie�
 ## SF-038 / SF-039 – gemeinsame Einrichtung und Kindartefakte
 
 Quick Run delegiert fehlende Finance-Konfiguration an denselben Auswahl-/Vorschau-/Apply-Dienst wie Karte und Assistent. 90408 erzeugt ausschließlich die bestätigte Paketgrundlage. UI speichert die Vorlage vor dem modalen Dialog; Apply und Worker behalten CommitBehavior Error. Neue Captures wählen versionierte Partnerwerte und optionale Einstellungen. Standard-Liefer-/Bestelladressen werden atomar mit Parent-Identität registriert; Partner- und Artefaktzähler bleiben getrennt. Keine neuen Generatorbindungen oder Recovery-Wiederholungen. [Details](STABILIZATION_FINANCE_PARTNERS.md).
+
+
+## SF-040 – Stammdatenbasis und Startprüfung
+
+Die [Modulmatrix und der Startvertrag](MASTER_DATA_READINESS.md) sind maßgeblich für die gemeinsamen, lesenden Prüfungen vor Queue-Ausführung und Fortsetzen. Keine zusätzlichen Schemaobjekte.

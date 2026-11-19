@@ -62,9 +62,7 @@ codeunit 90307 "BCSF Batch Runner"
     Generator := Registry.Resolve(Step."Generator Code", Step."Entity Code", TempCapability);
     if TempCapability."Contract Probe" or (TempCapability.Version <> Step."Generator Version") then
       Error(ResultErr);
-    Generator.CheckPrerequisites(Contract.Clone(Context), Contract.Clone(Target), Findings);
-    if Findings.Count() <> 0 then
-      Error(ResultErr);
+    Registry.RequirePrerequisites(Generator, Context, Target);
     Generator.ExecuteBatch(Contract.Clone(Context), Contract.Clone(Target), Contract.Clone(BatchJson), Result);
     if (Contract.GetCode(Result, 'generatorCode') <> Step."Generator Code") or
       (Contract.GetText(Result, 'runId') <> Contract.GetText(Context, 'runId')) or

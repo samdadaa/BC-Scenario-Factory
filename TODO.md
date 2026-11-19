@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 19.11.2026 – Einmalige Mandanteneinrichtung und direkter Vorlagenstart unter SF-043. SF-038/SF-039 implementiert beziehungsweise teilweise umgesetzt, fachliche Sandbox-Abnahme bleibt offen.
+**Stand:** 19.11.2026 – SF-040 zur Prüfung. SF-043 bleibt Grundlage für die einmalige Einrichtung. SF-041 bleibt offen.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -32,7 +32,7 @@ P0-Reihenfolge: [SF-038](#sf-038) Finanzsetup → [SF-039](#sf-039) Partnerdaten
 | [SF-037](#sf-037) | Stabilisierung | P0 | Reparatur Vorlage → Start → Ergebnis | Zur Prüfung |
 | [SF-038](#sf-038) | Stabilisierung | P0 | Realistische Kontenpläne und vollständige Buchungseinrichtung im Starterpfad | Zur Prüfung |
 | [SF-039](#sf-039) | Stabilisierung | P0 | Realistische Geschäftspartner und nutzbare Partnerstammdaten | Zur Prüfung |
-| [SF-040](#sf-040) | Stabilisierung | P0 | Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten | Offen |
+| [SF-040](#sf-040) | Stabilisierung | P0 | Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten | Zur Prüfung |
 | [SF-041](#sf-041) | Stabilisierung | P0 | Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns | Offen |
 | [SF-042](#sf-042) | Stabilisierung | P0 | Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben | Offen |
 | [SF-043](#sf-043) | Stabilisierung | P0 | Mandant einmalig initialisieren und Vorlagenstart vereinfachen | Zur Prüfung |
@@ -864,6 +864,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Artikelposten nur über Standardprozesse, keine direkten Ledger-Inserts.
 
+**Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
+
 **Vorgehen (einzeln abzuarbeiten):**
 - [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
 - [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
@@ -901,6 +903,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Ausgangslage / Problem:** Ungebuchte Bestellungen, vollständige/teilweise Eingänge, gebuchte Eingangsrechnungen, ausgewählte Gutschriften.
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Standard-Posting und resultierende Ledger/Inventory prüfen; Unsicherheiten bei Retry behandeln.
+
+**Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
 
 **Vorgehen (einzeln abzuarbeiten):**
 - [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
@@ -940,6 +944,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Standard-Sales-Posting, Bestand-/Preis-/Dimensionenprüfung; Standardprozess nicht umgehen.
 
+**Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
+
 **Vorgehen (einzeln abzuarbeiten):**
 - [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
 - [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
@@ -977,6 +983,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Ausgangslage / Problem:** Offene, teilweise und vollständig ausgeglichene Posten; unterschiedliche Zahlungszeitpunkte, Gutschriften/Retouren im freigegebenen Umfang.
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Standard-Buchungs-/Ausgleichsprozesse und Referenzen, keine willkürlichen Ledger-Manipulationen.
+
+**Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
 
 **Vorgehen (einzeln abzuarbeiten):**
 - [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
@@ -1202,6 +1210,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Abhängigkeiten zu Warehouse-Setup/Inventar prüfen; Nur-dort-wo-aktiv-Modus.
 
+**Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
+
 **Vorgehen (einzeln abzuarbeiten):**
 - [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
 - [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
@@ -1239,6 +1249,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Ausgangslage / Problem:** Fertigungsstücklisten, Arbeitsplätze, Arbeitspläne, Produktionsauftrag/Verbrauch/Output sowie Montagestücklisten.
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Feature-/Lizenzprüfung und trennscharfe fachliche Workflows.
+
+**Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
 
 **Vorgehen (einzeln abzuarbeiten):**
 - [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
@@ -1278,6 +1290,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Verfügbare Standardobjekte/Versionen und ggf. getrennte Sprints prüfen.
 
+**Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
+
 **Vorgehen (einzeln abzuarbeiten):**
 - [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
 - [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
@@ -1315,6 +1329,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Ausgangslage / Problem:** Anlagenklassen, Anschaffung, Abschreibung, Abgang/Sonderfälle als synthetische Belegketten.
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Standard-Buchungsmethoden, Rechte und Finanzabhängigkeiten prüfen.
+
+**Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
 
 **Vorgehen (einzeln abzuarbeiten):**
 - [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
@@ -1391,6 +1407,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Ausgangslage / Problem:** Kontakte/Kampagnen/Opportunities und Nachfrage-/Beschaffungsplanung mit plausiblen Daten.
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** BC-Modulverfügbarkeit nach Version prüfen; kein Dynamics CRM On-Prem vermischen.
+
+**Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
 
 **Vorgehen (einzeln abzuarbeiten):**
 - [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
@@ -1628,9 +1646,9 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-040 — Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten
 
-**Status:** Offen  
+**Status:** Zur Prüfung  
 **Priorität:** P0  
-**Abhängigkeiten:** SF-007, SF-008, SF-009, SF-016, SF-038, SF-039  
+**Abhängigkeiten:** SF-007, SF-008, SF-009, SF-016, SF-038, SF-039, SF-043  
 **Verantwortung / betroffene Module:** Core, ModuleRegistry, Planning, SetupManager, DataGeneration, ProcessEngine  
 **Verantwortliche Person:** Zu prüfen
 
@@ -1640,10 +1658,10 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Vorgehen (einzeln abzuarbeiten):**
 
-- [ ] Eine Modul- und Entitätsmatrix für BC pflegen. Pro Entität angeben: erforderlich/optional, BC-Quelle, Standardvalidierung, Eltern/Referenzen, nachgelagerte Verwendung, Status `Vorhanden` / `Generierbar` / `Geplant` / `Nicht unterstützt` und zugehöriges Ticket. Mindestens FI/Bank, Verkauf, Einkauf, Artikel/Lager, Logistik, Fertigung/Montage, Projekte, Service, Anlagen und Kontakte berücksichtigen. Fachlich nötige Stämme inventarisieren, keine pauschale Befüllung aller BC-Tabellen.
-- [ ] Für den aktuellen Stand die notwendigen Referenzen für Partner und Finance (Nummernserien, Länder/Regionen, Zahlungsbedingungen/-formen, Buchungsgruppen/-matrizen, erforderliche Währungen und Dimensionen) automatisiert prüfen und nur bei vorgesehener Sandbox-Einrichtung anlegen. Für spätere Entitäten z. B. Artikel, Einheiten, Preise, Lagerorte, Ressourcen, Stücklisten oder Serviceartikel Anforderungen in den zugehörigen Tickets nachziehen.
-- [ ] Preflight trennt „wird erzeugt und vorher validiert“, „bereits vorhanden“ sowie „fehlt/blockiert“ und nennt eine nächste Aktion. Relevante Voraussetzungen nach Anlage und vor der ersten abhängigen Beleg-/Buchungsaktion im Hintergrund erneut prüfen. Vorlage, Schnellstart, reguläre Queue und Fortsetzen verwenden dieselben fachlichen Regeln.
-- [ ] Validierungsvertrag und Ablauf im bestehenden Architektur-/Testbereich dokumentieren. Zum Beispiel Pflichtfeld-/Referenzmatrix, Abhängigkeitsreihenfolge und Soll-/Ist-Nachweise versionieren. Regeln nutzen die Registry und keine verteilten Einzelprüfungen ohne Begründung.
+- [x] Eine Modul- und Entitätsmatrix für BC pflegen. Pro Entität angeben: erforderlich/optional, BC-Quelle, Standardvalidierung, Eltern/Referenzen, nachgelagerte Verwendung, Status `Vorhanden` / `Generierbar` / `Geplant` / `Nicht unterstützt` und zugehöriges Ticket. Mindestens FI/Bank, Verkauf, Einkauf, Artikel/Lager, Logistik, Fertigung/Montage, Projekte, Service, Anlagen und Kontakte berücksichtigen. Fachlich nötige Stämme inventarisieren, keine pauschale Befüllung aller BC-Tabellen.
+- [x] Für den aktuellen Stand die notwendigen Referenzen für Partner und Finance (Nummernserien, Länder/Regionen, Zahlungsbedingungen/-formen, Buchungsgruppen/-matrizen, erforderliche Währungen und Dimensionen) automatisiert prüfen und nur bei vorgesehener Sandbox-Einrichtung anlegen. Für spätere Entitäten z. B. Artikel, Einheiten, Preise, Lagerorte, Ressourcen, Stücklisten oder Serviceartikel Anforderungen in den zugehörigen Tickets nachziehen.
+- [x] Preflight trennt „wird erzeugt und vorher validiert“, „bereits vorhanden“ sowie „fehlt/blockiert“ und nennt eine nächste Aktion. Relevante Voraussetzungen nach Anlage und vor der ersten abhängigen Beleg-/Buchungsaktion im Hintergrund erneut prüfen. Vorlage, Schnellstart, reguläre Queue und Fortsetzen verwenden dieselben fachlichen Regeln.
+- [x] Validierungsvertrag und Ablauf im bestehenden Architektur-/Testbereich dokumentieren. Zum Beispiel Pflichtfeld-/Referenzmatrix, Abhängigkeitsreihenfolge und Soll-/Ist-Nachweise versionieren. Regeln nutzen die Registry und keine verteilten Einzelprüfungen ohne Begründung.
 
 **Akzeptanzkriterien:**
 
@@ -1654,6 +1672,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine neuen Branchen- oder Prozessgeneratoren zur Erfüllung dieses Tickets. Keine automatischen Buchungen ohne bestehende Freigabe und keine direkten Writes in gebuchte BC-Posten.
 
 **Risiken / Entscheidungen:** Die Matrix ist erweiterbar, aber für bereits unterstützte Entitäten verbindlich. Fehlen Setup oder Rechte, darf die App keine Startfähigkeit vortäuschen.
+
+**Umsetzung:** [Modulmatrix, Prüfvertrag und Sandbox-Testfälle](docs/MASTER_DATA_READINESS.md). Keine neuen Generatoren, Tabellen, Seiten oder Buchungsfreigaben. Teilweise bzw. nicht konfigurierte zukünftige Beleg-/Bewegungsprofile bleiben Planung. Der Nachweis in BC ist noch offen.
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
