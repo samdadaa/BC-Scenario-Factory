@@ -337,3 +337,10 @@ Monitoring referenziert IndustryProfiles und Finance für diese Bedienaktionen. 
 | DataGeneration | 90258 | Codeunit | BCSF Partner Children | `src/DataGeneration/Codeunits/BCSFPartnerChildren.Codeunit.al` |
 
 Beide vor Anlage im aktuellen Code und Objektplan frei; innerhalb des bestehenden Modulblocks 90250–90274. 131 AL-Dateien insgesamt. Keine neuen Generatorbindungen oder Testobjekte. **Zur Prüfung**.
+
+
+## SF-041 – Datenbestand
+
+| Modul | ID | Typ | Objekt |
+| --- | --- | --- | --- |
+| Monitoring | 90369 | Codeunit | BCSF Dashboard Stock |

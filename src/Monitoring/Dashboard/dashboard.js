@@ -5,6 +5,7 @@
   let model;
   let busy = false;
   let failed = false;
+  let stockFocus = "";
   const navigation = ["scenarios", "monitor", "setup"];
   const groups = {
     planGroup: ["run", "scenario", "plan", "savePlan", "readiness", "preflight", "synthetic"],
@@ -40,6 +41,8 @@
     root.querySelectorAll("button, select").forEach(element => { element.disabled = value; });
     const feedback = root.querySelector(".sf-feedback");
     if (feedback && model) feedback.textContent = value ? text("busy") : failed ? text("error") : "";
+    const stockLoading = root.querySelector(".sf-stock-loading");
+    if (stockLoading && model) stockLoading.textContent = value ? text("busy") : "";
   }
   function invoke(event, args, success, failure) {
     const nav = window.Microsoft && window.Microsoft.Dynamics && window.Microsoft.Dynamics.NAV;
@@ -52,10 +55,16 @@
     if (busy) return;
     failed = false;
     setBusy(true);
-    invoke("Command", [action, runId], () => setBusy(false), () => {
+    if (action.startsWith("stock"))
+      stockFocus = document.activeElement?.dataset?.stockFocus || "";
+    invoke("Command", [action, runId], () => {
+      setBusy(false);
+      restoreStockFocus();
+    }, () => {
       failed = true;
       if (model) render();
       setBusy(false);
+      restoreStockFocus();
     });
   }
   function navigationPanel() {
@@ -81,6 +90,99 @@
     });
     return summary;
   }
+  function restoreStockFocus() {
+    if (!root || !stockFocus) return;
+    const selected = Array.from(root.querySelectorAll("[data-stock-focus]"))
+      .find(element => element.dataset.stockFocus === stockFocus);
+    stockFocus = "";
+    if (selected && !selected.disabled) selected.focus({ preventScroll: true });
+  }
+
+  function stockSelect(labelKey, command, options, selected) {
+    const label = node("label", "sf-stock-field");
+    label.appendChild(node("span", "sf-help", text(labelKey)));
+    const select = node("select", "sf-select");
+    select.setAttribute("aria-label", text(labelKey));
+    select.dataset.stockFocus = command;
+    select.disabled = busy;
+    options.forEach(([value, caption]) => {
+      const option = node("option", "", caption);
+      option.value = value;
+      option.selected = value === selected;
+      select.appendChild(option);
+    });
+    select.addEventListener("change", () => request(command, select.value));
+    return append(label, select);
+  }
+
+  function stockPanel(stock) {
+    const section = node("section", "sf-stock");
+    const title = node("h2", "", text("stockTitle"));
+    title.id = "sf-stock-heading";
+    section.setAttribute("aria-labelledby", title.id);
+    const toolbar = node("div", "sf-stock-toolbar");
+    const scope = stock.entireCompany ? "company" : "generated";
+    toolbar.appendChild(stockSelect("stockScope", "stockScope", [
+      ["generated", text("stockGenerated")],
+      ["company", text("stockCompany")]
+    ], scope));
+    if (!stock.entireCompany && model.runs.length) {
+      const options = [["", text("stockAllRuns")]];
+      const runs = model.runs.slice();
+      if (model.hasSelection && !runs.some(run => run.id === model.selected.id)) runs.push(model.selected);
+      runs.forEach(run => options.push([run.id,
+        run.description + " · " + run.createdAt + " · " + run.id.slice(-7, -1)]));
+      if (stock.runId && !runs.some(run => run.id === stock.runId))
+        options.push([stock.runId, stock.runId]);
+      toolbar.appendChild(stockSelect("stockRun", "stockRun", options, stock.runId));
+    }
+    const topGroups = node("div", "sf-stock-groups");
+    const extraGroups = node("div", "sf-stock-groups");
+    stock.groups.forEach((entry, index) => {
+      const group = node("button", "sf-button sf-stock-group", localized(entry.caption));
+      group.type = "button";
+      group.dataset.stockFocus = "group:" + entry.key;
+      group.setAttribute("aria-pressed", String(stock.group === entry.key));
+      group.disabled = busy;
+      group.addEventListener("click", () => request("stockGroup", entry.key));
+      (index < 4 ? topGroups : extraGroups).appendChild(group);
+    });
+    const extra = node("details", "sf-stock-extra");
+    extra.appendChild(node("summary", "sf-section-label", text("stockMore")));
+    extra.appendChild(extraGroups);
+    const loading = node("span", "sf-help sf-stock-loading");
+    loading.setAttribute("role", "status");
+    append(section, title, toolbar, loading, topGroups, extra);
+    if (!stock.group) return append(section, node("p", "sf-help", text("stockChoose")));
+
+    const list = node("ul", "sf-stock-list");
+    list.setAttribute("aria-label", localized(stock.groups.find(group => group.key === stock.group)?.caption || ""));
+    stock.metrics.forEach(metric => {
+      const row = node("li", "sf-stock-row");
+      const caption = localized(metric.caption);
+      const hasCount = Number.isSafeInteger(metric.count) && metric.count >= 0;
+      const value = hasCount ? number(metric.count) : "";
+      row.appendChild(node("span", "sf-stock-label", caption));
+      if (metric.canOpen && hasCount && metric.count > 0) {
+        const open = node("button", "sf-button sf-stock-number", value);
+        open.type = "button";
+        open.title = text("stockOpen");
+        open.dataset.stockFocus = "metric:" + metric.key;
+        open.disabled = busy;
+        open.setAttribute("aria-label", caption + " · " + value + " · " + text("stockOpen"));
+        open.addEventListener("click", () => request("stockOpen", metric.key));
+        row.appendChild(open);
+      } else if (hasCount) {
+        const count = node("span", "sf-stock-number", value);
+        count.setAttribute("aria-label", text("stockCount") + " · " + value);
+        row.appendChild(count);
+      }
+      if (metric.status) row.appendChild(node("span", "sf-help sf-stock-status", localized(metric.status)));
+      list.appendChild(row);
+    });
+    return append(section, list);
+  }
+
   function selector() {
     const section = node("section", "sf-run-picker");
     const label = node("label", "sf-section-label", text("recent"));
@@ -196,6 +298,7 @@
     const focused = document.activeElement && document.activeElement.dataset.action;
     const scrollTop = root.scrollTop;
     const diagnosticsOpen = root.querySelector(".sf-diagnostics")?.open || false;
+    const extraStockOpen = root.querySelector(".sf-stock-extra")?.open || false;
     root.replaceChildren();
     root.className = "sf-dashboard";
     root.setAttribute("aria-label", text("title"));
@@ -209,6 +312,7 @@
     const shell = node("div", "sf-shell");
     const main = node("main", "sf-main");
     main.appendChild(summaryPanel());
+    if (model.stock) main.appendChild(stockPanel(model.stock));
     if (model.hasSelection) append(main, selector(), runPanel(), stepPanel(), actionPanel());
     else {
       const empty = node("section", "sf-empty");
@@ -224,6 +328,9 @@
     append(root, hero, shell, footer);
     const diagnostics = root.querySelector(".sf-diagnostics");
     if (diagnostics) diagnostics.open = diagnosticsOpen;
+    const extraStock = root.querySelector(".sf-stock-extra");
+    if (extraStock) extraStock.open = extraStockOpen ||
+      model.stock.groups.slice(4).some(group => group.key === model.stock.group);
     setBusy(busy);
     if (focused) {
       const target = Array.from(root.querySelectorAll("button[data-action]")).find(element => element.dataset.action === focused);
@@ -235,7 +342,8 @@
     try {
       const incoming = JSON.parse(payload);
       if (incoming.schemaVersion !== 1 || !incoming.texts || !incoming.summary || !Array.isArray(incoming.runs) ||
-          (incoming.hasSelection && (!incoming.selected || !Array.isArray(incoming.steps)))) throw new Error("schema");
+          (incoming.hasSelection && (!incoming.selected || !Array.isArray(incoming.steps))) ||
+          (incoming.stock && (!Array.isArray(incoming.stock.groups) || !Array.isArray(incoming.stock.metrics)))) throw new Error("schema");
       model = incoming;
       if (model.language) document.documentElement.lang = model.language;
       failed = false;

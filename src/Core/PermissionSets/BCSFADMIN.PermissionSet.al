@@ -111,6 +111,7 @@ permissionset 90105 "BCSF ADMIN"
     page "BCSF Dashboard Part" = X,
     page "BCSF Factory Role Center" = X,
     codeunit "BCSF Dashboard Data" = X,
+    codeunit "BCSF Dashboard Stock" = X,
     codeunit "BCSF Dashboard Commands" = X,
     tabledata "BCSF Validation Result" = Ri,
     table "BCSF Validation Result" = X,

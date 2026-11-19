@@ -587,3 +587,16 @@ Stand 19.11.2026, Quellversion 1.0.3.0, **Zur Prüfung**.
 | AL-Build und BC-Sandbox | Offen: kein verfügbarer AL-Compiler oder angebundener Sandbox-Mandant. Keine .app gebaut oder veröffentlicht. Der lokale XERJ-Endpunkt war hier nicht erreichbar; Grundlage war der mitgelieferte Quellstand. |
 
 Für Abnahme und Fehlerfälle siehe [Stammdatenbasis und Startbereitschaft](MASTER_DATA_READINESS.md#abnahme-in-zwei-kleinen-sandbox-läufen). Nach dem ersten AL-Build mit deinen Sandbox-Symbolen `python3 Translations/sync_starter_translations.py` und `python3 scripts/check_translations.py` ausführen und vor der Veröffentlichung erneut bauen. SF-041 wurde nicht vorgezogen.
+
+## SF-041 – Fachlicher Datenbestand und Drilldowns
+
+Stand 19.11.2026, Quellversion 1.0.4.0, **Zur Prüfung**.
+
+| Prüfung | Tatsächliches Ergebnis |
+| --- | --- |
+| Quellenvergleich und Kennzahlenvertrag | PASS: 120 → 121 AL-Objekte, davon eine neue interne Codeunit, keine neuen Seiten oder Tabellen. SF-040-Pfad unverändert. 11 Gruppen, 20 Belegkopfkennzahlen, 7 getrennte Postenarten und 4 Herkunftszuordnungen geprüft. |
+| Laufende JS-Prüfung | PASS mit `node scripts/check_dashboard_stock.mjs`. Lazy Loading, null vs. nicht verfügbar, DE-Fallback, Tastaturfokus, Zugriffstatus, Umfang/Lauf und Weitergabe ausschließlich der vorgesehenen Schlüssel mit simuliertem BC-Bridge-Payload. Das simuliert keine BC-Abfrage oder -Berechtigung. |
+| Übersetzung und Partnerkatalog | PASS: 1.142 vorhandene XLIFF-IDs, neue SF-041-Texte mit geprüftem deutschen UI-Fallback und Synchronisierung beim nächsten Compilerlauf, bestehender Partnerkatalog grün. |
+| Standard-BC-Routen | Typen und relevante Standardlisten gegen Microsoft-Referenzen abgeglichen. Tatsächliche Standardlisten, Filterweitergabe, Rechte, große Datenmengen und kombinierte SF-040/SF-041-Ausführung in der Ziel-Sandbox stehen aus. Kein lokaler AL-Compiler und keine BC-Sandbox für diesen Build verfügbar. XERJ-Endpunkt war aus dieser Umgebung nicht erreichbar. |
+
+Gemeinsame Prüfschritte nach [Daten im Mandanten](DASHBOARD_DATA_STOCK.md#sandbox-abnahme-zusammen-mit-sf-040). Keine kompilierte oder veröffentlichte `.app`.

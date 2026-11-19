@@ -135,10 +135,10 @@ codeunit 90226 "BCSF Setup Manager"
     VATMatrix.SetRange(Blocked, false);
     if Context.Get('partnerSetup', Token) then begin
       Settings := Token.AsObject();
-      GroupCode := CopyStr(Contract.GetCode(Settings, 'genBusPostingGroup'), 1, MaxStrLen(GroupCode));
+      GroupCode := CopyStr(Contract.GetText(Settings, 'genBusPostingGroup'), 1, MaxStrLen(GroupCode));
       if GroupCode <> '' then
         GeneralMatrix.SetRange("Gen. Bus. Posting Group", GroupCode);
-      GroupCode := CopyStr(Contract.GetCode(Settings, 'vatBusPostingGroup'), 1, MaxStrLen(GroupCode));
+      GroupCode := CopyStr(Contract.GetText(Settings, 'vatBusPostingGroup'), 1, MaxStrLen(GroupCode));
       if GroupCode <> '' then
         VATMatrix.SetRange("VAT Bus. Posting Group", GroupCode);
     end;

@@ -170,3 +170,8 @@ Quick Run delegiert fehlende Finance-Konfiguration an denselben Auswahl-/Vorscha
 ## SF-040 – Stammdatenbasis und Startprüfung
 
 Die [Modulmatrix und der Startvertrag](MASTER_DATA_READINESS.md) sind maßgeblich für die gemeinsamen, lesenden Prüfungen vor Queue-Ausführung und Fortsetzen. Keine zusätzlichen Schemaobjekte.
+
+
+## SF-041 – Fachliche Datenansicht
+
+Der [Datenbestand](DASHBOARD_DATA_STOCK.md) ist ein separater lesender Bereich im Dashboard. Ein serverseitiger Kennzahlenkatalog stellt Zähler und native Standardlisten auf dieselben Filter. Die Laufsteuerung und der SF-040-Startvertrag bleiben unabhängig.

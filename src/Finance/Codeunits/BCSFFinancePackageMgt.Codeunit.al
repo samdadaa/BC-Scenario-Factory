@@ -1005,7 +1005,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
         VATCode: Code[20];
     begin
         Country.SecurityFiltering(SecurityFilter::Disallowed);
-        if Contract.GetCode(Settings, 'countryCode') = '' then
+        // Template defaults can be blank until this snapshot resolves the company values.
+        if Contract.GetText(Settings, 'countryCode') = '' then
             if Country.Get('DE') then
                 Settings.Replace('countryCode', 'DE')
             else
@@ -1059,7 +1060,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
     var
         Contract: Codeunit "BCSF Contract JSON";
     begin
-        if Contract.GetCode(Settings, KeyName) in ['', 'BCSF-DEMO', 'BCSF03', 'BCSF04', 'INLAND03', 'INLAND04'] then
+        if Contract.GetText(Settings, KeyName) in ['', 'BCSF-DEMO', 'BCSF03', 'BCSF04', 'INLAND03', 'INLAND04'] then
             Settings.Replace(KeyName, GroupCode);
     end;
 
@@ -1072,7 +1073,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
         DueDate: Date;
     begin
         Terms.SecurityFiltering(SecurityFilter::Disallowed);
-        Requested := Contract.GetCode(Settings, KeyName);
+        Requested := CopyStr(Contract.GetText(Settings, KeyName), 1, MaxStrLen(Requested));
         if (Requested <> '') and Terms.Get(Requested) then
             exit;
         if (Requested <> '') and not (Requested in ['NET00', 'NET14', 'NET30', 'NET60']) then

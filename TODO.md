@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 19.11.2026 – SF-040 zur Prüfung. SF-043 bleibt Grundlage für die einmalige Einrichtung. SF-041 bleibt offen.
+**Stand:** 19.11.2026 – SF-040 nach Nutzerangabe eingespielt. SF-041 umgesetzt und zur gemeinsamen Sandbox-Prüfung bereit.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -33,7 +33,7 @@ P0-Reihenfolge: [SF-038](#sf-038) Finanzsetup → [SF-039](#sf-039) Partnerdaten
 | [SF-038](#sf-038) | Stabilisierung | P0 | Realistische Kontenpläne und vollständige Buchungseinrichtung im Starterpfad | Zur Prüfung |
 | [SF-039](#sf-039) | Stabilisierung | P0 | Realistische Geschäftspartner und nutzbare Partnerstammdaten | Zur Prüfung |
 | [SF-040](#sf-040) | Stabilisierung | P0 | Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten | Zur Prüfung |
-| [SF-041](#sf-041) | Stabilisierung | P0 | Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns | Offen |
+| [SF-041](#sf-041) | Stabilisierung | P0 | Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns | Zur Prüfung |
 | [SF-042](#sf-042) | Stabilisierung | P0 | Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben | Offen |
 | [SF-043](#sf-043) | Stabilisierung | P0 | Mandant einmalig initialisieren und Vorlagenstart vereinfachen | Zur Prüfung |
 | [SF-001](#sf-001) | 0 / Fundierung | P0 | Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen | Blockiert |
@@ -1683,7 +1683,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-041 — Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns
 
-**Status:** Offen  
+**Status:** Zur Prüfung  
 **Priorität:** P0  
 **Abhängigkeiten:** SF-011, SF-014, SF-037  
 **Verantwortung / betroffene Module:** Monitoring, UI, ModuleRegistry, Sales, Purchasing, Finance, Inventory  
@@ -1695,12 +1695,12 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Vorgehen (einzeln abzuarbeiten):**
 
-- [ ] Gruppen **Stammdaten**, **Verkauf**, **Einkauf** und **Bewegungsdaten** umsetzen. **Stammdaten** pro Entität zählen, z. B. Debitoren, Kreditoren, Kontakte, Liefer-/Bestelladressen, Partnerbankverbindungen, Sachkonten, Bankkonten, Artikel und Lagerorte. Fehlende Generatoren nicht als Nullausgabe tarnen.
-- [ ] **Verkauf** und **Einkauf** je relevante Standardbelegart abbilden, u. a. Angebote, Rahmenaufträge/-bestellungen, Aufträge/Bestellungen, Rechnungen, Gutschriften, Reklamationen und gebuchte Lieferungen/Eingänge, Rechnungen, Gutschriften und Rücksendungen. Ungebuchte Dokumente und gebuchte Dokumente separat zählen. Zählbasis sind Belegköpfe, keine Belegzeilen.
-- [ ] **Bewegungsdaten** für Sach-, Debitoren-, Kreditoren-, Bank-, MwSt.-, Artikel- und Wertposten nach Art ausweisen, soweit verfügbar. Beleg und Posten sind getrennte Kennzahlen und werden nicht zu einer vermeintlichen Gesamtzahl zusammenaddiert.
-- [ ] Skalierbare Gruppen für weitere BC-Module wie Finanzen/Bank, Lager/Logistik, Fertigung/Montage, Projekte, Service, Anlagen und CRM/Beziehungen vorsehen. Registrierung pro Entität mit Modul, Caption, Zählquelle, fachlichem Filter, Drilldown-Ziel, Berechtigungs- und Verfügbarkeitsregeln. Kerngruppen sichtbar, weitere Gruppen aufklappbar. Neue Module ergänzen ihre Registrierung statt das Dashboard zu duplizieren.
-- [ ] Standardansicht **Von Scenario Factory erzeugt** in der aktuellen Firma mit optionalem Lauf-Filter. **Gesamter Mandant** als separat auswählbaren, klar beschrifteten Umfang ohne Laufbindung anbieten. Vorhandene Live-Datensätze zählen, keine geplanten, doppelt protokollierten oder gelöschten Ergebnisse. Können Herkunft oder Filter nicht zuverlässig abgebildet werden, als nicht verfügbar kennzeichnen. Keine Drilldowns in ungefilterte Listen als Ersatz für einen gefilterten Wert.
-- [ ] BC-Sitzungssprache einheitlich für Dashboard, Aktionen, Tooltips, Fehler und Zielseitenbeschriftungen verwenden. Status klar unterscheiden: „0 Datensätze“, „Kein Generator verfügbar“ oder „Kein Zugriff“. Keine wirkungslosen Buttons. Zählung bedarfsgerecht laden, nicht bei jeder Aktualisierung alle Postentabellen vollständig lesen. Lade- und Aktualisierungszustand zeigen.
+- [x] Gruppen **Stammdaten**, **Verkauf**, **Einkauf** und **Bewegungsdaten** umsetzen. **Stammdaten** pro Entität zählen, z. B. Debitoren, Kreditoren, Kontakte, Liefer-/Bestelladressen, Partnerbankverbindungen, Sachkonten, Bankkonten, Artikel und Lagerorte. Fehlende Generatoren nicht als Nullausgabe tarnen.
+- [x] **Verkauf** und **Einkauf** je relevante Standardbelegart abbilden, u. a. Angebote, Rahmenaufträge/-bestellungen, Aufträge/Bestellungen, Rechnungen, Gutschriften, Reklamationen und gebuchte Lieferungen/Eingänge, Rechnungen, Gutschriften und Rücksendungen. Ungebuchte Dokumente und gebuchte Dokumente separat zählen. Zählbasis sind Belegköpfe, keine Belegzeilen.
+- [x] **Bewegungsdaten** für Sach-, Debitoren-, Kreditoren-, Bank-, MwSt.-, Artikel- und Wertposten nach Art ausweisen, soweit verfügbar. Beleg und Posten sind getrennte Kennzahlen und werden nicht zu einer vermeintlichen Gesamtzahl zusammenaddiert.
+- [x] Skalierbare Gruppen für weitere BC-Module wie Finanzen/Bank, Lager/Logistik, Fertigung/Montage, Projekte, Service, Anlagen und CRM/Beziehungen vorsehen. Registrierung pro Entität mit Modul, Caption, Zählquelle, fachlichem Filter, Drilldown-Ziel, Berechtigungs- und Verfügbarkeitsregeln. Kerngruppen sichtbar, weitere Gruppen aufklappbar. Neue Module ergänzen ihre Registrierung statt das Dashboard zu duplizieren.
+- [x] Standardansicht **Von Scenario Factory erzeugt** in der aktuellen Firma mit optionalem Lauf-Filter. **Gesamter Mandant** als separat auswählbaren, klar beschrifteten Umfang ohne Laufbindung anbieten. Vorhandene Live-Datensätze zählen, keine geplanten, doppelt protokollierten oder gelöschten Ergebnisse. Können Herkunft oder Filter nicht zuverlässig abgebildet werden, als nicht verfügbar kennzeichnen. Keine Drilldowns in ungefilterte Listen als Ersatz für einen gefilterten Wert.
+- [x] BC-Sitzungssprache einheitlich für Dashboard, Aktionen, Tooltips, Fehler und Zielseitenbeschriftungen verwenden. Status klar unterscheiden: „0 Datensätze“, „Kein Generator verfügbar“ oder „Kein Zugriff“. Keine wirkungslosen Buttons. Zählung bedarfsgerecht laden, nicht bei jeder Aktualisierung alle Postentabellen vollständig lesen. Lade- und Aktualisierungszustand zeigen.
 
 **Akzeptanzkriterien:**
 
@@ -1712,6 +1712,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Nicht-Ziele / Sicherheitsgrenzen:** Statistik startet keine Generierung oder Buchung. Geplante Module erhalten keine erfundenen Datenquellen. Keine Berechtigungen über den Dashboardpfad umgehen.
 
 **Risiken / Entscheidungen:** Drilldowns für abhängige Entitäten und nicht zusammenhängende Datensätze mit Standardseiten, den realen BC-Symbolen und repräsentativer Filtergröße prüfen. Für große Datenmengen Strategie und Messung festhalten.
+
+**Umsetzung und gemeinsamer Sandbox-Test:** [SF-041 Daten im Mandanten](docs/DASHBOARD_DATA_STOCK.md). Statische und Client-/Bridge-Prüfungen durchgeführt. AL-Build, reale Zielseitenfilter, Berechtigungen und Laufzeiten noch nicht per Sandbox abgenommen.
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
@@ -1772,6 +1774,31 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 - [ ] Nutzerabnahme.
 
 **Nachweise und Grenzen:** [Umsetzung und Testweg](docs/COMPANY_INITIALIZATION.md), [Prüfprotokoll](docs/TESTS.md#sf-043--mandanteneinrichtung-und-direkter-vorlagenstart).
+
+---
+
+## SF-044 — Dashboard kompakt gestalten und Kennzahlen direkt nutzbar machen
+**Status**: Offen
+**Priorität**: P1
+**Abhängigkeit**: SF-041
+**Betroffen**: Bestehender Scenario-Factory-Arbeitsplatz und sein Dashboard-Control-Add-in
+**Ziel**
+Entwickler und Fachberater sollen auf einen Blick sehen, welche Daten vorhanden sind und was der ausgewählte Lauf erzeugt hat. Das Dashboard soll flach, kompakt und direkt bedienbar sein. Fachliche Zahlen stehen im Vordergrund. Erklärtexte und technische Details erscheinen nur dort, wo sie bei einer Entscheidung oder Fehlersuche helfen.
+Anforderungen
+1. Daten und Läufe klar trennen. Im bestehenden Arbeitsplatz zwei Reiter Daten und Läufe anbieten. Szenariovorlagen bleibt ein direkter Einstieg, erscheint aber nicht mehrfach. Die Laufauswahl unter Läufe ändert den Datenfilter im Reiter Daten nicht unbemerkt. Keine neue BC-Seite anlegen.
+2. Bestandszahlen als kleine Kacheln anzeigen. Stammdaten jeder Art sowie die Kennzahlen für Verkauf, Einkauf, Bewegungsdaten und weitere Module erscheinen in einem einheitlichen, responsiven Raster. Jede Kachel zeigt einen verständlichen Namen und eine Zahl, zum Beispiel Debitoren · 25 oder Lieferadressen · 25. Auf breiten Bildschirmen stehen mehrere Kacheln nebeneinander, auf schmalen Ansichten brechen sie um. Keine langen Tabellenzeilen mit einer kleinen Zahl am anderen Bildschirmrand.
+3. Kennzahlen direkt anklickbar machen. Wo eine passende Standardliste oder Laufansicht verfügbar und zulässig ist, ist die gesamte Kachel klickbar. Das gilt auch für die Kennzahlen zu Vorlagen und Läufen, sofern die Zielansicht zur angezeigten Zahl passt. Eine klickbare Zahl öffnet genau die gefilterte Menge, die sie anzeigt. Eine 0 ist nur klickbar, wenn die Zielansicht zuverlässig leer geöffnet werden kann. Ohne Zugriff oder passende Zielansicht gibt es keine Scheinaktion.
+4. Datenumfang sichtbar machen und leere Hinweise bündeln. Direkt am Kachelraster zeigen, ob die Zahlen den gesamten Mandanten, alle erzeugten Daten oder einen ausgewählten Lauf betreffen. In der erzeugten Ansicht nicht für jede Entität „Kein Generator verfügbar“ wiederholen. Diese Einträge standardmäßig in einem aufklappbaren Bereich bündeln. Ein echter Nullbestand, ein fehlender Generator und fehlender Zugriff bleiben unterscheidbar. In der Mandantenansicht bleiben vorhandene Daten auch ohne Generator sichtbar.
+5. Lauffortschritt direkt an der Entität zeigen. Die weit entfernten Fortschrittsbalken durch kompakte Fortschrittskacheln ersetzen. Eine Kachel zeigt zum Beispiel Debitoren · 20/20 · abgeschlossen. Ein kleiner Ring oder kurzer Balken kann direkt daneben stehen, darf aber keinen zusätzlichen Platz beanspruchen, wenn die Zahl schon alles sagt. Geplant, erzeugt und offen müssen verständlich bleiben. Zusätzliche Ergebnisse wie Adressen fachlich benennen, sofern sie getrennt vorliegen. Technische Begriffe wie Artefakte bleiben in der Diagnose.
+6. Laufansicht auf das Wesentliche kürzen. Im Normalfall reichen Laufname, Status, Ergebnis und die nächste sinnvolle Aktion. Ergebnisse öffnen bleibt bei einem abgeschlossenen Lauf gut sichtbar, aber nicht als Schaltfläche über die gesamte Breite. Den frühesten Start nur bei geplanten Läufen hervorheben. Bestanden darf nicht wie eine Warnung aussehen. Diagnose standardmäßig einklappen und leere Aktionsgruppen ausblenden.
+7. Kopf, Texte und Typografie vereinheitlichen. Die zusätzliche obere Linie des eigenen Dashboards, den doppelten Titel, wiederholte Navigation und allgemeine Einführungstexte entfernen. Den nativen BC-Rahmen unverändert lassen. Eine Schriftfamilie und wenige konsistente Größen für Überschriften, Fachbezeichnungen und Kennzahlen verwenden. Weniger Rahmen, keine verschachtelten Kacheln und einheitliche Abstände. Beim Scrollen dürfen Filter und Überschriften nicht unter dem BC-Kopf abgeschnitten werden.
+Akzeptanzkriterien
+- [ ] Datenbestand und Laufdetails sind über getrennte Reiter erreichbar. Niemand muss durch die Stammdaten scrollen, um zum aktuellen Lauf zu gelangen.
+- [ ] Alle Bestandsbereiche verwenden dasselbe Kachelraster. Die Kacheln sind mit Maus und Tastatur bedienbar, wo ein gültiges Ziel existiert.
+- [ ] Das Beispiel aus dem aktuellen Test ist eindeutig lesbar: 25 Debitoren im Mandanten und 20 Debitoren im ausgewählten Lauf sind unterschiedliche, klar beschriftete Zahlen. Beide öffnen bei vorhandener Berechtigung die jeweils passende gefilterte Liste.
+- [ ] Fortschritt steht direkt bei der Entität. Ein abgeschlossener Lauf lässt sich ohne technische Begriffe verstehen, die Diagnose bleibt erreichbar.
+- [ ] Ein leerer Bestand, ein fehlender Generator, fehlender Zugriff und ein fehlgeschlagener Lauf sind visuell und sprachlich unterscheidbar. Keine unnötigen Wiederholungen oder leeren Aktionsgruppen.
+- [ ] Die Ansicht ist in Business Central bei breiter und schmaler Fenstergröße geprüft. Es gibt keine abgeschnittenen Filter, keine unnötigen horizontalen Scrollbalken und einen sichtbaren Tastaturfokus.
 
 ---
 

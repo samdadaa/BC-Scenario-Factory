@@ -73,3 +73,5 @@ Zuerst AGENT_INITIALIZATION.md, docs/modules/DISCOVERY.md und docs/GAPS.md lesen
 - XERJ wird ausschließlich lokal für Codex erprobt und nicht mit BC verbunden.
 
 Für SF-040 siehe [Stammdatenbasis, Einrichtungsvorprüfung und Sandbox-Testfälle](docs/MASTER_DATA_READINESS.md).
+
+Für das neue Dashboard und den gemeinsamen SF-040/SF-041-Test siehe [Daten im Mandanten](docs/DASHBOARD_DATA_STOCK.md).
