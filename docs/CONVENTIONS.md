@@ -127,3 +127,8 @@ Echte Generatorbindungen per EnumExtension im jeweiligen Fachmodul; gemeinsame R
 ## SF-037 – Vorlagen und Zustand
 
 Bei Modify-Prüfungen gespeicherten Vorzustand unter passender Sperre lesen; xRec nicht als Nachweis verwenden. Statushistorie enthält auch persistierte Job-/Zähleränderungen. Lokalisierte Standardvorlagennamen sind Anzeigewerte über feste ID plus bekannte Standardbeschreibung, keine Datenmigration. Neuer Remove-Vermerk 90148 ist firmenbezogen und Lifecycle-geschützt. Neue Partner-Snapshots aus archivierten Vorlagen sind gesperrt. Normaler Seed darf Entfernt-Vermerke nicht entfernen.
+
+
+## SF-044 – Dashboardkacheln
+
+Datenfilter und Laufwahl getrennt halten. Fachliche Kennzahlen verwenden dasselbe responsive Raster; vollständige Kachel nur bei passendem berechtigtem Ziel als Button. Keine verschachtelten Buttons, keine Aktion für unzuverlässig leere Standardlisten. Bestätigte Arbeit nicht mit noch vorhandenen Live-Ergebnissen gleichsetzen. Technische Summen in Diagnose belassen. Texte bleiben AL-/XLIFF-basiert; `Translations/sf044.de.json` pflegt die neuen deutschen Texte für die Synchronisierung mit echten Compiler-IDs.

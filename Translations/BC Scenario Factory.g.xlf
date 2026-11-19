@@ -2873,10 +2873,25 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType CompletedBatchesLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 241708881" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Completed</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType CompletedLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 3978602899" size-unit="char" translate="yes" xml:space="preserve">
           <source>Confirmed units</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ConfirmedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 291269830" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Created</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType CreatedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3436950423" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Data</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType DataTabLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 565568802" size-unit="char" translate="yes" xml:space="preserve">
           <source>Diagnostics</source>
@@ -2942,6 +2957,11 @@
           <source>Your workspace</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType NavigationLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 263437505" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No access</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType NoAccessLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1799372165" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select a run to view progress and run-specific actions.</source>
@@ -3093,6 +3113,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType RunsLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 2494463649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType RunsTabLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 3233010332" size-unit="char" translate="yes" xml:space="preserve">
           <source>Save dependency plan</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3122,6 +3147,11 @@
           <source>Selected</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType SelectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 62532" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generated in selected run</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType SelectedRunScopeLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1595752698" size-unit="char" translate="yes" xml:space="preserve">
           <source>Configure sandbox, company, limits and languages.</source>
@@ -3203,6 +3233,21 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType SubtitleLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1788862344" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This count changed or its list is unavailable. Refresh the dashboard.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType SummaryChangedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1091120053" size-unit="char" translate="yes" xml:space="preserve">
+          <source>List unavailable for more than 150 executions.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType SummaryLimitLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1401626176" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The execution count cannot be matched to the visible run list.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType SummaryUnavailableLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 406561003" size-unit="char" translate="yes" xml:space="preserve">
           <source>Synthetic input preview</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3227,6 +3272,11 @@
           <source>Total batches</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType TotalBatchesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1049860151" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entities without a generator</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType UnavailableEntitiesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1005684385" size-unit="char" translate="yes" xml:space="preserve">
           <source>Read at</source>

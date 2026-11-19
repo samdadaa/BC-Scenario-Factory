@@ -62,3 +62,8 @@ Aktueller Bestand: 129 AL-Dateien in 14 Modulen, zehn Module ohne AL-Code. Scena
 ## SF-038 / SF-039 – Bestandserweiterung
 
 131 AL-Dateien in weiterhin 14 Modulen. Neu DataGeneration 90257 Partner Catalog und 90258 Partner Children. Finance-Bestand unverändert, 90408 dient jetzt dem gemeinsamen Paketfoundation-Vertrag. [Details](../STABILIZATION_FINANCE_PARTNERS.md). **Zur Prüfung**.
+
+
+## SF-044 – Monitoringdarstellung
+
+Bestand unverändert 121 AL-Dateien, davon 19 Monitoringobjekte. Bestehende Dashboard Part, Dashboard Data und Dashboard Stock sowie gebündelte Ressourcen angepasst. Daten und Läufe getrennt, einheitliches Kachelraster und geprüfte Zählernavigation; keine neuen Seiten oder Persistenz. [Vertrag und Abnahme](../DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026). **Zur Prüfung**.

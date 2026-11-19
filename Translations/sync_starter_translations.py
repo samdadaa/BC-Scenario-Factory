@@ -746,5 +746,6 @@ if __name__ == '__main__':
     DE['Up to 25 recent runs. Open the run monitor for full history.'] = 'Bis zu 25 aktuelle Läufe. Die vollständige Historie findest du im Laufmonitor.'
     DE.update(SF040_DE)
     DE.update(json.loads((base.ROOT / 'sf041.de.json').read_text(encoding='utf-8')))
+    DE.update(json.loads((base.ROOT / 'sf044.de.json').read_text(encoding='utf-8')))
     base.DE.update(DE)
     base.sync()

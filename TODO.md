@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 19.11.2026 – SF-040 nach Nutzerangabe eingespielt. SF-041 umgesetzt und zur gemeinsamen Sandbox-Prüfung bereit.
+**Stand:** 19.11.2026 – SF-040 nach Nutzerangabe eingespielt. SF-041 umgesetzt und zur gemeinsamen Sandbox-Prüfung bereit. SF-044 umgesetzt, zur Prüfung; reale BC-Abnahme offen.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -35,6 +35,7 @@ P0-Reihenfolge: [SF-038](#sf-038) Finanzsetup → [SF-039](#sf-039) Partnerdaten
 | [SF-040](#sf-040) | Stabilisierung | P0 | Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten | Zur Prüfung |
 | [SF-041](#sf-041) | Stabilisierung | P0 | Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns | Zur Prüfung |
 | [SF-042](#sf-042) | Stabilisierung | P0 | Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben | Offen |
+| [SF-044](#sf-044) | Bedienung | P1 | Dashboard kompakt gestalten und Kennzahlen direkt nutzbar machen | Zur Prüfung |
 | [SF-043](#sf-043) | Stabilisierung | P0 | Mandant einmalig initialisieren und Vorlagenstart vereinfachen | Zur Prüfung |
 | [SF-001](#sf-001) | 0 / Fundierung | P0 | Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen | Blockiert |
 | [SF-002](#sf-002) | 0 / Fundierung | P0 | AL-Struktur, Namenskonventionen und Objektplan finalisieren | Zur Prüfung |
@@ -1777,8 +1778,10 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ---
 
+<a name="sf-044"></a>
+
 ## SF-044 — Dashboard kompakt gestalten und Kennzahlen direkt nutzbar machen
-**Status**: Offen
+**Status**: Zur Prüfung
 **Priorität**: P1
 **Abhängigkeit**: SF-041
 **Betroffen**: Bestehender Scenario-Factory-Arbeitsplatz und sein Dashboard-Control-Add-in
@@ -1799,6 +1802,11 @@ Akzeptanzkriterien
 - [ ] Fortschritt steht direkt bei der Entität. Ein abgeschlossener Lauf lässt sich ohne technische Begriffe verstehen, die Diagnose bleibt erreichbar.
 - [ ] Ein leerer Bestand, ein fehlender Generator, fehlender Zugriff und ein fehlgeschlagener Lauf sind visuell und sprachlich unterscheidbar. Keine unnötigen Wiederholungen oder leeren Aktionsgruppen.
 - [ ] Die Ansicht ist in Business Central bei breiter und schmaler Fenstergröße geprüft. Es gibt keine abgeschnittenen Filter, keine unnötigen horizontalen Scrollbalken und einen sichtbaren Tastaturfokus.
+
+
+**Umsetzungsumfang / Risiken / Testweg (19.11.2026):** Bestehende Dashboardressourcen, drei AL-Objekte (Part/Data/Stock), Übersetzungskette, vorhandene Clientprüfungen und zugehörige Dokumentation angepasst. Ziel: Daten/Läufe ohne implizite Filterkopplung, gemeinsame Kacheln und passende direkte Listenrouten. Risiko sind unterschiedliche Sicherheits-/Standardseitenfilter sowie bestätigte Arbeit gegenüber später verändertem Live-Bestand. Rechte-/Countprüfung erneut beim Klick; keine Standardliste als unbeschränkter Ersatz. Kein Schemawechsel, keine neue Seite, keine Änderung an Generatoren, Queue oder Manifest. Keine unbekannte Fachanforderung angenommen.
+
+**Umsetzung / Nachweis:** [Bedienvertrag und konkrete Sandbox-Fälle](docs/DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026), [wirklich ausgeführte Prüfungen](docs/TESTS.md#sf-044--kompaktes-dashboard-und-direkte-kennzahlen). Lokale Client-/Layoutprüfung und Kompilierung sind erfolgreich; strenger Analyzerlauf bleibt durch zwölf nachweislich vorhandene Ausgangsbefunde blockiert. Akzeptanzhäkchen oben bleiben bis zur realen BC-Abnahme offen. Kein Deployment, keine menschliche Abnahme.
 
 ---
 

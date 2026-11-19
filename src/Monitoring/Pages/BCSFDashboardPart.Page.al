@@ -15,6 +15,8 @@ page 90362 "BCSF Dashboard Part"
                 trigger Ready()
                 begin
                     IsReady := true;
+                    if StockGroup = '' then
+                        StockGroup := 'master';
                     ReloadStock();
                     RenderDashboard();
                 end;
@@ -22,12 +24,18 @@ page 90362 "BCSF Dashboard Part"
                 trigger Command(ActionCode: Text; RunId: Text)
                 var
                     Commands: Codeunit "BCSF Dashboard Commands";
+                    Data: Codeunit "BCSF Dashboard Data";
+                    Stock: Codeunit "BCSF Dashboard Stock";
                 begin
                     case ActionCode of
                         'select':
                             SelectedRunId := Commands.ParseRunId(RunId);
                         'stockGroup', 'stockScope', 'stockRun', 'stockOpen':
                             HandleStock(ActionCode, RunId);
+                        'summary':
+                            Data.OpenSummary(RunId, SummaryViews);
+                        'runOpen':
+                            Stock.OpenMetric('master', RunId, false, SelectedRunId, RunStock);
                         'refresh':
                             ReloadStock();
                         else
@@ -98,7 +106,7 @@ page 90362 "BCSF Dashboard Part"
     var
         DashboardData: Codeunit "BCSF Dashboard Data";
     begin
-        CurrPage.Dashboard.SetDashboard(DashboardData.Build(SelectedRunId, StockView));
+        CurrPage.Dashboard.SetDashboard(DashboardData.Build(SelectedRunId, StockView, RunStock, SummaryViews));
     end;
 
     var
@@ -108,5 +116,7 @@ page 90362 "BCSF Dashboard Part"
         EntireCompany: Boolean;
         StockRunId: Guid;
         StockView: JsonObject;
+        RunStock: JsonObject;
+        SummaryViews: JsonObject;
         InvalidStockSelectionErr: Label 'The requested data selection is unavailable.';
 }

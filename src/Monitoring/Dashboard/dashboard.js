@@ -6,7 +6,8 @@
   let busy = false;
   let failed = false;
   let stockFocus = "";
-  const navigation = ["scenarios", "monitor", "setup"];
+  let activeTab = "data";
+  const tabScroll = { data: 0, runs: 0 };
   const groups = {
     planGroup: ["run", "scenario", "plan", "savePlan", "readiness", "preflight", "synthetic"],
     executeGroup: ["prepare", "schedule", "pause", "cancel", "apply", "resume"],
@@ -55,7 +56,7 @@
     if (busy) return;
     failed = false;
     setBusy(true);
-    if (action.startsWith("stock"))
+    if (action.startsWith("stock") || action === "runOpen")
       stockFocus = document.activeElement?.dataset?.stockFocus || "";
     invoke("Command", [action, runId], () => {
       setBusy(false);
@@ -67,28 +68,75 @@
       restoreStockFocus();
     });
   }
-  function navigationPanel() {
-    const nav = node("nav", "sf-nav");
-    nav.setAttribute("aria-label", text("navigation"));
-    append(nav, node("div", "sf-nav-title", text("navigation")));
-    navigation.forEach((key, index) => {
-      const item = button(key, "sf-nav-link", key);
-      const count = node("span", "sf-nav-index", String(index + 1).padStart(2, "0"));
-      item.prepend(count);
-      item.title = text(key + "Hint");
-      nav.appendChild(item);
-    });
-    append(nav, node("p", "sf-nav-note", text("requirements")));
-    return nav;
-  }
   function summaryPanel() {
-    const summary = node("section", "sf-summary");
+    const summary = node("section", "sf-summary sf-tile-grid");
     [["templateCount", "templates"], ["runCount", "runs"], ["activeCount", "active"], ["reviewCount", "review"]].forEach(([label, key]) => {
-      const card = node("div", "sf-stat sf-stat-" + key);
-      append(card, node("div", "sf-stat-label", text(label)), node("div", "sf-stat-value", number(model.summary[key])));
+      const metric = model.summaryViews?.[key];
+      const canOpen = metric?.canOpen && Number.isSafeInteger(model.summary[key]) && model.summary[key] > 0;
+      const card = node(canOpen ? "button" : "div", "sf-tile sf-stat sf-stat-" + key);
+      append(card, node("span", "sf-stat-label", text(label)),
+        node("strong", "sf-stat-value", Number.isSafeInteger(model.summary[key]) ? number(model.summary[key]) : "—"));
+      if (canOpen) {
+        card.type = "button";
+        card.dataset.action = "summary:" + key;
+        card.disabled = busy;
+        card.addEventListener("click", () => request("summary", key));
+      }
+      if (metric?.status) card.appendChild(node("span", "sf-help", localized(metric.status)));
       summary.appendChild(card);
     });
     return summary;
+  }
+  function tabs() {
+    const list = node("div", "sf-tabs");
+    list.setAttribute("role", "tablist");
+    list.setAttribute("aria-label", text("navigation"));
+    ["data", "runs"].forEach((key, index) => {
+      const tab = node("button", "sf-tab", text(key === "data" ? "dataTab" : "runsTab"));
+      tab.type = "button";
+      tab.id = "sf-tab-" + key;
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", "sf-tab-panel");
+      tab.setAttribute("aria-selected", String(activeTab === key));
+      tab.tabIndex = activeTab === key ? 0 : -1;
+      tab.disabled = busy;
+      tab.addEventListener("click", () => {
+        if (busy) return;
+        tabScroll[activeTab] = root.scrollTop;
+        activeTab = key;
+        render();
+        root.scrollTop = tabScroll[key];
+        root.querySelectorAll(".sf-tab")[index].focus({ preventScroll: true });
+      });
+      tab.addEventListener("keydown", event => {
+        if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+          event.preventDefault();
+          const next = event.key === "Home" ? 0 : event.key === "End" ? 1 : 1 - index;
+          root.querySelectorAll(".sf-tab")[next].click();
+        }
+      });
+      list.appendChild(tab);
+    });
+    return list;
+  }
+  function metricTile(metric, action) {
+    const hasCount = Number.isSafeInteger(metric.count) && metric.count >= 0;
+    // Zero is not routed: current stock service does not promise an empty native view.
+    const canOpen = metric.canOpen && hasCount && metric.count > 0;
+    const card = node(canOpen ? "button" : "div", "sf-tile sf-stock-row");
+    const caption = localized(metric.caption);
+    append(card, node("span", "sf-stock-label", caption),
+      node("strong", "sf-stock-number", hasCount ? number(metric.count) : "—"));
+    if (canOpen) {
+      card.type = "button";
+      card.title = text("stockOpen");
+      card.dataset.stockFocus = (action === "stockOpen" ? "metric:" : "result:") + metric.key;
+      card.disabled = busy;
+      card.setAttribute("aria-label", caption + " · " + number(metric.count) + " · " + text("stockOpen"));
+      card.addEventListener("click", () => request(action, metric.key));
+    }
+    if (metric.status) card.appendChild(node("span", "sf-help sf-stock-status", localized(metric.status)));
+    return card;
   }
   function restoreStockFocus() {
     if (!root || !stockFocus) return;
@@ -155,32 +203,23 @@
     append(section, title, toolbar, loading, topGroups, extra);
     if (!stock.group) return append(section, node("p", "sf-help", text("stockChoose")));
 
-    const list = node("ul", "sf-stock-list");
+    const scopeText = stock.entireCompany ? text("stockCompany") :
+      stock.runId ? text("selectedRunScope") + " · " +
+        (model.runs.find(run => run.id === stock.runId)?.description || stock.runId) :
+        text("stockGenerated") + " · " + text("stockAllRuns");
+    const scopeLabel = node("p", "sf-scope", scopeText);
+    const list = node("div", "sf-stock-list sf-tile-grid");
     list.setAttribute("aria-label", localized(stock.groups.find(group => group.key === stock.group)?.caption || ""));
+    const unavailable = node("details", "sf-stock-unavailable");
+    const missing = stock.metrics.filter(metric => !stock.entireCompany && metric.noGenerator);
+    unavailable.appendChild(node("summary", "", text("unavailableEntities") + " · " + number(missing.length)));
+    const missingList = node("div", "sf-tile-grid");
     stock.metrics.forEach(metric => {
-      const row = node("li", "sf-stock-row");
-      const caption = localized(metric.caption);
-      const hasCount = Number.isSafeInteger(metric.count) && metric.count >= 0;
-      const value = hasCount ? number(metric.count) : "";
-      row.appendChild(node("span", "sf-stock-label", caption));
-      if (metric.canOpen && hasCount && metric.count > 0) {
-        const open = node("button", "sf-button sf-stock-number", value);
-        open.type = "button";
-        open.title = text("stockOpen");
-        open.dataset.stockFocus = "metric:" + metric.key;
-        open.disabled = busy;
-        open.setAttribute("aria-label", caption + " · " + value + " · " + text("stockOpen"));
-        open.addEventListener("click", () => request("stockOpen", metric.key));
-        row.appendChild(open);
-      } else if (hasCount) {
-        const count = node("span", "sf-stock-number", value);
-        count.setAttribute("aria-label", text("stockCount") + " · " + value);
-        row.appendChild(count);
-      }
-      if (metric.status) row.appendChild(node("span", "sf-help sf-stock-status", localized(metric.status)));
-      list.appendChild(row);
+      (missing.includes(metric) ? missingList : list).appendChild(metricTile(metric, "stockOpen"));
     });
-    return append(section, list);
+    append(section, scopeLabel, list);
+    if (missing.length) section.appendChild(append(unavailable, missingList));
+    return section;
   }
 
   function selector() {
@@ -200,7 +239,7 @@
       select.appendChild(option);
     });
     select.addEventListener("change", () => request("select", select.value));
-    append(section, label, select, node("p", "sf-help", text("window")));
+    append(section, label, select);
     return section;
   }
   function runPanel() {
@@ -208,60 +247,54 @@
     const run = model.selected;
     const head = node("div", "sf-run-heading");
     const heading = node("div");
-    append(heading, node("div", "sf-section-label", text("choose")), node("h2", "", run.description));
-    append(head, heading, node("span", "sf-status", localized(run.status)));
+    append(heading, node("h2", "", run.description));
+    const tone = [11, 13].includes(run.statusCode) ? " sf-error" : run.statusCode === 9 ? " sf-success" : run.statusCode === 10 ? " sf-warning" : "";
+    append(head, heading, node("span", "sf-status" + tone, localized(run.status)));
     append(section, head, node("div", "sf-run-meta", [run.profile, localized(run.processMode)].join(" · ")));
     const flags = node("div", "sf-flags");
     if (run.pauseRequested) flags.appendChild(node("span", "sf-flag", text("pauseRequested")));
     if (run.cancelRequested) flags.appendChild(node("span", "sf-flag sf-warning", text("cancelRequested")));
     section.appendChild(flags);
-    const facts = node("dl", "sf-facts");
-    [["completedBatches", number(run.completedBatches) + " / " + number(run.totalBatches)], ["earliest", run.earliest], ["started", run.started], ["finished", run.finished]].forEach(([key, value]) => {
-      const fact = node("div");
-      append(fact, node("dt", "", text(key)), node("dd", "", value || text("notRecorded")));
-      facts.appendChild(fact);
-    });
-    append(section, facts, node("p", "sf-quality", localized(run.quality) || text("quality")));
+    if ([4, 5].includes(run.statusCode) && run.earliest)
+      section.appendChild(node("p", "sf-scope", text("earliest") + " · " + run.earliest));
+    const quality = node("p", "sf-quality" + (run.qualityCode === 0 ? " sf-success" :
+      run.qualityCode === 1 ? " sf-warning" : run.qualityCode === 2 ? " sf-error" : ""), localized(run.quality) || text("quality"));
+    section.appendChild(quality);
     return section;
   }
   function stepPanel() {
     const section = node("section", "sf-steps");
-    append(section, node("h3", "", text("steps")));
+    append(section, node("h3", "", text("steps")),
+      node("p", "sf-scope", text("selectedRunScope") + " · " + model.selected.description));
     if (!model.steps.length) return append(section, node("p", "sf-help", text("noSteps")));
-    const scroll = node("div", "sf-table-scroll");
-    scroll.tabIndex = 0;
-    scroll.setAttribute("role", "region");
-    scroll.setAttribute("aria-label", text("steps"));
-    const table = node("table", "sf-table");
-    const thead = node("thead");
-    const heading = node("tr");
-    ["entity", "target", "confirmed", "remaining", "artifacts", "status"].forEach(key => {
-      const th = node("th", "", text(key)); th.scope = "col"; heading.appendChild(th);
-    });
-    thead.appendChild(heading);
-    const tbody = node("tbody");
-    model.steps.forEach(step => {
-      const row = node("tr");
-      const identity = node("td");
-      append(identity, node("strong", "", localized(step.entity)), node("span", "sf-cell-sub", localized(step.module)));
-      row.appendChild(identity);
-      [step.external ? null : step.target, step.external ? null : step.confirmed, step.external ? null : step.remaining, step.external ? null : step.artifacts].forEach(value => row.appendChild(node("td", "sf-number", value === null ? "—" : number(value))));
-      const status = node("td", "sf-step-state");
-      append(status, node("span", "", step.external ? text("external") : localized(step.state)));
-      if (!step.external) {
-        const progress = node("progress", "sf-progress");
-        progress.max = 100;
-        progress.value = Math.max(0, Math.min(100, step.percent));
-        progress.setAttribute("aria-label", localized(step.entity) + " · " + text("confirmed"));
-        progress.textContent = number(step.percent) + "%";
-        status.appendChild(progress);
+    const grid = node("div", "sf-tile-grid");
+    const results = model.runStock?.metrics || [];
+    const matched = new Set();
+    model.steps.filter(step => !step.external).forEach(step => {
+      const key = step.entityCode === "CUSTOMER" ? "customer" : step.entityCode === "VENDOR" ? "vendor" : "";
+      const metric = results.find(item => item.key === key);
+      const safe = metric?.canOpen && metric.count > 0 && metric.count === step.confirmed;
+      if (metric && metric.count === step.confirmed) matched.add(key);
+      const card = node(safe ? "button" : "div", "sf-tile sf-step");
+      append(card, node("span", "sf-stock-label", localized(step.entity)),
+        node("strong", "sf-step-value", number(step.confirmed) + " / " + number(step.target)),
+        node("span", "sf-help", text("created") + " / " + text("target") + " · " + text("remaining") + " " + number(step.remaining)),
+        node("span", "sf-step-state", step.complete ? text("completed") : localized(step.state)));
+      if (safe) {
+        card.type = "button";
+        card.dataset.stockFocus = "result:" + key;
+        card.title = text("stockOpen");
+        card.disabled = busy;
+        card.addEventListener("click", () => request("runOpen", key));
       }
-      row.appendChild(status);
-      tbody.appendChild(row);
+      grid.appendChild(card);
     });
-    append(table, thead, tbody);
-    scroll.appendChild(table);
-    return append(section, scroll);
+    // Live result counts are separate from confirmed work. Never relabel artifact totals as addresses.
+    results.filter(metric => !matched.has(metric.key) &&
+      (metric.count > 0 || (!Number.isSafeInteger(metric.count) && !metric.noGenerator)))
+      .forEach(metric => grid.appendChild(metricTile(metric, "runOpen")));
+    section.appendChild(grid);
+    return section;
   }
   function actionPanel() {
     const section = node("section", "sf-action-groups");
@@ -287,8 +320,20 @@
           command === "resume" ? hasExecution && (status === 7 || model.selected.canResume) : true;
         if (meaningful) actions.appendChild(button(command, command === "cancel" ? "sf-button sf-danger" : "sf-button", command, model.selected.id));
       });
-      group.appendChild(actions);
-      diagnostics.appendChild(group);
+      if (actions.children.length) {
+        group.appendChild(actions);
+        diagnostics.appendChild(group);
+      }
+    });
+    const facts = node("dl", "sf-facts");
+    [["completedBatches", number(run.completedBatches) + " / " + number(run.totalBatches)],
+      ["started", run.started], ["finished", run.finished]].forEach(([key, value]) => {
+      if (value) facts.appendChild(append(node("div"), node("dt", "", text(key)), node("dd", "", value)));
+    });
+    diagnostics.appendChild(facts);
+    model.steps.forEach(step => {
+      if (step.external) diagnostics.appendChild(node("p", "sf-help", localized(step.entity) + " · " + text("external") + " · " + localized(step.state)));
+      else diagnostics.appendChild(node("p", "sf-help", localized(step.entity) + " · " + text("artifacts") + " " + number(step.artifacts)));
     });
     section.appendChild(diagnostics);
     return section;
@@ -299,35 +344,37 @@
     const scrollTop = root.scrollTop;
     const diagnosticsOpen = root.querySelector(".sf-diagnostics")?.open || false;
     const extraStockOpen = root.querySelector(".sf-stock-extra")?.open || false;
+    const unavailableOpen = root.querySelector(".sf-stock-unavailable")?.open || false;
     root.replaceChildren();
     root.className = "sf-dashboard";
     root.setAttribute("aria-label", text("title"));
-    const hero = node("header", "sf-hero");
-    const title = node("div");
-    append(title, node("p", "sf-eyebrow", text("eyebrow")), node("h1", "", text("title")), node("p", "sf-subtitle", text("subtitle")));
-    const heroActions = node("div", "sf-hero-actions");
-    const firstAction = model.initialized ? "scenarios" : "setup";
-    append(heroActions, button(firstAction, "sf-button sf-primary", firstAction), button("refresh", "sf-button sf-refresh", "refresh"));
-    append(hero, title, heroActions);
-    const shell = node("div", "sf-shell");
+    const toolbar = node("div", "sf-toolbar");
+    const links = node("div", "sf-buttons");
+    if (activeTab === "data" || !model.summaryViews?.templates?.canOpen)
+      links.appendChild(button("scenarios", "sf-button", "scenarios"));
+    links.appendChild(button("setup", "sf-button", "setup"));
+    append(toolbar, tabs(), links, button("refresh", "sf-button sf-refresh", "refresh"));
     const main = node("main", "sf-main");
-    main.appendChild(summaryPanel());
-    if (model.stock) main.appendChild(stockPanel(model.stock));
-    if (model.hasSelection) append(main, selector(), runPanel(), stepPanel(), actionPanel());
-    else {
-      const empty = node("section", "sf-empty");
-      append(empty, node("h2", "", text("empty")), button(firstAction, "sf-button sf-primary", firstAction));
-      main.appendChild(empty);
+    main.id = "sf-tab-panel";
+    main.setAttribute("role", "tabpanel");
+    main.setAttribute("aria-labelledby", "sf-tab-" + activeTab);
+    if (activeTab === "data") {
+      if (model.stock) main.appendChild(stockPanel(model.stock));
+    } else {
+      main.appendChild(summaryPanel());
+      if (model.hasSelection) append(main, selector(), runPanel(), stepPanel(), actionPanel());
+      else append(main, node("section", "sf-empty", text("empty")));
     }
-    append(shell, navigationPanel(), main);
     const footer = node("footer", "sf-footer");
     const feedback = node("div", "sf-feedback");
     feedback.setAttribute("role", "status");
     feedback.setAttribute("aria-live", "polite");
     append(footer, feedback, node("span", "sf-help", text("updated") + " " + model.readAt));
-    append(root, hero, shell, footer);
+    append(root, toolbar, main, footer);
     const diagnostics = root.querySelector(".sf-diagnostics");
     if (diagnostics) diagnostics.open = diagnosticsOpen;
+    const unavailable = root.querySelector(".sf-stock-unavailable");
+    if (unavailable) unavailable.open = unavailableOpen;
     const extraStock = root.querySelector(".sf-stock-extra");
     if (extraStock) extraStock.open = extraStockOpen ||
       model.stock.groups.slice(4).some(group => group.key === model.stock.group);

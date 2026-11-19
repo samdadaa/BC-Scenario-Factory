@@ -62,3 +62,8 @@ Factory-Einrichtung → „Finanzeinrichtung prüfen“ → Modus auswählen →
 ## SF-018 – 18.11.2026
 
 Szenariokarte bzw. Wizard-Schritt 3 → „Synthetische Partner“: vorhandenes Land, bei Existing explizite Buchungsgruppen, Zahlungsbedingungen je Klasse/B2C, B2C-Prozent und Kreditlimits auswählen. SKR-Testpakete verwenden ihre Paketgruppen und unterstützen in diesem Vertrag DE. Danach neuer Snapshot, neuer Plan, Einrichtungsvorprüfung und vorhandene explizite Queuefreigabe. Alte blockierte Pläne werden nicht verändert. Reine Kunden-/Lieferantenläufe haben nun echte Implementierungen; weitere Fachziele können weiterhin blockiert sein. [Bedienung, Standardkontakte und offene Abnahme](PARTNER_GENERATION.md).
+
+
+## SF-044 – aktueller Dashboardweg
+
+**Daten** zeigt den gewählten Bestand im Kachelraster, **Läufe** die Laufwahl mit Fortschrittskacheln und nächster Aktion. Die Filter beider Ansichten bleiben unabhängig. Vorlagen sind je Reiter einmal direkt erreichbar. Diagnose bleibt eingeklappt. [Bedienung und Sandbox-Prüfschritte](DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026), Status **Zur Prüfung**. Frühere Tabellen-/Seitenleistenbeschreibungen dieses Dokuments sind historische Planstände.

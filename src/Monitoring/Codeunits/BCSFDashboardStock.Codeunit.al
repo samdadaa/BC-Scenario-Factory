@@ -82,6 +82,7 @@ codeunit 90369 "BCSF Dashboard Stock"
         View.Add('key', TextProperty(Metric, 'key'));
         View.Add('caption', MetricCaption(Metric));
         View.Add('status', Status);
+        View.Add('noGenerator', Status = NoGeneratorLbl);
         View.Add('canOpen', CanOpen);
         if Count >= 0 then
           View.Add('count', Count);
@@ -90,6 +91,23 @@ codeunit 90369 "BCSF Dashboard Stock"
     end;
     Stock.Add('metrics', Metrics);
     exit(Stock);
+  end;
+
+  procedure BuildRunResults(RunId: Guid): JsonObject
+  var
+    Stock: JsonObject;
+    Result: JsonObject;
+    Values: JsonToken;
+    Value: JsonToken;
+    Metrics: JsonArray;
+  begin
+    Stock := Build('master', false, RunId);
+    Stock.Get('metrics', Values);
+    foreach Value in Values.AsArray() do
+      if TextProperty(Value.AsObject(), 'key') in ['customer', 'vendor', 'shipTo', 'orderAddress'] then
+        Metrics.Add(Value);
+    Result.Add('metrics', Metrics);
+    exit(Result);
   end;
 
   procedure OpenMetric(GroupKey: Text; MetricKey: Text; EntireCompany: Boolean; StockRunId: Guid; LastStock: JsonObject)
@@ -292,7 +310,7 @@ codeunit 90369 "BCSF Dashboard Stock"
     exit(true);
   end;
 
-  local procedure CanExecutePage(PageId: Integer): Boolean
+  procedure CanExecutePage(PageId: Integer): Boolean
   var
     TempPermission: Record "Expanded Permission" temporary;
     UserPermissions: Codeunit "User Permissions";

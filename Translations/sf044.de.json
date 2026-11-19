@@ -1,0 +1,11 @@
+{
+  "Data": "Daten",
+  "Runs": "Läufe",
+  "Generated in selected run": "Im ausgewählten Lauf erzeugt",
+  "Entities without a generator": "Entitäten ohne Generator",
+  "Created": "Erzeugt",
+  "List unavailable for more than 150 executions.": "Liste für mehr als 150 Ausführungen nicht verfügbar.",
+  "The execution count cannot be matched to the visible run list.": "Die Anzahl der Ausführungen lässt sich nicht der sichtbaren Laufliste zuordnen.",
+  "This count changed or its list is unavailable. Refresh the dashboard.": "Die Anzahl hat sich geändert oder die Liste ist nicht verfügbar. Aktualisieren Sie das Dashboard.",
+  "Completed": "Abgeschlossen"
+}

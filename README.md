@@ -122,3 +122,8 @@ Startvorlagen werden ausschließlich über die UI geladen, nicht beim Publishing
 ## SF-038 / SF-039 – aktueller Reparaturstand
 
 Gemeinsamer bestätigter Finance-Pfad ohne Zwei-Konten-Fallback, neue SKR-Teilpakete 2.0.0 und versionierte natürliche Partnerwerte einschließlich Liefer-/Bestelladressen sind implementiert, **Zur Prüfung**. Alte Pakete/Läufe werden nicht migriert. Zahlungsbereitschaft ohne freigegebene synthetische Bankdaten bleibt gesperrt. [Umfang und Grenzen](docs/STABILIZATION_FINANCE_PARTNERS.md), [Prüfanleitung](docs/review/TESTANLEITUNG.md).
+
+
+## Kompaktes Dashboard (SF-044)
+
+Die Reiter **Daten** und **Läufe** trennen Bestandsfilter und Laufwahl. Einheitliche klickbare Kacheln zeigen den berechtigten Datenbestand bzw. den Fortschritt direkt bei der Entität; technische Details liegen unter Diagnose. [Bedienung und offene BC-Abnahme](docs/DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026), [lokale Prüfungen](docs/TESTS.md#sf-044--kompaktes-dashboard-und-direkte-kennzahlen). **Zur Prüfung**.

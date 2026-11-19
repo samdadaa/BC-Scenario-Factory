@@ -175,3 +175,8 @@ Die [Modulmatrix und der Startvertrag](MASTER_DATA_READINESS.md) sind maßgeblic
 ## SF-041 – Fachliche Datenansicht
 
 Der [Datenbestand](DASHBOARD_DATA_STOCK.md) ist ein separater lesender Bereich im Dashboard. Ein serverseitiger Kennzahlenkatalog stellt Zähler und native Standardlisten auf dieselben Filter. Die Laufsteuerung und der SF-040-Startvertrag bleiben unabhängig.
+
+
+## SF-044 – getrennte Dashboardansichten
+
+Das bestehende Control Add-in trennt Datenfilter und ausgewählten Lauf. Die Part hält getrennte serverseitige Ansichten für Datenbestand und Laufresultate. Bestands- und Fortschrittskacheln verwenden den vorhandenen Herkunfts-/Standardlistendienst. Vorlagen-/Laufzähler öffnen bestehende gefilterte Seiten nach erneuter Prüfung von Rechten und Count. Tabellen, Objekte, Snapshots, Generatoren und Transaktionsgrenzen bleiben erhalten. [Darstellung, Grenzen und Abnahme](DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026). **Zur Prüfung**.

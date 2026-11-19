@@ -13,7 +13,7 @@ const view = { groups: [
 const generated = [
   { key: 'customer', caption: 'Debitor', count: 2, canOpen: true },
   { key: 'vendor', caption: 'Kreditor', count: 0, canOpen: false },
-  { key: 'item', caption: 'Artikel', status: 'No executable generator', canOpen: false },
+  { key: 'item', caption: 'Artikel', status: 'No executable generator', noGenerator: true, canOpen: false },
   { key: 'bank', caption: 'Bankkonto', status: 'No access', canOpen: false }
 ];
 const company = [{ key: 'invoice', caption: 'Invoices', count: 12, canOpen: true }];
@@ -78,11 +78,13 @@ get('group:master').events.click();
 assert.deepEqual(calls.at(-1), ['Command', 'stockGroup', 'master']);
 assert.equal(document.activeElement, get('group:master'), 'Keyboard focus restored after redraw');
 assert.equal(get('group:master').attrs['aria-pressed'], 'true');
-assert.equal(get('metric:customer').textContent, '2');
+assert.equal(get('metric:customer').querySelector('.sf-stock-number').textContent, '2');
+assert.equal(root.querySelector('.sf-stock-unavailable').open || false, false);
+assert.equal(root.querySelector('.sf-stock-unavailable').querySelectorAll('.sf-stock-row').length, 1);
 assert.ok(get('metric:customer').attrs['aria-label'].includes('Standardliste öffnen'));
 assert.equal(get('metric:vendor'), undefined);
 assert.equal(root.querySelectorAll('.sf-stock-row')[1].querySelector('.sf-stock-number').textContent, '0');
-assert.deepEqual(root.querySelectorAll('.sf-stock-status').map(el => el.textContent), ['Kein Generator verfügbar', 'Kein Zugriff']);
+assert.deepEqual(root.querySelectorAll('.sf-stock-status').map(el => el.textContent), ['Kein Zugriff', 'Kein Generator verfügbar']);
 get('metric:customer').events.click();
 assert.deepEqual(calls.at(-1), ['Command', 'stockOpen', 'customer'], 'No page, table, filter, company or count round-tripped');
 get('stockRun').value = picked;
@@ -94,7 +96,7 @@ assert.deepEqual(calls.at(-1), ['Command', 'stockScope', 'company']);
 assert.equal(get('stockRun'), undefined);
 assert.equal(view.runId, '');
 get('group:sales').events.click();
-assert.equal(get('metric:invoice').textContent, '12');
+assert.equal(get('metric:invoice').querySelector('.sf-stock-number').textContent, '12');
 get('group:finance').events.click();
 assert.equal(root.querySelector('.sf-stock-extra').open, true);
 view.metrics = [{ key: 'rejected', caption: 'Kreditor', count: 1, canOpen: true }];
@@ -102,4 +104,4 @@ window.SetDashboard(JSON.stringify(payload));
 get('metric:rejected').events.click();
 assert.ok(root.querySelector('.sf-feedback').textContent);
 assert.equal(get('stockScope').disabled, false, 'Blocked navigation does not lock the UI');
-console.log('PASS: SF-041 client and command bridge, lazy section, DE fallback, hidden counts, keyboard, scope, run and safe command payload.');
+console.log('PASS: SF-041/SF-044 client and command bridge, lazy section, DE fallback, hidden counts, keyboard, scope, run and safe command payload.');

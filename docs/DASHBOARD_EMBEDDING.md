@@ -1,5 +1,7 @@
 # JavaScript-Dashboard und Role-Center – SF-014
 
+**SF-044 (19.11.2026):** Die aktuelle kompakte Ansicht mit Daten-/Laufreitern und Kacheln ist in [Daten im Mandanten](DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026) beschrieben. Frühere Titel-, Seitenleisten-, Tabellen- und Fortschrittsbalkenangaben unten sind historische Nachweise. Die Einbettung über die bestehende CardPart bleibt erhalten.
+
 **Aktueller Stand ab 1.0.2.0:** Der reale Bedienweg ist in [Mandanteneinrichtung und Vorlagenstart](COMPANY_INITIALIZATION.md) beschrieben. Ältere Angaben zu Finanzauswahl je Vorlage, Vorschaufenster, Wizard, parallelen Lauflisten und Dashboard-Host sind historische Nachweise. Entfernte Objekt-IDs bleiben unbenutzt.
 
 **Stand: 16.11.2026, Zur Prüfung.** Die präzisierte Nutzervorgabe ist umgesetzt: JavaScript-ControlAddIn als zentrales App-Dashboard, eigenes Role-Center mit Profil und wiederverwendbare Dashboard-CardPart. Die native frühere Dashboardliste bleibt als Laufmonitor erhalten.

@@ -10,12 +10,11 @@ codeunit 90365 "BCSF Dashboard Data"
 {
   Access = Internal;
 
-  procedure Build(var SelectedRunId: Guid; StockView: JsonObject): Text
+  procedure Build(var SelectedRunId: Guid; StockView: JsonObject; var RunStock: JsonObject; var SummaryViews: JsonObject): Text
   var
     Header: Record "BCSF Run Header";
-    Scenario: Record "BCSF Scenario";
     Setup: Record "BCSF Factory Setup";
-    Execution: Record "BCSF Run Execution";
+    Stock: Codeunit "BCSF Dashboard Stock";
     Language: Codeunit Language;
     Payload: JsonObject;
     Texts: JsonObject;
@@ -32,17 +31,13 @@ codeunit 90365 "BCSF Dashboard Data"
     Payload.Add('texts', Texts);
     Payload.Add('stock', StockView);
     Payload.Add('readAt', Format(CurrentDateTime()));
-    Summary.Add('templates', Scenario.Count());
-    Summary.Add('runs', Header.Count());
-    Execution.SetFilter(Status, '%1|%2|%3|%4', "BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled,
-      "BCSF Run Status"::Running, "BCSF Run Status"::ResumePending);
-    Summary.Add('active', Execution.Count());
-    Execution.SetFilter(Status, '%1|%2', "BCSF Run Status"::Failed, "BCSF Run Status"::ValidationFailed);
-    Summary.Add('review', Execution.Count());
+    AddSummary(Summary, SummaryViews);
+    Payload.Add('summaryViews', SummaryViews);
     Payload.Add('summary', Summary);
     if Setup.ReadPermission() then
       if Setup.Get(Setup.GetSetupKey()) then
         Payload.Add('initialized', Setup."Company Initialized");
+    Header.SecurityFiltering(SecurityFilter::Filtered);
     Header.SetCurrentKey("Created At", "Run Id");
     Header.SetAscending("Created At", false);
     Header.SetAscending("Run Id", false);
@@ -62,6 +57,8 @@ codeunit 90365 "BCSF Dashboard Data"
       AddExecution(Header."Run Id", Item);
       Payload.Add('selected', Item);
       Payload.Add('steps', DescribeSteps(Header."Run Id"));
+      RunStock := Stock.BuildRunResults(Header."Run Id");
+      Payload.Add('runStock', RunStock);
     end;
     Payload.WriteTo(Result);
     exit(Result);
@@ -94,6 +91,7 @@ codeunit 90365 "BCSF Dashboard Data"
     Manager: Codeunit "BCSF Scenario Manager";
     Validation: Codeunit "BCSF Validation Manager";
     CanStart: Boolean;
+    Severity: Enum "BCSF Validation Severity";
   begin
     Header.Get(RunId);
     CanStart := Header."Process Mode" = "BCSF Process Mode"::SetupAndMasterData;
@@ -106,6 +104,8 @@ codeunit 90365 "BCSF Dashboard Data"
       until TempTarget.Next() = 0;
     Item.Add('canStart', CanStart);
     Item.Add('quality', Validation.Describe(RunId));
+    if Validation.GetSummary(RunId, Severity) then
+      Item.Add('qualityCode', Severity.AsInteger());
     Item.Add('hasExecution', Execution.Get(RunId));
     Item.Add('statusCode', Execution.Status.AsInteger());
     Batch.SetRange("Run Id", RunId);
@@ -138,20 +138,159 @@ codeunit 90365 "BCSF Dashboard Data"
         Item.Add('node', TempMetric."Node Code");
         Item.Add('module', Policy.GetModuleName(TempMetric."Module Code"));
         Item.Add('entity', Policy.GetEntityName(TempMetric."Entity Code"));
+        Item.Add('entityCode', TempMetric."Entity Code");
         Item.Add('target', TempMetric."Planned Units");
         Item.Add('confirmed', TempMetric."Confirmed Units");
         Item.Add('remaining', TempMetric."Remaining Units");
         Item.Add('artifacts', TempMetric."Created Artifacts");
         Item.Add('percent', TempMetric."Progress Percent");
         Item.Add('state', TempMetric.State);
+        Item.Add('complete', (TempMetric."Total Batches" > 0) and
+          (TempMetric."Completed Batches" = TempMetric."Total Batches") and
+          (TempMetric."Confirmed Units" = TempMetric."Planned Units"));
         Item.Add('external', TempMetric."External Check");
         Items.Add(Item);
       until TempMetric.Next() = 0;
     exit(Items);
   end;
 
+  local procedure AddSummary(var Summary: JsonObject; var Views: JsonObject)
+  var
+    Rows: RecordRef;
+    View: JsonObject;
+    MetricKey: Text;
+    MetricKeys: List of [Text];
+    Status: Text;
+    Count: Integer;
+    PageId: Integer;
+    CanOpen: Boolean;
+  begin
+    Clear(Views);
+    MetricKeys.Add('templates');
+    MetricKeys.Add('runs');
+    MetricKeys.Add('active');
+    MetricKeys.Add('review');
+    foreach MetricKey in MetricKeys do begin
+      Clear(View);
+      ReadSummary(MetricKey, Rows, PageId, Count, CanOpen, Status);
+      if Count >= 0 then
+        Summary.Add(MetricKey, Count);
+      View.Add('count', Count);
+      View.Add('canOpen', CanOpen);
+      View.Add('status', Status);
+      Views.Add(MetricKey, View);
+      Rows.Close();
+    end;
+  end;
+
+  procedure OpenSummary(MetricKey: Text; LastViews: JsonObject)
+  var
+    Header: Record "BCSF Run Header";
+    Scenario: Record "BCSF Scenario";
+    Rows: RecordRef;
+    Previous: JsonToken;
+    Value: JsonToken;
+    Status: Text;
+    Count: Integer;
+    PageId: Integer;
+    CanOpen: Boolean;
+  begin
+    if not LastViews.Get(MetricKey, Previous) then
+      Error(SummaryChangedLbl);
+    Previous.AsObject().Get('canOpen', Value);
+    if not Value.AsValue().AsBoolean() then
+      Error(SummaryChangedLbl);
+    ReadSummary(MetricKey, Rows, PageId, Count, CanOpen, Status);
+    Previous.AsObject().Get('count', Value);
+    if not CanOpen or (Count <> Value.AsValue().AsInteger()) then
+      Error(SummaryChangedLbl);
+    if MetricKey = 'templates' then begin
+      Rows.SetTable(Scenario);
+      Page.Run(Page::"BCSF Scenario List", Scenario);
+    end else begin
+      Rows.SetTable(Header);
+      Page.Run(Page::"BCSF Factory Dashboard", Header);
+    end;
+    Rows.Close();
+  end;
+
+  local procedure ReadSummary(MetricKey: Text; var Rows: RecordRef; var PageId: Integer; var Count: Integer; var CanOpen: Boolean; var Status: Text)
+  var
+    Header: Record "BCSF Run Header";
+    Scenario: Record "BCSF Scenario";
+    Execution: Record "BCSF Run Execution";
+    Stock: Codeunit "BCSF Dashboard Stock";
+    Ids: Text;
+    Seen: Integer;
+  begin
+    Count := -1;
+    CanOpen := false;
+    Status := '';
+    if MetricKey = 'templates' then begin
+      Scenario.SecurityFiltering(SecurityFilter::Filtered);
+      Scenario.FilterGroup(10);
+      Scenario.SetRange(Archived, false);
+      Scenario.FilterGroup(0);
+      Rows.GetTable(Scenario);
+      PageId := Page::"BCSF Scenario List";
+    end else begin
+      Header.SecurityFiltering(SecurityFilter::Filtered);
+      Rows.GetTable(Header);
+      PageId := Page::"BCSF Factory Dashboard";
+    end;
+    if not Rows.ReadPermission() or not Stock.CanExecutePage(PageId) then begin
+      Status := NoAccessLbl;
+      exit;
+    end;
+    if MetricKey in ['active', 'review'] then begin
+      Execution.SecurityFiltering(SecurityFilter::Filtered);
+      if not Execution.ReadPermission() then begin
+        Status := NoAccessLbl;
+        exit;
+      end;
+      if MetricKey = 'active' then
+        Execution.SetFilter(Status, '%1|%2|%3|%4', "BCSF Run Status"::Queued, "BCSF Run Status"::Scheduled,
+          "BCSF Run Status"::Running, "BCSF Run Status"::ResumePending)
+      else
+        Execution.SetFilter(Status, '%1|%2', "BCSF Run Status"::Failed, "BCSF Run Status"::ValidationFailed);
+      Count := Execution.Count();
+      // A bounded exact ID filter matches the execution counter to the existing header list.
+      // Above this bound keep the count readable, without an unfiltered substitute action.
+      Execution.SetLoadFields("Run Id");
+      if Execution.FindSet() then
+        repeat
+          Seen += 1;
+          if Seen > 150 then begin
+            Status := SummaryLimitLbl;
+            exit;
+          end;
+          if Ids <> '' then
+            Ids += '|';
+          Ids += Format(Execution."Run Id", 0, 4);
+        until Execution.Next() = 0;
+      if Count = 0 then
+        exit;
+      Header.FilterGroup(10);
+      Header.SetFilter("Run Id", Ids);
+      Header.FilterGroup(0);
+      Rows.GetTable(Header);
+      if Rows.Count() <> Count then begin
+        Status := SummaryUnavailableLbl;
+        exit;
+      end;
+    end else
+      Count := Rows.Count();
+    CanOpen := Count > 0;
+  end;
+
   local procedure AddTexts(var Texts: JsonObject)
   begin
+    Texts.Add('dataTab', DataTabLbl);
+    Texts.Add('runsTab', RunsTabLbl);
+    Texts.Add('selectedRunScope', SelectedRunScopeLbl);
+    Texts.Add('unavailableEntities', UnavailableEntitiesLbl);
+    Texts.Add('created', CreatedLbl);
+    Texts.Add('completed', CompletedLbl);
     Texts.Add('stockTitle', StockTitleLbl);
     Texts.Add('stockMore', StockMoreLbl);
     Texts.Add('stockGenerated', StockGeneratedLbl);
@@ -237,6 +376,16 @@ codeunit 90365 "BCSF Dashboard Data"
   end;
 
   var
+    DataTabLbl: Label 'Data';
+    RunsTabLbl: Label 'Runs';
+    SelectedRunScopeLbl: Label 'Generated in selected run';
+    UnavailableEntitiesLbl: Label 'Entities without a generator';
+    CreatedLbl: Label 'Created';
+    CompletedLbl: Label 'Completed';
+    NoAccessLbl: Label 'No access';
+    SummaryLimitLbl: Label 'List unavailable for more than 150 executions.';
+    SummaryUnavailableLbl: Label 'The execution count cannot be matched to the visible run list.';
+    SummaryChangedLbl: Label 'This count changed or its list is unavailable. Refresh the dashboard.';
     StockTitleLbl: Label 'Data in this company';
     StockMoreLbl: Label 'More modules';
     StockGeneratedLbl: Label 'Generated by Scenario Factory';

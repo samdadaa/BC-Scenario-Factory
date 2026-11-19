@@ -67,3 +67,8 @@ Gespeicherte Summary statt pauschaler Qualitätsauskunft; rungefilterte Ergebnis
 ## SF-037 – Reparaturauftrag 18.11.2026
 
 Zustandsabhängige Hauptaktionen, Diagnosebereich, ursprünglicher Standardfehler mit Paketbezug/sicherem Folgeschritt, exakte Partnernavigation und vollständige persistierte Zustandshistorie ohne xRec-Vergleich. JS-Dynamik lokalisiert. [Aktueller Vertrag](../../../STARTER_TEMPLATES.md), [echte lokale Prüfungen und offene BC-Abnahme](../../../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**.
+
+
+## SF-044 – kompakte Daten- und Laufansicht
+
+Bestehende Objekte 90362, 90365 und 90369 um getrennte Ansichten und direkte Zählernavigation ergänzt. Einheitliches responsives Kachelraster; Live-Herkunftsergebnisse getrennt von bestätigter Arbeit; Summary-Drilldowns mit aktuellem Rechte-/Countvergleich und begrenztem Status-ID-Filter. Kein neuer Generator, keine Tabelle/Seite oder Rechteerhöhung. [Bedienung und Grenzen](../../../DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026), [tatsächliche Prüfungen](../../../TESTS.md#sf-044--kompaktes-dashboard-und-direkte-kennzahlen). **Zur Prüfung**, BC-Abnahme offen.

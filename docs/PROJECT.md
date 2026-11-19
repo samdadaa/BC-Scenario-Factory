@@ -138,3 +138,8 @@ Grundlage ist der aktuelle Workspace einschließlich bereits vorhandener Starter
 ## SF-038 / SF-039 – aktueller Bestand
 
 Manifest unverändert 1.0.1.0, Application 28, Runtime 17. Aktuell 131 AL-Dateien; neue interne DataGeneration-Codeunits 90257/90258. Finance-Paketneuanlage 2.0.0, neue Partnerregel-/Setupversion 2; historische Versionen bleiben erhalten. [Vertrag und Grenzen](STABILIZATION_FINANCE_PARTNERS.md). Status **Zur Prüfung**, kein Deployment oder BC-Abnahmenachweis.
+
+
+## SF-044 – kompakter Arbeitsplatz, 19.11.2026
+
+Verifizierter Ausgangs-/Endbestand: 121 AL-Dateien, davon 19 unter Monitoring. Keine neuen AL-Objekte, Tabellen oder Felder. App-ID, Publisher, Version 1.0.4.0, Application 28.0.0.0, Runtime 17, ID-Bereich 90100–90999 und Dependencies [] unverändert. Daten-/Laufreiter, Kachelraster und sichere Zählernavigation im bestehenden Dashboard ergänzt. [Bedienung und offene BC-Abnahme](DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026), [lokale Prüfungen](TESTS.md#sf-044--kompaktes-dashboard-und-direkte-kennzahlen). **Zur Prüfung**.
