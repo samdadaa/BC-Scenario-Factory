@@ -52,3 +52,7 @@ Vorhandene Objekte liegen in Codeunits/ und EnumExtensions/; der Modulmarker ble
 ## SF-039
 
 Customer Generator unterstützt neue Regel-/Setupversion 2, optional validierte Einstellungen und registrierte Lieferadressen für B2B. [Vertrag](../../../STABILIZATION_FINANCE_PARTNERS.md). **Zur Prüfung**.
+
+## SF-018 – Nachprüfung 19.11.2026
+
+In 90425 Customer Generator wird die zusätzliche Lieferadress-Rechteprüfung bei Partner-Setupversion 2 auf `B2C Percent < 100` begrenzt. Reine Privatkundenläufe erzeugen keine Lieferadresse und benötigen diese zusätzliche App-Vorprüfung deshalb nicht. B2B-/Mischläufe prüfen weiter vor Start, der Adresswriter erneut vor Anlage. Snapshot-/Generatorversion, Standardvalidierung, Herkunft und Schema unverändert. [Prüfnachweis und ausstehende BC-Rechtefälle](../../../TESTS.md#sf-018--nachprüfung-und-privatkunden-vorprüfung-19112026). **Zur Prüfung**.

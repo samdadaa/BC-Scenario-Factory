@@ -89,6 +89,7 @@ Diese Anweisungen sind **eigenständig formulierte, projektsichere Ableitungen**
 - Den Implementierungsstand je Modul anhand des Quellcodes prüfen. Vorhanden sind ausführbare Partnergeneratoren. Planungsvorlagen ohne registrierten ausführbaren Generator bleiben nicht ausführbar.
 - Bei Entwurfs-/Dokumentationsaufträgen darf die ausdrücklich beauftragte Dokumentationsänderung erfolgen. Für Implementierung weiterhin genau ein gewähltes Ticket.
 - Zusätzliche Pflichtlektüre bei passenden Tickets: `docs/REQUIREMENTS.md`, `docs/SCENARIOS.md`, `docs/DATA_MODEL.md`, `docs/BACKGROUND_PROCESSING.md`, `docs/UI_WORKFLOWS.md`, `docs/DECISIONS.md`.
+- Für neue oder geänderte Generatoren gilt die [Generator-Qualitätscheckliste aus SF-042](docs/ARCHITECTURE.md#generator-qualitätscheckliste-sf-042) als Vorbedingung und Abnahmeumfang. Modulnachweise und echte Prüfungen gemäß [Testvertrag](docs/TESTS.md#sf-042--prüfumfang-je-generator) dokumentieren. Fehlende Abdeckung konkret eingrenzen oder dem bestehenden Folgeticket zuordnen; eine Planungsvorlage ist keine ausführbare Funktion.
 
 
 ## Bedienvertrag ab 1.0.2.0

@@ -46,10 +46,13 @@ codeunit 90425 "BCSF Customer Generator" implements "BCSF Generator"
     Rules: Codeunit "BCSF Partner Rules";
     Children: Codeunit "BCSF Partner Children";
     Contract: Codeunit "BCSF Contract JSON";
+    Settings: JsonObject;
   begin
     Rules.CheckTarget(Context, Target, 'CUSTOMER', 'SALES');
     Rules.CheckSetup(Context, 'CUSTOMER');
-    if Contract.GetInteger(Rules.ReadSettings(Context), 'version') = 2 then
+    Settings := Rules.ReadSettings(Context);
+    // Only business customers receive an additional delivery address.
+    if (Contract.GetInteger(Settings, 'version') = 2) and (Contract.GetInteger(Settings, 'b2cPercent') < 100) then
       Children.CheckPermissions(true);
     Partner.SecurityFiltering(SecurityFilter::Disallowed);
     if not Partner.ReadPermission() or not Partner.WritePermission() then

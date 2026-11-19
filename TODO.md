@@ -34,7 +34,7 @@ P0-Reihenfolge: [SF-038](#sf-038) Finanzsetup → [SF-039](#sf-039) Partnerdaten
 | [SF-039](#sf-039) | Stabilisierung | P0 | Realistische Geschäftspartner und nutzbare Partnerstammdaten | Zur Prüfung |
 | [SF-040](#sf-040) | Stabilisierung | P0 | Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten | Zur Prüfung |
 | [SF-041](#sf-041) | Stabilisierung | P0 | Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns | Zur Prüfung |
-| [SF-042](#sf-042) | Stabilisierung | P0 | Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben | Offen |
+| [SF-042](#sf-042) | Stabilisierung | P0 | Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben | Zur Prüfung |
 | [SF-044](#sf-044) | Bedienung | P1 | Dashboard kompakt gestalten und Kennzahlen direkt nutzbar machen | Zur Prüfung |
 | [SF-043](#sf-043) | Stabilisierung | P0 | Mandant einmalig initialisieren und Vorlagenstart vereinfachen | Zur Prüfung |
 | [SF-001](#sf-001) | 0 / Fundierung | P0 | Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen | Blockiert |
@@ -822,6 +822,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Verantwortliche Person:** Zu prüfen
 
 **Nutzerstand / Korrektur:** Partnergeneratoren wurden laut Nutzer umgesetzt und haben Geschäftspartner angelegt. Der Backlog hält deshalb „Zur Prüfung“ fest. Die sichtbaren Platzhalter und noch nicht nachgewiesenen Partnerbeziehungen werden in [SF-039](#sf-039) korrigiert und nachgetestet. Keine Abnahme abgeleitet.
+
+**Nachprüfung 19.11.2026:** Bestehende Generatoren, Setup-/Seed-/Herkunftsvertrag und SF-039-Ergänzungen mit XERJ und aktuellen Dateien geprüft. Keine erneute Implementierung des Partnerpfads. Kleine belegte Vereinfachung: Der Debitoren-Preflight verlangt die zusätzliche Lieferadressberechtigung bei Partner-Setupversion 2 nur noch bei möglichem B2B-Anteil (`b2cPercent < 100`). Reine Privatkunden erzeugen keine zusätzliche Lieferadresse. B2B-/Mischlauf, Kreditoren-Bestelladresse und alle tatsächlichen Standard-Schreibprüfungen bleiben geschützt. Eine zunächst vermutete fehlende frühe Länderprüfung ist bereits vorhanden und wurde nicht geändert. [Umfang, echte Prüfungen und offene BC-Abnahme](docs/TESTS.md#sf-018--nachprüfung-und-privatkunden-vorprüfung-19112026). Status weiterhin **Zur Prüfung**, keine menschliche Abnahme oder Freigabe weiterer Tickets.
 
 **Ausgangslage / Problem:** B2B/B2C, Regionen, Zahlungsziele, Kreditlimits, Lieferantenklassen und Beziehungen plausibel und synthetisch anlegen.
 
@@ -1724,7 +1726,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-042 — Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-037, SF-038, SF-039, SF-040, SF-041, SF-043  
 **Verantwortung / betroffene Module:** ScenarioManagement, Monitoring, BackgroundProcessing, Validation, Finance, Querschnitt  
@@ -1734,13 +1736,17 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Den vorhandenen Kernpfad stabilisieren und in einer frischen Sandbox abnehmen. Klarer Bedienweg: Vorlage auswählen → Voraussetzungen prüfen und bei Bedarf passende Einrichtung anbieten → Lauf im Hintergrund starten → Status ansehen → Daten öffnen. Erweiterte Einrichtung, Pakete, Checkpoints und technische Fehlerdetails bleiben erreichbar, stehen aber nicht im Standardpfad.
 
+**Prüfauftrag und Ergebnis 19.11.2026:** Nutzer beauftragt zuerst Soll-Ist-Prüfung mit XERJ; nur Verbesserungen übernehmen, die eine einfache, freundliche App unterstützen. Direkter Start mit einmaliger Mandanteneinrichtung, statusbezogene Hauptaktionen, eingeklappte Dashboarddiagnose, Queue-/Checkpointschutz und Standardlistenrouten sind bereits vorhanden. Deshalb keine zusätzliche UI oder neue Ausführungslogik. Veraltete Einsteigeranleitung auf den heutigen Weg korrigiert und Generatorregeln zentral in Architektur, AGENTS, Test- und Modulindex verlinkt. Betroffene Dateien, Risiken, Quellen und echte Prüfungen: [SF-042-Prüfbericht](docs/TESTS.md#sf-042--soll-ist-prüfung-des-partnerpfads). App-Version, Schema und Laufdaten unverändert.
+
+**Abnahmegrenze:** Lokal bestehen Dashboard-/Stock-, Partnerkatalog- und Übersetzungsprüfungen. Keine reale BC-Abnahme, kein neuer AL-Build und keine P0-Ausbau-Freigabe. Die native Laufkarte zählt weiterhin Herkunftseinträge; nach Löschung/Sichtbeschränkung kann ihre Partnerliste weniger Datensätze enthalten. Diesen Unterschied zu den Dashboard-Livezählern in der Bedienabnahme bewerten. Alle folgenden Sandbox-Akzeptanzkriterien bleiben offen; `Zur Prüfung` bezeichnet die vorliegende Bestandsprüfung und Dokumentationsverbesserung.
+
 **Vorgehen (einzeln abzuarbeiten):**
 
 - [ ] Standardweg mit wenigen eindeutigen Hauptaktionen prüfen und vereinfachen. Je Status die sinnvolle nächste Aktion prominent anbieten. Fehlertext nennt betroffene Entität, Ursache und mögliche nächste Aktion. Keine automatische Wiederholung eines ungeklärten Pakets. Vorlage und Daten bleiben nachvollziehbar verknüpft.
 - [ ] Ende-zu-Ende-Prüfung mit BC-Version, Lokalisierung, Umgebung, Rolle, Seed, Vorlage, erwartetem und tatsächlich erreichtem Ergebnis dokumentieren. Den realen Hintergrundlauf einschließlich mehrerer Pakete und Schließen der Sitzung nach Start prüfen. Die tatsächlich erzeugten Daten über den Dashboard-Drilldown im BC-Standard öffnen.
 - [ ] Regression von Startervorlagen, Sammeltransfer, Lösch-/Archivregeln und DE/EN anhand SF-037 prüfen. Beispieldaten dürfen bei korrekter deutscher UI weiterhin der bewusst gewählten Datensprache folgen.
-- [ ] Verbindliche Generatorregeln in `AGENTS.md` verlinken und an bestehender Stelle in Architektur-/Test-/Moduldokumentation festhalten. Mindestens Datenrealismus, Setup-/Stammreihenfolge, BC-Standardvalidierung und -buchung, Herkunft/Idempotenz, Modulstatistik und Drilldown, Sprachtrennung sowie die Nachweise je Modul dokumentieren. Kurze Einsteiger-Testanleitung unter dem bestehenden Testpfad nachführen.
-- [ ] Bei künftigen Tickets die Qualitätscheckliste als Vorbedingung und Abnahme übernehmen. Bei fehlender Generator- oder Setupabdeckung ein Folgeticket verlinken oder den Umfang konkret eingrenzen, nicht stillschweigend umgehen.
+- [x] Verbindliche Generatorregeln in `AGENTS.md` verlinken und an bestehender Stelle in Architektur-/Test-/Moduldokumentation festhalten. Mindestens Datenrealismus, Setup-/Stammreihenfolge, BC-Standardvalidierung und -buchung, Herkunft/Idempotenz, Modulstatistik und Drilldown, Sprachtrennung sowie die Nachweise je Modul dokumentieren. Kurze Einsteiger-Testanleitung unter dem bestehenden Testpfad nachführen.
+- [x] Bei künftigen Tickets die Qualitätscheckliste als Vorbedingung und Abnahme übernehmen. Bei fehlender Generator- oder Setupabdeckung ein Folgeticket verlinken oder den Umfang konkret eingrenzen, nicht stillschweigend umgehen. Verbindlich über AGENTS-/Modulverweis; tatsächliche Anwendung und Abnahme erfolgen erst im jeweiligen ausdrücklich beauftragten Ticket.
 
 **Akzeptanzkriterien:**
 

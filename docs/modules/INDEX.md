@@ -1,5 +1,7 @@
 # Modulindex – Zielarchitektur
 
+Für neue oder geänderte Generatoren gelten die [SF-042-Qualitätsregeln](../ARCHITECTURE.md#generator-qualitätscheckliste-sf-042) und der [Prüfumfang je Modul](../TESTS.md#sf-042--prüfumfang-je-generator). In der jeweiligen Moduldatei unterstützte Entitäten/Modi, konkrete Setup-/Stammvorgänger, Herkunft, Statistikroute und echte Soll-/Ist-Nachweise festhalten. Nicht unterstützte Fälle mit bestehendem Ticket und Grenze benennen. [Aktueller Partnerpfad und offene Abnahme](../TESTS.md#sf-042--soll-ist-prüfung-des-partnerpfads).
+
 **Aktueller Bestand SF-018, 18.11.2026:** 121 AL-Dateien in 14 Modulen; zehn Module ohne AL-Code. Zwei echte Partnerstammdatengeneratoren, Qualitätsabschluss und Finanztestpakete zur Prüfung; BC-Laufzeitabnahme weiterhin offen. [Partnervertrag](../PARTNER_GENERATION.md).
 
 | Modul | Kategorie | Ziel | Status |

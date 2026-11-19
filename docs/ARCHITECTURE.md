@@ -80,6 +80,20 @@ Finanz-Grundsetup (Buchungsgruppen, Nummernserien, Steuer-/MWSt.-Kontext, Zahlun
 
 Neue Industrieprofile konfigurieren die vorhandenen Fachgeneratoren. Weitere ISV-/Branchen-Generatoren können **erst nach festgelegtem Interfacevertrag** registriert werden. Nicht jedes Standard-BC-Modul ist in jeder Lizenz/Lokalisierung vorhanden; Features zur Laufzeit geprüft. XERJ/Codex sind Entwicklungswerkzeuge außerhalb von BC und **nicht Bestandteil** der Extension.
 
+## Generator-Qualitätscheckliste (SF-042)
+
+Diese Regeln konkretisieren den bestehenden Produktvertrag für jedes neue oder geänderte Generator-Ticket. Vor Umsetzung unterstützte Entitäten, Modi, Einrichtung und Grenzen im Ticket und zugehörigen Modul festhalten; nach Umsetzung die tatsächlichen Nachweise ergänzen.
+
+1. **Datenrealismus:** Natürliche, vielfältige synthetische Fachwerte und plausible Beziehungen. Keine Test-/Demo-/Muster-Präfixe oder Zählersuffixe in Fachfeldern; Herkunft über die Registry. Keine echten Kommunikations- oder Zahlungsdaten.
+2. **Voraussetzungen:** Gemeinsame Basis einmal über die Mandanteneinrichtung vorbereiten. Referenzierte Einrichtung und Vorgängerstämme vor der ersten abhängigen Anlage sowie im Hintergrund erneut prüfen. Passende vorhandene Einrichtung nutzen; keine Dummy-Konten oder stillen Überschreibungen. Maßgeblich ist die [Stammdatenmatrix](MASTER_DATA_READINESS.md#modul--und-entitätsmatrix).
+3. **BC-Standard:** Feldvalidierungen und Standardanlage verwenden; Belege und Posten ausschließlich über die passenden Standardprozesse buchen. Fehlende Generator-, Rechte- oder Setupabdeckung blockiert den betreffenden Umfang.
+4. **Herkunft und Wiederanlauf:** Lauf/Snapshot, logische Schlüssel, SystemIds und Elternbeziehungen nachvollziehbar halten. Fachliche Anlage, Herkunft und Paketabschluss teilen die vorgesehene Transaktion. Bestätigte Arbeit nicht wiederholen; unklare Arbeit bleibt ohne gesicherten Nachweis gesperrt. [Recovery-Vertrag](RECOVERY.md).
+5. **Statistik und Datenzugriff:** Jede neue Entität mit verständlicher Bezeichnung, Zählquelle und passendem berechtigtem Standardlisten-Drilldown berücksichtigen. Ziel, bestätigte Arbeit und heute sichtbarer Datenbestand getrennt halten. Filtergrenzen und fehlende Listen offen benennen. [Dashboard-Vertrag](DASHBOARD_DATA_STOCK.md).
+6. **Sprache:** Oberfläche folgt der BC-Sitzung; erzeugte Fachwerte folgen der eingefrorenen Datensprache und Regelversion. Vorhandene Daten werden bei Sprachwechsel nicht umgeschrieben.
+7. **Nachweis:** Je Modul fachlicher Sandbox-Erfolgsfall, passender Negativ-/Wiederanlauffall und Dashboard-Drilldown. Umgebung, Eingaben, Soll/Ist und Grenzen gemäß [Testvertrag](TESTS.md#sf-042--prüfumfang-je-generator) dokumentieren. Lokale Tests ersetzen diese Abnahme nicht.
+
+Aktuell sind Customer und Vendor mit ihren Liefer-/Bestelladressen ausführbar. Artikel (SF-019), Einkauf (SF-020), Verkauf (SF-021), Zahlungen (SF-022) und weitere Fachgeneratoren bleiben eigene Tickets. Ihr Beginn setzt die menschliche P0-Freigabe aus SF-042 voraus.
+
 ## Konkretisierung durch SF-002 (11.11.2026)
 
 [OBJECT_PLAN.md](OBJECT_PLAN.md) definiert geplante Objektzuständigkeiten, Namen, IDs und erlaubte direkte Codeabhängigkeiten. Dieser Graph ersetzt die früheren allgemeinen Code-Abhängigkeitsannahmen in den Modulskeletten. Fachliche Reihenfolgen bleiben davon getrennte Laufplanregeln. Core ist unabhängig; Generatoren implementieren den Vertrag aus ModuleRegistry. Run Header/Run Step/Snapshot gehören ScenarioManagement, Batches BackgroundProcessing, Herkunft DataGeneration, Validierungsbefunde Validation. Monitoring liest Ausführungsstände, Ausführung referenziert Monitoring nicht. Tabellen und Pages sind weiterhin nicht implementiert; der Plan legt noch keine BC-APIs oder Commit-Garantien fest.

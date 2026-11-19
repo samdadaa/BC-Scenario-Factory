@@ -2,6 +2,14 @@
 
 **Aktueller Stand ab 1.0.2.0:** Der reale Bedienweg ist in [Mandanteneinrichtung und Vorlagenstart](COMPANY_INITIALIZATION.md) beschrieben. Ältere Angaben zu Finanzauswahl je Vorlage, Vorschaufenster, Wizard, parallelen Lauflisten und Dashboard-Host sind historische Nachweise. Entfernte Objekt-IDs bleiben unbenutzt.
 
+## Nachprüfung SF-018 – 19.11.2026
+
+Die vorhandenen Customer-/Vendor-Generatoren decken die Partnerziele aus SF-018 bereits ab. Aktuelle neue Snapshots verwenden die natürlichen Werte und Adressbeziehungen aus SF-039; alte Version-1-Snapshots bleiben unverändert. Der normale Einstieg ist **Mandant einmal initialisieren → Partnervorlage → Vorlage ausführen → Status → Daten öffnen**. Es entstehen keine zusätzlichen Dialoge.
+
+Kleine Korrektur am Debitoren-Preflight: Bei `partnerSetup` Version 2 verlangt die App Rechte für zusätzliche Lieferadressen nur, wenn `b2cPercent < 100` ist. Bei 100 % Privatkunden erzeugt dieser Generator keine zusätzliche Lieferadresse; die bisherige pauschale Lieferadressprüfung konnte daher unnötig blockieren. Für gemischte/B2B-Läufe bleibt sie vor Start aktiv, ebenso die erneute Prüfung bei tatsächlicher Adressanlage. Kreditoren mit Bestelladresse, Standard-Partnerrechte, CRM-/Dimensionsprüfungen und Sicherheitsguards bleiben unverändert. Es werden keine Rechte vergeben. [Tatsächliche Prüfungen und offene BC-Fälle](TESTS.md#sf-018--nachprüfung-und-privatkunden-vorprüfung-19112026).
+
+Die folgenden Abschnitte dokumentieren den ursprünglichen Vertrag vom 18.11.2026; aktuelle Version-2-Ergänzungen stehen unter SF-039 und im vorstehenden Nachtrag.
+
 ## Arbeitsplan vor Änderungen – 18.11.2026
 
 Nur SF-018 ist beauftragt. Ausgangsbestand 116 AL-Dateien, keine schreibenden Debitoren-/Kreditorengeneratoren. Manifest: App-ID 618c08c6-601b-430a-90d2-55f96866bfa4, Version 1.0.0.0, Runtime 17, Application 28.0, IDs 90100–90999, Dependencies []; Publisher unverändert Default Publisher. Lokale Vergleichssymbole BC 28.5/DE, keine bestätigte Sandbox-Laufzeit.
