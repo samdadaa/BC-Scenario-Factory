@@ -1,5 +1,7 @@
 # SF-038 / SF-039 – Finanzeinrichtung und Partnerdaten
 
+**Aktueller Stand ab 1.0.2.0:** Der reale Bedienweg ist in [Mandanteneinrichtung und Vorlagenstart](COMPANY_INITIALIZATION.md) beschrieben. Ältere Angaben zu Finanzauswahl je Vorlage, Vorschaufenster, Wizard, parallelen Lauflisten und Dashboard-Host sind historische Nachweise. Entfernte Objekt-IDs bleiben unbenutzt.
+
 Stand: 18.11.2026. Beide Tickets ausdrücklich gemeinsam beauftragt, Reihenfolge Finance → Partner. Status **Zur Prüfung**, keine fachliche Abnahme. Maßgeblich ist der aktuelle Workspace einschließlich der zuvor vorhandenen JSON-/Queue-/Übersetzungsfixes. Keine Änderungen an SF-040 bis SF-042.
 
 ## Ziel, Eingriffe und Grenzen
@@ -63,3 +65,17 @@ Optionale vorhandene Währung, Zahlungsform und Werte der beiden globalen Dimens
 ## Reale Prüfung und offene Abnahme
 
 Lokale Prüfungen und Paketnachweis stehen in [TESTS.md](TESTS.md); ausführbare Schritte und Sollbeträge in der [Testanleitung](review/TESTANLEITUNG.md). Ein Build oder Katalogcheck ersetzt keine BC-Standardvalidierung, keine Buchung und keinen Scheduler-Test. Nicht ausgeführt: zwei frische Firmen SKR03/SKR04, idempotente Anwendung, vorhandene Einrichtung, Standardbuchungen/Bilanz/GuV, DE 50/50 und EN, Belegübernahme, Kinddatensatz-/Rechte-/Rollback-/Recoveryfälle und firmengrenzender Sammeltransfer. Keine angebundene BC-Sandboxsteuerung verfügbar; installierter Paketstand bleibt zu prüfen.
+
+
+## SF-038 – Nachprüfung der gesperrten Anwendung, 19.11.2026
+
+Nutzer meldet deaktiviertes „Testpaket anwenden“ für SKR03/SKR04. Der Screenshot allein zeigt lediglich nicht blockierte Neuanlagen am Listenende; anschließend bestätigt der Nutzer „Erforderliche Standard-Lese- oder Schreibberechtigung fehlt.“ als Befund. Keine Sandbox-Reproduktion; die individuellen Benutzer-/Lizenzrechte sind nicht einsehbar.
+
+Arbeitsziel: Freigabegrund im vorhandenen Vorschauvertrag sichtbar machen, Blocker zuerst und mit Filter anzeigen, Paketaktion prominent anbieten. Betroffen: Finance Preview, temporärer Setup Diff-Sortierschlüssel, Übersetzungen und Testanleitung. Risiken: temporäre Filter dürfen die erneute serverseitige Prüfung nicht begrenzen; Apply-/Sandbox-/Buchungs-/Rechtesperren bleiben verbindlich. Testweg: vollständiger AL-/Analyzerbuild, frische Compiler-IDs und alle Zielübersetzungen, Paketabgleich. Die konkrete Sandboxursache bleibt bis zum Befundtext bzw. einer freigegebenen Reproduktion offen.
+
+
+**Belegter Codefehler:** `NeedsInsert` verlangte `RecordRef.WritePermission()` für neue Einrichtungsdatensätze, `SetupRow` ebenso für neue oder ergänzte Einrichtungszeilen. Diese Standardmethode umfasst Insert, Modify **und Delete**, obwohl der jeweilige Pfad lediglich Insert bzw. Modify benötigt. Damit werden Anwender ohne vollständige Löschrechte unnötig ausgeschlossen. Quelle: [Microsoft: WritePermission](https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/methods-auto/recordref/recordref-writepermission-method). Ob bei diesem Benutzer zusätzlich tatsächliche Insert-/Modify- oder Lizenzrechte fehlen, bleibt offen; der gemeldete Text allein trennt dies nicht.
+
+**Korrektur:** Finance prüft zuerst die bisherige volle Plattformberechtigung. Wenn diese fehlt, werden für die konkrete Operation die direkten wirksamen Benutzerrechte in der aktuellen Firma über die öffentliche Standard-API `User Permissions.GetEffectivePermission` sowie die entsprechenden direkten Lizenzrechte aus `License Permission` geprüft. Lesen bleibt zusätzlich über den tatsächlichen RecordRef und SecurityFiltering::Disallowed erforderlich. Indirekte Rechte werden dabei nicht als direkte Freigabe akzeptiert. Es werden weder Rechte vergeben noch Codeunit-Permissions auf Standardtabellen erhöht. Die tatsächlichen Standard-Inserts/Modifies und ihre Plattform-/Security-Filter-/Entitlementprüfungen bleiben unverändert; Fehler verwerfen die Anwendung. Siehe [Standard-API](https://learn.microsoft.com/en-us/dynamics365/business-central/application/system-application/codeunit/system.security.user.user-permissions) und [Lizenzmetadaten](https://learn.microsoft.com/en-us/dynamics365/business-central/application/system/table/system.security.accesscontrol.license-permission).
+
+**Bedienung:** Die Vorschau zeigt Rahmen, Blockerzahl, nächsten Schritt und den ersten tatsächlichen Blocker samt Maßnahme. Blocker werden zuerst sortiert und können isoliert gefiltert werden. Anwenden und Befundfilter sind hervorgehoben. Ein Filter auf der temporären Liste begrenzt nicht die frische vollständige Prüfung in `Apply`. „Vorhandene Einrichtung verwenden“ bleibt eine reine Prüfung; in einer leeren Firma erzeugt dieser Modus erwartungsgemäß nichts. Produktions-Einrichtungsdaten sind damit keine fachliche Voraussetzung des SKR-Pakets, aber die notwendigen Standard-Anlagerechte müssen vorhanden sein.

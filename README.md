@@ -1,5 +1,7 @@
 # BC Scenario Factory
 
+**Aktueller Einstieg ab 1.0.2.0:** Einrichtung öffnen, Mandant einmal mit SKR03/SKR04 oder vorhandener BC-Einrichtung initialisieren, danach eine Vorlage direkt in der Job Queue starten. [Mandanteneinrichtung und Vorlagenstart](docs/COMPANY_INITIALIZATION.md). Die nachfolgenden Ticketvermerke sind historische Zwischenstände.
+
 **Status: Grundlagen bis Qualitätsabschluss und Finanztestpaketen (SF-003–SF-017) sowie Partnerstammdaten (SF-018) implementiert, zur Prüfung; weitere Fachgeneratoren und BC-End-to-End-Abnahme ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
 
 ## Zielgruppen und Nutzen

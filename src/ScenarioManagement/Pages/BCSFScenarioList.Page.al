@@ -1,6 +1,7 @@
 namespace BCScenarioFactory.ScenarioManagement;
 
 using BCScenarioFactory.Core;
+using BCScenarioFactory.Monitoring;
 
 page 90133 "BCSF Scenario List"
 {
@@ -92,34 +93,6 @@ page 90133 "BCSF Scenario List"
           CurrPage.Update(false);
         end;
       }
-      action(NewGuidedScenario)
-      {
-        ApplicationArea = All;
-        Caption = 'New Guided Scenario';
-        ToolTip = 'Creates a template explicitly and opens guided planning. Saved edits remain when the wizard closes.';
-        Image = New;
-        trigger OnAction()
-        var
-          Scenario: Record "BCSF Scenario";
-          Manager: Codeunit "BCSF Scenario Manager";
-        begin
-          Scenario.Get(Manager.CreateScenario());
-          Page.Run(Page::"BCSF Scenario Wizard", Scenario);
-        end;
-      }
-      action(GuidedPlanning)
-      {
-        ApplicationArea = All;
-        Caption = 'Plan with Wizard';
-        ToolTip = 'Opens five guided steps on this saved template. Edits persist; closing does not schedule execution.';
-        Image = Planning;
-        trigger OnAction()
-        begin
-          CurrPage.SaveRecord();
-          Page.Run(Page::"BCSF Scenario Wizard", Rec);
-        end;
-      }
-
       action(CreateScenario)
       {
         ApplicationArea = All;
@@ -157,7 +130,7 @@ page 90133 "BCSF Scenario List"
         Caption = 'Captured Runs';
         ToolTip = 'Opens the captured configuration history.';
         Image = History;
-        RunObject = page "BCSF Run List";
+        RunObject = page "BCSF Factory Dashboard";
         RunPageLink = "Scenario Id" = field("Scenario Id");
       }
     }

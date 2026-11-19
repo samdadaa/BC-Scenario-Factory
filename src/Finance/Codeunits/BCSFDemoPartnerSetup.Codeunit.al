@@ -8,6 +8,8 @@ using Microsoft.Foundation.Address;
 using Microsoft.Foundation.AuditCodes;
 using Microsoft.Foundation.NoSeries;
 using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Foundation.UOM;
+using Microsoft.Bank.BankAccount;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
 using Microsoft.Purchases.Setup;
@@ -19,9 +21,8 @@ codeunit 90408 "BCSF Demo Partner Setup"
 
   /// <summary>Foundation of the explicitly reviewed finance package. Never creates substitute G/L accounts.</summary>
   [CommitBehavior(CommitBehavior::Error)]
-  procedure Prepare(EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  procedure Prepare(EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; Initializing: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
   var
-    GL: Record "General Ledger Setup";
     Sales: Record "Sales & Receivables Setup";
     Purchases: Record "Purchases & Payables Setup";
     Inventory: Record "Inventory Setup";
@@ -29,27 +30,27 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Marketing: Record "Marketing Setup";
     Country: Record "Country/Region";
     Journal: Record "Gen. Journal Template";
+    JournalBatch: Record "Gen. Journal Batch";
+    Measure: Record "Unit of Measure";
+    Payment: Record "Payment Method";
     SourceSetup: Record "Source Code Setup";
     Packages: Codeunit "BCSF Finance Package Mgt";
     Manager: Codeunit "BCSF Setup Manager";
     Fields: List of [Integer];
   begin
-    GL.Init();
-    GL."Amount Rounding Precision" := 0.01;
-    GL."LCY Code" := 'EUR';
-    if Packages.NeedsInsert(GL, Fields, Write, AllowCreate, TempDiff) then
-      GL.Insert(true);
-    GL.SecurityFiltering(SecurityFilter::Disallowed);
-    if GL.Get() then
-      if (GL."Amount Rounding Precision" <= 0) or (GL."LCY Code" = '') or
-        ((GL."Allow Posting From" <> 0D) and (EffectiveDate < GL."Allow Posting From")) or
-        ((GL."Allow Posting To" <> 0D) and (EffectiveDate > GL."Allow Posting To")) then
-        Block(GL.TableCaption(), Write, TempDiff);
+    PrepareLedger(EffectiveDate, Write, AllowCreate, TempDiff);
     Country.Init();
     Country.Code := 'DE';
     Country.Name := GermanyLbl;
     if Packages.NeedsInsert(Country, Fields, Write, AllowCreate, TempDiff) then
       Country.Insert(true);
+    if Initializing then begin
+      Country.Init();
+      Country.Code := 'GB';
+      Country.Name := 'Vereinigtes Königreich';
+      if Packages.NeedsInsert(Country, Fields, Write, AllowCreate, TempDiff) then
+        Country.Insert(true);
+    end;
     Marketing.Init();
     if Packages.NeedsInsert(Marketing, Fields, Write, AllowCreate, TempDiff) then
       Marketing.Insert(true);
@@ -62,6 +63,22 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Fields.Add(Sales.FieldNo("Invoice Nos."));
     Fields.Add(Sales.FieldNo("Posted Invoice Nos."));
     Fields.Add(Sales.FieldNo("Posted Shipment Nos."));
+    if Initializing then begin
+      Sales."Quote Nos." := 'SALES-QUO';
+      Sales."Order Nos." := 'SALES-ORD';
+      Sales."Blanket Order Nos." := 'SALES-BLK';
+      Sales."Credit Memo Nos." := 'SALES-CM';
+      Sales."Posted Credit Memo Nos." := 'SALES-PCM';
+      Sales."Return Order Nos." := 'SALES-RET';
+      Sales."Posted Return Receipt Nos." := 'SALES-PRR';
+      Fields.Add(Sales.FieldNo("Quote Nos."));
+      Fields.Add(Sales.FieldNo("Order Nos."));
+      Fields.Add(Sales.FieldNo("Blanket Order Nos."));
+      Fields.Add(Sales.FieldNo("Credit Memo Nos."));
+      Fields.Add(Sales.FieldNo("Posted Credit Memo Nos."));
+      Fields.Add(Sales.FieldNo("Return Order Nos."));
+      Fields.Add(Sales.FieldNo("Posted Return Receipt Nos."));
+    end;
     SetupRow(Sales, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
     Sales.SecurityFiltering(SecurityFilter::Disallowed);
     if Sales.Get() then
@@ -77,6 +94,22 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Fields.Add(Purchases.FieldNo("Invoice Nos."));
     Fields.Add(Purchases.FieldNo("Posted Invoice Nos."));
     Fields.Add(Purchases.FieldNo("Posted Receipt Nos."));
+    if Initializing then begin
+      Purchases."Quote Nos." := 'PURCH-QUO';
+      Purchases."Order Nos." := 'PURCH-ORD';
+      Purchases."Blanket Order Nos." := 'PURCH-BLK';
+      Purchases."Credit Memo Nos." := 'PURCH-CM';
+      Purchases."Posted Credit Memo Nos." := 'PURCH-PCM';
+      Purchases."Return Order Nos." := 'PURCH-RET';
+      Purchases."Posted Return Shpt. Nos." := 'PURCH-PRS';
+      Fields.Add(Purchases.FieldNo("Quote Nos."));
+      Fields.Add(Purchases.FieldNo("Order Nos."));
+      Fields.Add(Purchases.FieldNo("Blanket Order Nos."));
+      Fields.Add(Purchases.FieldNo("Credit Memo Nos."));
+      Fields.Add(Purchases.FieldNo("Posted Credit Memo Nos."));
+      Fields.Add(Purchases.FieldNo("Return Order Nos."));
+      Fields.Add(Purchases.FieldNo("Posted Return Shpt. Nos."));
+    end;
     SetupRow(Purchases, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
     Purchases.SecurityFiltering(SecurityFilter::Disallowed);
     if Purchases.Get() then
@@ -89,12 +122,40 @@ codeunit 90408 "BCSF Demo Partner Setup"
     SetupRow(Inventory, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
     Inventory.SecurityFiltering(SecurityFilter::Disallowed);
     Location.SecurityFiltering(SecurityFilter::Disallowed);
-    if Inventory.Get() then
-      if Inventory."Location Mandatory" then begin
-        Location.SetRange("Use As In-Transit", false);
-        if Location.IsEmpty() then
-          Block(Location.TableCaption(), Write, TempDiff);
-      end;
+    Location.SetRange("Use As In-Transit", false);
+    if Location.IsEmpty() then
+      if Initializing then begin
+        Location.Reset();
+        Location.Init();
+        Location.Code := 'MAIN';
+        Location.Name := 'Hauptlager';
+        Clear(Fields);
+        Fields.Add(Location.FieldNo("Use As In-Transit"));
+        if Packages.NeedsInsert(Location, Fields, Write, AllowCreate, TempDiff) then
+          Location.Insert(true);
+      end else
+        if Inventory.Get() then
+          if Inventory."Location Mandatory" then
+            Block(Location.TableCaption(), Write, TempDiff);
+    if Initializing then begin
+      Clear(Fields);
+      Measure.Init();
+      Measure.Code := 'STK';
+      Measure.Description := 'Stück';
+      if Packages.NeedsInsert(Measure, Fields, Write, AllowCreate, TempDiff) then
+        Measure.Insert(true);
+      Clear(Measure);
+      Measure.Init();
+      Measure.Code := 'STD';
+      Measure.Description := 'Stunde';
+      if Packages.NeedsInsert(Measure, Fields, Write, AllowCreate, TempDiff) then
+        Measure.Insert(true);
+      Payment.Init();
+      Payment.Code := 'UBW';
+      Payment.Description := 'Überweisung';
+      if Packages.NeedsInsert(Payment, Fields, Write, AllowCreate, TempDiff) then
+        Payment.Insert(true);
+    end;
     Terms('NET00', '<0D>', Write, AllowCreate, TempDiff);
     Terms('NET14', '<14D>', Write, AllowCreate, TempDiff);
     Terms('NET30', '<30D>', Write, AllowCreate, TempDiff);
@@ -125,14 +186,79 @@ codeunit 90408 "BCSF Demo Partner Setup"
       Fields.Add(Journal.FieldNo(Type));
       if Packages.NeedsInsert(Journal, Fields, Write, AllowCreate, TempDiff) then
         Journal.Insert(true);
-    end else
+    end else begin
+      Journal.FindFirst();
       Manager.AddFinding(TempDiff, Journal.TableCaption(), false, ReuseLbl, ReuseLbl);
+    end;
+    if Initializing then begin
+      JournalBatch.SecurityFiltering(SecurityFilter::Disallowed);
+      JournalBatch.SetRange("Journal Template Name", Journal.Name);
+      if JournalBatch.IsEmpty() then begin
+        JournalBatch.Init();
+        JournalBatch."Journal Template Name" := Journal.Name;
+        JournalBatch.Name := 'STANDARD';
+        JournalBatch.Description := JournalLbl;
+        Clear(Fields);
+        if Packages.NeedsInsert(JournalBatch, Fields, Write, AllowCreate, TempDiff) then
+          JournalBatch.Insert(true);
+      end;
+    end;
+  end;
+
+  local procedure PrepareLedger(EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    GL: Record "General Ledger Setup";
+    Packages: Codeunit "BCSF Finance Package Mgt";
+    Manager: Codeunit "BCSF Setup Manager";
+    Missing: Boolean;
+  begin
+    GL.SecurityFiltering(SecurityFilter::Disallowed);
+    if not GL.ReadPermission() then begin
+      Block(GL.TableCaption(), Write, TempDiff);
+      exit;
+    end;
+    if Write then
+      GL.LockTable();
+    Missing := not GL.Get();
+    if not Missing then
+      if ((GL."LCY Code" <> '') and (GL."LCY Code" <> 'EUR')) or
+         (GL."Amount Rounding Precision" < 0) or (GL."Unit-Amount Rounding Precision" < 0) or
+         ((GL."Allow Posting From" <> 0D) and (EffectiveDate < GL."Allow Posting From")) or
+         ((GL."Allow Posting To" <> 0D) and (EffectiveDate > GL."Allow Posting To")) then begin
+        Block(GL.TableCaption(), Write, TempDiff);
+        exit;
+      end;
+    if not (Missing or (GL."LCY Code" = '') or (GL."Amount Rounding Precision" = 0) or
+       (GL."Unit-Amount Rounding Precision" = 0)) then
+      exit;
+    if not AllowCreate or not Packages.HasSetupWritePermission(Database::"General Ledger Setup", Missing) then begin
+      Block(GL.TableCaption(), Write, TempDiff);
+      exit;
+    end;
+    if not Write then begin
+      Manager.AddFinding(TempDiff, GL.TableCaption(), false, FillLbl, ConfirmLbl);
+      exit;
+    end;
+    if Missing then
+      GL.Init();
+    if GL."LCY Code" = '' then
+      GL.Validate("LCY Code", 'EUR');
+    // These are the standard field defaults. Assignment avoids the rounding fields' informational dialogs.
+    if GL."Amount Rounding Precision" = 0 then
+      GL."Amount Rounding Precision" := 0.01;
+    if GL."Unit-Amount Rounding Precision" = 0 then
+      GL."Unit-Amount Rounding Precision" := 0.00001;
+    if Missing then
+      GL.Insert(true)
+    else
+      GL.Modify(true);
   end;
 
   local procedure SetupRow(ExpectedRow: Variant; SeriesFields: List of [Integer]; NumberSeries: Boolean; EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
   var
     Series: Record "No. Series";
     Manager: Codeunit "BCSF Setup Manager";
+    Packages: Codeunit "BCSF Finance Package Mgt";
     NoSeries: Codeunit "No. Series";
     Expected: RecordRef;
     Actual: RecordRef;
@@ -183,7 +309,7 @@ codeunit 90408 "BCSF Demo Partner Setup"
         CheckSourceCode(Code, Write, TempDiff);
     end;
     if Changed then begin
-      if not AllowCreate or not Actual.WritePermission() then begin
+      if not AllowCreate or not Packages.HasSetupWritePermission(Actual.Number(), Missing) then begin
         Block(Actual.Caption(), Write, TempDiff);
         exit;
       end;

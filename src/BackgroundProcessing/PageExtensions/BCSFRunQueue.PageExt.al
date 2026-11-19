@@ -140,15 +140,6 @@ pageextension 90312 "BCSF Run Queue" extends "BCSF Run Card"
           CurrPage.Update(false);
         end;
       }
-      action(ViewExecution)
-      {
-        ApplicationArea = All;
-        Caption = 'View Execution';
-        ToolTip = 'Shows the current execution status, confirmed batch counts, requested start and current job reference.';
-        Image = View;
-        RunObject = page "BCSF Execution List";
-        RunPageLink = "Run Id" = field("Run Id");
-      }
       action(ViewBatches)
       {
         ApplicationArea = All;

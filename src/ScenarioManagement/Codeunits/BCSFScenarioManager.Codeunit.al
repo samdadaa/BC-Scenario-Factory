@@ -99,16 +99,6 @@ codeunit 90130 "BCSF Scenario Manager"
       until Selection.Next() = 0;
   end;
 
-  procedure ConfigureFinance(ScenarioId: Guid)
-  begin
-    OnConfigureFinance(ScenarioId);
-  end;
-
-  [IntegrationEvent(false, false)]
-  local procedure OnConfigureFinance(ScenarioId: Guid)
-  begin
-  end;
-
   procedure CreateScenario(): Guid
   var
     Scenario: Record "BCSF Scenario";

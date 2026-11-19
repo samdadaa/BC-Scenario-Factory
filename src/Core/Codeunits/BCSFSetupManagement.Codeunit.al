@@ -34,6 +34,15 @@ codeunit 90106 "BCSF Setup Management"
         FactorySetup.ValidateSettings();
     end;
 
+    procedure EnsureInitialized()
     var
-        MissingSetupErr: Label 'Open Scenario Factory Setup and initialize the settings in the approved sandbox and test company.';
+        FactorySetup: Record "BCSF Factory Setup";
+    begin
+        GetSetup(FactorySetup);
+        if not FactorySetup."Company Initialized" then
+            Error(MissingSetupErr);
+    end;
+
+    var
+        MissingSetupErr: Label 'Open Scenario Factory Setup and choose Initialize Company in the approved sandbox and test company.';
 }

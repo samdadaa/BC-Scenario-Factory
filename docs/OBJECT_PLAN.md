@@ -1,5 +1,7 @@
 # Objektplan und Modulgrenzen – SF-002
 
+**Aktueller Stand ab 1.0.2.0:** Der reale Bedienweg ist in [Mandanteneinrichtung und Vorlagenstart](COMPANY_INITIALIZATION.md) beschrieben. Ältere Angaben zu Finanzauswahl je Vorlage, Vorschaufenster, Wizard, parallelen Lauflisten und Dashboard-Host sind historische Nachweise. Entfernte Objekt-IDs bleiben unbenutzt.
+
 **Stand:** 11.11.2026, zur Prüfung. Dies ist ein Entwicklungsplan, keine implementierte Funktion und keine Implementierungsfreigabe für Folgetickets. Historischer SF-002-Stand: 0 AL-Objekte und 24 leere Modulordner. Aktuell sind die unten aufgeführten Grundlagen aus SF-003/SF-004 implementiert; weitere Zeilen bleiben Planung. Grundlage ist die vom Nutzer bestätigte aktuelle Manifest-Range `90100..90999` (900 ID-Werte), Ziel `Playground`, Entwicklungsmodus. Die frühere Auswahl `50100..50999` ist abgelöst.
 
 ## Umfang, Voraussetzungen und Prüfweg

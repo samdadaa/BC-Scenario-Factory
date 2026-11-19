@@ -24,7 +24,7 @@ assert.ok(Object.values(texts).every(Boolean), 'Every dashboard text must be an 
 const firstId = '{10000000-0000-0000-0000-000000000001}';
 const secondId = '{20000000-0000-0000-0000-000000000002}';
 const selected = { id: firstId, description: 'Wholesale · Demo 2026', profile: 'TRADE / 1', createdAt: '16.11.2026 10:00', processMode: 'Unposted Documents', status: 'Running', hasExecution: true, statusCode: 6, totalBatches: 5, completedBatches: 1, earliest: '16.11.2026 10:00', started: '16.11.2026 10:02', finished: '', pauseRequested: false, cancelRequested: false };
-const fixture = { schemaVersion: 1, locale: 'en-US', language: 'en-US', texts, readAt: '16.11.2026 10:05', summary: { templates: 3, runs: 2, active: 1, review: 0 }, runs: [selected, { ...selected, id: secondId, description: 'Training · Returns' }], hasSelection: true, selected, steps: [
+const fixture = { schemaVersion: 1, locale: 'en-US', language: 'en-US', initialized: true, texts, readAt: '16.11.2026 10:05', summary: { templates: 3, runs: 2, active: 1, review: 0 }, runs: [selected, { ...selected, id: secondId, description: 'Training · Returns' }], hasSelection: true, selected, steps: [
   { node: 'CUSTOMER', module: 'Sales', entity: 'Customers', target: 100, confirmed: 20, remaining: 80, artifacts: 60, percent: 20, state: 'Running; unconfirmed work remains', external: false },
   { node: 'ITEM', module: 'Inventory', entity: 'Items', target: 120, confirmed: 0, remaining: 120, artifacts: 0, percent: 0, state: 'No saved plan', external: false },
   { node: 'FINANCE.SETUP', module: 'FINANCE', entity: 'FINANCE.SETUP', target: 1, confirmed: 0, remaining: 1, artifacts: 0, percent: 0, state: 'Plan blocked', external: true }
@@ -89,13 +89,13 @@ try {
   assert.equal(await evaluate('document.querySelector("progress").value'), 20);
   assert.equal(await evaluate('document.querySelectorAll("progress").length'), 2, 'External prerequisites must have no generated progress.');
   assert.equal(await evaluate('document.querySelector(".sf-quality").textContent'), texts.quality);
-  const expected = ['new', 'refresh', 'scenarios', 'runs', 'executions', 'allBatches', 'allRecords', 'catalog', 'setup', 'monitor', 'run', 'scenario', 'wizard', 'plan', 'savePlan', 'readiness', 'preflight', 'synthetic', 'pause', 'cancel', 'apply', 'primary', 'progress', 'batches', 'history', 'records', 'queue'];
+  const expected = ['scenarios', 'refresh', 'scenarios', 'monitor', 'setup', 'run', 'scenario', 'plan', 'savePlan', 'readiness', 'preflight', 'synthetic', 'pause', 'cancel', 'apply', 'primary', 'progress', 'batches', 'history', 'records', 'queue'];
   assert.equal(await evaluate('document.querySelector(".sf-diagnostics").open'), false, 'Technical actions start collapsed.');
   const actual = await evaluate('Array.from(document.querySelectorAll("button[data-action]")).map(e=>e.dataset.action)');
   assert.deepEqual(actual.toSorted(), expected.toSorted(), 'Every central navigation and run action must be available.');
   await evaluate('document.querySelector(".sf-diagnostics").open=true');
-  await evaluate('window.hold=true;document.querySelector("[data-action=new]").click();document.querySelector("[data-action=new]").click()');
-  assert.equal(await evaluate('window.calls.filter(c=>c.name==="Command"&&c.args[0]==="new").length'), 1, 'Busy controls must suppress duplicate creation.');
+  await evaluate('window.hold=true;document.querySelector(".sf-hero-actions [data-action=scenarios]").click();document.querySelector(".sf-hero-actions [data-action=scenarios]").click()');
+  assert.equal(await evaluate('window.calls.filter(c=>c.name==="Command"&&c.args[0]==="scenarios").length'), 1, 'Busy controls must suppress duplicate commands.');
   assert.equal(await evaluate('Array.from(document.querySelectorAll("button,select")).every(e=>e.disabled)'), true);
   await evaluate('window.hold=false;window.pending()');
   await evaluate('document.querySelector("[data-action=plan]").click()');
@@ -179,10 +179,13 @@ try {
   await cdp('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1200, deviceScaleFactor: 1, mobile: false });
   const shot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true });
   await writeFile(join(tmpdir(), 'BCSF-dashboard-preview.png'), Buffer.from(shot.data, 'base64'));
-  await evaluate('window.fixture.hasSelection=false;window.fixture.runs=[];window.SetDashboard(JSON.stringify(window.fixture))');
+  await evaluate('window.fixture.hasSelection=false;window.fixture.runs=[];window.fixture.initialized=false;window.SetDashboard(JSON.stringify(window.fixture))');
   assert.equal(await evaluate('document.querySelectorAll(".sf-action-groups").length'), 0);
   assert.equal(await evaluate('document.querySelector(".sf-empty").textContent.includes(window.fixture.texts.empty)'), true);
-  assert.equal(await evaluate('document.querySelectorAll(".sf-nav-link").length'), 8, 'Empty state must retain complete navigation.');
+  assert.equal(await evaluate('document.querySelectorAll(".sf-nav-link").length'), 3, 'Empty state has a focused navigation.');
+  assert.equal(await evaluate('document.querySelector(".sf-hero-actions .sf-primary").dataset.action'), 'setup', 'An empty company starts with setup.');
+  await evaluate('window.fixture.initialized=true;window.SetDashboard(JSON.stringify(window.fixture))');
+  assert.equal(await evaluate('document.querySelector(".sf-hero-actions .sf-primary").dataset.action'), 'scenarios', 'An initialized company starts with templates.');
   console.log('PASS: real Chromium rendering, ready handshake, status-dependent primary action, collapsed diagnostics, run routing, confirmed/remaining/artifact separation, duplicate suppression, error recovery, invalid payload recovery, XSS text rendering, real German XLIFF labels/number formatting, German fallback from English labels in five cultures, English UI with German format region, 500px scrolling/keyboard/footer/refresh, empty state and 1440/768/320px layouts.');
   console.log(`Synthetic local preview: ${join(tmpdir(), 'BCSF-dashboard-preview.png')}. AL/BC iframe, security, dialogs and profile selection were not executed.`);
 } finally {

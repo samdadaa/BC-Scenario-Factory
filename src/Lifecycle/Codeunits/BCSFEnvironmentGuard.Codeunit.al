@@ -91,6 +91,8 @@ codeunit 90375 "BCSF Environment Guard"
 
   local procedure CheckSetupWrite(var FactorySetup: Record "BCSF Factory Setup")
   begin
+    if FactorySetup.IsTemporary() then
+      exit;
     EnsureSandbox();
     EnsureSetupPermissions(FactorySetup);
     FactorySetup.ValidateSettings();
@@ -113,13 +115,15 @@ codeunit 90375 "BCSF Environment Guard"
   [EventSubscriber(ObjectType::Table, Database::"BCSF Factory Setup", 'OnBeforeDeleteEvent', '', false, false)]
   local procedure BlockSetupDelete(var Rec: Record "BCSF Factory Setup"; RunTrigger: Boolean)
   begin
-    Error(DeleteErr);
+    if not Rec.IsTemporary() then
+      Error(DeleteErr);
   end;
 
   [EventSubscriber(ObjectType::Table, Database::"BCSF Factory Setup", 'OnBeforeRenameEvent', '', false, false)]
   local procedure BlockSetupRename(var Rec: Record "BCSF Factory Setup"; var xRec: Record "BCSF Factory Setup"; RunTrigger: Boolean)
   begin
-    Error(RenameErr);
+    if not Rec.IsTemporary() then
+      Error(RenameErr);
   end;
 
   var

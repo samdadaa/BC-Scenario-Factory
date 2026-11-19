@@ -538,3 +538,38 @@ Beide Tickets ausdrücklich ausgewählt, Finance vor Partnerdaten. Aktueller Wor
 **Nicht ausgeführt:** Installation/Upgrade oder Publishing, tatsächliche neue SKR03-/SKR04-Firmen, Wiederholung/konkurrierende Anwendung in BC, Standardverkaufs-/Einkaufs-/Buchblattbuchung und Bilanz-/GuV-Abgleich, DE-50/50-/EN-Läufe, Kinddatensatz-/Belegübernahme, Rechte-/Rollback-/Drittanbietertrigger-/Recoveryfälle und Sammeltransfer zwischen Firmen. Kein angebundener BC-Browser oder Sandbox-Connector verfügbar; keine Sitzung oder Geheimnisse ausgelesen. Der Nutzerbericht über einen bereits funktionierenden vorherigen Partnerlauf bleibt getrennt von diesen neuen Änderungen. Bankprozesse bleiben mangels freigegebenen synthetischen Bankdatensatzes ausdrücklich nicht bereit; CRM-Kontakte werden nur von vorhandener Standardintegration erzeugt. Alte Läufe/Snapshots/Partner und Paketversion 1.0.0 werden nicht migriert.
 
 **Lieferung:** [vollständiges Paket](../artifacts/BCScenarioFactory-1.0.1.0-SF038-SF039.app), [Buildprotokoll](../artifacts/BCScenarioFactory-SF038-SF039-build.log). SHA256 `edf20b36cb02f9cf675a272504db4db8c62993259abcef193efee21002446b3d`. Kein Deployment, kein Commit/Push/Branchwechsel. Vor BC-Abnahme genau dieses Paket installieren; installierter Stand ist hier nicht nachgewiesen.
+
+
+## SF-038 – gesperrte Finanzpaketanwendung 19.11.2026
+
+**Ausgangsnachweis:** Nutzer meldet deaktiviertes Anwenden von SKR03/SKR04 und bestätigt den Wortlaut „Erforderliche Standard-Lese- oder Schreibberechtigung fehlt.“. Der erste Screenshot zeigt am Listenende nicht blockierte geplante Neuanlagen. Ohne Benutzer-/Lizenzdiagnose oder Sandboxzugriff lässt sich daraus nicht ableiten, welche konkrete Tabelle oder Rechteoperation tatsächlich fehlt. Keine erfolgreiche Reproduktion behauptet.
+
+**Belegter Codefehler und Korrektur:** Die Finance-Insertprüfung verlangte volles WritePermission einschließlich Delete. Neue operationsbezogene Prüfung behält die volle Plattformprüfung als sicheren Erfolgsfall und prüft andernfalls direkte Insert- bzw. Modify-Rechte des aktuellen Benutzers in der aktuellen Firma und die passenden direkten Lizenzrechte. Indirekt zählt nicht als direkt. RecordRef-Leseprüfung, SecurityFiltering::Disallowed, tatsächliche Standardoperationen und ihre Plattform-/Entitlementprüfung bleiben bestehen. Kein Standard-TableData-Recht, keine Rolle oder InherentPermission hinzugefügt. [Quellen, Umfang und Grenzen](STABILIZATION_FINANCE_PARTNERS.md#sf-038--nachprüfung-der-gesperrten-anwendung-19112026).
+
+**Bedienkorrektur:** Finance Preview zeigt Paket, Blockerzahl, nächsten Schritt und ersten tatsächlichen Befund mit Maßnahme. Blocker zuerst und Filter für Blocker/alle Befunde; Anwenden und Filter hervorgehoben. Der zusätzliche Schlüssel ist ausschließlich auf dem vorhandenen temporären Setup-Diff-Objekt. Erneute Apply-Prüfung verwendet eine eigene frisch aufgebaute Befundmenge; Listenfilter geben kein Paket frei.
+
+**Tatsächlich ausgeführt:**
+
+- Vollständiger Cloud-Build aller **131 AL-Dateien** mit Compiler **18.1.43.24897**, CodeCop/UICop, generatecode+ und warnaserror+: **PASS**, keine Fehler/Warnungen, acht bekannte AW0006-Informationen. Vorhandene lokale Symbolpakete unverändert (Base/System Application 28.5.54976.57342, Application/Business Foundation 28.5.54976.56550, System 28.0.57066.0). Finales Verzeichnis `/var/folders/qj/9rbr1wc575d4skwv8wnt21lw0000gn/T/bcsf-build-d3fm4y7e`.
+- Frische g.xlf → gepflegtes Übersetzungsskript → **1.277 IDs** vollständig in de-DE/AT/CH/LI/LU und en-US: **PASS**, Compiler-IDs/Quellen/Platzhalter/Breiten. JS-Fallback neu erzeugt/geprüft. Eine zunächst fehlende Zuordnung für die neue Aktionsgruppe „Setup“ wurde ergänzt; nur das anschließend vollständig synchronisierte Paket wird geliefert.
+- Bestehender `node scripts/check_dashboard.mjs`: **PASS**, Chromium mit synthetischer BC-Brücke einschließlich DE/EN/Fallback, Navigation, Statusaktionen, getrennten Zählern, Fehlerbehandlung und Responsive-Layouts. Diese Prüfung testet **keine** native AL-Finanzseite und keine Benutzer-/Lizenzrechte in BC.
+- `scripts/check_package.py`: **PASS**, vollständiges Paket gegen alle 131 Workspacequellen, sieben XLIFF-Dateien mit je 1.277 IDs und vier Dashboardressourcen abgeglichen. `git diff --check`: **PASS**.
+
+**Nicht ausgeführt:** Installation/Publishing, native Finanzvorschau und Promoted-Aktionsdarstellung, Rechte-/Lizenzmatrix ohne Delete bzw. mit fehlendem Insert/Modify, Sicherheitsfilter, tatsächliche Apply-/Rollbackfälle in leeren SKR03-/SKR04-Firmen und anschließender Queue-Partnerlauf. Keine angebundene freigegebene BC-Steuerung; wirksame Rechte des gemeldeten Benutzers nicht eingesehen. Der gemeldete Fall bleibt bis zur BC-Nachprüfung **offen**, SF-038 **Zur Prüfung**. Konkrete Fälle in der [Testanleitung](review/TESTANLEITUNG.md#sf-038--rechte-und-deaktiviertes-anwenden-nachprüfung-19112026).
+
+Paket: [SF-038 Rechteprüfung](../artifacts/BCScenarioFactory-1.0.1.0-SF038-Permissions.app), [Buildprotokoll](../artifacts/BCScenarioFactory-SF038-Permissions-build.log). SHA256 `3c71ea82623bc75442fd40cd086e3bc243b3a962a53b096987f1ce2b8966f35d`. Manifest 1.0.1.0 unverändert. Kein Deployment, kein Commit/Push, keine Berechtigungsänderung in BC.
+
+## SF-043 – Mandanteneinrichtung und direkter Vorlagenstart
+
+Stand 19.11.2026, Quellversion 1.0.2.0, Status **Zur Prüfung**.
+
+| Prüfung | Tatsächliches Ergebnis |
+| --- | --- |
+| Quellvergleich mit dem gelieferten Projekt | PASS: 131 → 120 AL-Objekte. Sieben Seiten, zwei PageExtensions und zwei leere Install-/Upgrade-Codeunits entfernt. Referenzen auf entfernte Objekte geprüft. IDs der beibehaltenen Objekte unverändert. Eine additive Setupspalte, kein Tabellenentfall. |
+| Startvertrag, Init-Reihenfolge und TODO | PASS als statische Quellprüfung: Finanzmodus in der Einrichtung, Initialisierung vor neuem Snapshot, Vorlagenpfad ohne Modal- oder Konfigurationsaufruf, abhängige Tickets ohne Zyklus. |
+| Übersetzungen und Dashboard-Katalog | PASS: 1.152 vorhandene XLIFF-Einheiten inklusive geänderter stabiler IDs in fünf deutschen Kulturen und en-US, Platzhalter geprüft, JS-Fallback daraus abgeleitet. Abgleich mit dem Generat des nächsten AL-Builds bleibt offen. |
+| Partnerkatalog | PASS: 28 Katalog-Pools, DE/EN-Daten, Größenbegrenzung, PLZ-/Domain-Prüfungen. Keine BC-Feldvalidierung ausgeführt. |
+| Dashboard-JavaScript ohne BC | PASS: Syntax und lokaler DOM-/Bridge-Smoke. Erste Aktion wechselt nach Initialisierung von Einrichtung zu Vorlagen. Drei Navigationseinstiege, Doppelklickschutz, deutsche Beschriftung, eingeklappte Diagnose und persistenzbezogene Laufaktion geprüft. Vollständiger Chromiumtest nicht ausführbar. Die Umgebung blockiert das Starten des Chromium-Sockets. |
+| AL-Compiler und reale Sandbox | Offen. Der Mac-Compiler aus den alten Build-Protokollen und ein passender .NET-/AL-Compiler sind hier nicht verfügbar. Keine aktuelle Paketkompilierung, Installation, BC-Initialisierung, Standardbuchung oder echte Job-Queue-Ausführung. Keine App-Datei als neu gebaut ausgegeben. |
+
+Nächster Schritt: AL-Paket mit den Symbolen der tatsächlichen Ziel-Sandbox bauen und die [Sandbox-Abnahme](COMPANY_INITIALIZATION.md#sandbox-abnahme) durchführen. Falls der Compiler beim Erzeugen der XLIFF-Datei eine Differenz meldet, zuerst `python3 Translations/sync_starter_translations.py` gegen die neu erzeugten IDs ausführen und erneut bauen. Ohne Fachabnahme bleiben SF-038, SF-039 und SF-043 **Zur Prüfung**.

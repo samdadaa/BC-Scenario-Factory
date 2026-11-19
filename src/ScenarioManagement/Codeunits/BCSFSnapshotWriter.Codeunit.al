@@ -33,6 +33,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     Posted: Integer;
     Partial: Integer;
     HasPositiveTarget: Boolean;
+    FinanceMode: Enum "BCSF Finance Mode";
     FinanceYear: Integer;
     FinanceVersion: Code[20];
   begin
@@ -41,6 +42,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     Scenario.Get(ScenarioId);
     Scenario.TestField(Archived, false);
     FactorySetup.LockTable();
+    SetupManagement.EnsureInitialized();
     SetupManagement.GetSetup(FactorySetup);
     Policy.ValidateScenario(Scenario);
     Scenario.TestField("Profile Code");
@@ -84,13 +86,14 @@ codeunit 90144 "BCSF Snapshot Writer"
     Payload.Add('companyName', Header."Company Name");
     Payload.Add('environmentName', Header."Environment Name");
     Payload.Add('capturedAt', Format(Header."Created At", 0, 9));
-    OnCaptureFinancePackage(Scenario."Finance Mode", FinanceYear, FinanceVersion);
-    if (Scenario."Finance Mode" <> "BCSF Finance Mode"::Existing) and ((FinanceYear <= 0) or (FinanceVersion = '')) then
+    OnCaptureFinancePackage(FinanceMode, FinanceYear, FinanceVersion);
+    if (FinanceMode <> "BCSF Finance Mode"::Existing) and ((FinanceYear <= 0) or (FinanceVersion = '')) then
       Error(FinancePackageErr);
-    Payload.Add('financeMode', Scenario."Finance Mode".AsInteger());
+    Payload.Add('companySetupVersion', 1);
+    Payload.Add('financeMode', FinanceMode.AsInteger());
     Payload.Add('financeYear', FinanceYear);
     Payload.Add('financeVersion', FinanceVersion);
-    Payload.Add('partnerSetup', CapturePartners(Scenario));
+    Payload.Add('partnerSetup', CapturePartners(Scenario, FinanceMode));
     ScenarioModule.SetRange("Scenario Id", ScenarioId);
     if ScenarioModule.FindSet() then
       repeat
@@ -139,7 +142,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     exit(Header."Run Id");
   end;
 
-  local procedure CapturePartners(Scenario: Record "BCSF Scenario"): JsonObject
+  local procedure CapturePartners(Scenario: Record "BCSF Scenario"; FinanceMode: Enum "BCSF Finance Mode"): JsonObject
   var
     Settings: JsonObject;
   begin
@@ -163,7 +166,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     Settings.Add('dimension1', Scenario."Partner Dimension 1");
     Settings.Add('dimension2', Scenario."Partner Dimension 2");
     Settings.Add('paymentReady', false);
-    OnCapturePartnerSetup(Scenario."Finance Mode", Settings);
+    OnCapturePartnerSetup(FinanceMode, Settings);
     exit(Settings);
   end;
 
@@ -178,7 +181,7 @@ codeunit 90144 "BCSF Snapshot Writer"
   end;
 
   [IntegrationEvent(false, false)]
-  local procedure OnCaptureFinancePackage(Mode: Enum "BCSF Finance Mode"; var Year: Integer; var PackageVersion: Code[20])
+  local procedure OnCaptureFinancePackage(var Mode: Enum "BCSF Finance Mode"; var Year: Integer; var PackageVersion: Code[20])
   begin
   end;
 

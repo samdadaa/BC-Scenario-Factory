@@ -1,6 +1,6 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
-**Stand:** 18.11.2026 – Der Partnerlauf funktioniert nach Nutzerbericht wieder. SF-017, SF-018 und SF-037 stehen weiterhin zur fachlichen Prüfung. Vorrang haben jetzt realistische Stammdaten, eine buchungsfähige Einrichtung und eine verständliche Bedienung (SF-038 bis SF-042). Historische Prüfprotokolle bleiben erhalten.
+**Stand:** 19.11.2026 – Einmalige Mandanteneinrichtung und direkter Vorlagenstart unter SF-043. SF-038/SF-039 implementiert beziehungsweise teilweise umgesetzt, fachliche Sandbox-Abnahme bleibt offen.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
 
@@ -35,6 +35,7 @@ P0-Reihenfolge: [SF-038](#sf-038) Finanzsetup → [SF-039](#sf-039) Partnerdaten
 | [SF-040](#sf-040) | Stabilisierung | P0 | Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten | Offen |
 | [SF-041](#sf-041) | Stabilisierung | P0 | Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns | Offen |
 | [SF-042](#sf-042) | Stabilisierung | P0 | Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben | Offen |
+| [SF-043](#sf-043) | Stabilisierung | P0 | Mandant einmalig initialisieren und Vorlagenstart vereinfachen | Zur Prüfung |
 | [SF-001](#sf-001) | 0 / Fundierung | P0 | Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen | Blockiert |
 | [SF-002](#sf-002) | 0 / Fundierung | P0 | AL-Struktur, Namenskonventionen und Objektplan finalisieren | Zur Prüfung |
 | [SF-003](#sf-003) | 0 / Fundierung | P0 | Sicherheitsguard: Sandbox, Mandant, Berechtigung | Zur Prüfung |
@@ -1556,15 +1557,15 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Ausgangslage / Problem:** In der gezeigten Testfirma stehen nur `BCSF-AP` und `BCSF-AR` im Kontenplan. Die beiden Konten mit Test-Bezeichnung ersetzen keinen für Buchungen und Auswertungen brauchbaren Kontenplan. SF-017 beschreibt bereits SKR03-/SKR04-Pakete. Zu prüfen ist, welcher Starter-, Einrichtungs- oder Schnellstartpfad solche Ersatzkonten anlegt und ob er den Paketvertrag umgeht.
 
-**Soll-Verhalten / technischer Arbeitsauftrag:** Einen gemeinsamen Finance-Einrichtungspfad nutzen. Passende vorhandene BC-Einrichtung vollständig prüfen und unverändert wiederverwenden oder in der freigegebenen Sandbox nach Vorschau und Bestätigung eines der versionierten lokalen SKR03-/SKR04-basierten Pakete anwenden. Fehlt die Einrichtung, soll die Vorlage eine klare Aktion zur passenden Einrichtung anbieten. Keine manuelle Einzelanlage von Sachkonten oder Gruppen als reguläre Startvoraussetzung.
+**Soll-Verhalten / technischer Arbeitsauftrag:** Einen gemeinsamen Finance-Einrichtungspfad nutzen. Passende vorhandene BC-Einrichtung vollständig prüfen und unverändert wiederverwenden oder in der freigegebenen Sandbox bei der einmaligen Mandanteninitialisierung nach einer Auswahl eines der versionierten lokalen SKR03-/SKR04-basierten Pakete anwenden. Fehlt die Einrichtung, soll die Vorlage eine klare Aktion zur passenden Einrichtung anbieten. Keine manuelle Einzelanlage von Sachkonten oder Gruppen als reguläre Startvoraussetzung.
 
 **Vorgehen (einzeln abzuarbeiten):**
 
-- [ ] Alle Schreibpfade für Konten und Gruppen vom Starter, Schnellstart, Assistenten und regulären Lauf bis Finance prüfen. Zwei-Konten-Fallbacks und Buchungsgruppen mit generischen Test-/Demo-Namen aus dem regulären Pfad entfernen.
-- [ ] Je Rahmen einen schlanken, belastbaren Kontenplan mit fachlichen Nummernbereichen, führenden Nullen, lesbaren Bezeichnungen, Gliederung und Klassifikation vorsehen. Mindestens Bank/Kasse, Forderungen, Verbindlichkeiten, Bestand, Vor-/Umsatzsteuer, Eigenkapital, Erlöse, Wareneinsatz und repräsentative Betriebskosten abdecken. Buchungs- und Summenkonten unterscheiden, Standard-Bilanz/GuV und freie Sachkontenbuchungen unterstützen.
-- [ ] Konsistente Zuordnung der Kontenrollen zu Debitoren-/Kreditoren-/Bank-/Lagerbuchungsgruppen sowie allgemeinen und MwSt.-Buchungskombinationen treffen, soweit für das Profil benötigt. Sachkontonummern nicht in einzelnen Generatoren hardcodieren. Validierung und Zuordnung im Paket bündeln.
-- [ ] Bezugsjahr, Version, Herkunft, tatsächlichen Kontenumfang und Änderungen je Paket dokumentieren. Vorhandene SF-017-Pakete weiterverwenden bzw. korrigieren. Wenn offizielle DATEV-Daten erwogen werden, verfügbare Bezugsquelle und Wiederverwendungsrechte vor Übernahme prüfen. Kein Scraping oder Live-Abruf als Laufzeitvoraussetzung. Selbst erstellte Teilpläne eindeutig als SKR03-/SKR04-basiert beschreiben, nicht als vollständigen offiziellen Kontenrahmen ausgeben.
-- [ ] Vorschau für Anlage, Wiederverwendung und Konflikte, Paketversion im Lauf-Snapshot sowie einen Umgang mit bestehenden Ersatzkonten dokumentieren. Keine bestehenden oder bebuchten Konten umbenennen, löschen oder umhängen. Bei Konflikten konkrete nächste Aktion anzeigen.
+- [x] Alle Schreibpfade für Konten und Gruppen vom Starter, Schnellstart, Assistenten und regulären Lauf bis Finance prüfen. Zwei-Konten-Fallbacks und Buchungsgruppen mit generischen Test-/Demo-Namen aus dem regulären Pfad entfernen.
+- [x] Je Rahmen einen schlanken, belastbaren Kontenplan mit fachlichen Nummernbereichen, führenden Nullen, lesbaren Bezeichnungen, Gliederung und Klassifikation vorsehen. Mindestens Bank/Kasse, Forderungen, Verbindlichkeiten, Bestand, Vor-/Umsatzsteuer, Eigenkapital, Erlöse, Wareneinsatz und repräsentative Betriebskosten abdecken. Buchungs- und Summenkonten unterscheiden, Standard-Bilanz/GuV und freie Sachkontenbuchungen unterstützen.
+- [x] Konsistente Zuordnung der Kontenrollen zu Debitoren-/Kreditoren-/Bank-/Lagerbuchungsgruppen sowie allgemeinen und MwSt.-Buchungskombinationen treffen, soweit für das Profil benötigt. Sachkontonummern nicht in einzelnen Generatoren hardcodieren. Validierung und Zuordnung im Paket bündeln.
+- [x] Bezugsjahr, Version, Herkunft, tatsächlichen Kontenumfang und Änderungen je Paket dokumentieren. Vorhandene SF-017-Pakete weiterverwenden bzw. korrigieren. Wenn offizielle DATEV-Daten erwogen werden, verfügbare Bezugsquelle und Wiederverwendungsrechte vor Übernahme prüfen. Kein Scraping oder Live-Abruf als Laufzeitvoraussetzung. Selbst erstellte Teilpläne eindeutig als SKR03-/SKR04-basiert beschreiben, nicht als vollständigen offiziellen Kontenrahmen ausgeben.
+- [x] Konfliktprüfung intern, erste konkrete Meldung bei einem Blocker, Paketversion im Lauf-Snapshot und Umgang mit bestehenden Ersatzkonten dokumentieren. Die frühere Vorschauseite entfällt nach SF-043. Keine bestehenden oder bebuchten Konten umbenennen, löschen oder umhängen. Bei Konflikten konkrete nächste Aktion anzeigen.
 
 **Akzeptanzkriterien:**
 
@@ -1579,6 +1580,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 **Umsetzungsstand 18.11.2026:** Implementierung im aktuellen Workspace; [gemeinsamer Vertrag und Grenzen](docs/STABILIZATION_FINANCE_PARTNERS.md), [tatsächliche Prüfungen](docs/TESTS.md#sf-038--sf-039--lokaler-prüfnachweis-18112026). Keine Sandbox-Abnahme. Insbesondere Standardbuchungen, DE/EN-Partnerlauf und Kinddaten-/Recoveryfälle bleiben offen. Neue Paketversion 2.0.0; kein Zwei-Konten-Fallback, keine stille Migration alter Pakete.
+
+**Nachprüfung 19.11.2026:** Nutzer bestätigt deaktivierte SKR-Anwendung mit Standardrechte-Befund. Zu pauschale Vollschreibprüfung (einschließlich Delete) durch operationsbezogene Prüfung bestehender Benutzer-/Lizenzrechte ergänzt; keine Rechteerhöhung. Vorschau zeigt Blocker zuerst, Ursache und nächste Schritte sowie hervorgehobene Aktionen. [Nachweis und offene BC-Rechteprüfung](docs/TESTS.md#sf-038--gesperrte-finanzpaketanwendung-19112026). Status bleibt **Zur Prüfung**, konkrete Sandboxlösung nicht behauptet.
 
 ---
 
@@ -1598,10 +1601,12 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Vorgehen (einzeln abzuarbeiten):**
 
-- [ ] Seed-Kataloge und Generatoren auf alle Platzhalterpfade prüfen. Plausible Personen wie „Jonas Schneider“ oder „Lea Müller“, fiktive Firmen mit passenden Rechtsformen und passende Ansprechpartner kombinieren. Variabilität nach Branche, Datensprache, Region und Zielmenge steuern. Keine eckigen Zählersuffixe oder künstlichen Test-/Demo-/Muster-Präfixe in Namen, Adressen, Kontakten, E-Mails und neu angelegten Buchungsgruppen. Fachlich legitime Kennzeichnung in App/Setup-Vorschau bleibt möglich.
+- [x] Seed-Kataloge und Generatoren auf alle Platzhalterpfade prüfen. Plausible Personen wie „Jonas Schneider“ oder „Lea Müller“, fiktive Firmen mit passenden Rechtsformen und passende Ansprechpartner kombinieren. Variabilität nach Branche, Datensprache, Region und Zielmenge steuern. Keine eckigen Zählersuffixe oder künstlichen Test-/Demo-/Muster-Präfixe in Namen, Adressen, Kontakten, E-Mails und neu angelegten Buchungsgruppen. Fachlich legitime Kennzeichnung in App/Setup-Vorschau bleibt möglich.
 - [ ] Straße, Hausnummer, PLZ, Ort und Land konsistent kombinieren. Für E-Mails reservierte nicht zustellbare Domains benutzen. Bankverbindungen als zugeordnete BC-Standarddatensätze mit plausiblen Feldwerten, und für Bankformate mit der BC-Validierung kompatible synthetische Testwerte verwenden. Keine realen Empfänger, importierten Personendaten, Mailzustellungen, Bankübermittlungen oder produktiven Zahlungsexporte. Wenn keine sichere Bankkonfiguration verfügbar ist, klar melden und den betroffenen Zahlungsprozess nicht als bereit ausweisen.
 - [ ] Nach Profil und Partnerklasse passende Debitoren-Lieferadressen, Kreditoren-Bestelladressen, Kontakte, bevorzugte Bankverbindung soweit sinnvoll, Währung, Zahlungsbedingungen/-form, Buchungsgruppen, Steuerlogik und Dimensionen zuordnen. Relevante Felder über BC-Standardvalidierung und Nummernserien setzen. Keine fachfremden Einträge nur zur Erhöhung der Feldabdeckung.
-- [ ] Parent-/Child-Zuordnung, Herkunft, Wiederanlauf und Eindeutigkeit über stabile Schlüssel sicherstellen. Gleicher Seed und gleiche Regelversion ergeben gleiche fachliche Werte, ohne interne BC-Nummern mit Namen zu verwechseln. Alte Laufdaten und manuell gepflegte Stammwerte unverändert lassen.
+- [x] Parent-/Child-Zuordnung, Herkunft, Wiederanlauf und Eindeutigkeit über stabile Schlüssel sicherstellen. Gleicher Seed und gleiche Regelversion ergeben gleiche fachliche Werte, ohne interne BC-Nummern mit Namen zu verwechseln. Alte Laufdaten und manuell gepflegte Stammwerte unverändert lassen.
+
+**Teilumfang umgesetzt:** Plausible Adressen/E-Mail, natürliche Ansprechpartner, Liefer-/Bestelladressen sowie fachliche Zuordnungen für vorhandene Einstellungen. Bankverbindungen und Zahlungsabnahme sind nicht erledigt.
 
 **Akzeptanzkriterien:**
 
@@ -1698,7 +1703,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Status:** Offen  
 **Priorität:** P0  
-**Abhängigkeiten:** SF-037, SF-038, SF-039, SF-040, SF-041  
+**Abhängigkeiten:** SF-037, SF-038, SF-039, SF-040, SF-041, SF-043  
 **Verantwortung / betroffene Module:** ScenarioManagement, Monitoring, BackgroundProcessing, Validation, Finance, Querschnitt  
 **Verantwortliche Person:** Zu prüfen
 
@@ -1726,6 +1731,27 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Risiken / Entscheidungen:** Ein einzelner erfolgreicher Lauf genügt nicht für Wiederanlauf oder Datenqualität. Bei Wiederauftreten des Fehlers den ersten vollständigen Queue-Fehler mit Lauf-/Paketbezug dokumentieren.
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+
+---
+
+<a name="sf-043"></a>
+
+### SF-043 — Mandant einmalig initialisieren und Vorlagenstart vereinfachen
+
+**Status:** Zur Prüfung  
+**Priorität:** P0  
+**Abhängigkeiten:** SF-038, SF-039  
+**Betroffene Module:** Core, Finance, IndustryProfiles, ScenarioManagement, Monitoring
+
+**Ziel und Umsetzung:** Kontenrahmenwahl beim einmaligen Initialisieren der Sandbox-Firma. Gemeinsame Stammdaten und Einrichtung dort vorhalten. Ein Vorlagenstart nutzt bereits vorhandene Einrichtung und legt keine globale Finanzkonfiguration an. Die Navigation konzentriert sich auf Einrichtung, Vorlagen und Laufmonitor. Sieben doppelte Seiten entfallen. Keine neuen Tabellen/Seiten, keine Datenlöschung.
+
+- [x] Auswahl und Bootstrap in den vorhandenen Setupbereich verlegen, vorhandene SKR-Pakete verwenden und bei Blockern einen konkreten Befund anzeigen.
+- [x] Direkten Queue-Start ohne Vorlagen-Finanzdialog umsetzen, bestehende Snapshots nicht verändern und Starterdaten erst beim Initialisieren laden.
+- [x] Objektverweise, Übersetzungen und Bedien-/Abnahmeweg aktualisieren.
+- [ ] AL-Build auf Zielversion und reale BC-Prüfung in leeren SKR03-/SKR04-Sandbox-Firmen, bestehender Firma und Altstand-Upgrade.
+- [ ] Nutzerabnahme.
+
+**Nachweise und Grenzen:** [Umsetzung und Testweg](docs/COMPANY_INITIALIZATION.md), [Prüfprotokoll](docs/TESTS.md#sf-043--mandanteneinrichtung-und-direkter-vorlagenstart).
 
 ---
 

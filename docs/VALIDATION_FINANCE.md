@@ -1,5 +1,7 @@
 # SF-016 / SF-017 – Umsetzung und Prüfvertrag
 
+**Aktueller Stand ab 1.0.2.0:** Der reale Bedienweg ist in [Mandanteneinrichtung und Vorlagenstart](COMPANY_INITIALIZATION.md) beschrieben. Ältere Angaben zu Finanzauswahl je Vorlage, Vorschaufenster, Wizard, parallelen Lauflisten und Dashboard-Host sind historische Nachweise. Entfernte Objekt-IDs bleiben unbenutzt.
+
 ## Arbeitsplan vom 18.11.2026
 
 Beide Tickets sind ausdrücklich gemeinsam beauftragt. Ausgangsbestand: 116 AL-Dateien; bereits vorhandene, noch nicht dokumentierte Ansätze für Qualitätsabschluss und Finanzpakete. Keine Bestandsobjekte ersetzen oder verschieben, keine Folgetickets implementieren.

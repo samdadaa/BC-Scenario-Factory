@@ -5,9 +5,9 @@
   let model;
   let busy = false;
   let failed = false;
-  const navigation = ["scenarios", "runs", "executions", "allBatches", "allRecords", "catalog", "setup", "monitor"];
+  const navigation = ["scenarios", "monitor", "setup"];
   const groups = {
-    planGroup: ["run", "scenario", "wizard", "plan", "savePlan", "readiness", "preflight", "synthetic"],
+    planGroup: ["run", "scenario", "plan", "savePlan", "readiness", "preflight", "synthetic"],
     executeGroup: ["prepare", "schedule", "pause", "cancel", "apply", "resume"],
     resultGroup: ["progress", "batches", "history", "records", "queue"]
   };
@@ -203,7 +203,8 @@
     const title = node("div");
     append(title, node("p", "sf-eyebrow", text("eyebrow")), node("h1", "", text("title")), node("p", "sf-subtitle", text("subtitle")));
     const heroActions = node("div", "sf-hero-actions");
-    append(heroActions, button("new", "sf-button sf-primary", "new"), button("refresh", "sf-button sf-refresh", "refresh"));
+    const firstAction = model.initialized ? "scenarios" : "setup";
+    append(heroActions, button(firstAction, "sf-button sf-primary", firstAction), button("refresh", "sf-button sf-refresh", "refresh"));
     append(hero, title, heroActions);
     const shell = node("div", "sf-shell");
     const main = node("main", "sf-main");
@@ -211,7 +212,7 @@
     if (model.hasSelection) append(main, selector(), runPanel(), stepPanel(), actionPanel());
     else {
       const empty = node("section", "sf-empty");
-      append(empty, node("h2", "", text("empty")), button("new", "sf-button sf-primary", "new"));
+      append(empty, node("h2", "", text("empty")), button(firstAction, "sf-button sf-primary", firstAction));
       main.appendChild(empty);
     }
     append(shell, navigationPanel(), main);

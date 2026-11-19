@@ -14,6 +14,7 @@ codeunit 90365 "BCSF Dashboard Data"
   var
     Header: Record "BCSF Run Header";
     Scenario: Record "BCSF Scenario";
+    Setup: Record "BCSF Factory Setup";
     Execution: Record "BCSF Run Execution";
     Language: Codeunit Language;
     Payload: JsonObject;
@@ -38,6 +39,9 @@ codeunit 90365 "BCSF Dashboard Data"
     Execution.SetFilter(Status, '%1|%2', "BCSF Run Status"::Failed, "BCSF Run Status"::ValidationFailed);
     Summary.Add('review', Execution.Count());
     Payload.Add('summary', Summary);
+    if Setup.ReadPermission() then
+      if Setup.Get(Setup.GetSetupKey()) then
+        Payload.Add('initialized', Setup."Company Initialized");
     Header.SetCurrentKey("Created At", "Run Id");
     Header.SetAscending("Created At", false);
     Header.SetAscending("Run Id", false);
@@ -155,21 +159,12 @@ codeunit 90365 "BCSF Dashboard Data"
     Texts.Add('title' , TitleLbl);
     Texts.Add('eyebrow', EyebrowLbl);
     Texts.Add('subtitle', SubtitleLbl);
-    Texts.Add('new', NewLbl);
     Texts.Add('refresh', RefreshLbl);
     Texts.Add('navigation', NavigationLbl);
     Texts.Add('scenarios', ScenariosLbl);
     Texts.Add('scenariosHint', ScenariosHintLbl);
     Texts.Add('runs', RunsLbl);
     Texts.Add('runsHint', RunsHintLbl);
-    Texts.Add('executions', ExecutionsLbl);
-    Texts.Add('executionsHint', ExecutionsHintLbl);
-    Texts.Add('allBatches', AllBatchesLbl);
-    Texts.Add('allBatchesHint', AllBatchesHintLbl);
-    Texts.Add('allRecords', AllRecordsLbl);
-    Texts.Add('allRecordsHint', AllRecordsHintLbl);
-    Texts.Add('catalog', CatalogLbl);
-    Texts.Add('catalogHint', CatalogHintLbl);
     Texts.Add('setup', SetupLbl);
     Texts.Add('setupHint', SetupHintLbl);
     Texts.Add('monitor', MonitorLbl);
@@ -189,7 +184,6 @@ codeunit 90365 "BCSF Dashboard Data"
     Texts.Add('resultGroup', ResultGroupLbl);
     Texts.Add('run', RunLbl);
     Texts.Add('scenario', ScenarioLbl);
-    Texts.Add('wizard', WizardLbl);
     Texts.Add('progress', ProgressLbl);
     Texts.Add('plan', PlanLbl);
     Texts.Add('savePlan', SavePlanLbl);
@@ -240,21 +234,12 @@ codeunit 90365 "BCSF Dashboard Data"
     TitleLbl: Label 'Scenario Factory';
     EyebrowLbl: Label 'SCENARIO WORKSPACE';
     SubtitleLbl: Label 'Define scenarios. Plan with confidence. Follow every run.';
-    NewLbl: Label 'New scenario';
     RefreshLbl: Label 'Refresh';
     NavigationLbl: Label 'Your workspace';
     ScenariosLbl: Label 'Scenario templates';
     ScenariosHintLbl: Label 'Define modules, targets, seed and process scope.';
     RunsLbl: Label 'Captured runs';
     RunsHintLbl: Label 'Open frozen configurations and run actions.';
-    ExecutionsLbl: Label 'Executions';
-    ExecutionsHintLbl: Label 'Review persisted execution states.';
-    AllBatchesLbl: Label 'Batches & recovery';
-    AllBatchesHintLbl: Label 'Inspect packages, retries and queue logs.';
-    AllRecordsLbl: Label 'Generated records';
-    AllRecordsHintLbl: Label 'Trace generated records and document chains.';
-    CatalogLbl: Label 'Generator catalog';
-    CatalogHintLbl: Label 'Inspect capabilities and contract checks.';
     SetupLbl: Label 'Factory setup';
     SetupHintLbl: Label 'Configure sandbox, company, limits and languages.';
     MonitorLbl: Label 'Run monitor';
@@ -264,7 +249,7 @@ codeunit 90365 "BCSF Dashboard Data"
     ActiveCountLbl: Label 'Active executions';
     ReviewCountLbl: Label 'Failed executions';
     RecentLbl: Label 'Recent captured runs';
-    WindowLbl: Label 'Up to 25 recent runs. Open Captured runs for full history.';
+    WindowLbl: Label 'Up to 25 recent runs. Open the run monitor for full history.';
     EmptyLbl: Label 'No captured runs yet. Create a scenario to get started.';
     ChooseLbl: Label 'Selected run';
     NoSelectionLbl: Label 'Select a run to view progress and run-specific actions.';
@@ -274,7 +259,6 @@ codeunit 90365 "BCSF Dashboard Data"
     ResultGroupLbl: Label 'Results & diagnostics';
     RunLbl: Label 'Run card';
     ScenarioLbl: Label 'Source template';
-    WizardLbl: Label 'Configure with wizard';
     ProgressLbl: Label 'Step details';
     PlanLbl: Label 'Dependency preview';
     SavePlanLbl: Label 'Save dependency plan';

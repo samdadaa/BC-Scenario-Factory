@@ -74,6 +74,13 @@ table 90100 "BCSF Factory Setup"
       Caption = 'Default Generated Data Language';
       ToolTip = 'Specifies the default data language for new scenarios. Automatic uses German for any German BC language and English otherwise.';
     }
+
+    // Additive marker: an older settings row alone does not mean the company was initialized.
+    field(19; "Company Initialized"; Boolean)
+    {
+      Caption = 'Company Initialized', Locked = true;
+      Editable = false;
+    }
   }
 
   keys

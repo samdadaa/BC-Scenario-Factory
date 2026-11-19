@@ -28,7 +28,7 @@ page 90351 "BCSF Factory Dashboard"
         field(ExecutionState; ExecutionState)
         {
           Caption = 'Current Execution Status';
-          ToolTip = 'Shows current persisted execution status, independently of the captured initial status. Use executions for status filtering.';
+          ToolTip = 'Shows current persisted execution status, independently of the captured initial status.';
         }
       }
     }
@@ -44,13 +44,6 @@ page 90351 "BCSF Factory Dashboard"
   {
     area(Processing)
     {
-      action(Workspace)
-      {
-        Caption = 'Dashboard';
-        ToolTip = 'Opens the JavaScript workspace with scenario creation, navigation and run actions.';
-        Image = Statistics;
-        RunObject = page "BCSF Dashboard Host";
-      }
 
       action(Progress)
       {
@@ -81,17 +74,10 @@ page 90351 "BCSF Factory Dashboard"
         RunObject = page "BCSF Run Events";
         RunPageLink = "Run Id" = field("Run Id");
       }
-      action(Executions)
-      {
-        Caption = 'Filter Executions';
-        ToolTip = 'Opens persisted execution states with native status filtering.';
-        Image = Filter;
-        RunObject = page "BCSF Execution List";
-      }
       action(Scenarios)
       {
         Caption = 'Scenarios';
-        ToolTip = 'Opens scenario templates for guided planning or detailed configuration.';
+        ToolTip = 'Opens the available scenario templates.';
         Image = Planning;
         RunObject = page "BCSF Scenario List";
       }

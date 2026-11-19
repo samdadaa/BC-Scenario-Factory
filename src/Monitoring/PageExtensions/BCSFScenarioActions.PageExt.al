@@ -17,8 +17,8 @@ pageextension 90368 "BCSF Scenario Actions" extends "BCSF Scenario List"
       action(RunPartnerScenario)
       {
         ApplicationArea = All;
-        Caption = 'Run Partner Scenario';
-        ToolTip = 'Checks, captures and schedules the selected partner scenario in the approved sandbox after confirmation.';
+        Caption = 'Run Template';
+        ToolTip = 'Starts the selected template in the background using this company''s initialized setup.';
         Image = Task;
         Enabled = CanRunPartnerScenario;
 

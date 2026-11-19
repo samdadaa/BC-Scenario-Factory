@@ -84,7 +84,7 @@ codeunit 90147 "BCSF Scenario Transfer"
     Item: JsonToken;
   begin
     Scenario.LockTable();
-    SetupMgt.InitializeSetup();
+    SetupMgt.EnsureInitialized();
     foreach Item in Scenarios do
       MissingReferences += ReadScenario(Item.AsObject());
   end;
@@ -265,24 +265,22 @@ codeunit 90147 "BCSF Scenario Transfer"
     TermCode: Code[10];
     TermCodes: List of [Code[10]];
   begin
-    if not Country.Get(Scenario."Partner Country Code") then
+    if (Scenario."Partner Country Code" <> '') and not Country.Get(Scenario."Partner Country Code") then
       Missing += StrSubstNo(ReferenceLbl, Country.TableCaption(), Scenario."Partner Country Code");
-    if Scenario."Finance Mode" = "BCSF Finance Mode"::Existing then begin
-      if not CustomerGroup.Get(Scenario."Customer Posting Group") then
+    if not (Scenario."Customer Posting Group" in ['', 'BCSF-DEMO', 'BCSF03', 'BCSF04', 'INLAND03', 'INLAND04']) and not CustomerGroup.Get(Scenario."Customer Posting Group") then
         Missing += StrSubstNo(ReferenceLbl, CustomerGroup.TableCaption(), Scenario."Customer Posting Group");
-      if not VendorGroup.Get(Scenario."Vendor Posting Group") then
+      if not (Scenario."Vendor Posting Group" in ['', 'BCSF-DEMO', 'BCSF03', 'BCSF04', 'INLAND03', 'INLAND04']) and not VendorGroup.Get(Scenario."Vendor Posting Group") then
         Missing += StrSubstNo(ReferenceLbl, VendorGroup.TableCaption(), Scenario."Vendor Posting Group");
-      if not GeneralGroup.Get(Scenario."Gen. Bus. Posting Group") then
+      if not (Scenario."Gen. Bus. Posting Group" in ['', 'BCSF-DEMO', 'BCSF03', 'BCSF04', 'INLAND03', 'INLAND04']) and not GeneralGroup.Get(Scenario."Gen. Bus. Posting Group") then
         Missing += StrSubstNo(ReferenceLbl, GeneralGroup.TableCaption(), Scenario."Gen. Bus. Posting Group");
-      if not VATGroup.Get(Scenario."VAT Bus. Posting Group") then
+      if not (Scenario."VAT Bus. Posting Group" in ['', 'BCSF-DEMO', 'BCSF03', 'BCSF04', 'INLAND03', 'INLAND04']) and not VATGroup.Get(Scenario."VAT Bus. Posting Group") then
         Missing += StrSubstNo(ReferenceLbl, VATGroup.TableCaption(), Scenario."VAT Bus. Posting Group");
-    end;
     TermCodes.Add(Scenario."Cash Terms Code");
     TermCodes.Add(Scenario."Small Terms Code");
     TermCodes.Add(Scenario."Medium Terms Code");
     TermCodes.Add(Scenario."Large Terms Code");
     foreach TermCode in TermCodes do
-      if not Terms.Get(TermCode) then
+      if not (TermCode in ['', 'NET00', 'NET14', 'NET30', 'NET60']) and not Terms.Get(TermCode) then
         Missing += StrSubstNo(ReferenceLbl, Terms.TableCaption(), TermCode);
     if Scenario."Partner Currency Code" <> '' then
       if not Currency.Get(Scenario."Partner Currency Code") then

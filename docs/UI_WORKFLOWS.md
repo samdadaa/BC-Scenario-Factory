@@ -1,5 +1,7 @@
 # Bedienkonzept, Seiten und Dashboard
 
+**Aktueller Stand ab 1.0.2.0:** Der reale Bedienweg ist in [Mandanteneinrichtung und Vorlagenstart](COMPANY_INITIALIZATION.md) beschrieben. Ältere Angaben zu Finanzauswahl je Vorlage, Vorschaufenster, Wizard, parallelen Lauflisten und Dashboard-Host sind historische Nachweise. Entfernte Objekt-IDs bleiben unbenutzt.
+
 **Status:** JavaScript-Dashboard mit eigenem Role-Center und wiederverwendbarer CardPart sowie fünfstufiger Wizard implementiert, **Zur Prüfung**. Fachgeneratoren und echte BC-Laufzeitabnahme ausstehend. Details: [MONITORING_WIZARD.md](MONITORING_WIZARD.md).
 
 ## Navigation (sechs Bereiche)

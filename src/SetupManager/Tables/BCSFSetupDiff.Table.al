@@ -37,5 +37,6 @@ table 90225 "BCSF Setup Diff"
   keys
   {
     key(PK; "Entry No.") { Clustered = true; }
+    key(BlockingFindings; Blocked, "Entry No.") { }
   }
 }

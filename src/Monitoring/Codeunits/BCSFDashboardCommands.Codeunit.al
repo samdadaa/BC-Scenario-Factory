@@ -4,7 +4,6 @@ using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.DependencyManager;
-using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.SetupManager;
 using System.Threading;
@@ -29,25 +28,14 @@ codeunit 90366 "BCSF Dashboard Commands"
   procedure Execute(ActionCode: Text; RunIdText: Text)
   var
     Header: Record "BCSF Run Header";
-    Scenario: Record "BCSF Scenario";
-    Manager: Codeunit "BCSF Scenario Manager";
   begin
     // No client-supplied page, table, method, company, filter or approval is accepted.
     case ActionCode of
-      'new':
-        begin
-          Scenario.Get(Manager.CreateScenario());
-          Page.Run(Page::"BCSF Scenario Wizard", Scenario);
-        end;
       'scenarios': Page.Run(Page::"BCSF Scenario List");
-      'runs': Page.Run(Page::"BCSF Run List");
+      'runs': Page.Run(Page::"BCSF Factory Dashboard");
       'monitor': Page.Run(Page::"BCSF Factory Dashboard");
-      'executions': Page.Run(Page::"BCSF Execution List");
-      'allBatches': Page.Run(Page::"BCSF Batch List");
-      'allRecords': Page.Run(Page::"BCSF Generated Records");
-      'catalog': Page.Run(Page::"BCSF Generator Catalog");
       'setup': Page.Run(Page::"BCSF Factory Setup Card");
-      'run', 'scenario', 'wizard', 'progress', 'plan', 'savePlan', 'readiness', 'preflight', 'synthetic',
+      'run', 'scenario', 'progress', 'plan', 'savePlan', 'readiness', 'preflight', 'synthetic',
       'prepare', 'schedule', 'pause', 'cancel', 'apply', 'resume', 'batches', 'history', 'records', 'queue', 'primary':
         begin
           Header.Get(ParseRunId(RunIdText));
@@ -111,13 +99,10 @@ codeunit 90366 "BCSF Dashboard Commands"
           QuickRun.StartCaptured(Header."Run Id");
         end;
       'run': Page.Run(Page::"BCSF Run Card", Header);
-      'scenario', 'wizard':
+      'scenario':
         begin
           Scenario.Get(Header."Scenario Id");
-          if ActionCode = 'wizard' then
-            Page.Run(Page::"BCSF Scenario Wizard", Scenario)
-          else
-            Page.Run(Page::"BCSF Scenario Card", Scenario);
+          Page.Run(Page::"BCSF Scenario Card", Scenario);
         end;
       'progress':
         begin

@@ -86,10 +86,16 @@ Diese Anweisungen sind **eigenständig formulierte, projektsichere Ableitungen**
 - **Nur Sandbox/Testbetrieb** für schreibende Generierung. Sicherheitsprüfung auch in Hintergrund-Code. Keine Zusage, dass alle Läufe über Nacht fertig werden.
 - Seit ausdrücklichem Nutzerauftrag vom 16.11.2026 gilt `src/<Modul>/<Objekttyp>/`, z. B. `Tables`, `Pages`, `PageExtensions`, `Codeunits`; vollständige Zuordnung in `docs/CONVENTIONS.md`. Typordner nur für vorhandene Objekte anlegen; keine stillen Bestandsverschiebungen außerhalb eines beauftragten Strukturwechsels.
 - **XERJ nur lokal als Codex-Wissenswerkzeug**, niemals BC-Laufzeitintegration oder SDK-Abhängigkeit, solange kein neuer Nutzerauftrag dies ändert.
-- Alle 24 Module im Index sind **geplant und leer**. Module, Objekte, Laufzeiten und Tests niemals als existent/erfolgreich ausgeben, bevor nachgewiesen.
+- Den Implementierungsstand je Modul anhand des Quellcodes prüfen. Vorhanden sind ausführbare Partnergeneratoren. Planungsvorlagen ohne registrierten ausführbaren Generator bleiben nicht ausführbar.
 - Bei Entwurfs-/Dokumentationsaufträgen darf die ausdrücklich beauftragte Dokumentationsänderung erfolgen. Für Implementierung weiterhin genau ein gewähltes Ticket.
 - Zusätzliche Pflichtlektüre bei passenden Tickets: `docs/REQUIREMENTS.md`, `docs/SCENARIOS.md`, `docs/DATA_MODEL.md`, `docs/BACKGROUND_PROCESSING.md`, `docs/UI_WORKFLOWS.md`, `docs/DECISIONS.md`.
 
+
+## Bedienvertrag ab 1.0.2.0
+
+- Die gemeinsame BC-Grundkonfiguration wird einmal in der Sandbox-Mandanteneinrichtung vorbereitet. Vorlagen nutzen diese Basis, ergänzen nur fachlich benötigte branchenspezifische Einrichtung und generieren realistische synthetische Daten. Die Auswahl des Kontenplans darf nicht im Vorlagenstart wiederkehren.
+- Die Kernnavigation besteht aus Einrichtung, Vorlagen und Laufmonitor. Bestehende Seiten und temporäre Diagnoseansichten nach Möglichkeit wiederverwenden. Zusätzliche Tabellen/Seiten oder Dialoge nur bei belegtem Bedarf.
+- Persistente Tabellen und gespeicherte Läufe kompatibel halten. Keine ForceSync-Abkürzung für eine UI-Vereinfachung. [Aktueller Vertrag und Abnahme](docs/COMPANY_INITIALIZATION.md).
 
 ## XERJ – Automatische Projektsuche und Wissensverwaltung
 

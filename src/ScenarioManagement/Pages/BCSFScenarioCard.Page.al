@@ -1,6 +1,7 @@
 namespace BCScenarioFactory.ScenarioManagement;
 
 using BCScenarioFactory.Core;
+using BCScenarioFactory.Monitoring;
 
 page 90131 "BCSF Scenario Card"
 {
@@ -46,11 +47,11 @@ page 90131 "BCSF Scenario Card"
           end;
         }
         field("Batch Size"; Rec."Batch Size") { }
-        field("Finance Mode"; Rec."Finance Mode") { }
       }
       group(PartnerGeneration)
       {
         Caption = 'Synthetic Partners';
+        ShowCaption = true;
         field("Partner Country Code"; Rec."Partner Country Code") { }
         field("Partner Currency Code"; Rec."Partner Currency Code") { }
         field("Partner Payment Method"; Rec."Partner Payment Method") { }
@@ -132,40 +133,12 @@ page 90131 "BCSF Scenario Card"
   }
   actions
   {
+    area(Promoted)
+    {
+      actionref(RunTemplatePromoted; CaptureRun) { }
+    }
     area(Processing)
     {
-      action(ConfigureFinance)
-      {
-        ApplicationArea = All;
-        Caption = 'Review Finance Setup';
-        ToolTip = 'Opens the shared finance preview. Apply a reviewed package explicitly, then select it for this template.';
-        Image = Setup;
-        trigger OnAction()
-        var
-          Manager: Codeunit "BCSF Scenario Manager";
-        begin
-          CurrPage.SaveRecord();
-          // Finish template editing before opening the separate reviewed setup workflow.
-          Commit();
-          Manager.ConfigureFinance(Rec."Scenario Id");
-          Rec.Get(Rec."Scenario Id");
-          CurrPage.Update(false);
-        end;
-      }
-
-      action(GuidedPlanning)
-      {
-        ApplicationArea = All;
-        Caption = 'Plan with Wizard';
-        ToolTip = 'Opens five guided steps on this saved template. Edits persist; closing does not schedule execution.';
-        Image = Planning;
-        trigger OnAction()
-        begin
-          CurrPage.SaveRecord();
-          Page.Run(Page::"BCSF Scenario Wizard", Rec);
-        end;
-      }
-
       action(CopyScenario)
       {
         ApplicationArea = All;
@@ -185,16 +158,17 @@ page 90131 "BCSF Scenario Card"
       action(CaptureRun)
       {
         ApplicationArea = All;
-        Caption = 'Capture Run Snapshot';
-        ToolTip = 'Freezes the current settings and resolved data language as a new draft run. No data generation or queue start occurs.';
+        Enabled = CanRunTemplate;
+        Caption = 'Run Template';
+        ToolTip = 'Starts the selected template in the background using the initialized company setup.';
         Image = Archive;
         trigger OnAction()
         var
           Header: Record "BCSF Run Header";
-          Writer: Codeunit "BCSF Snapshot Writer";
+          QuickRun: Codeunit "BCSF Quick Scenario Run";
         begin
           CurrPage.SaveRecord();
-          Header.Get(Writer.CreateSnapshot(Rec."Scenario Id"));
+          Header.Get(QuickRun.RunScenario(Rec));
           Page.Run(Page::"BCSF Run Card", Header);
         end;
       }
@@ -204,7 +178,7 @@ page 90131 "BCSF Scenario Card"
         Caption = 'Captured Runs';
         ToolTip = 'Opens the captured configuration history.';
         Image = History;
-        RunObject = page "BCSF Run List";
+        RunObject = page "BCSF Factory Dashboard";
         RunPageLink = "Scenario Id" = field("Scenario Id");
       }
     }
@@ -213,11 +187,13 @@ page 90131 "BCSF Scenario Card"
   var
     Manager: Codeunit "BCSF Scenario Manager";
   begin
+    CanRunTemplate := not IsNullGuid(Rec."Scenario Id") and Manager.IsPartnerTemplate(Rec);
     Manager.GetMinimumReferences(Rec."Scenario Id", MinimumCustomers, MinimumVendors);
     Manager.GetScenarioLanguagePreview(Rec, CustomerPreview, VendorPreview, ItemPreview);
   end;
 
   var
+    CanRunTemplate: Boolean;
     CustomerPreview: Text[100];
     VendorPreview: Text[100];
     ItemPreview: Text[100];

@@ -1,6 +1,8 @@
 namespace BCScenarioFactory.IndustryProfiles;
 
 using BCScenarioFactory.Core;
+using BCScenarioFactory.Finance;
+using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ScenarioManagement;
 using System.Environment;
 
@@ -16,17 +18,28 @@ codeunit 90155 "BCSF Starter Catalog"
         exit(Environment.IsSaaS() and Environment.IsSandbox() and not Environment.IsProduction());
     end;
 
-    procedure SeedDuringDeployment()
+    [CommitBehavior(CommitBehavior::Error)]
+    procedure InitializeCompany(Mode: Enum "BCSF Finance Mode")
     var
         Setup: Record "BCSF Factory Setup";
-        Environment: Codeunit "Environment Information";
+        Scenario: Record "BCSF Scenario";
+        SetupMgt: Codeunit "BCSF Setup Management";
+        Packages: Codeunit "BCSF Finance Package Mgt";
+        Guard: Codeunit "BCSF Environment Guard";
     begin
         if not IsStarterSandbox() then
+            Error(SandboxErr);
+        // Coordinate with snapshot and template writers: scenario locks precede setup locks.
+        Scenario.LockTable();
+        SetupMgt.InitializeSetup();
+        Guard.EnsureCanConfigure(CompanyName());
+        Setup.Get(Setup.GetSetupKey());
+        if Setup."Company Initialized" then
             exit;
-        // Copied companies may carry an explicit setup bound to a different company or environment.
-        if Setup.Get(Setup.GetSetupKey()) then
-            if (Setup."Allowed Environment Name" <> Environment.GetEnvironmentName()) or (Setup."Allowed Company Name" <> CompanyName()) then
-                exit;
+        Packages.InitializeCompany(Mode);
+        Setup."Company Initialized" := true;
+        Setup.Validate("Generation Enabled", true);
+        Setup.Modify(true);
         Seed();
     end;
 
@@ -41,7 +54,7 @@ codeunit 90155 "BCSF Starter Catalog"
         if not IsStarterSandbox() then
             Error(SandboxErr);
         Scenario.LockTable();
-        SetupMgt.InitializeSetup();
+        SetupMgt.EnsureInitialized();
         SetupMgt.GetSetup(Setup);
         for Industry := 1 to 8 do
             SeedIndustry(Industry, Setup);
@@ -131,21 +144,11 @@ codeunit 90155 "BCSF Starter Catalog"
         Scenario."Profile Version" := '1';
         Scenario."Usage Mode" := Usage;
         Scenario."Process Mode" := Scope;
-        Scenario."Finance Mode" := "BCSF Finance Mode"::SKR03;
         Scenario.Seed := Industry * 100 + VariantNo;
         Scenario."Starting Date" := WorkDate();
         Scenario."Ending Date" := WorkDate();
         Scenario."Batch Size" := MinValue(Setup."Default Batch Size", MinValue(Customers, Vendors));
         Scenario."Data Language" := Setup."Default Data Language";
-        Scenario."Partner Country Code" := 'DE';
-        Scenario."Customer Posting Group" := 'INLAND03';
-        Scenario."Vendor Posting Group" := 'INLAND03';
-        Scenario."Gen. Bus. Posting Group" := 'INLAND03';
-        Scenario."VAT Bus. Posting Group" := 'INLAND03';
-        Scenario."Cash Terms Code" := 'NET00';
-        Scenario."Small Terms Code" := 'NET14';
-        Scenario."Medium Terms Code" := 'NET30';
-        Scenario."Large Terms Code" := 'NET60';
         Scenario."B2C Percent" := Consumer;
         Scenario.Insert(true);
         AddModule(ScenarioId, "BCSF Module Type"::Sales);

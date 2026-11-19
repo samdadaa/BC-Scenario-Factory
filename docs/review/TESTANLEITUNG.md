@@ -81,3 +81,16 @@ Aktueller [Vertrag mit Rollen und Versionsgrenzen](../STABILIZATION_FINANCE_PART
 | F39-08 | Neuer Mehrpaketlauf 12/7, Paketgröße 5; kontrollierter Fehler nach einem erfolgreich bestätigten Paket; Recovery/Abschluss prüfen. Alten Version-1-Lauf öffnen. | 5 Pakete; bestätigte Einheiten und Kindartefakte getrennt. Keine doppelten Partner/Kinder, kein blinder Retry und kein Überschreiben alter Fachwerte. Ursprüngliche Paketfehler direkt erreichbar. |
 
 Kürzester Normalpfad bei vorbereiteter Firma: **Vorlage wählen → Partnerszenario ausführen → Ergebnisse öffnen**. Einmalige neue Finance-Grundlage: **Finanzeinrichtung prüfen → Rahmen wählen → Vorschau → Testpaket anwenden**. Alte Vorlagen/Pakete werden dabei nicht automatisch migriert.
+
+
+## SF-038 – Rechte und deaktiviertes Anwenden, Nachprüfung 19.11.2026
+
+Nutzer bestätigt den Befund „Erforderliche Standard-Lese- oder Schreibberechtigung fehlt.“. Neuer lokaler Paketstand und echte Checks siehe [TESTS.md](../TESTS.md#sf-038--gesperrte-finanzpaketanwendung-19112026). Keine Prüfung der individuellen Sandboxrechte ausgeführt.
+
+1. In einer neuen **unbebuchten Sandbox-Testfirma** SKR03 bzw. SKR04 wählen. Die Vorschau zeigt Blockerzahl und ersten Befund oben, blockierende Zeilen zuerst. **Blockierende Befunde anzeigen** und **Alle Befunde anzeigen** prüfen. Die Paketaktion muss als hervorgehobene Aktion auffindbar sein. Vorschau öffnen/filtern/schließen darf keine Standarddaten schreiben.
+2. Benutzer mit erforderlichen direkten Lese-/Einfüge- und Lizenzrechten auf fehlende Paketdatensätze, aber ohne Delete: Neuanlagen dürfen nicht allein wegen fehlendem Delete blockieren. Bei Ergänzung leerer Felder in vorhandenen Setupzeilen sind zusätzlich die dortigen Modify-Rechte erforderlich. Alle Standardtrigger-Nebenrechte bleiben maßgeblich.
+3. Fehlendes Insert, fehlendes Modify bei nötiger Ergänzung, ausschließlich indirekte Berechtigung ohne passenden Standardwriter, fehlendes Lizenzrecht oder unzulässiger Sicherheitsfilter: konkrete Blockierung/Standardfehler; keine teilweise gespeicherte Paketanwendung und kein Job. Keine automatische Rollenzuweisung oder Empfehlung, pauschal SUPER zu vergeben.
+4. Vollständig passende bestehende Datensätze werden lesend wiederverwendet; unnötige Schreib-/Löschrechte dürfen nicht verlangt werden. Rechte im **richtigen Testmandanten** unter den effektiven Berechtigungen prüfen lassen, wenn der Befund bestehen bleibt. `BCSF ADMIN` allein enthält weiterhin keine Standard-Einrichtungsrechte.
+5. Nach fehlerfreier Vorschau **Testpaket anwenden → Bestätigung**; erst danach den Partnerlauf fortsetzen. Datenbank-/Lizenz-/Sicherheitsfilteränderung zwischen Vorschau und Anwendung muss durch die frische Prüfung weiterhin blockiert werden. Buchungsschutz, Paketwechselverbot und vorhandene Laufdaten bleiben erhalten.
+
+Diese fünf nativen BC-Prüfungen sind **noch nicht ausgeführt**. Fehlende Standardrechte lassen sich nicht durch ein Codepaket ohne administrative Freigabe des Mandanten beheben. Der konkrete ursprüngliche Benutzerfall ist deshalb noch nicht als gelöst abgenommen.

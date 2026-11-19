@@ -1,5 +1,7 @@
 # SF-018 – Debitoren und Kreditoren
 
+**Aktueller Stand ab 1.0.2.0:** Der reale Bedienweg ist in [Mandanteneinrichtung und Vorlagenstart](COMPANY_INITIALIZATION.md) beschrieben. Ältere Angaben zu Finanzauswahl je Vorlage, Vorschaufenster, Wizard, parallelen Lauflisten und Dashboard-Host sind historische Nachweise. Entfernte Objekt-IDs bleiben unbenutzt.
+
 ## Arbeitsplan vor Änderungen – 18.11.2026
 
 Nur SF-018 ist beauftragt. Ausgangsbestand 116 AL-Dateien, keine schreibenden Debitoren-/Kreditorengeneratoren. Manifest: App-ID 618c08c6-601b-430a-90d2-55f96866bfa4, Version 1.0.0.0, Runtime 17, Application 28.0, IDs 90100–90999, Dependencies []; Publisher unverändert Default Publisher. Lokale Vergleichssymbole BC 28.5/DE, keine bestätigte Sandbox-Laufzeit.

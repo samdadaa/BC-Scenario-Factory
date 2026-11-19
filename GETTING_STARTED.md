@@ -1,5 +1,15 @@
 # Einstieg für Entwickler — BC Scenario Factory
 
+## Aktueller Ablauf für einen leeren Sandbox-Mandanten
+
+1. AL-Symbole für deine Zielversion herunterladen und dieses Quellprojekt bauen.
+2. Erweiterung in der Sandbox-Firma installieren. Im BC-Profil **BC Scenario Factory** beziehungsweise über die BC-Suche die **Scenario-Factory-Einrichtung** öffnen.
+3. **Mandant initialisieren** wählen und den Kontenrahmen einstellen. Die Erweiterung bereitet das Grundsetup und die Startervorlagen vor.
+4. Unter **Szenariovorlagen** „Allgemeines Unternehmen – Funktionstest: Debitoren und Kreditoren“ wählen → **Vorlage ausführen**. Im **Laufmonitor** warten und die erzeugten Datensätze prüfen.
+5. Die Prüfpfade für SKR03, SKR04, bestehende Einrichtung und Aktualisierung sind unter [Mandanteneinrichtung und Vorlagenstart](docs/COMPANY_INITIALIZATION.md) beschrieben.
+
+Die folgenden Abschnitte beschreiben die ursprüngliche Projekteinrichtung vor Version 1.0.2.0.
+
 Diese Dateien machen ein **AL-/Business-Central-Projekt für externe Coding-Agenten vorbereitbar**. AL Agentura stellt die Struktur und die Markdown-Vorlagen bereit, führt aber **keine KI selbst aus** und garantiert nicht, dass ein Agent die Dokumente automatisch erkennt. Den Startprompt im verwendeten Agenten bewusst senden.
 
 ## Verzeichnis und Zweck

@@ -1,5 +1,7 @@
 # SF-014 / SF-015 – Monitoring und geführte Planung
 
+**Aktueller Stand ab 1.0.2.0:** Der reale Bedienweg ist in [Mandanteneinrichtung und Vorlagenstart](COMPANY_INITIALIZATION.md) beschrieben. Ältere Angaben zu Finanzauswahl je Vorlage, Vorschaufenster, Wizard, parallelen Lauflisten und Dashboard-Host sind historische Nachweise. Entfernte Objekt-IDs bleiben unbenutzt.
+
 **Aktuell nach Nutzerpräzisierung:** JavaScript-ControlAddIn, eigenes Role-Center und wiederverwendbare CardPart sind ergänzt. Maßgebliche aktuelle Bedienung, Einbau und Grenzen: [DASHBOARD_EMBEDDING.md](DASHBOARD_EMBEDDING.md). Die anfängliche ausschließlich native Entscheidung unten ist historischer Umsetzungsstand.
 
 ## Plan vor Änderungen, 16.11.2026

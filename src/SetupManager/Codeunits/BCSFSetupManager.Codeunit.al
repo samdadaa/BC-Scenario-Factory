@@ -151,8 +151,12 @@ codeunit 90226 "BCSF Setup Manager"
   var
     TempDiff: Record "BCSF Setup Diff" temporary;
   begin
-    if not BuildFromRun(RunId, TempDiff) then
-      Error(BlockedErr);
+    if not BuildFromRun(RunId, TempDiff) then begin
+      TempDiff.Reset();
+      TempDiff.SetRange(Blocked, true);
+      TempDiff.FindFirst();
+      Error(BlockedErr, TempDiff.Requirement, TempDiff.Finding, TempDiff.Action);
+    end;
   end;
 
   procedure HasBlockers(var TempDiff: Record "BCSF Setup Diff" temporary): Boolean
@@ -376,7 +380,7 @@ codeunit 90226 "BCSF Setup Manager"
   end;
 
   var
-    BlockedErr: Label 'Setup preflight is blocked. Review the current setup diff and resolve every required action before execution.';
+    BlockedErr: Label 'Cannot start: %1. %2 %3', Comment = '%1 = requirement, %2 = reason, %3 = next action';
     CompanyErr: Label 'Review this run in its captured company.';
     TargetErr: Label 'The captured entity is not supported by setup preflight.';
     ReadPermissionLbl: Label 'Read permission is missing.';
