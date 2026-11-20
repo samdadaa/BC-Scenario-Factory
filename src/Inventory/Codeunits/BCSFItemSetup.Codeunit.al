@@ -37,7 +37,7 @@ codeunit 90478 "BCSF Item Setup"
     Target.SetRange("Scenario Id", Scenario."Scenario Id");
     Target.SetRange(Entity, Target.Entity::Item);
     Target.SetFilter(Quantity, '>0');
-    if Target.IsEmpty() or not Catalog.SupportsProfile(Scenario."Profile Code") then
+    if Target.IsEmpty() or not Catalog.SupportsProfile(Scenario."Profile Code", Scenario."Profile Version") then
       exit;
     Inventory.SecurityFiltering(SecurityFilter::Disallowed);
     Inventory.Get();
@@ -167,7 +167,7 @@ codeunit 90478 "BCSF Item Setup"
   begin
     Contract.CheckTarget(Context, Target);
     if (Contract.GetText(Target, 'entityCode') <> 'ITEM') or (Contract.GetText(Target, 'moduleCode') <> 'INVENTORY') or
-      (Contract.GetInteger(Target, 'processMode') <> 0) or not Catalog.SupportsProfile(Contract.GetText(Context, 'profileCode')) then
+      (Contract.GetInteger(Target, 'processMode') <> 0) or not Catalog.SupportsProfile(Contract.GetText(Context, 'profileCode'), Contract.GetText(Context, 'profileVersion')) then
       Error(ProfileErr);
     Catalog.BuildValues(Context, 1);
     Settings := ReadSettings(Context);

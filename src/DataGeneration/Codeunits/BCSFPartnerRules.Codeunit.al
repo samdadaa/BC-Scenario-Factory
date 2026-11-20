@@ -367,7 +367,7 @@ codeunit 90256 "BCSF Partner Rules"
     Step.TestField("Contract Version", 1);
     Step.TestField("Work Units", Contract.GetInteger(Target, 'quantity'));
     Step.TestField("Module Code", Contract.GetCode(Target, 'moduleCode'));
-    Step.TestField("Process Mode", "BCSF Process Mode"::SetupAndMasterData);
+    Step.TestField("Process Mode", "BCSF Process Mode".FromInteger(Contract.GetInteger(Target, 'processMode')));
     OnCheckExecutingBatch(RunId, BatchId, Step."Node Code", Batch);
   end;
 

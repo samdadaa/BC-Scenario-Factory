@@ -39,7 +39,7 @@ pageextension 90368 "BCSF Scenario Actions" extends "BCSF Scenario List"
       {
         ApplicationArea = All;
         Caption = 'Load Starter Scenarios';
-        ToolTip = 'Adds missing built-in starter scenarios without replacing existing templates or starting a run.';
+        ToolTip = 'Loads missing starters and updates unchanged built-in test templates for implemented generators. Keeps custom settings, removed templates and captured runs.';
         Image = Setup;
 
         trigger OnAction()
@@ -48,6 +48,7 @@ pageextension 90368 "BCSF Scenario Actions" extends "BCSF Scenario List"
         begin
           Catalog.Seed();
           CurrPage.Update(false);
+          Message(TemplatesUpdatedLbl);
         end;
       }
       action(RestoreStarterScenarios)
@@ -98,12 +99,11 @@ pageextension 90368 "BCSF Scenario Actions" extends "BCSF Scenario List"
     }
   }
   trigger OnAfterGetCurrRecord()
-  var
-    Manager: Codeunit "BCSF Scenario Manager";
   begin
-    CanRunPartnerScenario := not IsNullGuid(Rec."Scenario Id") and Manager.IsPartnerTemplate(Rec);
+    CanRunPartnerScenario := not IsNullGuid(Rec."Scenario Id") and not Rec.Archived;
   end;
 
   var
+    TemplatesUpdatedLbl: Label 'Starter templates are up to date. Unchanged sales templates were updated; customized or archived templates, removed starters and captured runs were retained.';
     CanRunPartnerScenario: Boolean;
 }

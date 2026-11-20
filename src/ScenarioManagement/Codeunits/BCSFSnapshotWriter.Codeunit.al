@@ -25,6 +25,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     Payload: JsonObject;
     SyntheticRules: JsonObject;
     InventorySettings: JsonObject;
+    SalesSettings: JsonObject;
     PartnerSettings: JsonObject;
     Targets: JsonArray;
     Modules: JsonArray;
@@ -100,6 +101,9 @@ codeunit 90144 "BCSF Snapshot Writer"
     OnCaptureInventorySetup(Scenario, PartnerSettings, InventorySettings);
     if InventorySettings.Keys().Count() > 0 then
       Payload.Add('itemSetup', InventorySettings);
+    OnCaptureSalesSetup(Scenario, InventorySettings, SalesSettings);
+    if SalesSettings.Keys().Count() > 0 then
+      Payload.Add('salesSetup', SalesSettings);
     ScenarioModule.SetRange("Scenario Id", ScenarioId);
     if ScenarioModule.FindSet() then
       repeat
@@ -193,6 +197,11 @@ codeunit 90144 "BCSF Snapshot Writer"
 
   [IntegrationEvent(false, false)]
   local procedure OnCaptureInventorySetup(Scenario: Record "BCSF Scenario"; PartnerSettings: JsonObject; var Settings: JsonObject)
+  begin
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnCaptureSalesSetup(Scenario: Record "BCSF Scenario"; InventorySettings: JsonObject; var Settings: JsonObject)
   begin
   end;
 

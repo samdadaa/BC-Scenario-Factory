@@ -99,6 +99,12 @@ page 90137 "BCSF Data Targets"
       }
     }
   }
+  procedure RefreshTargets()
+  begin
+    if Rec.Get(Rec."Scenario Id", Rec.Entity) then
+      CurrPage.Update(false);
+  end;
+
   trigger OnNewRecord(BelowxRec: Boolean)
   var
     Policy: Codeunit "BCSF Scenario Policy";

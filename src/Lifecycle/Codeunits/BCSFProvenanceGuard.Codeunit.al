@@ -12,13 +12,14 @@ codeunit 90379 "BCSF Provenance Guard"
   var
     Step: Record "BCSF Run Step";
     Guard: Codeunit "BCSF Environment Guard";
+    Manager: Codeunit "BCSF Scenario Manager";
     Registry: Codeunit "BCSF Record Registry";
   begin
     if Rec.IsTemporary() then
       exit;
     Step.Get(Rec."Run Id", Rec."Node Code");
-    // No implicit posting approval. Future posting generators require a separate approved contract.
-    Guard.EnsureCanGenerate(Rec.CurrentCompany(), Step."Process Mode", Step."Work Units", 1, false);
+    // Other generators receive no posting approval from the SF-021 contract.
+    Guard.EnsureCanGenerate(Rec.CurrentCompany(), Step."Process Mode", Step."Work Units", 1, Manager.HasSalesPostingApproval(Rec."Run Id", Step."Node Code"));
     Registry.CheckEntry(Rec);
   end;
 

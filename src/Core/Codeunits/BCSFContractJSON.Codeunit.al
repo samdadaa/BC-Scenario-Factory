@@ -32,6 +32,15 @@ codeunit 90111 "BCSF Contract JSON"
     exit(Token.AsValue().AsInteger());
   end;
 
+  procedure GetDecimal(Value: JsonObject; FieldName: Text): Decimal
+  var
+    Token: JsonToken;
+  begin
+    if not Value.Get(FieldName, Token) then
+      Error(MissingKeyErr, FieldName);
+    exit(Token.AsValue().AsDecimal());
+  end;
+
   procedure GetBoolean(Value: JsonObject; FieldName: Text): Boolean
   var
     Token: JsonToken;

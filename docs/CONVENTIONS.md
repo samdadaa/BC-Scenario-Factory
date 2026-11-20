@@ -138,3 +138,11 @@ Datenfilter und Laufwahl getrennt halten. Fachliche Kennzahlen verwenden dasselb
 Die separate Test-App unter `tests/SF019/` wird mit `BCSFTESTS` gebaut; ihre AL-Quelle bleibt im normalen Main-Build per Präprozessor ausgeschlossen. Main-App hat keine Test-Dependency, nur eine ausdrücklich benannte Internals-Freigabe für diese Test-App. [Reproduzierbarer isolierter Build und Runner-Voraussetzungen](INVENTORY_GENERATION.md#automatisierte-test-app).
 
 Zusammengesetzte Standard-Primärschlüssel gegen die tatsächlichen Symbole prüfen; Felddeklarationsreihenfolge und Sekundärschlüssel sind kein Nachweis. Für Item Vendor ist die Reihenfolge Kreditor, Artikel, Variante; `GetItemVendor` bündelt die Lesestellen. Standard-Item-Reference-Insert erzeugt die Bezugsquelle, deshalb keine zweite Item-Vendor-Anlage. Core-Permission-Set darf deklarativ Inventory-Execute aufnehmen; Core-Geschäftslogik bleibt ohne Inventory-Aufruf.
+
+## SF-021 – Buchungsaufruf und Tests
+
+Sales-Post öffentlich nur ohne booleschen Run-Rückgabewert, mit SetSuppressCommit(true) unter CommitBehavior::Error. Internes RunWithCheck nicht direkt aus Fremd-App aufrufen. Standard-Angebotsumwandlung ebenfalls ohne booleschen Run. Keine zusätzlichen Main-Testobjekte; sechs neue Methoden im vorhandenen isolierten Testhost. Snapshot-Schema bleibt 1, neuer optionaler salesSetup-Vertrag Version 1; alte Snapshots erhalten keine Buchungsfreigabe. Keine ForceSync-Änderung. [Vertrag](SALES_PROCESS.md).
+
+### Verbindliche Vorlagenpflege nach jedem Implementierungsticket
+
+Vorhandene Starter gegen den aktuellen Generator-Katalog prüfen und zum Testen aktualisieren; Umfang/Quoten/Quellen und Native-Prüfschritte dokumentieren. Maximalumfang nicht mit tatsächlichem Stepmodus verwechseln. Geeignete Standard-Vorlagenmigration über feste IDs/erkannte ursprüngliche Konfiguration und explizite Ladeaktion; eigene/entfernte/archivierte Vorlagen und Captures schützen. Prozentwerte als Decimal transportieren. Keine automatische Buchungsfreigabe. [Aktueller SF-021-Vertrag](SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051).

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile SF-019 app and isolated test app with installed tools; never publish or install."""
+"""Compile app and existing isolated SF-019/SF-021 test host with installed tools; never publish or install."""
 import argparse
 from pathlib import Path
 import shutil
@@ -23,6 +23,8 @@ def main():
     if compiler is None or dotnet is None:
         parser.error('Pass --compiler and --dotnet for an existing AL compiler and matching .NET host; no tools are installed.')
     subprocess.run([sys.executable, str(ROOT / 'scripts/check_inventory_contracts.py')], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, str(ROOT / 'scripts/check_sales_contracts.py')], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, str(ROOT / 'scripts/check_template_contracts.py')], cwd=ROOT, check=True)
     output = (args.output or Path(tempfile.mkdtemp(prefix='bcsf-sf019-build-'))).resolve()
     output.mkdir(parents=True, exist_ok=True)
     app = output / 'app'

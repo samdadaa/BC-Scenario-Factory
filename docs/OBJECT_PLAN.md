@@ -358,3 +358,16 @@ Beide vor Anlage im aktuellen Code und Objektplan frei; innerhalb des bestehende
 | Separate SF-019-Test-App | 90700 | Test-Codeunit | BCSF Inventory Tests | `tests/SF019/BCSFInventoryTests.Codeunit.al` |
 
 Main-Objekte im freigegebenen Inventory-Block 90475–90499; Testbereich 90700–90709 für die ausdrücklich verlangte separate SF-019-Test-App aus der gemeinsamen Reserve gewählt, davon nur 90700 belegt. Keine neue Main-Tabelle oder Seite. Externe Fremd-App-Kollisionen bleiben in der Ziel-Sandbox zu prüfen. Core referenziert Inventory ausschließlich deklarativ im ADMIN-Permission-Set; keine neue ausführbare Rückabhängigkeit.
+
+## SF-021 – reale Ergänzungen, 20.11.2026
+
+| Modul | ID | Typ | Objekt | Pfad |
+| --- | --- | --- | --- | --- |
+| ProcessEngine | 90275 | Codeunit | BCSF Process Coordinator | `src/ProcessEngine/Codeunits/BCSFProcessCoordinator.Codeunit.al` |
+| Sales | 90426 | Codeunit | BCSF Sales Generator | `src/Sales/Codeunits/BCSFSalesGenerator.Codeunit.al` |
+| Sales | 90428 | EnumExtension | BCSF Sales Binding | `src/Sales/EnumExtensions/BCSFSalesBinding.EnumExt.al` |
+| Sales | 90429 | Codeunit | BCSF Sales Setup | `src/Sales/Codeunits/BCSFSalesSetup.Codeunit.al` |
+| Sales | 90430 | Codeunit | BCSF Sales Documents | `src/Sales/Codeunits/BCSFSalesDocuments.Codeunit.al` |
+| Sales | 90431 | Codeunit | BCSF Sales Evidence | `src/Sales/Codeunits/BCSFSalesEvidence.Codeunit.al` |
+
+90275/90426 waren geplant und lokal unimplementiert; 90428–90431 vor Anlage frei, innerhalb des bestehenden Sales-Blocks. Main insgesamt 133 AL-Dateien, keine neue Tabelle/Seite; vorhandene Test-Codeunit 90700 um sechs Methoden ergänzt, keine neue Test-ID. Zwei additive Szenariofelder 41/42. Core referenziert ProcessEngine/Sales nur deklarativ im ADMIN-Execute-Permission-Set. Kein Standardtabledata-Recht hinzugefügt. Externe ID-Konflikte in der Ziel-Sandbox weiterhin zu prüfen.

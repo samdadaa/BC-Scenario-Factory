@@ -34,7 +34,6 @@ codeunit 90367 "BCSF Quick Scenario Run"
   begin
     Header.LockTable();
     Header.Get(RunId);
-    Header.TestField("Process Mode", "BCSF Process Mode"::SetupAndMasterData);
     Guard.EnsureCanConfigure(CompanyName());
     SetupMgt.EnsureInitialized();
     Manager.LoadFrozenTargets(RunId, TempTarget);
@@ -42,7 +41,7 @@ codeunit 90367 "BCSF Quick Scenario Run"
     if not TempTarget.FindSet() then
       Error(PartnerOnlyErr);
     repeat
-      if not (TempTarget.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]) then
+      if not Manager.SupportsTarget(TempTarget) then
         Error(PartnerOnlyErr);
     until TempTarget.Next() = 0;
     Execution.LockTable();
@@ -87,25 +86,12 @@ codeunit 90367 "BCSF Quick Scenario Run"
 
   local procedure CheckTargets(Scenario: Record "BCSF Scenario")
   var
-    Target: Record "BCSF Data Target";
-    Found: Boolean;
+    Manager: Codeunit "BCSF Scenario Manager";
   begin
-    Scenario.TestField(Archived, false);
-    if Scenario."Process Mode" <> "BCSF Process Mode"::SetupAndMasterData then
-      Error(PartnerOnlyErr);
-    Target.SetRange("Scenario Id", Scenario."Scenario Id");
-    Target.SetFilter(Quantity, '>0');
-    if Target.FindSet() then
-      repeat
-        Found := true;
-        if not (Target.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]) then
-          Error(PartnerOnlyErr);
-      until Target.Next() = 0;
-    if not Found then
-      Error(PartnerOnlyErr);
+    Manager.RequireExecutableTargets(Scenario);
   end;
 
   var
-    CapturedQst: Label 'Start this captured master-data run after rechecking its setup and permissions? Existing or uncertain batches are not repeated.';
-    PartnerOnlyErr: Label 'Quick run supports customer, vendor and supported item master data. This template depends on generators that are not available yet.';
+    CapturedQst: Label 'Start this captured run after rechecking its setup and permissions? Approved sales targets can post documents. Existing or uncertain batches are not repeated.';
+    PartnerOnlyErr: Label 'Quick run supports customer, vendor, supported items and sales quotes, orders and invoices. This template requires an unavailable generator.';
 }

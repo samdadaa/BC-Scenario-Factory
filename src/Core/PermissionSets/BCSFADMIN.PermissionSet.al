@@ -10,6 +10,7 @@ using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.Monitoring;
 using BCScenarioFactory.Purchasing;
+using BCScenarioFactory.ProcessEngine;
 using BCScenarioFactory.Sales;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.SetupManager;
@@ -125,6 +126,11 @@ permissionset 90105 "BCSF ADMIN"
     codeunit "BCSF Partner Rules" = X,
     codeunit "BCSF Partner Catalog" = X,
     codeunit "BCSF Partner Children" = X,
+    codeunit "BCSF Process Coordinator" = X,
+    codeunit "BCSF Sales Generator" = X,
+    codeunit "BCSF Sales Setup" = X,
+    codeunit "BCSF Sales Documents" = X,
+    codeunit "BCSF Sales Evidence" = X,
     codeunit "BCSF Customer Generator" = X,
     codeunit "BCSF Vendor Generator" = X,
     codeunit "BCSF Starter Catalog" = X,

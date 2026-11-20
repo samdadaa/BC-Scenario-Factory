@@ -29,7 +29,7 @@ page 90133 "BCSF Scenario List"
         field(Availability; Availability)
         {
           Caption = 'Availability';
-          ToolTip = 'Only partner master data has executable generators. Other templates support planning only.';
+          ToolTip = 'Shows whether the actual entity targets have executable generators. Setup and permissions are checked on start.';
         }
         field(Archived; Rec.Archived) { }
         field(Revision; Rec.Revision) { }
@@ -41,6 +41,11 @@ page 90133 "BCSF Scenario List"
   }
   actions
   {
+    area(Promoted)
+    {
+      actionref(CreateScenarioPromoted; CreateScenario) { }
+      actionref(RemoveTemplatesPromoted; RemoveTemplates) { }
+    }
     area(Processing)
     {
       action(RemoveTemplates)
@@ -140,15 +145,10 @@ page 90133 "BCSF Scenario List"
     Manager: Codeunit "BCSF Scenario Manager";
   begin
     DisplayName := Manager.GetDisplayName(Rec);
-    if Manager.IsPartnerTemplate(Rec) then
-      Availability := PartnerLbl
-    else
-      Availability := PlanningLbl;
+    Availability := Manager.DescribeAvailability(Rec);
   end;
   var
     DisplayName: Text;
     Availability: Text;
     IncludeArchived: Boolean;
-    PartnerLbl: Label 'Partner Master Data';
-    PlanningLbl: Label 'Planning Only';
 }

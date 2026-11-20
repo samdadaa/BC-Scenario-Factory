@@ -100,3 +100,5 @@ Vierzehn zusätzliche optionale Partnerfelder auf bestehender Vorlage, sichtbar 
 ## SF-037 – Reparaturauftrag 18.11.2026
 
 Archivflag, Remove-Vermerk 90148, neue Snapshot-Sperre für Archive, erneute Löschprüfung unter Elternsperre, Kindkaskade ohne Laufdatenlöschung, Namensanzeige-Ereignis und konkreter Import-Referenzbericht. [Aktueller Vertrag](../../../STARTER_TEMPLATES.md), [echte lokale Prüfungen und offene BC-Abnahme](../../../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**.
+
+SF-021-Vorlagenkorrektur 1.0.5.1: gültige neue Minimalvorlage, Unterstützung tatsächlicher Ziele aus Registry, zentrale konsistente Scope-/Quotenwechsel, genaue Verfügbarkeit und sichtbares sicheres Löschen/Archivieren. Keine neuen AL-Objekte/Felder. [Vertrag/Abnahme](../../../SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051), Zur Prüfung.

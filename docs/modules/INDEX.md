@@ -13,13 +13,13 @@ Für neue oder geänderte Generatoren gelten die [SF-042-Qualitätsregeln](../AR
 | [DependencyManager](details/src/DependencyManager.md) | Kern | `src/DependencyManager/` | Graph/Plan/Vorschau: 9 AL-Objekte, zur Prüfung |
 | [SetupManager](details/src/SetupManager.md) | Kern | `src/SetupManager/` | 4 AL-Objekte: temporärer Setup-Diff, Manager, Vorschau und Laufkarten-Erweiterung; zur Prüfung. |
 | [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | 9 AL-Objekte: Partnerregeln/-katalog/-kinddaten, Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. |
-| [ProcessEngine](details/src/ProcessEngine.md) | Kern | `src/ProcessEngine/` | Geplant, ohne Code |
+| [ProcessEngine](details/src/ProcessEngine.md) | Kern | `src/ProcessEngine/` | 1 Objekt für SF-021-Prozessquoten, Mengen und Datum, zur Prüfung |
 | [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 17 AL-Objekte: Qualitätsabschluss, Ausführung, Queue und begrenzte Recovery mit Checkpoints/Steuerung; zur Prüfung. |
 | [Validation](details/src/Validation.md) | Kern | `src/Validation/` | 4 AL-Objekte: immutable Qualitätsbefunde, Manager, Severity und Ergebnisliste; zur Prüfung |
 | [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | 18 AL-Objekte: JS-Dashboard, Role-Center/Profil, Kennzahlen, Historie und Wizard-Ausführungsintegration, zur Prüfung |
 | [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Teilweise implementiert, 4 AL-Objekte, Zur Prüfung. |
 | [Finance](details/src/Finance.md) | Fach | `src/Finance/` | 7 AL-Objekte: lesender Finanzcheck, versionierter Paketmanager/Paketvermerk, Auswahl/Vorschau und zwei PageExtensions; zur Prüfung. Keine Fachbuchungsgeneratoren. |
-| [Sales](details/src/Sales.md) | Fach | `src/Sales/` | 2 AL-Objekte: echter Customer-Generator und EnumExtension-Bindung; zur Prüfung. Beleggeneratoren geplant. |
+| [Sales](details/src/Sales.md) | Fach | `src/Sales/` | 7 AL-Objekte: Customer-Generator und SF-021-Angebote/Aufträge/Rechnungen; zur Prüfung, native BC-Abnahme offen. |
 | [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | 2 AL-Objekte: echter Vendor-Generator und EnumExtension-Bindung; zur Prüfung. Beleggeneratoren geplant. |
 | [Inventory](details/src/Inventory.md) | Fach | `src/Inventory/` | Sechs SF-019-Objekte, Artikel-/Beziehungsstämme ohne Bestände, zur Prüfung |
 | [Warehouse](details/src/Warehouse.md) | Fach | `src/Warehouse/` | Geplant, ohne Code |
@@ -73,3 +73,9 @@ Bestand unverändert 121 AL-Dateien, davon 19 Monitoringobjekte. Bestehende Dash
 ## SF-019 – Artikelstammdaten (20.11.2026)
 
 127 AL-Dateien in 15 Modulen; Inventory jetzt sechs Objekte. Drei ausführbare führende Entitäten: Customer, Vendor und ITEM für die ausdrücklich unterstützten technischen Großhandelsprofile. Keine neue Custom-Tabelle/Seite; acht optionale Vorlagenfelder. Test-App getrennt unter `tests/SF019/`. [Umfang/Bedienung](../INVENTORY_GENERATION.md), [Prüfungen und offene BC-Abnahme](../TESTS.md#sf-019--artikelsortiment-und-lagerbasics-20112026). **Zur Prüfung**.
+
+## SF-021 – Verkaufsprozess, 20.11.2026
+
+133 Main-AL-Dateien in 16 Modulen, acht Module weiterhin ohne AL-Code. Sales sieben Objekte, ProcessEngine ein Objekt, übrige Objektzahlen unverändert. Keine neue Custom-Tabelle/Seite; separate bestehende Test-Codeunit jetzt 19 Tests. [Vertrag](../SALES_PROCESS.md), [Prüfstand](../TESTS.md#sf-021--verkaufsprozess-20112026). **Zur Prüfung**.
+
+SF-021-Vorlagenkorrektur 1.0.5.1: Objektbestand unverändert (133/16 Module); vorhandene ScenarioManagement-/IndustryProfiles-/Monitoring-/Finance-/Core-/ProcessEngine-Objekte korrigiert. Bestehender isolierter Testhost 26 Methoden. [Vorlagenmatrix und native Abnahme](../SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051), Zur Prüfung.

@@ -1151,6 +1151,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
         Contract: Codeunit "BCSF Contract JSON";
         Mode: Enum "BCSF Finance Mode";
         Token: JsonToken;
+        Targets: JsonToken;
+        Target: JsonToken;
         Settings: JsonObject;
         MasterDataMode: Enum "BCSF Process Mode";
         InitializedMasterData: Boolean;
@@ -1160,8 +1162,14 @@ codeunit 90400 "BCSF Finance Package Mgt"
         Mode := "BCSF Finance Mode".FromInteger(Token.AsValue().AsInteger());
         if Context.Contains('companySetupVersion') then begin
             MasterDataMode := MasterDataMode::SetupAndMasterData;
-            InitializedMasterData := (Contract.GetInteger(Context, 'companySetupVersion') = 1) and
-              (Contract.GetInteger(Context, 'processMode') = MasterDataMode.AsInteger());
+            InitializedMasterData := Contract.GetInteger(Context, 'companySetupVersion') = 1;
+            if Context.Get('targets', Targets) then
+                foreach Target in Targets.AsArray() do
+                    if (Contract.GetInteger(Target.AsObject(), 'quantity') > 0) and
+                      (Contract.GetInteger(Target.AsObject(), 'processMode') <> MasterDataMode.AsInteger()) then
+                        InitializedMasterData := false;
+            if not Context.Contains('targets') then
+                InitializedMasterData := false;
         end;
         if Mode = Mode::Existing then begin
             if InitializedMasterData then

@@ -1,6 +1,6 @@
 # Sales – Modulspezifikation
 
-**Status:** 2 AL-Objekte für Partnerstammdaten implementiert, zur Prüfung; Beleggeneratoren weiterhin geplant. **Pfad:** `src/Sales/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** MVP / P1.
+**Status:** 7 AL-Objekte für Partnerstammdaten und SF-021-Verkaufsbelege implementiert, zur Prüfung; native BC-Abnahme offen. **Pfad:** `src/Sales/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -56,3 +56,7 @@ Customer Generator unterstützt neue Regel-/Setupversion 2, optional validierte 
 ## SF-018 – Nachprüfung 19.11.2026
 
 In 90425 Customer Generator wird die zusätzliche Lieferadress-Rechteprüfung bei Partner-Setupversion 2 auf `B2C Percent < 100` begrenzt. Reine Privatkundenläufe erzeugen keine Lieferadresse und benötigen diese zusätzliche App-Vorprüfung deshalb nicht. B2B-/Mischläufe prüfen weiter vor Start, der Adresswriter erneut vor Anlage. Snapshot-/Generatorversion, Standardvalidierung, Herkunft und Schema unverändert. [Prüfnachweis und ausstehende BC-Rechtefälle](../../../TESTS.md#sf-018--nachprüfung-und-privatkunden-vorprüfung-19112026). **Zur Prüfung**.
+
+## SF-021 – aktueller Stand, 20.11.2026
+
+Jetzt sieben AL-Objekte: vorhandene 90425/90427 und neue 90426 Sales Generator, 90428 Sales Binding, 90429 Sales Setup, 90430 Sales Documents, 90431 Sales Evidence. Quote/Order/Invoice in Modus 1/2 (Quote nur 1), normale MwSt./LCY/einfacher Lagerort, ausdrückliche synthetische Quelle und Freigabe. Quoten, Halbmenge, Standardumwandlung/-preis/-buchung, Ausgabe-/Postenbezug und bestehende Queue/Checkpoints. Keine Bestandsbeschaffung, Zahlungen/Gutschriften oder unsicherer Replay. [Umfang/Bedienung/Abnahme](../../../SALES_PROCESS.md), [echte Prüfungen](../../../TESTS.md#sf-021--verkaufsprozess-20112026). **Zur Prüfung**. Frühere Abschnitte ohne Beleggenerator sind historische Stände.

@@ -56,3 +56,5 @@ Vorhandene AL-Objekte liegen unter `src/IndustryProfiles/Codeunits/`. Zuordnung 
 ## SF-037 – Reparaturauftrag 18.11.2026
 
 Optionale Startvorlagen nur über die UI, fixe IDs und bekannte Standardnamen zur sprachabhängigen Anzeige, Entfernt-Vermerke/Archive beim Seed respektiert, Wiederherstellung ausdrücklich bestätigt. Install-/Upgradetrigger schreibfrei. [Aktueller Vertrag](../../../STARTER_TEMPLATES.md), [echte lokale Prüfungen und offene BC-Abnahme](../../../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**.
+
+SF-021-Vorlagenkorrektur 1.0.5.1: neue gemischte Verkaufsvorlage und explizites Upgrade genau erkannter unveränderter 16 Branchen-Belegstarter auf Verkaufsziele v2. Unterschiedliche Mischquoten, alte Namen/Quellen und Captures geschützt, angepasste/entfernte/archivierte Starter behalten. Ohne entfernte/eigene Vorlagen 60 Starter; 8 Folgeprozessvorlagen bleiben Planung. Keine neuen AL-Objekte. [Vertrag](../../../SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051), Zur Prüfung.

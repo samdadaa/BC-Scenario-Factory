@@ -5,8 +5,16 @@ using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Inventory;
+using BCScenarioFactory.IndustryProfiles;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ScenarioManagement;
+using BCScenarioFactory.Sales;
+using BCScenarioFactory.ProcessEngine;
+using BCScenarioFactory.ModuleRegistry;
+using Microsoft.Sales.History;
+using Microsoft.Finance.GeneralLedger.Ledger;
+using Microsoft.Finance.VAT.Ledger;
+using Microsoft.Sales.Receivables;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Inventory.Ledger;
@@ -308,6 +316,421 @@ codeunit 90700 "BCSF Inventory Tests"
     SalesLine.Validate(Quantity, 2);
     SalesLine.Insert(true);
     Assert((SalesLine."Variant Code" = 'ROT') and (SalesLine."Quantity (Base)" = 2), 'Variant/piece resolution failed.');
+  end;
+
+  [Test]
+  procedure SalesDistributionPreservesFlooredQuotas()
+  var
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Context: JsonObject;
+    Targets: JsonArray;
+    Target: JsonObject;
+    Index: Integer;
+    Counts: array[3] of Integer;
+  begin
+    Context := ContextFixture();
+    Target.Add('entity', 4);
+    Target.Add('quantity', 7);
+    Target.Add('postedPercent', 50);
+    Target.Add('partialPercent', 25);
+    Targets.Add(Target);
+    Context.Replace('targets', Targets);
+    for Index := 1 to 7 do
+      Counts[Coordinator.Disposition(Context, 'SALES.ORDER', Index) + 1] += 1;
+    Assert((Counts[1] = 3) and (Counts[2] = 3) and (Counts[3] = 1), 'Sales quota rounding differs from scenario policy.');
+    asserterror Coordinator.Disposition(Context, 'SALES.ORDER', 8);
+  end;
+
+  [Test]
+  procedure SalesQuantityAndDatesAreStableAcrossRunAndBatchOrder()
+  var
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Context: JsonObject;
+    FirstQuantity: Decimal;
+    Index: Integer;
+    FirstDate: Date;
+  begin
+    Context := ContextFixture();
+    Context.Add('startingDate', '2026-11-01');
+    Context.Add('endingDate', '2026-11-20');
+    FirstQuantity := Coordinator.Quantity(Context, 'SALES.ORDER', 3);
+    FirstDate := Coordinator.DocumentDate(Context, 'SALES.ORDER', 3);
+    for Index := 100 downto 1 do begin
+      Assert(Coordinator.Quantity(Context, 'SALES.ORDER', Index) mod 2 = 0, 'Partial quantities must be integral base units.');
+      Assert((Coordinator.DocumentDate(Context, 'SALES.ORDER', Index) >= 20261101D) and
+        (Coordinator.DocumentDate(Context, 'SALES.ORDER', Index) <= 20261120D), 'Sales date escaped the scenario period.');
+    end;
+    Context.Replace('runId', Format(CreateGuid(), 0, 4));
+    Assert((Coordinator.Quantity(Context, 'SALES.ORDER', 3) = FirstQuantity) and
+      (Coordinator.DocumentDate(Context, 'SALES.ORDER', 3) = FirstDate), 'Sales values depend on run identity or invocation order.');
+  end;
+
+  [Test]
+  procedure SalesCapabilitiesAndMissingSourceFailClosed()
+  var
+    TempCapabilities: Record "BCSF Generator Registry" temporary;
+    Generator: Codeunit "BCSF Sales Generator";
+    Setup: Codeunit "BCSF Sales Setup";
+  begin
+    Generator.DescribeCapabilities(TempCapabilities);
+    Assert(TempCapabilities.Count() = 3, 'Sales must expose exactly quote, order and invoice targets.');
+    TempCapabilities.Get('SALES.DOCUMENT', 'SALES.QUOTE');
+    TempCapabilities.TestField("Maximum Mode", "BCSF Process Mode"::UnpostedDocuments);
+    asserterror Setup.ReadSettings(ContextFixture());
+  end;
+
+  [Test]
+  procedure SalesCannotExecuteWithoutOwnedBackgroundBatch()
+  var
+    Header: Record "Sales Header";
+    Generator: Codeunit "BCSF Sales Generator";
+    Context: JsonObject;
+    Target: JsonObject;
+    Batch: JsonObject;
+    Result: JsonObject;
+    CountBefore: Integer;
+  begin
+    Context := ContextFixture();
+    Context.Replace('processMode', 1);
+    Target.Add('entityCode', 'SALES.ORDER');
+    Target.Add('moduleCode', 'SALES');
+    Target.Add('quantity', 1);
+    Target.Add('processMode', 1);
+    Batch.Add('batchKey', 'SALES.ORDER/1-1');
+    Batch.Add('firstKey', 1);
+    Batch.Add('lastKey', 1);
+    CountBefore := Header.Count();
+    asserterror Generator.ExecuteBatch(Context, Target, Batch, Result);
+    Assert(Header.Count() = CountBefore, 'Direct invocation created a sales header before verifying worker ownership.');
+  end;
+
+  [Test]
+  procedure SalesUnpostedReferenceHasNoRegisteredLedger()
+  var
+    Header: Record "BCSF Run Header";
+    Entry: Record "BCSF Generated Record";
+    Document: Record "Sales Header";
+    Customer: Record Customer;
+    Item: Record Item;
+    Master: Record "BCSF Generated Record";
+    RunStep: Record "BCSF Run Step";
+    MasterStep: Record "BCSF Run Step";
+    Line: Record "Sales Line";
+    CustomerEntry: Record "Cust. Ledger Entry";
+    GL: Record "G/L Entry";
+    VAT: Record "VAT Entry";
+    Ledger: Record "Item Ledger Entry";
+    Value: Record "Value Entry";
+    Manager: Codeunit "BCSF Scenario Manager";
+    Setup: Codeunit "BCSF Sales Setup";
+    Context: JsonObject;
+  begin
+    RequireSalesRun("BCSF Process Mode"::UnpostedDocuments, Header);
+    Manager.ReadSnapshot(Header."Run Id", Context);
+    Assert(Setup.UsesRunMasters(Context), 'Use the new same-run sales reference template.');
+    Entry.SetRange("Run Id", Header."Run Id");
+    Entry.SetRange("Table Id", Database::"Sales Header");
+    Assert(Entry.Count() = 8, 'Use the documented 2-quote/4-order/2-invoice unposted reference.');
+    Entry.FindSet();
+    repeat
+      Entry.TestField("Table Id", Database::"Sales Header");
+      Document.GetBySystemId(Entry."Record SystemId");
+      Line.Get(Document."Document Type", Document."No.", 10000);
+      RunStep.Get(Header."Run Id", Entry."Node Code");
+      MasterStep.Get(Header."Run Id", 'VENDOR');
+      Assert(MasterStep."Sequence No." < RunStep."Sequence No.", 'Vendor generation must precede sales.');
+      MasterStep.Get(Header."Run Id", 'CUSTOMER');
+      Assert(MasterStep."Sequence No." < RunStep."Sequence No.", 'Customer generation must precede sales.');
+      MasterStep.Get(Header."Run Id", 'ITEM');
+      Assert(MasterStep."Sequence No." < RunStep."Sequence No.", 'Item generation must precede sales.');
+      Customer.Get(Document."Sell-to Customer No.");
+      Item.Get(Line."No.");
+      Master.SetRange("Run Id", Header."Run Id");
+      Master.SetRange("Table Id", Database::Customer);
+      Master.SetRange("Record SystemId", Customer.SystemId);
+      Assert(not Master.IsEmpty(), 'The sales customer is outside this run.');
+      Master.SetRange("Table Id", Database::Item);
+      Master.SetRange("Record SystemId", Item.SystemId);
+      Assert(not Master.IsEmpty(), 'The sales item is outside this run.');
+      Line.TestField("Quantity Shipped", 0);
+      Line.TestField("Quantity Invoiced", 0);
+      CustomerEntry.SetRange("Document No.", Document."No.");
+      GL.SetRange("Document No.", Document."No.");
+      VAT.SetRange("Document No.", Document."No.");
+      Ledger.SetRange("Document No.", Document."No.");
+      Value.SetRange("Document No.", Document."No.");
+      Assert(CustomerEntry.IsEmpty() and GL.IsEmpty() and VAT.IsEmpty() and Ledger.IsEmpty() and Value.IsEmpty(), 'An unposted sales document has ledger evidence.');
+      if Document."Document Type" = Document."Document Type"::Order then
+        Document.TestField("Quote No.");
+    until Entry.Next() = 0;
+  end;
+
+  [Test]
+  procedure SalesPostedReferenceKeepsOpenPartialRemainder()
+  var
+    Header: Record "BCSF Run Header";
+    Entry: Record "BCSF Generated Record";
+    Document: Record "Sales Header";
+    Line: Record "Sales Line";
+    CustomerEntry: Record "Cust. Ledger Entry";
+    TempTarget: Record "BCSF Data Target" temporary;
+    Manager: Codeunit "BCSF Scenario Manager";
+    Policy: Codeunit "BCSF Scenario Policy";
+    ExpectedInvoices: Integer;
+    ExpectedPartial: Integer;
+    Unposted: Integer;
+    Posted: Integer;
+    Partial: Integer;
+    PartialFound: Boolean;
+  begin
+    RequireSalesRun("BCSF Process Mode"::PostedMovements, Header);
+    Manager.LoadFrozenTargets(Header."Run Id", TempTarget);
+    if TempTarget.FindSet() then
+      repeat
+        Policy.GetDistribution(TempTarget, Unposted, Posted, Partial);
+        if TempTarget.Entity in [TempTarget.Entity::SalesOrder, TempTarget.Entity::SalesInvoice] then
+          ExpectedInvoices += Posted + Partial;
+        if TempTarget.Entity = TempTarget.Entity::SalesOrder then
+          ExpectedPartial += Partial;
+      until TempTarget.Next() = 0;
+    Assert((ExpectedInvoices > 0) and (ExpectedPartial > 0), 'Use a mixed posted reference with partial orders.');
+    Entry.SetRange("Run Id", Header."Run Id");
+    Entry.SetRange("Table Id", Database::"Sales Invoice Header");
+    Assert(Entry.Count() = ExpectedInvoices, 'Posted invoice count differs from captured quotas.');
+    Entry.SetRange("Table Id", Database::"Cust. Ledger Entry");
+    Assert(Entry.Count() = ExpectedInvoices, 'Each invoice requires its own open customer entry.');
+    Entry.FindSet();
+    repeat
+      CustomerEntry.GetBySystemId(Entry."Record SystemId");
+      CustomerEntry.TestField(Open, true);
+      CustomerEntry.CalcFields("Remaining Amount");
+      Assert(CustomerEntry."Remaining Amount" > 0, 'Customer invoice is unexpectedly balanced.');
+    until Entry.Next() = 0;
+    Entry.SetRange("Table Id", Database::"Sales Header");
+    Entry.FindSet();
+    repeat
+      Document.GetBySystemId(Entry."Record SystemId");
+      if Document."Document Type" = Document."Document Type"::Order then begin
+        Line.Get(Document."Document Type", Document."No.", 10000);
+        if Line."Quantity Invoiced" > 0 then begin
+          Line.TestField("Outstanding Quantity", Line.Quantity / 2);
+          Line.TestField("Quantity Invoiced", Line.Quantity / 2);
+          PartialFound := true;
+        end;
+      end;
+    until Entry.Next() = 0;
+    Assert(PartialFound, 'No half-invoiced order remains open.');
+  end;
+
+  [Test]
+  procedure PostedDefaultsSeparateOrdersInvoicesAndQuotes()
+  var
+    Target: Record "BCSF Data Target" temporary;
+    Policy: Codeunit "BCSF Scenario Policy";
+    Unposted: Integer;
+    Posted: Integer;
+    Partial: Integer;
+  begin
+    Target.Entity := Target.Entity::SalesOrder;
+    Target.Quantity := 10;
+    Target."Process Mode" := "BCSF Process Mode"::PostedMovements;
+    Policy.ApplyDocumentModeDefaults(Target);
+    Policy.GetDistribution(Target, Unposted, Posted, Partial);
+    Assert((Unposted = 3) and (Posted = 5) and (Partial = 2), 'Posted orders need unposted, fully posted and partial examples.');
+    Target.Entity := Target.Entity::SalesInvoice;
+    Policy.ApplyDocumentModeDefaults(Target);
+    Target.TestField("Unposted Percent", 25);
+    Target.TestField("Posted Percent", 75);
+    Target.TestField("Partial Percent", 0);
+    Target.Entity := Target.Entity::SalesQuote;
+    Policy.ApplyDocumentModeDefaults(Target);
+    Target.TestField("Process Mode", "BCSF Process Mode"::UnpostedDocuments);
+    Target.TestField("Unposted Percent", 100);
+  end;
+
+  [Test]
+  procedure DecimalSalesSharesMatchTheScenarioDistribution()
+  var
+    Target: Record "BCSF Data Target" temporary;
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Policy: Codeunit "BCSF Scenario Policy";
+    Context: JsonObject;
+    Value: JsonObject;
+    Targets: JsonArray;
+    Counts: array[3] of Integer;
+    Index: Integer;
+    Unposted: Integer;
+    Posted: Integer;
+    Partial: Integer;
+  begin
+    Target.Entity := Target.Entity::SalesOrder;
+    Target.Quantity := 11;
+    Target."Unposted Percent" := 60;
+    Target."Posted Percent" := 27.5;
+    Target."Partial Percent" := 12.5;
+    Value.Add('entity', Target.Entity.AsInteger());
+    Value.Add('quantity', Target.Quantity);
+    Value.Add('postedPercent', Target."Posted Percent");
+    Value.Add('partialPercent', Target."Partial Percent");
+    Targets.Add(Value);
+    Context := ContextFixture();
+    Context.Replace('targets', Targets);
+    for Index := 1 to Target.Quantity do
+      Counts[Coordinator.Disposition(Context, 'SALES.ORDER', Index) + 1] += 1;
+    Policy.GetDistribution(Target, Unposted, Posted, Partial);
+    Assert((Counts[1] = Unposted) and (Counts[2] = Posted) and (Counts[3] = Partial), 'Fractional percentages were changed during execution.');
+    Assert((Posted = 3) and (Partial = 1) and (Unposted = 7), 'Unexpected decimal quota coverage.');
+  end;
+
+  [Test]
+  [TransactionModel(TransactionModel::AutoRollback)]
+  procedure NewTemplateHasAUsableMasterTargetUnderHigherCeiling()
+  var
+    Scenario: Record "BCSF Scenario";
+    Target: Record "BCSF Data Target";
+    Manager: Codeunit "BCSF Scenario Manager";
+  begin
+    Scenario.Get(Manager.CreateScenario());
+    Scenario.TestField("Profile Code", 'GENERAL');
+    Scenario.TestField("Profile Version", '1');
+    Target.Get(Scenario."Scenario Id", Target.Entity::Customer);
+    Target.TestField(Quantity, 1);
+    Manager.ChangeProcessScope(Scenario."Scenario Id", "BCSF Process Mode"::FollowUpProcesses);
+    Scenario.Get(Scenario."Scenario Id");
+    Assert(Manager.IsPartnerTemplate(Scenario), 'A higher ceiling blocked the actual supported master target.');
+    Manager.RequireExecutableTargets(Scenario);
+  end;
+
+  [Test]
+  [TransactionModel(TransactionModel::AutoRollback)]
+  procedure ScopeChangesKeepTargetsAndSharesConsistent()
+  var
+    Scenario: Record "BCSF Scenario";
+    Target: Record "BCSF Data Target";
+    Manager: Codeunit "BCSF Scenario Manager";
+  begin
+    Scenario.Get(Manager.CreateScenario());
+    Manager.ChangeProcessScope(Scenario."Scenario Id", "BCSF Process Mode"::UnpostedDocuments);
+    Target.Init();
+    Target."Scenario Id" := Scenario."Scenario Id";
+    Target.Validate(Entity, Target.Entity::SalesOrder);
+    Target.Quantity := 10;
+    Target.Insert(true);
+    Manager.ChangeProcessScope(Scenario."Scenario Id", "BCSF Process Mode"::PostedMovements);
+    Target.Get(Scenario."Scenario Id", Target.Entity::SalesOrder);
+    Target.TestField("Process Mode", "BCSF Process Mode"::PostedMovements);
+    Target.TestField("Unposted Percent", 30);
+    Target.TestField("Posted Percent", 50);
+    Target.TestField("Partial Percent", 20);
+    Manager.ChangeProcessScope(Scenario."Scenario Id", "BCSF Process Mode"::UnpostedDocuments);
+    Target.Get(Scenario."Scenario Id", Target.Entity::SalesOrder);
+    Target.TestField("Process Mode", "BCSF Process Mode"::UnpostedDocuments);
+    Target.TestField("Unposted Percent", 100);
+    Target.TestField("Posted Percent", 0);
+    Target.TestField("Partial Percent", 0);
+    Scenario.Get(Scenario."Scenario Id");
+    Scenario.TestField("Sales Posting Approved", false);
+  end;
+
+  [Test]
+  [HandlerFunctions('AcceptTemplateRemoval')]
+  [TransactionModel(TransactionModel::AutoRollback)]
+  procedure NewTemplateCanBeRemovedThroughTheSafeAction()
+  var
+    Scenario: Record "BCSF Scenario";
+    Selection: Record "BCSF Scenario";
+    Target: Record "BCSF Data Target";
+    Module: Record "BCSF Scenario Module";
+    Manager: Codeunit "BCSF Scenario Manager";
+    Id: Guid;
+  begin
+    Id := Manager.CreateScenario();
+    Selection.SetRange("Scenario Id", Id);
+    Assert(Manager.RemoveSelection(Selection), 'The confirmed remove action was not performed.');
+    Assert(not Scenario.Get(Id), 'Unused template was not removed.');
+    Target.SetRange("Scenario Id", Id);
+    Module.SetRange("Scenario Id", Id);
+    Assert(Target.IsEmpty() and Module.IsEmpty(), 'Template children were retained after safe removal.');
+  end;
+
+  [ConfirmHandler]
+  procedure AcceptTemplateRemoval(Question: Text[1024]; var Reply: Boolean)
+  begin
+    Reply := true;
+  end;
+
+  [Test]
+  [TransactionModel(TransactionModel::AutoRollback)]
+  procedure StarterRefreshIsIdempotentAndIncludesMixedSales()
+  var
+    Scenario: Record "BCSF Scenario";
+    Target: Record "BCSF Data Target";
+    Removed: Record "BCSF Removed Template";
+    Catalog: Codeunit "BCSF Starter Catalog";
+    Id: Guid;
+    CountBefore: Integer;
+    RevisionBefore: Integer;
+    WasPresent: Boolean;
+  begin
+    Evaluate(Id, '{B55C2100-AB51-4021-9C00-000000000002}');
+    WasPresent := Scenario.Get(Id);
+    Catalog.Seed();
+    CountBefore := Scenario.Count();
+    if not Removed.Get(Id) then begin
+      Scenario.Get(Id);
+      if not Scenario.Archived and not WasPresent then begin
+        Target.Get(Id, Target.Entity::SalesOrder);
+        Target.TestField("Unposted Percent", 30);
+        Target.TestField("Posted Percent", 50);
+        Target.TestField("Partial Percent", 20);
+      end;
+      RevisionBefore := Scenario.Revision;
+    end;
+    Catalog.Seed();
+    Assert(Scenario.Count() = CountBefore, 'Repeated refresh created duplicate starters.');
+    if Scenario.Get(Id) then
+      Scenario.TestField(Revision, RevisionBefore);
+  end;
+
+  [Test]
+  [HandlerFunctions('AcceptTemplateRemoval')]
+  [TransactionModel(TransactionModel::AutoRollback)]
+  procedure UsedTemplateIsArchivedAndItsSnapshotRetained()
+  var
+    Scenario: Record "BCSF Scenario";
+    Header: Record "BCSF Run Header";
+    Selection: Record "BCSF Scenario";
+    Manager: Codeunit "BCSF Scenario Manager";
+    Writer: Codeunit "BCSF Snapshot Writer";
+    ScenarioId: Guid;
+    RunId: Guid;
+  begin
+    ScenarioId := Manager.CreateScenario();
+    RunId := Writer.CreateSnapshot(ScenarioId);
+    Selection.SetRange("Scenario Id", ScenarioId);
+    Assert(Manager.RemoveSelection(Selection), 'The confirmed archive action was not performed.');
+    Scenario.Get(ScenarioId);
+    Scenario.TestField(Archived, true);
+    Header.Get(RunId);
+    Header.TestField("Scenario Id", ScenarioId);
+  end;
+
+  local procedure RequireSalesRun(Mode: Enum "BCSF Process Mode"; var Header: Record "BCSF Run Header")
+  var
+    Execution: Record "BCSF Run Execution";
+    Guard: Codeunit "BCSF Environment Guard";
+  begin
+    Guard.EnsureCanConfigure(CompanyName());
+    Header.SetCurrentKey("Created At", "Run Id");
+    Header.SetRange("Profile Code", 'TECH-SALES');
+    Header.SetRange("Process Mode", Mode);
+    if Header.FindLast() then
+      repeat
+        if Execution.Get(Header."Run Id") then
+          if Execution.Status = Execution.Status::Completed then
+            exit;
+      until Header.Next(-1) = 0;
+    Error('First complete the documented TECH-SALES reference run in mode %1.', Mode);
   end;
 
   local procedure RequireRun(Profile: Code[20]; var Header: Record "BCSF Run Header")

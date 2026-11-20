@@ -153,3 +153,11 @@ Verifizierter Ausgangs-/Endbestand: 121 AL-Dateien, davon 19 unter Monitoring. K
 Main-App 1.0.4.0 / Runtime 17 / Application 28.0 unverändert; keine neuen Main-App-Dependencies. 127 AL-Dateien in 15 Modulen, sechs neue Inventory-Objekte und acht optionale Felder in der bestehenden Szenariotabelle. `internalsVisibleTo` bindet nur die eigene separate SF-019-Test-App, keine Laufzeit-/SDK-Abhängigkeit und keine Standardrechteerhöhung. Test-App hat eigene Identität/Dependencies und nur Test-Codeunit 90700.
 
 [Implementierung, Testanleitung und Scope](INVENTORY_GENERATION.md), [echte lokale Prüfungen, Nutzer-Sandboxfehler und offene Korrekturabnahme](TESTS.md#sf-019--artikelsortiment-und-lagerbasics-20112026). Der Nutzer meldet einen fehlgeschlagenen Artikelstart durch vertauschte Item-Vendor-Schlüssel; die korrigierte Version ist deshalb nicht als fachlich abgenommen erklärt. **Zur Prüfung**.
+
+## SF-021 – Verkaufsprozess, 20.11.2026
+
+Aktuelle Main-Version **1.0.5.0**, App-ID/Publisher/Application 28.0/Runtime 17/IDs 90100–90999/Dependencies [] unverändert. 133 Main-AL-Dateien in 16 Modulen, Sales sieben/ProcessEngine ein Objekt; keine neue Tabelle/Seite, zwei additive Szenariofelder. Angebote, Standard-Angebotsumwandlung, offene/volle/halbe Verkäufe, Standardbuchung und Herkunft im vorhandenen Queuepfad. Quelle ausdrücklich aus abgeschlossenem synthetischem Lauf; keine Umsetzung SF-020. Separate bestehende Test-App jetzt 19 Tests, keine neue Test-Codeunit. [Vertrag und Grenzen](SALES_PROCESS.md), [Prüfstand](TESTS.md#sf-021--verkaufsprozess-20112026). **Zur Prüfung**, keine Sandboxabnahme oder Veröffentlichung.
+
+## SF-021 – Vorlagenkorrektur 1.0.5.1
+
+Bestand unverändert 133 Main-AL-Dateien/16 Module, keine neuen AL-Objekte/Tabellen/Seiten/Felder. Main 1.0.5.1, Testhost 1.1.1.0 mit 26 Methoden. Neue Vorlagen mit GENERAL/1-Debitor-Ziel; Ausführbarkeit anhand tatsächlicher registrierter Zielmodi. Sicheres Löschen/Archivieren sichtbar. Erkennbare unveränderte 16 Branchen-Belegstarter werden auf Verkauf v2 aktualisiert, zusätzliche gemischte Verkaufsvorlage; eigene/entfernte/archivierte Vorlagen und immutable Läufe bleiben geschützt. [Vertrag](SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051). **Zur Prüfung**, native Prüfung/Deployment offen.

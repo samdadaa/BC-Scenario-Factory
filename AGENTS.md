@@ -80,6 +80,7 @@ Diese Anweisungen sind **eigenständig formulierte, projektsichere Ableitungen**
 ## 6. Ergänzende bestätigte Projektleitplanken – BC Scenario Factory
 
 - Produktziel: **realistische synthetische Branchen-/Prozessdaten** für Demo, Schulung, Funktions-/Regressionstests und Lasttests. Nicht bloß gleichförmige Massenobjekte.
+- Zusammenhängende Testprozesse in einer Vorlage und einem Lauf planen. Einkauf und Verkauf beziehen Partner und Artikel aus bestätigten Vorgängern desselben Laufs. Bestehende Mandanteneinrichtung bleibt die technische Grundlage. Gebuchte Verkäufe auf neu erzeugten Artikeln benötigen vorgelagerte Wareneingänge über Standardbuchung.
 - Branchenprofil konfiguriert vorhandene Generatoren. Pro Entität konfigurierbare Zielmengen, Zeiträume, Verteilungen, Seed und Prozessmodi.
 - Vier Stufen: Setup+Stammdaten; plus ungebuchte Dokumente; plus gebuchte Posten via BC-Standardbuchung; plus optionale Folgeprozesse. Keine direkten Standard-Ledger-Inserts.
 - Queue-Läufe mit Batches, sicheren Checkpoints, Wiederaufnahme und Dashboard; keine Doppelbuchungen nach unsicherem Retry.
@@ -97,6 +98,8 @@ Diese Anweisungen sind **eigenständig formulierte, projektsichere Ableitungen**
 - Die gemeinsame BC-Grundkonfiguration wird einmal in der Sandbox-Mandanteneinrichtung vorbereitet. Vorlagen nutzen diese Basis, ergänzen nur fachlich benötigte branchenspezifische Einrichtung und generieren realistische synthetische Daten. Die Auswahl des Kontenplans darf nicht im Vorlagenstart wiederkehren.
 - Die Kernnavigation besteht aus Einrichtung, Vorlagen und Laufmonitor. Bestehende Seiten und temporäre Diagnoseansichten nach Möglichkeit wiederverwenden. Zusätzliche Tabellen/Seiten oder Dialoge nur bei belegtem Bedarf.
 - Persistente Tabellen und gespeicherte Läufe kompatibel halten. Keine ForceSync-Abkürzung für eine UI-Vereinfachung. [Aktueller Vertrag und Abnahme](docs/COMPANY_INITIALIZATION.md).
+- Bestätigter Nutzerauftrag: Nach jedem Implementierungsticket die vorhandenen Start-/Testvorlagen gegen den realen Generatorstand prüfen und passend aktualisieren. Neue Funktionen müssen in nutzbaren Testvorlagen vorkommen; gebuchter Maximalumfang muss passende unterschiedliche ungebuchte/teilgebuchte/gebuchte Belegquoten enthalten. Angebote bleiben ungebucht, Teilquoten nur für Aufträge. Eigene Vorlagenwerte/Namen, absichtlich entfernte/archivierte Starter und gespeicherte Läufe schützen. Vorlagenaktualisierung, neue/aktualisierte Testfälle, lokale Nachweise und offene native Prüfung sind Teil desselben Tickets; keine Planung als ausführbare Funktion ausweisen.
+
 
 ## XERJ – Automatische Projektsuche und Wissensverwaltung
 

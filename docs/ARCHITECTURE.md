@@ -92,7 +92,7 @@ Diese Regeln konkretisieren den bestehenden Produktvertrag für jedes neue oder 
 6. **Sprache:** Oberfläche folgt der BC-Sitzung; erzeugte Fachwerte folgen der eingefrorenen Datensprache und Regelversion. Vorhandene Daten werden bei Sprachwechsel nicht umgeschrieben.
 7. **Nachweis:** Je Modul fachlicher Sandbox-Erfolgsfall, passender Negativ-/Wiederanlauffall und Dashboard-Drilldown. Umgebung, Eingaben, Soll/Ist und Grenzen gemäß [Testvertrag](TESTS.md#sf-042--prüfumfang-je-generator) dokumentieren. Lokale Tests ersetzen diese Abnahme nicht.
 
-Aktuell sind Customer und Vendor mit ihren Liefer-/Bestelladressen ausführbar. Artikel (SF-019), Einkauf (SF-020), Verkauf (SF-021), Zahlungen (SF-022) und weitere Fachgeneratoren bleiben eigene Tickets. Ihr Beginn setzt die menschliche P0-Freigabe aus SF-042 voraus.
+Stand der SF-042-Prüfung vom 19.11.2026: Customer und Vendor waren mit ihren Liefer-/Bestelladressen ausführbar. Artikel, Einkauf, Verkauf und Folgeprozesse blieben eigene Tickets unter dem damaligen P0-Freigabevertrag. Spätere ausdrücklich beauftragte Umsetzungen und ihre Grenzen stehen in den datierten SF-019-/SF-021-Abschnitten unten; sie ersetzen keine menschliche Abnahme von SF-042.
 
 ## Konkretisierung durch SF-002 (11.11.2026)
 
@@ -200,3 +200,15 @@ Das bestehende Control Add-in trennt Datenfilter und ausgewählten Lauf. Die Par
 Vorlagen-/Starterkatalog → optionales `itemSetup` Version 1 im unveränderten Snapshot-Schema 1 → reale ITEM-Registrybindung mit expliziten Partner-Vorgängern → vorhandener Dispatcher/Worker → Standard-Kategorien/-Attribute/-Artikel und begrenzte Beziehungen → Herkunft/Checkpoint/Outputvalidierung. Inventory verwendet den bereits vorhandenen unveränderten Snapshot-/Jobbesitzvertrag in DataGeneration; dessen Pflichtsubscriber in BackgroundProcessing schützt auch ITEM. Kein zusätzlicher Commit, keine Wiederholung unklarer Claims.
 
 Gemeinsame Basis ausschließlich im bestätigten Mandanteneinrichtungspfad; ergänzende Aktion auf bestehender Einrichtung für bereits angewendete SKR-Testpakete. Vorlagenstart erfasst nur und ändert keine globale Einrichtung. TECH-TRADE und TECH-BINS teilen einen Katalog, nur die Lagerbetriebsart unterscheidet sich. SKU und fixe Lagerplatzzuordnung sind Stammdaten, keine Bestandsnachweise. [Konkreter Umfang und offene Laufzeitabnahme](INVENTORY_GENERATION.md). **Zur Prüfung**.
+
+## SF-021 – Verkauf im bestehenden Ausführungspfad
+
+Snapshot Writer veröffentlicht zusätzlich OnCaptureSalesSetup; Sales Setup friert ausgewählte synthetische Quellidentitäten/Serien/Quelle/Lagerort/Freigabe ein, BackgroundProcessing prüft den abgeschlossenen Quelllauf. Sales Generator 90426 bietet drei Entitäten, Process Coordinator 90275 deterministische Menge/Datum/Quoten. Sales Documents 90430 verwendet Standard-Angebotsumwandlung und Sales-Post mit Commitunterdrückung; Sales Evidence 90431 registriert erhaltene Köpfe und tatsächlich erzeugte Ledgeridentitäten. Ausgabe-/Qualitätsprüfung und bestehender atomarer Checkpoint folgen vor Paketabschluss.
+
+Die generische Besitzprüfung vergleicht den gespeicherten Stepmodus mit dem Target. Start/Worker/Registry verwenden eine eng auf SALES.DOCUMENT Version 1 gebundene eingefrorene Zustimmung und den aktuellen globalen Guard. Keine Freigabe anderer Postinggeneratoren. Externe Finance-/Stock-Platzhalter werden nur für die drei konkret geprüften Verkaufstypen durch echte eigene Vorprüfungen ersetzt; unimplementierte Typen bleiben blockiert. Quelle und vorhandener Bestand ersetzen keine automatische Beschaffung. Native BC- und Retryabnahme offen. [Vollständiger Vertrag](SALES_PROCESS.md).
+
+### SF-021 – tatsächlicher Zielmodus und Vorlagenpflege
+
+Scenario Manager verwendet den bestehenden Generator-Katalog für Ziel-Unterstützung. Maximalumfang ist eine Obergrenze; Registry/Guards entscheiden anhand tatsächlicher Step-/Zielmodi. Finance-Vorprüfung für initialisierte reine Stammdaten richtet sich ebenfalls nach positiven tatsächlichen Zielen statt nach der Obergrenze. Neue Vorlagen starten mit gültigem Profil und kleinem Kundenstammziel. Scopewechsel werden zentral transaktional über ChangeProcessScope behandelt: erst höhere Elternobergrenze, dann Kinder; beim Senken umgekehrt. Zustimmung wird zurückgesetzt, Snapshots werden nicht verändert. Process Coordinator liest Quoten als Decimal.
+
+Starter Catalog aktualisiert nur exakt erkannte alte Standard-Belegkonfigurationen über bestehende feste IDs und Profilversion 2. Geänderte Ziel-/Profil-/Seed-/Modulwerte und archivierte/entfernte Starter werden nicht übergangen. Vorhandene ausdrückliche Ladeaktion liefert Rückmeldung; keine automatische Konfigurationsänderung bei Installation/Seitenöffnung. Die bestätigte Pflegepflicht nach jedem Ticket steht in AGENTS.md. [Vertrag und Grenzen](SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051).

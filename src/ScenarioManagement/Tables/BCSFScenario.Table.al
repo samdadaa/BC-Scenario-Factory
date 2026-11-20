@@ -262,6 +262,18 @@ table 90125 "BCSF Scenario"
       ToolTip = 'Specifies a second distinct existing supplier for the reference assortment.';
       TableRelation = Vendor;
     }
+    field(41; "Sales Source Run Id"; Guid)
+    {
+      Caption = 'Sales Source Run';
+      ToolTip = 'Selects the existing run whose recorded synthetic customers and items are used for sales. Stock is checked for posted sales.';
+      TableRelation = "BCSF Run Header"."Run Id";
+    }
+    field(42; "Sales Posting Approved"; Boolean)
+    {
+      Caption = 'Approve Sales Posting';
+      ToolTip = 'Explicitly approves posting for sales runs captured from this template. Global posting permission in Factory Setup is also required.';
+    }
+
   }
 
   keys

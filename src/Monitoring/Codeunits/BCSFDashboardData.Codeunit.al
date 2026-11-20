@@ -94,13 +94,13 @@ codeunit 90365 "BCSF Dashboard Data"
     Severity: Enum "BCSF Validation Severity";
   begin
     Header.Get(RunId);
-    CanStart := Header."Process Mode" = "BCSF Process Mode"::SetupAndMasterData;
+    CanStart := true;
     Manager.LoadFrozenTargets(RunId, TempTarget);
     TempTarget.SetFilter(Quantity, '>0');
     CanStart := CanStart and not TempTarget.IsEmpty();
     if TempTarget.FindSet() then
       repeat
-        CanStart := CanStart and (TempTarget.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]);
+        CanStart := CanStart and Manager.SupportsTarget(TempTarget);
       until TempTarget.Next() = 0;
     Item.Add('canStart', CanStart);
     Item.Add('quality', Validation.Describe(RunId));

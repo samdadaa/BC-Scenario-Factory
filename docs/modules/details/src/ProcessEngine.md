@@ -1,6 +1,6 @@
 # ProcessEngine – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/ProcessEngine/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
+**Status:** 1 AL-Objekt für SF-021-Prozessquoten, Mengen und Datum implementiert, zur Prüfung. **Pfad:** `src/ProcessEngine/`. **Kategorie:** Technischer Kern. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
@@ -42,3 +42,7 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Ablage – SF-002, 16.11.2026
 
 Weiterhin kein AL-Code; der Modulmarker bleibt erhalten. Typordner entstehen erst mit vorhandenen Objekten. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+## SF-021 – aktueller Stand, 20.11.2026
+
+Ein reales Objekt 90275 BCSF Process Coordinator unter Codeunits/: generische deterministische Prozessquoten, gerade Basismengen für Halbteilung und Periodendatum. BC-Sales-APIs bleiben im Sales-Modul, keine Rückabhängigkeit auf Fachgeneratoren und keine neuen Tabellen/Seiten. [Vertrag](../../../SALES_PROCESS.md), [Prüfungen](../../../TESTS.md#sf-021--verkaufsprozess-20112026). **Zur Prüfung**. Historische Abschnitte „ohne Code“ oben gelten nur für den damaligen Stand.

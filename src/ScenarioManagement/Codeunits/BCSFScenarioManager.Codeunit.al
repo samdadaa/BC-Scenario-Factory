@@ -1,6 +1,7 @@
 namespace BCScenarioFactory.ScenarioManagement;
 
 using BCScenarioFactory.Core;
+using BCScenarioFactory.ModuleRegistry;
 
 codeunit 90130 "BCSF Scenario Manager"
 {
@@ -21,26 +22,149 @@ codeunit 90130 "BCSF Scenario Manager"
   begin
   end;
 
+  procedure HasSalesPostingApproval(RunId: Guid; NodeCode: Code[30]): Boolean
+  var
+    Step: Record "BCSF Run Step";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    Token: JsonToken;
+  begin
+    if not (NodeCode in ['SALES.ORDER', 'SALES.INVOICE']) then
+      exit(false);
+    if not Step.Get(RunId, NodeCode) then
+      exit(false);
+    if (Step."Generator Code" <> 'SALES.DOCUMENT') or (Step."Generator Version" <> '1') or
+      (Step."Contract Version" <> 1) or (Step."Process Mode" <> "BCSF Process Mode"::PostedMovements) then
+      exit(false);
+    ReadSnapshot(RunId, Context);
+    if not Context.Get('salesSetup', Token) then
+      exit(false);
+    exit((Contract.GetInteger(Token.AsObject(), 'version') = 1) and Contract.GetBoolean(Token.AsObject(), 'postingApproved'));
+  end;
+
+  procedure SupportsTarget(Target: Record "BCSF Data Target"): Boolean
+  var
+    TempCapability: Record "BCSF Generator Registry" temporary;
+    Registry: Codeunit "BCSF Generator Registry Mgt";
+    Policy: Codeunit "BCSF Scenario Policy";
+  begin
+    if not Registry.SelectForTarget(Policy.GetEntityCode(Target.Entity), Target."Process Mode", false, TempCapability) then
+      exit(false);
+    exit(TempCapability."Module Code" = Policy.GetModuleCode(Target.Module));
+  end;
+
   procedure IsPartnerTemplate(Scenario: Record "BCSF Scenario"): Boolean
   var
     Target: Record "BCSF Data Target";
     HasTarget: Boolean;
   begin
-    if Scenario.Archived or (Scenario."Process Mode" <> "BCSF Process Mode"::SetupAndMasterData) then
+    if Scenario.Archived then
       exit(false);
     Target.SetRange("Scenario Id", Scenario."Scenario Id");
     Target.SetFilter(Quantity, '>0');
     if Target.FindSet() then
       repeat
         HasTarget := true;
-        if not (Target.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]) or
-          (Target."Process Mode" <> "BCSF Process Mode"::SetupAndMasterData) then
+        if not SupportsTarget(Target) then
           exit(false);
       until Target.Next() = 0;
     exit(HasTarget);
   end;
 
-  procedure RemoveSelection(var Selection: Record "BCSF Scenario")
+  procedure RequireExecutableTargets(Scenario: Record "BCSF Scenario")
+  var
+    Target: Record "BCSF Data Target";
+    Module: Record "BCSF Scenario Module";
+    Policy: Codeunit "BCSF Scenario Policy";
+  begin
+    Scenario.TestField(Archived, false);
+    Scenario.TestField("Profile Code");
+    Scenario.TestField("Profile Version");
+    Target.SetRange("Scenario Id", Scenario."Scenario Id");
+    Target.SetFilter(Quantity, '>0');
+    if not Target.FindSet() then
+      Error(NoTargetsErr);
+    repeat
+      if not SupportsTarget(Target) then
+        Error(UnsupportedTargetErr, Format(Target.Entity), Format(Target."Process Mode"));
+      Policy.ValidateTarget(Target);
+      Module.Get(Scenario."Scenario Id", Target.Module);
+      Module.TestField(Enabled, true);
+    until Target.Next() = 0;
+  end;
+
+  procedure DescribeAvailability(Scenario: Record "BCSF Scenario"): Text
+  var
+    Target: Record "BCSF Data Target";
+    HasSales: Boolean;
+    HasItems: Boolean;
+  begin
+    Target.SetRange("Scenario Id", Scenario."Scenario Id");
+    Target.SetFilter(Quantity, '>0');
+    if Target.IsEmpty() then
+      exit(NoTargetsLbl);
+    if not IsPartnerTemplate(Scenario) then
+      exit(PlanningLbl);
+    if Target.FindSet() then
+      repeat
+        HasSales := HasSales or (Target.Entity in ["BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesOrder, "BCSF Entity Type"::SalesInvoice]);
+        HasItems := HasItems or (Target.Entity = "BCSF Entity Type"::Item);
+      until Target.Next() = 0;
+    if HasSales then
+      exit(SalesLbl);
+    if HasItems then
+      exit(ItemsLbl);
+    exit(PartnersLbl);
+  end;
+
+  [CommitBehavior(CommitBehavior::Error)]
+  procedure ChangeProcessScope(ScenarioId: Guid; NewScope: Enum "BCSF Process Mode")
+  var
+    Scenario: Record "BCSF Scenario";
+    Target: Record "BCSF Data Target";
+    Policy: Codeunit "BCSF Scenario Policy";
+    TargetScope: Enum "BCSF Process Mode";
+    PreviousScope: Enum "BCSF Process Mode";
+  begin
+    Scenario.LockTable();
+    Scenario.Get(ScenarioId);
+    Policy.CheckProcessMode(NewScope);
+    PreviousScope := Scenario."Process Mode";
+    if PreviousScope = NewScope then
+      exit;
+    Target.SetRange("Scenario Id", ScenarioId);
+    if NewScope = NewScope::SetupAndMasterData then
+      if Target.FindSet() then
+        repeat
+          if Policy.IsDocument(Target.Entity) and (Target.Quantity > 0) then
+            Error(MasterScopeErr);
+        until Target.Next() = 0;
+    // Raising the ceiling precedes child validation; lowering follows it.
+    if NewScope.AsInteger() > PreviousScope.AsInteger() then begin
+      Scenario."Process Mode" := NewScope;
+      Scenario."Sales Posting Approved" := false;
+      Scenario.Modify(true);
+    end;
+    if NewScope.AsInteger() >= NewScope::PostedMovements.AsInteger() then
+      TargetScope := TargetScope::PostedMovements
+    else
+      TargetScope := TargetScope::UnpostedDocuments;
+    if Target.FindSet(true) then
+      repeat
+        if Policy.IsDocument(Target.Entity) and (Target.Entity <> "BCSF Entity Type"::SalesQuote) then
+          if Target."Process Mode" <> TargetScope then begin
+            Target."Process Mode" := TargetScope;
+            Policy.ApplyDocumentModeDefaults(Target);
+            Target.Modify(true);
+          end;
+      until Target.Next() = 0;
+    Scenario.Get(ScenarioId);
+    Scenario."Process Mode" := NewScope;
+    Scenario."Sales Posting Approved" := false;
+    Scenario.Modify(true);
+  end;
+
+  procedure RemoveSelection(var Selection: Record "BCSF Scenario"): Boolean
   var
     Header: Record "BCSF Run Header";
     RemoveCount: Integer;
@@ -60,6 +184,7 @@ codeunit 90130 "BCSF Scenario Manager"
     if not Confirm(RemoveQst, false, RemoveCount, ArchiveCount) then
       exit;
     RemoveConfirmed(Selection);
+    exit(true);
   end;
 
   [CommitBehavior(CommitBehavior::Error)]
@@ -99,16 +224,21 @@ codeunit 90130 "BCSF Scenario Manager"
       until Selection.Next() = 0;
   end;
 
+  [CommitBehavior(CommitBehavior::Error)]
   procedure CreateScenario(): Guid
   var
     Scenario: Record "BCSF Scenario";
     FactorySetup: Record "BCSF Factory Setup";
+    Module: Record "BCSF Scenario Module";
+    Target: Record "BCSF Data Target";
     SetupManagement: Codeunit "BCSF Setup Management";
   begin
     SetupManagement.GetSetup(FactorySetup);
     Scenario.Init();
     Scenario."Scenario Id" := CreateGuid();
     Scenario.Description := NewScenarioLbl;
+    Scenario."Profile Code" := 'GENERAL';
+    Scenario."Profile Version" := '1';
     Scenario."Usage Mode" := FactorySetup."Default Usage Mode";
     Scenario."Process Mode" := FactorySetup."Default Process Mode";
     Scenario.Seed := FactorySetup."Default Seed";
@@ -117,6 +247,16 @@ codeunit 90130 "BCSF Scenario Manager"
     Scenario."Starting Date" := WorkDate();
     Scenario."Ending Date" := WorkDate();
     Scenario.Insert(true);
+    Module.Init();
+    Module."Scenario Id" := Scenario."Scenario Id";
+    Module.Module := "BCSF Module Type"::Sales;
+    Module.Enabled := true;
+    Module.Insert(true);
+    Target.Init();
+    Target."Scenario Id" := Scenario."Scenario Id";
+    Target.Validate(Entity, "BCSF Entity Type"::Customer);
+    Target.Quantity := 1;
+    Target.Insert(true);
     exit(Scenario."Scenario Id");
   end;
 
@@ -134,6 +274,7 @@ codeunit 90130 "BCSF Scenario Manager"
     Source.Get(SourceId);
     Copy.Init();
     Copy.TransferFields(Source, false);
+    Copy."Sales Posting Approved" := false;
     Copy."Scenario Id" := CreateGuid();
     Copy.Archived := false;
     Copy.Description := CopyStr(StrSubstNo(CopyScenarioLbl, Source.Description), 1, MaxStrLen(Copy.Description));
@@ -333,6 +474,14 @@ codeunit 90130 "BCSF Scenario Manager"
   end;
 
   var
+    NoTargetsErr: Label 'Enter at least one positive entity target before running this template.';
+    UnsupportedTargetErr: Label 'No executable generator is available for %1 in mode %2. Choose a supported target or mode; the maximum process scope alone does not request additional processes.', Comment = '%1 = entity, %2 = target process mode';
+    MasterScopeErr: Label 'Set document quantities to zero before reducing the maximum scope to setup and master data.';
+    NoTargetsLbl: Label 'Enter entity targets';
+    PlanningLbl: Label 'Planning Only';
+    SalesLbl: Label 'Sales: setup check required';
+    ItemsLbl: Label 'Items: setup check required';
+    PartnersLbl: Label 'Partner Master Data';
     RemoveQst: Label 'Delete %1 unused templates and archive %2 templates with captured runs? Used templates cannot be deleted because their run history must remain. Active jobs and results are retained. The classification is checked again before changing data.', Comment = '%1 = unused count, %2 = used count';
     RestoreQst: Label 'Restore the selected archived templates for new runs?';
     NewScenarioLbl: Label 'New Scenario';

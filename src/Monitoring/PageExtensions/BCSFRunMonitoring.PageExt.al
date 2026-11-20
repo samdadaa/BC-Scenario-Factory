@@ -206,10 +206,10 @@ pageextension 90358 "BCSF Run Monitoring" extends "BCSF Run Card"
     if CanStart then begin
       Manager.LoadFrozenTargets(Rec."Run Id", TempTarget);
       TempTarget.SetFilter(Quantity, '>0');
-      PartnerOnly := not TempTarget.IsEmpty() and (Header."Process Mode" = "BCSF Process Mode"::SetupAndMasterData);
+      PartnerOnly := not TempTarget.IsEmpty();
       if TempTarget.FindSet() then
         repeat
-          PartnerOnly := PartnerOnly and (TempTarget.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]);
+          PartnerOnly := PartnerOnly and Manager.SupportsTarget(TempTarget);
         until TempTarget.Next() = 0;
       CanStart := CanStart and PartnerOnly;
     end;

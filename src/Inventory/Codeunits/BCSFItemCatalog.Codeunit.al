@@ -14,15 +14,17 @@ codeunit 90477 "BCSF Item Catalog"
     Contract: Codeunit "BCSF Contract JSON";
     Values: JsonObject;
   begin
-    if not SupportsProfile(Contract.GetText(Context, 'profileCode')) or (Contract.GetText(Context, 'profileVersion') <> '1') then
+    if not SupportsProfile(Contract.GetText(Context, 'profileCode'), Contract.GetText(Context, 'profileVersion')) then
       exit;
     Values := BuildValues(Context, 1);
     ItemName := CopyStr(Contract.GetText(Values, 'description'), 1, MaxStrLen(ItemName));
   end;
 
-  procedure SupportsProfile(Profile: Text): Boolean
+  procedure SupportsProfile(Profile: Text; Version: Text): Boolean
   begin
-    exit(Profile in ['TECH-TRADE', 'TECH-BINS']);
+    if Version = '1' then
+      exit(Profile in ['TECH-TRADE', 'TECH-BINS']);
+    exit((Version = '3') and (Profile in ['TECH-SALES', 'GENERAL', 'TRADE', 'ECOMMERCE', 'DISTRIBUTION', 'MANUFACTURING', 'CONSULTING', 'CONSTRUCTION', 'SERVICE']));
   end;
 
   procedure UsesBins(Profile: Text): Boolean
@@ -45,8 +47,7 @@ codeunit 90477 "BCSF Item Catalog"
     Cost: Decimal;
     PackQuantity: Integer;
   begin
-    if not SupportsProfile(Contract.GetText(Context, 'profileCode')) or
-      (Contract.GetText(Context, 'profileVersion') <> '1') or (LogicalKey <= 0) then
+    if not SupportsProfile(Contract.GetText(Context, 'profileCode'), Contract.GetText(Context, 'profileVersion')) or (LogicalKey <= 0) then
       Error(ProfileErr);
     German := Contract.GetInteger(Context, 'dataLanguage') = 1;
     Family := ((LogicalKey - 1) mod 8) + 1;
@@ -145,5 +146,5 @@ codeunit 90477 "BCSF Item Catalog"
   end;
 
   var
-    ProfileErr: Label 'Select technical wholesale profile TECH-TRADE or TECH-BINS, version 1, with a positive item key.';
+    ProfileErr: Label 'Select a supported item assortment or sales template profile with a positive item key.';
 }

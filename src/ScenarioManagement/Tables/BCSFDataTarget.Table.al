@@ -43,6 +43,13 @@ table 90127 "BCSF Data Target"
     {
       Caption = 'Process Mode';
       ToolTip = 'Specifies this entity scope within the scenario maximum.';
+      trigger OnValidate()
+      var
+        Policy: Codeunit "BCSF Scenario Policy";
+      begin
+        if "Process Mode" <> xRec."Process Mode" then
+          Policy.ApplyDocumentModeDefaults(Rec);
+      end;
     }
     field(6; "Unposted Percent"; Decimal)
     {

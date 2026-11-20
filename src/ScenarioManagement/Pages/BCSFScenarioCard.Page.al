@@ -35,7 +35,23 @@ page 90131 "BCSF Scenario Card"
       {
         Caption = 'Scenario Period and Scope';
         field("Usage Mode"; Rec."Usage Mode") { }
-        field("Process Mode"; Rec."Process Mode") { }
+        field("Process Mode"; MaximumProcessScope)
+        {
+          Caption = 'Maximum Process Scope';
+          ToolTip = 'Changes the document target modes and initializes matching document shares when their mode changes. Master data stays unposted; a higher maximum alone does not request follow-up processes.';
+          trigger OnValidate()
+          var
+            Manager: Codeunit "BCSF Scenario Manager";
+            RequestedScope: Enum "BCSF Process Mode";
+          begin
+            RequestedScope := MaximumProcessScope;
+            CurrPage.SaveRecord();
+            Manager.ChangeProcessScope(Rec."Scenario Id", RequestedScope);
+            Rec.Get(Rec."Scenario Id");
+            CurrPage.Targets.Page.RefreshTargets();
+            CurrPage.Update(false);
+          end;
+        }
         field(Seed; Rec.Seed) { }
         field("Starting Date"; Rec."Starting Date") { }
         field("Ending Date"; Rec."Ending Date") { }
@@ -47,6 +63,17 @@ page 90131 "BCSF Scenario Card"
           end;
         }
         field("Batch Size"; Rec."Batch Size") { }
+      }
+      group(SalesProcess)
+      {
+        Caption = 'Sales Process';
+        Visible = HasSalesTarget;
+        field(SalesLocation; Rec."Item Location Code")
+        {
+          Caption = 'Sales Location';
+          ToolTip = 'Specifies the shared simple location for items and sales. Leave blank to use the assortment location.';
+        }
+        field("Sales Posting Approved"; Rec."Sales Posting Approved") { }
       }
       group(PartnerGeneration)
       {
@@ -149,9 +176,27 @@ page 90131 "BCSF Scenario Card"
     area(Promoted)
     {
       actionref(RunTemplatePromoted; CaptureRun) { }
+      actionref(RemoveTemplatePromoted; RemoveTemplate) { }
     }
     area(Processing)
     {
+      action(RemoveTemplate)
+      {
+        ApplicationArea = All;
+        Caption = 'Delete Template';
+        ToolTip = 'Deletes an unused template after confirmation. A template with captured runs is archived and its history retained.';
+        Image = Delete;
+        trigger OnAction()
+        var
+          Selection: Record "BCSF Scenario";
+          Manager: Codeunit "BCSF Scenario Manager";
+        begin
+          CurrPage.SaveRecord();
+          Selection.SetRange("Scenario Id", Rec."Scenario Id");
+          if Manager.RemoveSelection(Selection) then
+            CurrPage.Close();
+        end;
+      }
       action(CopyScenario)
       {
         ApplicationArea = All;
@@ -205,14 +250,19 @@ page 90131 "BCSF Scenario Card"
     ItemTarget.SetRange(Entity, ItemTarget.Entity::Item);
     ItemTarget.SetFilter(Quantity, '>0');
     HasItemTarget := not ItemTarget.IsEmpty();
-    CanRunTemplate := not IsNullGuid(Rec."Scenario Id") and Manager.IsPartnerTemplate(Rec);
+    ItemTarget.SetFilter(Entity, '%1|%2|%3', ItemTarget.Entity::SalesQuote, ItemTarget.Entity::SalesOrder, ItemTarget.Entity::SalesInvoice);
+    HasSalesTarget := not ItemTarget.IsEmpty();
+    MaximumProcessScope := Rec."Process Mode";
+    CanRunTemplate := not IsNullGuid(Rec."Scenario Id") and not Rec.Archived;
     Manager.GetMinimumReferences(Rec."Scenario Id", MinimumCustomers, MinimumVendors);
     Manager.GetScenarioLanguagePreview(Rec, CustomerPreview, VendorPreview, ItemPreview);
   end;
 
   var
+    MaximumProcessScope: Enum "BCSF Process Mode";
     CanRunTemplate: Boolean;
     HasItemTarget: Boolean;
+    HasSalesTarget: Boolean;
     CustomerPreview: Text[100];
     VendorPreview: Text[100];
     ItemPreview: Text[100];

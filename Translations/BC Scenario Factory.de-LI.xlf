@@ -6094,8 +6094,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType DistributionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 3901634850" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Planning Only: Open Documents</source>
-          <target state="translated">Nur Planung: Offene Belege</target>
+          <source>Sales: Unposted Documents</source>
+          <target state="translated">Verkauf: Ungebuchte Belege</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType DocumentsLbl</note>
         </trans-unit>
@@ -6136,8 +6136,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PerformanceLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 1733831957" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Planning Only: Posted Movements</source>
-          <target state="translated">Nur Planung: Gebuchte Bewegungen</target>
+          <source>Sales: Mixed Posted Documents</source>
+          <target state="translated">Verkauf: Gemischte gebuchte Belege</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PostedLbl</note>
         </trans-unit>
@@ -6226,14 +6226,14 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Monitoring Mgt - NamedType NoResultsErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2935868274 - NamedType 2149861178" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Start this captured master-data run after rechecking its setup and permissions? Existing or uncertain batches are not repeated.</source>
-          <target state="translated">Diesen erfassten Stammdatenlauf nach erneuter Einrichtungs- und Berechtigungsprüfung starten? Vorhandene oder ungeklärte Pakete werden nicht wiederholt.</target>
+          <source>Start this captured run after rechecking its setup and permissions? Approved sales targets can post documents. Existing or uncertain batches are not repeated.</source>
+          <target state="translated">Diesen erfassten Lauf nach erneuter Prüfung von Einrichtung und Berechtigungen starten? Freigegebene Verkaufsziele können Belege buchen. Vorhandene oder unklare Pakete werden nicht wiederholt.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Quick Scenario Run - NamedType CapturedQst</note>
         </trans-unit>
         <trans-unit id="Codeunit 2935868274 - NamedType 1968297929" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Quick run supports customer, vendor and supported item master data. This template depends on generators that are not available yet.</source>
-          <target state="translated">Der direkte Start unterstützt Debitoren, Kreditoren und unterstützte Artikelstammdaten. Diese Vorlage benötigt noch nicht verfügbare Generatoren.</target>
+          <source>Quick run supports customer, vendor, supported items and sales quotes, orders and invoices. This template requires an unavailable generator.</source>
+          <target state="translated">Der Vorlagenstart unterstützt Debitoren, Kreditoren, unterstützte Artikel sowie Verkaufsangebote, Aufträge und Rechnungen. Für diese Vorlage fehlt ein Generator.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Quick Scenario Run - NamedType PartnerOnlyErr</note>
         </trans-unit>
@@ -6418,8 +6418,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action ImportScenarioBundle - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2520265292 - Action 773921824 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2520265292">
-          <source>Adds missing built-in starter scenarios without replacing existing templates or starting a run.</source>
-          <target state="translated">Ergänzt fehlende Startvorlagen, ohne vorhandene Vorlagen zu ersetzen oder einen Lauf zu starten.</target>
+          <source>Loads missing starters and updates unchanged built-in test templates for implemented generators. Keeps custom settings, removed templates and captured runs.</source>
+          <target state="translated">Lädt fehlende Startvorlagen und aktualisiert unveränderte Standard-Testvorlagen für vorhandene Generatoren. Eigene Einstellungen, entfernte Vorlagen und erfasste Läufe bleiben erhalten.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - Action LoadStarterScenarios - Property ToolTip</note>
         </trans-unit>
@@ -6579,21 +6579,9 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control Description - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 2520265292 - NamedType 2278290120" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Partner Master Data</source>
-          <target state="translated">Debitoren- und Kreditorenstammdaten</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - NamedType PartnerLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 2520265292 - NamedType 1189112345" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Planning Only</source>
-          <target state="translated">Nur Planung</target>
-          <note from="Developer" annotates="general" priority="2" />
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - NamedType PlanningLbl</note>
-        </trans-unit>
         <trans-unit id="Page 2520265292 - Control 2336152139 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Only partner master data has executable generators. Other templates support planning only.</source>
-          <target state="translated">Ausführbare Generatoren gibt es nur für Debitoren- und Kreditorenstammdaten. Andere Vorlagen dienen nur der Planung.</target>
+          <source>Shows whether the actual entity targets have executable generators. Setup and permissions are checked on start.</source>
+          <target state="translated">Zeigt, ob die Entitätsziele ausführbare Generatoren haben. Einrichtung und Berechtigungen werden beim Start geprüft.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario List - Control Availability - Property ToolTip</note>
         </trans-unit>
@@ -7198,8 +7186,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Inventory Generator - NamedType ReplayErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 4193062846 - NamedType 1146909282" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Select technical wholesale profile TECH-TRADE or TECH-BINS, version 1, with a positive item key.</source>
-          <target state="translated">Wählen Sie das technische Großhandelsprofil TECH-TRADE oder TECH-BINS in Version 1 mit einem positiven Artikelschlüssel.</target>
+          <source>Select a supported item assortment or sales template profile with a positive item key.</source>
+          <target state="translated">Wählen Sie ein unterstütztes Artikelsortiment oder Verkaufsprofil mit einem positiven Artikelschlüssel.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Catalog - NamedType ProfileErr</note>
         </trans-unit>
@@ -7436,6 +7424,252 @@
           <target state="translated">Herkunft</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Control MappingSource - Property Caption</note>
+        </trans-unit>
+      <trans-unit id="Codeunit 3043848220 - NamedType 494176370" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales – Quotes, Orders and Invoices</source>
+          <target state="translated">Verkauf – Angebote, Aufträge und Rechnungen</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType SalesDocumentsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2337640495 - NamedType 2106083201" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The captured sales quantity or distribution is inconsistent. Capture a new run.</source>
+          <target state="translated">Die erfasste Verkaufsmenge oder Verteilung ist widersprüchlich. Erfassen Sie einen neuen Lauf.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Process Coordinator - NamedType ContractErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3104100388 - NamedType 2230233351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The standard sales dimensions are blocked or required dimensions are missing. Review customer and item defaults.</source>
+          <target state="translated">Die Verkaufsdimensionen sind gesperrt oder Pflichtdimensionen fehlen. Prüfen Sie die Vorgabedimensionen von Debitor und Artikel.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Documents - NamedType DimensionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3104100388 - NamedType 2413181516" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The standard sales price or line amount is not positive. Review source prices and customer price agreements.</source>
+          <target state="translated">Der vom BC-Standard berechnete Verkaufspreis oder Zeilenbetrag ist nicht positiv. Prüfen Sie Quellpreise und Preisvereinbarungen des Debitors.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Documents - NamedType PriceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1908097553 - NamedType 1422195362" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales posting did not produce the expected customer, inventory and accounting evidence. Keep the batch blocked for review.</source>
+          <target state="translated">Die Verkaufsbuchung hat nicht die erwarteten Debitoren-, Artikel- und Buchungsnachweise erzeugt. Lassen Sie das Paket zur Prüfung gesperrt.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Evidence - NamedType EvidenceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4100430089 - NamedType 1981706351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales Quotes, Orders and Invoices</source>
+          <target state="translated">Verkaufsangebote, Aufträge und Rechnungen</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Generator - NamedType NameLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4100430089 - NamedType 2714761632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales results are missing, changed or already registered. Review the batch and its checkpoint; do not repeat uncertain posting.</source>
+          <target state="translated">Verkaufsergebnisse fehlen, wurden geändert oder sind bereits registriert. Prüfen Sie Paket und Checkpoint; wiederholen Sie keine unklare Buchung.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Generator - NamedType ResultErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2085679885 - NamedType 1698880782" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Approve sales posting on this template and enable posting in Factory Setup before capturing a posted run.</source>
+          <target state="translated">Geben Sie Verkaufsbuchungen auf dieser Vorlage und in der Factory-Einrichtung frei, bevor Sie einen gebuchten Lauf erfassen.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType ApprovalErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2085679885 - NamedType 1707647923" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The sales dates or captured number series are unavailable or incompatible with atomic posting.</source>
+          <target state="translated">Die Verkaufsdaten oder erfassten Nummernserien fehlen oder sind nicht mit der gemeinsamen Pakettransaktion kompatibel.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType DateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2085679885 - NamedType 2743586180" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source sales master data has changed since capture. Review the source and capture a new run.</source>
+          <target state="translated">Die Verkaufsstammdaten der Quelle wurden seit der Erfassung geändert. Prüfen Sie die Quelle und erfassen Sie einen neuen Lauf.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType DriftErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2085679885 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read or write permission is missing for %1. Review standard permissions; no rights are granted.</source>
+          <target state="translated">Lese- oder Schreibberechtigungen für %1 fehlen. Prüfen Sie die Standardberechtigungen; es werden keine Rechte vergeben.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = table caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2085679885 - NamedType 2413181516" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A source item requires a positive sales price.</source>
+          <target state="translated">Ein Quellartikel benötigt einen positiven Verkaufspreis.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType PriceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2085679885 - NamedType 4281848628" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The captured sales setup is missing or unsupported. Start the template again after checking its sales and item targets.</source>
+          <target state="translated">Die erfasste Verkaufseinrichtung fehlt oder wird nicht unterstützt. Prüfen Sie die Verkaufs- und Artikelziele und starten Sie die Vorlage erneut.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType SourceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2085679885 - NamedType 1122067359" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 needs %2 base units at the selected location; only %3 unreserved units are available. Prepare stock through a standard BC process or use unposted mode.</source>
+          <target state="translated">Artikel %1 benötigt %2 Basiseinheiten am gewählten Lagerort; verfügbar sind nur %3 unreservierte Einheiten. Stellen Sie Bestand über einen BC-Standardprozess bereit oder verwenden Sie den ungebuchten Modus.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number, %2 = required quantity, %3 = available quantity</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType StockErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2085679885 - NamedType 3748405772" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This sales process supports quotes, orders and invoices in local currency with a simple location and no tracking, mandatory variant, intercompany or automatic payment.</source>
+          <target state="translated">Der Verkaufsprozess unterstützt Angebote, Aufträge und Rechnungen in Mandantenwährung an einem einfachen Lagerort ohne Artikelverfolgung, Pflichtvariante, Intercompany oder automatische Zahlung.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType UnsupportedErr</note>
+        </trans-unit>
+        <trans-unit id="Enum 224228713 - EnumValue 1641215960 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Enum 224228713">
+          <source>Sales Documents</source>
+          <target state="translated">Verkaufsbelege</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">EnumExtension BCSF Sales Binding - EnumValue SalesDocuments - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2291130533 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explicitly approves posting for sales runs captured from this template. Global posting permission in Factory Setup is also required.</source>
+          <target state="translated">Gibt Buchungen für Verkaufsabläufe aus dieser Vorlage ausdrücklich frei. Die globale Buchungsfreigabe in der Factory-Einrichtung ist zusätzlich erforderlich.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Sales Posting Approved - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2291130533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Approve Sales Posting</source>
+          <target state="translated">Verkaufsbuchungen freigeben</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Sales Posting Approved - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2859815723 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Selects the existing run whose recorded synthetic customers and items are used for sales. Stock is checked for posted sales.</source>
+          <target state="translated">Wählt den vorhandenen Lauf mit nachgewiesenen synthetischen Debitoren und Artikeln für den Verkauf. Für Buchungen wird der Bestand geprüft.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Sales Source Run Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2859815723 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales Source Run</source>
+          <target state="translated">Quelllauf für Verkauf</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Sales Source Run Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 4245194685 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales Process</source>
+          <target state="translated">Verkaufsprozess</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control SalesProcess - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 1394696143 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the shared simple location for items and sales. Leave blank to use the assortment location.</source>
+          <target state="translated">Gibt den gemeinsamen einfachen Lagerort für Artikel und Verkauf an. Leer verwendet die Vorgabe des Artikelsortiments.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control SalesLocation - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 1394696143 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales Location</source>
+          <target state="translated">Verkaufslagerort</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control SalesLocation - Property Caption</note>
+        </trans-unit>
+      <trans-unit id="Codeunit 3043848220 - NamedType 3940410257" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales – Mixed Posted Documents</source>
+          <target state="translated">Verkauf – Gemischte gebuchte Belege</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType MixedSalesLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 2520265292 - NamedType 2926764808" size-unit="char" translate="yes" xml:space="preserve" al-object-target="PageExtension 1871848041">
+          <source>Starter templates are up to date. Unchanged sales templates were updated; customized or archived templates, removed starters and captured runs were retained.</source>
+          <target state="translated">Die Startvorlagen sind aktuell. Unveränderte Verkaufsvorlagen wurden aktualisiert; angepasste oder archivierte Vorlagen, entfernte Startvorlagen und erfasste Läufe bleiben erhalten.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension BCSF Scenario Actions - NamedType TemplatesUpdatedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 1569653016" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Items: setup check required</source>
+          <target state="translated">Artikel: Einrichtung wird beim Start geprüft</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType ItemsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 3386600109" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set document quantities to zero before reducing the maximum scope to setup and master data.</source>
+          <target state="translated">Setzen Sie die Belegzielmengen auf null, bevor Sie den Maximalumfang auf Einrichtung und Stammdaten reduzieren.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType MasterScopeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 2308701218" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter at least one positive entity target before running this template.</source>
+          <target state="translated">Tragen Sie vor dem Start mindestens eine positive Entitätszielmenge ein.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType NoTargetsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 4002534331" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter entity targets</source>
+          <target state="translated">Entitätsziele eintragen</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType NoTargetsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 1535718289" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Partner Master Data</source>
+          <target state="translated">Debitoren- und Kreditorenstammdaten</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType PartnersLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 1189112345" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning Only</source>
+          <target state="translated">Nur Planung</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType PlanningLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 3096777198" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales: setup check required</source>
+          <target state="translated">Verkauf: Einrichtung wird beim Start geprüft</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType SalesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1912494491 - NamedType 3171612627" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No executable generator is available for %1 in mode %2. Choose a supported target or mode; the maximum process scope alone does not request additional processes.</source>
+          <target state="translated">Für %1 im Modus %2 ist kein ausführbarer Generator vorhanden. Wählen Sie ein unterstütztes Ziel oder einen passenden Modus. Der Maximalumfang allein fordert keine zusätzlichen Prozesse an.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entity, %2 = target process mode</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Manager - NamedType UnsupportedTargetErr</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 3206867468 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Changes the document target modes and initializes matching document shares when their mode changes. Master data stays unposted; a higher maximum alone does not request follow-up processes.</source>
+          <target state="translated">Passt die Belegmodi an und setzt bei einem Moduswechsel passende Belegquoten. Stammdaten bleiben ungebucht; ein höherer Maximalumfang allein startet keine Folgeprozesse.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control Process Mode - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 3206867468 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Maximum Process Scope</source>
+          <target state="translated">Maximaler Prozessumfang</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control Process Mode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Action 1352530898 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Deletes an unused template after confirmation. A template with captured runs is archived and its history retained.</source>
+          <target state="translated">Löscht eine unbenutzte Vorlage nach Bestätigung. Vorlagen mit erfassten Läufen werden archiviert; ihre Historie bleibt erhalten.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action RemoveTemplate - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Action 1352530898 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Delete Template</source>
+          <target state="translated">Vorlage löschen</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Action RemoveTemplate - Property Caption</note>
+        </trans-unit>
+      <trans-unit id="Codeunit 3043848220 - NamedType 785445965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning Only: Open Documents</source>
+          <target state="translated">Nur Planung: Offene Belege</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType LegacyDocumentsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1887537154" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning Only: Posted Movements</source>
+          <target state="translated">Nur Planung: Gebuchte Bewegungen</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType LegacyPostedLbl</note>
+        </trans-unit>
+      <trans-unit id="Codeunit 2085679885 - NamedType 2757287588" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted sales from newly generated items require an earlier posted purchase receipt in the same run. Use unposted documents until purchase generation is available.</source>
+          <target state="translated">Die Verkaufsbuchung für neu erzeugte Artikel benötigt einen vorherigen gebuchten Wareneingang im selben Lauf. Verwenden Sie bis zur Umsetzung des Einkaufs ungebuchte Belege.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType ReceiptRequiredErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2085679885 - NamedType 1445981202" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales requires at least one customer, two vendors and one item from the same template. Use the technical wholesale assortment and leave the existing item vendors blank.</source>
+          <target state="translated">Verkauf benötigt mindestens einen Debitor, zwei Kreditoren und einen Artikel aus derselben Vorlage. Verwenden Sie ein unterstütztes Artikelsortiment und lassen Sie vorhandene Artikellieferanten leer.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType SameRunErr</note>
         </trans-unit>
       </group>
     </body>

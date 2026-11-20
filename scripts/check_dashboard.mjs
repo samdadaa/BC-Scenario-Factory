@@ -233,6 +233,17 @@ try {
   await click('[data-stock-focus="result:item"]');
   assert.equal(await evaluate('window.calls.at(-1).args[0]'), 'runOpen');
   assert.equal(await evaluate('window.calls.at(-1).args[1]'), 'item');
+  for (const [entity, metricKey] of [['SALES.QUOTE', 'sales/quote'], ['SALES.ORDER', 'sales/order'], ['SALES.INVOICE', 'sales/invoice']]) {
+    await redraw(`window.fixture.steps=[{node:${JSON.stringify(entity)},entityCode:${JSON.stringify(entity)},entity:"Sales",target:2,confirmed:2,remaining:0,complete:true,external:false,state:"Completed"}];window.fixture.runStock={metrics:[{key:${JSON.stringify(metricKey)},caption:"Sales",count:2,canOpen:true}]}`);
+    await click(`[data-stock-focus="result:${metricKey}"]`);
+    assert.equal(await evaluate('window.calls.at(-1).args[0]'), 'runOpen');
+    assert.equal(await evaluate('window.calls.at(-1).args[1]'), metricKey);
+  }
+  await redraw('window.fixture.runStock={metrics:[{key:"sales/postedInvoice",caption:"Posted invoices",count:5,canOpen:true},{key:"entries/customerEntry",caption:"Customer entries",count:5,canOpen:true}]}');
+  for (const metricKey of ['sales/postedInvoice', 'entries/customerEntry']) {
+    await click(`[data-stock-focus="result:${metricKey}"]`);
+    assert.equal(await evaluate('window.calls.at(-1).args[1]'), metricKey);
+  }
   await redraw('window.fixture.hasSelection=false;window.fixture.runs=[]');
   assert.equal(await evaluate('document.querySelectorAll(".sf-action-groups").length'), 0);
   assert.equal(await evaluate('document.querySelector(".sf-empty").textContent'), germanTexts.empty);

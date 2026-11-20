@@ -877,17 +877,17 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
 
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Artikelstamm für Verkauf und Beschaffung valide, Kategorien und Beziehungen plausibel; keine Bestands-/Wertbewegungen aus diesem Stammdatenlauf.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
 - [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
@@ -899,6 +899,9 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 ---
 
 **Bedienkorrektur 20.11.2026:** Abschlussmeldung für „Stammdatenbasis ergänzen“, konkrete Fehler bleiben sichtbar. Elf neue Standardlistenrouten; erzeugte Attributzuordnungen lesbar in bestehender Herkunftsseite. Keine neuen Seiten/Tabellen. Mandantenweite Attributzuordnungen weiterhin ohne Herkunftsroute; Nullzahlen ohne Link. [Prüfvertrag](docs/INVENTORY_GENERATION.md#sf-019--bedienkorrektur-20112026). Native Sandboxabnahme offen, Status **Zur Prüfung**.
+
+
+**Aktualisierung auf Nutzerauftrag:** Belegte Implementierungs-/Dokumentationsschritte abgehakt. Reale BC-Positiv-/Negativ-/Rechte-/Wiederanlaufprüfung und fachliche Gesamtakzeptanz bleiben offen; die Aufforderung zur Ticketpflege ersetzt keinen Laufzeitnachweis.
 
 <a name="sf-020"></a>
 
@@ -944,7 +947,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-021 — Verkaufsprozess: Angebot bis gebuchte Rechnung
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P1  
 **Abhängigkeiten:** SF-018,SF-019,SF-020  
 **Verantwortung / betroffene Module:** Sales, ProcessEngine  
@@ -956,20 +959,26 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Standard-Sales-Posting, Bestand-/Preis-/Dimensionenprüfung; Standardprozess nicht umgehen.
 
+**Umsetzung 20.11.2026:** Angebote, Standard-Angebotsumwandlung zu Aufträgen, direkte Rechnungen, vollständige/halbe Lieferung und Faktura via Sales-Post. Vorhandene Vorlagen/Queue/Checkpoints und Dashboardlisten werden verwendet. Neue TECH-SALES-Vorlage standardmäßig ungebucht, Quelle ausdrücklich aus abgeschlossenem synthetischem Lauf; tatsächlicher datierter unreservierter Bestand für Buchungen erforderlich. Eingefrorene Vorlagenzustimmung und aktuelle globale Postingfreigabe, keine automatische Beschaffung oder Zahlung. Sechs neue Objekte, zwei additive Vorlagenfelder, keine neue Tabelle/Seite. Main 1.0.5.0, bestehender isolierter Testhost um sechs Methoden auf 19 ergänzt. [Vertrag, Grenzen und native Abnahme](docs/SALES_PROCESS.md).
+
+**Abhängigkeit SF-020:** Weiterhin offen und nicht umgesetzt. Der aktuelle ausdrückliche Auftrag erlaubt SF-021 mit bereits vorhandenen synthetischen Stämmen und gegebenenfalls separat über BC-Standard bereitgestelltem Bestand. Keine implizite Abnahme von SF-020/SF-042.
+
+**Prüfstand:** Lokale Original-API-/Schlüssel-/Transaktionsprüfung, Compile/Paket/Übersetzungen und Dashboardregression; genaue Nachweise in [TESTS](docs/TESTS.md#sf-021--verkaufsprozess-20112026). Native Ausführung der 19 AL-Tests, Beleg-/Postenabgleich, Rechte, konkurrierender Bestand, Teilfehler/Rollback und Queue-Wiederanlauf bleiben offen. Keine Veröffentlichung.
+
 **Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
 
 **Vorgehen (einzeln abzuarbeiten):**
-- [ ] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
-- [ ] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
-- [ ] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
-- [ ] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
+- [x] Relevante Originaldateien, Modulregeln, Standard-BC-APIs, vorhandene Tests und `app.json` prüfen; offenen Sachverhalt vor Coding abstimmen.
+- [x] Fachliche Vor-/Nachbedingungen, Prozessmodus, Berechtigungen und Fehlerpfade schriftlich beschreiben.
+- [x] Betroffene AL-Objekte, Schnittstellen, ID-Belegung, Datenfluss und Transaktions-/Batch-Grenzen planen.
+- [x] Nur diesen freigegebenen Ticketumfang implementieren; vorhandene Einstellungen, Modulgrenzen und Standardbuchungsprozesse respektieren.
 - [ ] Positive, negative, Teilfehler-, Wiederholungs- und Berechtigungsfälle passend zum Ticket prüfen; tatsächliche Ergebnisse protokollieren.
-- [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
+- [x] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
 - [ ] Demo mit plausibler Belegkette und passenden Posten; ungebuchter Modus bleibt ohne Ledger.
-- [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
-- [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
+- [x] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
+- [x] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
 - [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
 
 **Nicht-Ziele / Sicherheitsgrenzen:** Keine Änderung oder Veröffentlichung in Produktivmandanten; kein blindes Direktinsert in gebuchte Standardposten; keine erfundene Standard-API; keine automatische Umsetzung abhängiger Tickets.
@@ -979,6 +988,11 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
+
+
+**Nachauftrag Vorlagen, 20.11.2026:** Neue Vorlagen erhalten GENERAL und ein Debitorenziel statt leerer Planung. Tatsächliche Zielmodi bestimmen Verfügbarkeit; Start meldet konkrete Blocker, sichere Löschung/Archivierung ist sichtbar. Die Ladeaktion aktualisiert erkannte unveränderte Branchen-Belegstarter auf Verkauf v2 und ergänzt eine gemischte Vorlage. Gebuchte Vorlagen haben unterschiedliche Belegquoten; Umfangswechsel und Dezimalprozente konsistent. Eigene Konfigurationen, entfernte/archivierte Starter und Captures geschützt. Pflege nach jedem Ticket in AGENTS verbindlich festgehalten. Main 1.0.5.1, 26 Methoden im vorhandenen Testhost; [Vertrag/Prüfschritte](docs/SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051). Native Abnahme bleibt offen, Status **Zur Prüfung**.
+
+**Nachauftrag Stammdaten im selben Lauf:** Verkaufsvorlagen bündeln generierte Debitoren, Kreditoren und Artikel mit den Verkaufszielen. Die Queue verwendet nur die bestätigten Stammdaten dieses Laufs. Die Quelllaufauswahl entfällt. Gebuchte Verkäufe auf diesen neuen Artikeln warten auf den vorgelagerten SF-020-Wareneingang. [Vertrag und Prüfung](docs/SALES_PROCESS.md#stammdaten-und-verkauf-in-einem-lauf).
 
 <a name="sf-022"></a>
 

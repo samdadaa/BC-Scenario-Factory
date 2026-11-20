@@ -82,6 +82,7 @@ codeunit 90378 "BCSF Planning Guard"
     Guard: Codeunit "BCSF Environment Guard";
     SetupManagement: Codeunit "BCSF Setup Management";
     EnvironmentInformation: Codeunit "Environment Information";
+    Manager: Codeunit "BCSF Scenario Manager";
     BatchSize: Integer;
   begin
     Header.Get(RunId);
@@ -94,8 +95,8 @@ codeunit 90378 "BCSF Planning Guard"
         BatchSize := Header."Batch Size";
         if BatchSize > Step."Work Units" then
           BatchSize := Step."Work Units";
-        // No posting approval exists in this ticket. Posted starts must remain blocked until approved snapshots/worker contracts exist.
-        Guard.EnsureCanGenerate(Header.CurrentCompany(), Step."Process Mode", Step."Work Units", BatchSize, false);
+        // Posting is opt-in only for the explicitly approved captured SF-021 sales contract.
+        Guard.EnsureCanGenerate(Header.CurrentCompany(), Step."Process Mode", Step."Work Units", BatchSize, Manager.HasSalesPostingApproval(RunId, Step."Node Code"));
       until Step.Next() = 0;
   end;
 

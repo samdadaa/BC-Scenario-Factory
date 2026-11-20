@@ -36,7 +36,7 @@ codeunit 90201 "BCSF Dependency Planner"
     TempTargets.SetFilter(Quantity, '>0');
     if TempTargets.FindSet() then
       repeat
-        PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]);
+        PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item, "BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesOrder, "BCSF Entity Type"::SalesInvoice]);
         EntityCode := Policy.GetEntityCode(TempTargets.Entity);
         Nodes.Init();
         Nodes."Node Code" := EntityCode;
@@ -66,7 +66,7 @@ codeunit 90201 "BCSF Dependency Planner"
               AddEdge(Edges, EntityCode, 'FINANCE.SETUP', "BCSF Dependency Kind"::External);
           "BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesOrder,
           "BCSF Entity Type"::SalesInvoice, "BCSF Entity Type"::SalesCreditMemo:
-            begin
+            if not (Context.Contains('salesSetup') and (TempTargets.Entity <> "BCSF Entity Type"::SalesCreditMemo)) then begin
               AddEntityRequirement(Nodes, Edges, TempModules, EntityCode, 'CUSTOMER', 'SALES');
               AddEntityRequirement(Nodes, Edges, TempModules, EntityCode, 'ITEM', 'INVENTORY');
             end;
@@ -78,7 +78,7 @@ codeunit 90201 "BCSF Dependency Planner"
             end;
         end;
         Policy.GetDistribution(TempTargets, UnpostedCount, PostedCount, PartialCount);
-        if (TempTargets.Entity in ["BCSF Entity Type"::SalesOrder, "BCSF Entity Type"::SalesInvoice]) and
+        if not Context.Contains('salesSetup') and (TempTargets.Entity in ["BCSF Entity Type"::SalesOrder, "BCSF Entity Type"::SalesInvoice]) and
           ((PostedCount > 0) or (PartialCount > 0))
         then begin
           EnsureExternal(Nodes, TempModules, 'INVENTORY.STOCK', 'INVENTORY', TempTargets."Process Mode");

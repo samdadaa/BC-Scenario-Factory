@@ -110,8 +110,32 @@ codeunit 90369 "BCSF Dashboard Stock"
     foreach Value in Values.AsArray() do
       if TextProperty(Value.AsObject(), 'key') in ['customer', 'vendor', 'shipTo', 'orderAddress', 'item', 'category', 'itemUnit', 'attribute', 'attributeValue', 'attributeMapping', 'variant', 'itemReference', 'itemVendor', 'substitution', 'sku', 'bin', 'binContent'] then
         Metrics.Add(Value);
+    AddRunMetrics('sales', RunId, Metrics);
+    AddRunMetrics('entries', RunId, Metrics);
     Result.Add('metrics', Metrics);
     exit(Result);
+  end;
+
+  local procedure AddRunMetrics(GroupKey: Text; RunId: Guid; var Metrics: JsonArray)
+  var
+    Stock: JsonObject;
+    Values: JsonToken;
+    Value: JsonToken;
+    Metric: JsonObject;
+    MetricKey: Text;
+  begin
+    Stock := Build(GroupKey, false, RunId);
+    Stock.Get('metrics', Values);
+    foreach Value in Values.AsArray() do begin
+      Metric := Value.AsObject();
+      MetricKey := TextProperty(Metric, 'key');
+      if (GroupKey = 'entries') or (MetricKey in ['quote', 'order', 'invoice', 'postedShipment', 'postedInvoice']) then
+        if Metric.Contains('count') then
+          if IntProperty(Metric, 'count') > 0 then begin
+            Metric.Replace('key', GroupKey + '/' + MetricKey);
+            Metrics.Add(Metric);
+          end;
+    end;
   end;
 
   procedure OpenMetric(GroupKey: Text; MetricKey: Text; EntireCompany: Boolean; StockRunId: Guid; LastStock: JsonObject)
@@ -128,6 +152,15 @@ codeunit 90369 "BCSF Dashboard Stock"
   begin
     if not GetDisplayedCount(LastStock, MetricKey, ExpectedCount) then
       Error(ChangedLbl);
+    if GroupKey = 'master' then
+      if CopyStr(MetricKey, 1, 6) = 'sales/' then begin
+        GroupKey := 'sales';
+        MetricKey := CopyStr(MetricKey, 7);
+      end else
+        if CopyStr(MetricKey, 1, 8) = 'entries/' then begin
+          GroupKey := 'entries';
+          MetricKey := CopyStr(MetricKey, 9);
+        end;
     LoadCatalog(GroupKey, Catalog);
     foreach Item in Catalog do begin
       Metric := Item.AsObject();
@@ -718,14 +751,14 @@ codeunit 90369 "BCSF Dashboard Stock"
         end;
       'sales':
         begin
-          AddMetric(Catalog, 'quote', Database::"Sales Header", Page::"Sales Quotes", false, Doc0Lbl);
+          AddMetric(Catalog, 'quote', Database::"Sales Header", Page::"Sales Quotes", true, Doc0Lbl);
           AddMetric(Catalog, 'blanket', Database::"Sales Header", Page::"Blanket Sales Orders", false, Doc1Lbl);
-          AddMetric(Catalog, 'order', Database::"Sales Header", Page::"Sales Order List", false, Doc2Lbl);
-          AddMetric(Catalog, 'invoice', Database::"Sales Header", Page::"Sales Invoice List", false, Doc3Lbl);
+          AddMetric(Catalog, 'order', Database::"Sales Header", Page::"Sales Order List", true, Doc2Lbl);
+          AddMetric(Catalog, 'invoice', Database::"Sales Header", Page::"Sales Invoice List", true, Doc3Lbl);
           AddMetric(Catalog, 'credit', Database::"Sales Header", Page::"Sales Credit Memos", false, Doc4Lbl);
           AddMetric(Catalog, 'return', Database::"Sales Header", Page::"Sales Return Order List", false, Doc5Lbl);
-          AddMetric(Catalog, 'postedShipment', Database::"Sales Shipment Header", Page::"Posted Sales Shipments", false, PostedShipmentLbl);
-          AddMetric(Catalog, 'postedInvoice', Database::"Sales Invoice Header", Page::"Posted Sales Invoices", false, PostedInvoiceLbl);
+          AddMetric(Catalog, 'postedShipment', Database::"Sales Shipment Header", Page::"Posted Sales Shipments", true, PostedShipmentLbl);
+          AddMetric(Catalog, 'postedInvoice', Database::"Sales Invoice Header", Page::"Posted Sales Invoices", true, PostedInvoiceLbl);
           AddMetric(Catalog, 'postedCredit', Database::"Sales Cr.Memo Header", Page::"Posted Sales Credit Memos", false, PostedCreditLbl);
           AddMetric(Catalog, 'postedReturn', Database::"Return Receipt Header", Page::"Posted Return Receipts", false, PostedReturnLbl);
         end;
@@ -744,13 +777,13 @@ codeunit 90369 "BCSF Dashboard Stock"
         end;
       'entries':
         begin
-          AddMetric(Catalog, 'glEntry', Database::"G/L Entry", Page::"General Ledger Entries", false, '');
-          AddMetric(Catalog, 'customerEntry', Database::"Cust. Ledger Entry", Page::"Customer Ledger Entries", false, '');
+          AddMetric(Catalog, 'glEntry', Database::"G/L Entry", Page::"General Ledger Entries", true, '');
+          AddMetric(Catalog, 'customerEntry', Database::"Cust. Ledger Entry", Page::"Customer Ledger Entries", true, '');
           AddMetric(Catalog, 'vendorEntry', Database::"Vendor Ledger Entry", Page::"Vendor Ledger Entries", false, '');
           AddMetric(Catalog, 'bankEntry', Database::"Bank Account Ledger Entry", Page::"Bank Account Ledger Entries", false, '');
-          AddMetric(Catalog, 'vatEntry', Database::"VAT Entry", Page::"VAT Entries", false, '');
-          AddMetric(Catalog, 'itemEntry', Database::"Item Ledger Entry", Page::"Item Ledger Entries", false, '');
-          AddMetric(Catalog, 'valueEntry', Database::"Value Entry", Page::"Value Entries", false, '');
+          AddMetric(Catalog, 'vatEntry', Database::"VAT Entry", Page::"VAT Entries", true, '');
+          AddMetric(Catalog, 'itemEntry', Database::"Item Ledger Entry", Page::"Item Ledger Entries", true, '');
+          AddMetric(Catalog, 'valueEntry', Database::"Value Entry", Page::"Value Entries", true, '');
         end;
       'finance':
         begin

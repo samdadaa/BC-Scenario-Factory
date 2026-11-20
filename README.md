@@ -2,7 +2,7 @@
 
 **Aktueller Einstieg ab 1.0.2.0:** Einrichtung öffnen, Mandant einmal mit SKR03/SKR04 oder vorhandener BC-Einrichtung initialisieren, danach eine Vorlage direkt in der Job Queue starten. [Mandanteneinrichtung und Vorlagenstart](docs/COMPANY_INITIALIZATION.md). Die nachfolgenden Ticketvermerke sind historische Zwischenstände.
 
-**Status: Grundlagen bis Qualitätsabschluss und Finanztestpaketen (SF-003–SF-017) sowie Partnerstammdaten (SF-018) implementiert, zur Prüfung; weitere Fachgeneratoren und BC-End-to-End-Abnahme ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
+**Status: Grundlagen, Qualitätsabschluss, Finanztestpakete, Partner-/Artikelstammdaten und Verkaufsprozess (SF-021) implementiert, zur Prüfung; weitere Fachgeneratoren und native BC-End-to-End-Abnahme ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
 
 ## Zielgruppen und Nutzen
 
@@ -133,3 +133,13 @@ Die Reiter **Daten** und **Läufe** trennen Bestandsfilter und Laufwahl. Einheit
 Zwei zusätzliche Vorlagen erzeugen ein technisches Sortiment mit Kategorien/Merkmalen, Artikel-Einheiten, zwei angebotenen Kugelhahnvarianten, Referenzen/Bezugsquellen, Ersatzpaar und einer gezielten SKU. Wahlweise einfaches Lager ohne oder mit Platzführung; keine Bestände oder Buchungen. Der bestehende Vorlagenstart bleibt erhalten. Bei älterer initialisierter SKR-Firma kann die bestehende Einrichtung über **Stammdatenbasis ergänzen** vervollständigt werden.
 
 [Bedienung und Sandbox-Smoke](docs/INVENTORY_GENERATION.md), [Prüfstand einschließlich korrigiertem Item-Vendor-Schlüsselfehler](docs/TESTS.md#sf-019--artikelsortiment-und-lagerbasics-20112026). **Zur Prüfung**, reale Korrekturabnahme offen.
+
+## Verkaufsprozess (SF-021, Version 1.0.5.0)
+
+Vorlagen laden → **Verkauf – Angebote, Aufträge und Rechnungen** öffnen → abgeschlossenen synthetischen Quelllauf auswählen → **Vorlage ausführen**. Standardmäßig entstehen nur offene Belege. Gebuchte/teilweise Verkäufe benötigen vorhandenen Bestand sowie die ausdrückliche Freigabe auf Vorlage und Einrichtung. Standard-Angebotsumwandlung, Lieferung, Rechnung und offene Debitorenposten bleiben über Herkunft und Dashboard prüfbar. Kein automatischer Einkauf oder Zahlungslauf.
+
+[Bedienung, Grenzen und native Prüfschritte](docs/SALES_PROCESS.md), [lokale Prüfungen](docs/TESTS.md#sf-021--verkaufsprozess-20112026). **Zur Prüfung**, native BC-Abnahme offen. SF-019-Checkliste gemäß belegtem Stand aktualisiert; offene Laufzeit-/Abnahmehäkchen bleiben offen.
+
+### Vorlagenkorrektur 1.0.5.1
+
+Nach dem Paketupdate einmal **Startvorlagen laden** wählen: erkennbare unveränderte Branchen-Belegstarter werden auf Verkauf aktualisiert, eine gemischte Verkaufsvorlage kommt hinzu. Neue Szenarien haben ein kleines ausführbares Stammdatenziel; Start liefert konkrete fehlende Voraussetzungen, Löschen ist direkt sichtbar und bewahrt benutzte Historie durch Archivierung. Der maximale Umfang begrenzt die tatsächlichen Ziele; gebuchte Vorlagen enthalten unterschiedliche ungebuchte/teilgebuchte/gebuchte Quoten. Eigene Konfigurationen und gespeicherte Läufe bleiben geschützt. [Umfang und native Abnahme](docs/SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051). **Zur Prüfung**.

@@ -151,6 +151,8 @@ codeunit 90147 "BCSF Scenario Transfer"
     Item.Add('paymentMethod', Scenario."Partner Payment Method");
     Item.Add('dimension1', Scenario."Partner Dimension 1");
     Item.Add('dimension2', Scenario."Partner Dimension 2");
+    Item.Add('salesSourceRunId', Format(Scenario."Sales Source Run Id", 0, 4));
+    // Posting approval is deliberately not portable to another company.
     Item.Add('itemBaseUnit', Scenario."Item Base Unit");
     Item.Add('itemPackUnit', Scenario."Item Pack Unit");
     Item.Add('itemInventoryGroup', Scenario."Item Inventory Group");
@@ -231,6 +233,9 @@ codeunit 90147 "BCSF Scenario Transfer"
       Scenario."Partner Dimension 1" := CopyStr(ReadText(Item, 'dimension1', MaxStrLen(Scenario."Partner Dimension 1")), 1, MaxStrLen(Scenario."Partner Dimension 1"));
     if Item.Contains('dimension2') then
       Scenario."Partner Dimension 2" := CopyStr(ReadText(Item, 'dimension2', MaxStrLen(Scenario."Partner Dimension 2")), 1, MaxStrLen(Scenario."Partner Dimension 2"));
+    if Item.Contains('salesSourceRunId') then
+      Evaluate(Scenario."Sales Source Run Id", ReadText(Item, 'salesSourceRunId', 50));
+    Scenario."Sales Posting Approved" := false;
     if Item.Contains('itemBaseUnit') then
       Scenario."Item Base Unit" := CopyStr(ReadText(Item, 'itemBaseUnit', MaxStrLen(Scenario."Item Base Unit")), 1, MaxStrLen(Scenario."Item Base Unit"));
     if Item.Contains('itemPackUnit') then

@@ -65,6 +65,7 @@ codeunit 90306 "BCSF Execution Rules"
     Active: Record "Active Session";
     Contract: Codeunit "BCSF Contract JSON";
     Guard: Codeunit "BCSF Environment Guard";
+    Manager: Codeunit "BCSF Scenario Manager";
   begin
     CheckEnvironment(RunId, CompanyName());
     if GuiAllowed() then
@@ -76,8 +77,8 @@ codeunit 90306 "BCSF Execution Rules"
     StoredBatch.TestField(Status, StoredBatch.Status::Running);
     Header.Get(RunId);
     Step.Get(RunId, NodeCode);
-    Guard.EnsureCanGenerate(Header."Company Name", "BCSF Process Mode"::SetupAndMasterData,
-      Step."Work Units", StoredBatch."Last Key" - StoredBatch."First Key" + 1, false);
+    Guard.EnsureCanGenerate(Header."Company Name", Step."Process Mode",
+      Step."Work Units", StoredBatch."Last Key" - StoredBatch."First Key" + 1, Manager.HasSalesPostingApproval(RunId, NodeCode));
     StoredBatch.TestField("Batch Key", Contract.GetText(Batch, 'batchKey'));
     StoredBatch.TestField("First Key", Contract.GetInteger(Batch, 'firstKey'));
     StoredBatch.TestField("Last Key", Contract.GetInteger(Batch, 'lastKey'));

@@ -146,13 +146,38 @@ codeunit 90143 "BCSF Scenario Policy"
     Scenario.Get(Target."Scenario Id");
     if IsDocument(Target.Entity) then begin
       Target."Process Mode" := Scenario."Process Mode";
+      if Target."Process Mode" = "BCSF Process Mode"::FollowUpProcesses then
+        Target."Process Mode" := "BCSF Process Mode"::PostedMovements;
       if (Target."Process Mode" = "BCSF Process Mode"::SetupAndMasterData) or (Target.Entity = "BCSF Entity Type"::SalesQuote) then
         Target."Process Mode" := "BCSF Process Mode"::UnpostedDocuments;
     end else
       Target."Process Mode" := "BCSF Process Mode"::SetupAndMasterData;
+    ApplyDocumentModeDefaults(Target);
+  end;
+
+  procedure ApplyDocumentModeDefaults(var Target: Record "BCSF Data Target")
+  begin
     Target."Unposted Percent" := 100;
     Target."Posted Percent" := 0;
     Target."Partial Percent" := 0;
+    if not IsDocument(Target.Entity) then begin
+      Target."Process Mode" := "BCSF Process Mode"::SetupAndMasterData;
+      exit;
+    end;
+    if Target.Entity = "BCSF Entity Type"::SalesQuote then begin
+      Target."Process Mode" := "BCSF Process Mode"::UnpostedDocuments;
+      exit;
+    end;
+    if Target."Process Mode".AsInteger() < "BCSF Process Mode"::PostedMovements.AsInteger() then
+      exit;
+    if Target.Entity in ["BCSF Entity Type"::SalesOrder, "BCSF Entity Type"::PurchaseOrder] then begin
+      Target."Unposted Percent" := 30;
+      Target."Posted Percent" := 50;
+      Target."Partial Percent" := 20;
+    end else begin
+      Target."Unposted Percent" := 25;
+      Target."Posted Percent" := 75;
+    end;
   end;
 
   procedure ValidateTarget(var Target: Record "BCSF Data Target")
