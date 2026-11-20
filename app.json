@@ -29,5 +29,12 @@
   "features": [
     "NoImplicitWith",
     "TranslationFile"
+  ],
+  "internalsVisibleTo": [
+    {
+      "id": "e8f7f5f2-7a86-4a19-9270-6c3cf9019019",
+      "name": "BC Scenario Factory SF019 Tests",
+      "publisher": "Default Publisher"
+    }
   ]
 }

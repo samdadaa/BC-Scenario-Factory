@@ -44,6 +44,22 @@ codeunit 90155 "BCSF Starter Catalog"
     end;
 
     [CommitBehavior(CommitBehavior::Error)]
+    procedure RefreshCompanyFoundation()
+    var
+        SetupMgt: Codeunit "BCSF Setup Management";
+        Packages: Codeunit "BCSF Finance Package Mgt";
+        Guard: Codeunit "BCSF Environment Guard";
+    begin
+        Guard.EnsureCanConfigure(CompanyName());
+        SetupMgt.EnsureInitialized();
+        if Packages.GetAppliedMode() = "BCSF Finance Mode"::Existing then
+            Error(ExistingFoundationErr);
+        // Same applied package, same accounts; existing conflict/posted-company guards remain active.
+        Packages.InitializeCompany(Packages.GetAppliedMode());
+        Seed();
+    end;
+
+    [CommitBehavior(CommitBehavior::Error)]
     procedure Seed()
     var
         Setup: Record "BCSF Factory Setup";
@@ -58,6 +74,48 @@ codeunit 90155 "BCSF Starter Catalog"
         SetupMgt.GetSetup(Setup);
         for Industry := 1 to 8 do
             SeedIndustry(Industry, Setup);
+        SeedItemTemplates(Setup);
+    end;
+
+    local procedure SeedItemTemplates(Setup: Record "BCSF Factory Setup")
+    var
+        Scenario: Record "BCSF Scenario";
+        Removed: Record "BCSF Removed Template";
+        ScenarioId: Guid;
+        VariantNo: Integer;
+    begin
+        for VariantNo := 1 to 2 do begin
+            if VariantNo = 1 then
+                Evaluate(ScenarioId, '{B55C1900-AB51-4019-9C00-000000000001}')
+            else
+                Evaluate(ScenarioId, '{B55C1900-AB51-4019-9C00-000000000002}');
+            if not Scenario.Get(ScenarioId) and not Removed.Get(ScenarioId) then begin
+                Scenario.Init();
+                Scenario."Scenario Id" := ScenarioId;
+                Scenario.Description := TechnicalItemsLbl;
+                Scenario."Profile Code" := 'TECH-TRADE';
+                if VariantNo = 2 then begin
+                    Scenario.Description := TechnicalBinsLbl;
+                    Scenario."Profile Code" := 'TECH-BINS';
+                end;
+                Scenario."Profile Version" := '1';
+                Scenario."Usage Mode" := "BCSF Usage Mode"::Functional;
+                Scenario."Process Mode" := "BCSF Process Mode"::SetupAndMasterData;
+                Scenario.Seed := 1901;
+                Scenario."Starting Date" := WorkDate();
+                Scenario."Ending Date" := WorkDate();
+                Scenario."Batch Size" := MinValue(3, Setup."Default Batch Size");
+                Scenario."Data Language" := Setup."Default Data Language";
+                Scenario."B2C Percent" := 0;
+                Scenario.Insert(true);
+                AddModule(ScenarioId, "BCSF Module Type"::Inventory);
+                AddModule(ScenarioId, "BCSF Module Type"::Sales);
+                AddTarget(ScenarioId, "BCSF Entity Type"::Customer, 1, "BCSF Process Mode"::SetupAndMasterData, 0);
+                AddModule(ScenarioId, "BCSF Module Type"::Purchasing);
+                AddTarget(ScenarioId, "BCSF Entity Type"::Vendor, MinValue(2, Setup."Maximum Records per Entity"), "BCSF Process Mode"::SetupAndMasterData, 0);
+                AddTarget(ScenarioId, "BCSF Entity Type"::Item, MinValue(8, Setup."Maximum Records per Entity"), "BCSF Process Mode"::SetupAndMasterData, 0);
+            end;
+        end;
     end;
 
     local procedure SeedIndustry(Industry: Integer; Setup: Record "BCSF Factory Setup")
@@ -213,6 +271,16 @@ codeunit 90155 "BCSF Starter Catalog"
         VariantNo: Integer;
         Id: Guid;
     begin
+        Evaluate(Id, '{B55C1900-AB51-4019-9C00-000000000001}');
+        if (Scenario."Scenario Id" = Id) and (Scenario.Description in ['Technical Wholesale – Item Assortment', 'Technischer Großhandel – Artikelsortiment']) then begin
+            Name := TechnicalItemsLbl;
+            exit;
+        end;
+        Evaluate(Id, '{B55C1900-AB51-4019-9C00-000000000002}');
+        if (Scenario."Scenario Id" = Id) and (Scenario.Description in ['Technical Wholesale – Item Assortment with Bins', 'Technischer Großhandel – Sortiment mit Lagerplätzen']) then begin
+            Name := TechnicalBinsLbl;
+            exit;
+        end;
         for Industry := 1 to 8 do
             for VariantNo := 1 to 7 do begin
                 Id := GetStarterId(Industry, VariantNo);
@@ -247,6 +315,19 @@ codeunit 90155 "BCSF Starter Catalog"
                         Scenario.Modify(true);
                     end;
             end;
+        for VariantNo := 1 to 2 do begin
+            if VariantNo = 1 then
+                Evaluate(Id, '{B55C1900-AB51-4019-9C00-000000000001}')
+            else
+                Evaluate(Id, '{B55C1900-AB51-4019-9C00-000000000002}');
+            if Removed.Get(Id) then
+                Removed.Delete(true);
+            if Scenario.Get(Id) then
+                if Scenario.Archived then begin
+                    Scenario.Archived := false;
+                    Scenario.Modify(true);
+                end;
+        end;
         Seed();
     end;
 
@@ -297,6 +378,9 @@ codeunit 90155 "BCSF Starter Catalog"
     end;
 
     var
+        ExistingFoundationErr: Label 'For existing company setup, select the existing item units, posting groups and compatible location under Item Assortment. No test package will be applied.';
+        TechnicalItemsLbl: Label 'Technical Wholesale – Item Assortment';
+        TechnicalBinsLbl: Label 'Technical Wholesale – Item Assortment with Bins';
         RestoreQst: Label 'Restore all removed or archived built-in starter templates? Custom names are retained.';
         EnglishIndustriesTok: Label 'General Business,Wholesale and Retail,E-Commerce,Distribution and Logistics,Manufacturing,Services and Consulting,Construction and Projects,Service and Maintenance', Locked = true;
         EnglishPurposesTok: Label 'Demo Partners,Training Partners,Functional Partner Test,Partner Volume Test,Planning Only: Open Documents,Planning Only: Posted Movements,Planning Only: Follow-Up Processes', Locked = true;

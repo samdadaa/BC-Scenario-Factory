@@ -1107,6 +1107,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 1788334240" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The master data foundation has been checked and completed successfully.</source>
+          <target state="translated">The master data foundation has been checked and completed successfully.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType FoundationCompletedLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 1162456241" size-unit="char" translate="yes" xml:space="preserve">
           <source>Which chart of accounts should %1 use? This prepares the sandbox company and enables test data generation. Posting remains disabled for a new company.</source>
           <target state="translated">Which chart of accounts should %1 use? This prepares the sandbox company and enables test data generation. Posting remains disabled for a new company.</target>
@@ -1142,6 +1148,18 @@
           <target state="translated">Initialize Company</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action InitializeSetup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 3462005627 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Adds missing foundation from the already applied test package, including carton unit and simple bin location. Does not change the chart of accounts or start a run.</source>
+          <target state="translated">Adds missing foundation from the already applied test package, including carton unit and simple bin location. Does not change the chart of accounts or start a run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action RefreshCompanyFoundation - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 3462005627 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Complete Master Data Foundation</source>
+          <target state="translated">Complete Master Data Foundation</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action RefreshCompanyFoundation - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1321738634 - EnumValue 683922871 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Automatic (BC Language)</source>
@@ -1653,6 +1671,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 2002769295 - NamedType 3577412170" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Attribute Assignments</source>
+          <target state="translated">Item Attribute Assignments</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - NamedType AttributeAssignmentsLbl</note>
+        </trans-unit>
         <trans-unit id="Page 2002769295 - NamedType 3490717560" size-unit="char" translate="yes" xml:space="preserve">
           <source>The recorded stable result identity still exists. This does not validate the full business process.</source>
           <target state="translated">The recorded stable result identity still exists. This does not validate the full business process.</target>
@@ -1664,6 +1688,54 @@
           <target state="translated">The recorded result is missing or not visible. Review it before retrying any creation or posting.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - NamedType MissingLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 2002769295 - Control 1182307093 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the attribute name.</source>
+          <target state="translated">Specifies the attribute name.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Control AttributeName - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2002769295 - Control 1182307093 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Attribute</source>
+          <target state="translated">Attribute</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Control AttributeName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2002769295 - Control 1604111561 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the assigned attribute value.</source>
+          <target state="translated">Specifies the assigned attribute value.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Control AttributeValue - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2002769295 - Control 1604111561 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Attribute Value</source>
+          <target state="translated">Attribute Value</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Control AttributeValue - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2002769295 - Control 3668860607 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the item or category that owns this attribute value.</source>
+          <target state="translated">Specifies the item or category that owns this attribute value.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Control MappingNo - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2002769295 - Control 3668860607 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item or Category No.</source>
+          <target state="translated">Item or Category No.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Control MappingNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2002769295 - Control 4135048339 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether the attribute belongs to an item or item category.</source>
+          <target state="translated">Specifies whether the attribute belongs to an item or item category.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Control MappingSource - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2002769295 - Control 4135048339 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source</source>
+          <target state="translated">Source</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Generated Records - Control MappingSource - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2002769295 - Action 3198910548 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Checks whether the recorded SystemId still exists. Does not accept a reused primary key or change any record.</source>
@@ -2565,6 +2637,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType EcommerceLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 103200263" size-unit="char" translate="yes" xml:space="preserve">
+          <source>For existing company setup, select the existing item units, posting groups and compatible location under Item Assortment. No test package will be applied.</source>
+          <target state="translated">For existing company setup, select the existing item units, posting groups and compatible location under Item Assortment. No test package will be applied.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType ExistingFoundationErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 1886611882" size-unit="char" translate="yes" xml:space="preserve">
           <source>Planning Only: Follow-Up Processes</source>
           <target state="translated">Planning Only: Follow-Up Processes</target>
@@ -2619,6 +2697,18 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType ServiceLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 3203949065" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Technical Wholesale – Item Assortment with Bins</source>
+          <target state="translated">Technical Wholesale – Item Assortment with Bins</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType TechnicalBinsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 518671681" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Technical Wholesale – Item Assortment</source>
+          <target state="translated">Technical Wholesale – Item Assortment</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType TechnicalItemsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 - %2</source>
           <target state="translated">%1 - %2</target>
@@ -2636,6 +2726,78 @@
           <target state="translated">Training Partners</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType TrainingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1051735679 - NamedType 1981706351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Technical Wholesale Items</source>
+          <target state="translated">Technical Wholesale Items</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Inventory Generator - NamedType NameLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1051735679 - NamedType 612572586" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item results or relationships are missing, changed or already registered. Review the existing batch and checkpoint; do not repeat uncertain work.</source>
+          <target state="translated">Item results or relationships are missing, changed or already registered. Review the existing batch and checkpoint; do not repeat uncertain work.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Inventory Generator - NamedType ReplayErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4193062846 - NamedType 1146909282" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select technical wholesale profile TECH-TRADE or TECH-BINS, version 1, with a positive item key.</source>
+          <target state="translated">Select technical wholesale profile TECH-TRADE or TECH-BINS, version 1, with a positive item key.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Catalog - NamedType ProfileErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1173939272 - NamedType 1990387277" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An item substitution must refer to a different existing item in this run.</source>
+          <target state="translated">An item substitution must refer to a different existing item in this run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Relations - NamedType RelationErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518404290 - NamedType 4148992451" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select an explicit existing value for %1 under Item Assortment. The company setup does not have one unambiguous choice.</source>
+          <target state="translated">Select an explicit existing value for %1 under Item Assortment. The company setup does not have one unambiguous choice.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = setup table</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Setup - NamedType AmbiguousErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518404290 - NamedType 2743586180" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The captured item posting setup has changed. Review the exact posting combinations and capture a new run.</source>
+          <target state="translated">The captured item posting setup has changed. Review the exact posting combinations and capture a new run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Setup - NamedType DriftErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518404290 - NamedType 4094001306" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inventory posting setup is missing for location %1 and inventory posting group %2. Complete this exact combination through company setup using the existing accounts.</source>
+          <target state="translated">Inventory posting setup is missing for location %1 and inventory posting group %2. Complete this exact combination through company setup using the existing accounts.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = location, %2 = inventory posting group</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Setup - NamedType MatrixErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518404290 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item generation requires effective standard read and write permissions for %1.</source>
+          <target state="translated">Item generation requires effective standard read and write permissions for %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = standard table</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Setup - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518404290 - NamedType 1146909282" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Capture a new technical wholesale master-data run with item setup version 1.</source>
+          <target state="translated">Capture a new technical wholesale master-data run with item setup version 1.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Setup - NamedType ProfileErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518404290 - NamedType 1676801253" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose different existing base and carton units for the item assortment.</source>
+          <target state="translated">Choose different existing base and carton units for the item assortment.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Setup - NamedType UnitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518404290 - NamedType 2605746843" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select two different existing suppliers or include at least two generated vendors as a predecessor in this scenario.</source>
+          <target state="translated">Select two different existing suppliers or include at least two generated vendors as a predecessor in this scenario.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Setup - NamedType VendorErr</note>
+        </trans-unit>
+        <trans-unit id="Enum 224228713 - EnumValue 2105307182 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Enum 224228713">
+          <source>Technical Wholesale Items</source>
+          <target state="translated">Technical Wholesale Items</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">EnumExtension BCSF Item Binding - EnumValue Inventory - Property Caption</note>
         </trans-unit>
         <trans-unit id="Codeunit 2111972200 - NamedType 2417619304" size-unit="char" translate="yes" xml:space="preserve">
           <source>Request a positive batch size within Maximum Batch Size and the requested record count.</source>
@@ -4168,14 +4330,14 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Monitoring Mgt - NamedType WaitingLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2935868274 - NamedType 2149861178" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Start this captured partner run after rechecking its setup and permissions? Existing or uncertain batches are not repeated.</source>
-          <target state="translated">Start this captured partner run after rechecking its setup and permissions? Existing or uncertain batches are not repeated.</target>
+          <source>Start this captured master-data run after rechecking its setup and permissions? Existing or uncertain batches are not repeated.</source>
+          <target state="translated">Start this captured master-data run after rechecking its setup and permissions? Existing or uncertain batches are not repeated.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Quick Scenario Run - NamedType CapturedQst</note>
         </trans-unit>
         <trans-unit id="Codeunit 2935868274 - NamedType 1968297929" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Quick run supports only customer and vendor master data. This template depends on generators that are not available yet.</source>
-          <target state="translated">Quick run supports only customer and vendor master data. This template depends on generators that are not available yet.</target>
+          <source>Quick run supports customer, vendor and supported item master data. This template depends on generators that are not available yet.</source>
+          <target state="translated">Quick run supports customer, vendor and supported item master data. This template depends on generators that are not available yet.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Quick Scenario Run - NamedType PartnerOnlyErr</note>
         </trans-unit>
@@ -5673,6 +5835,102 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Gen. Bus. Posting Group - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 842370546 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the existing base unit for generated items. Blank uses STK.</source>
+          <target state="translated">Specifies the existing base unit for generated items. Blank uses STK.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Base Unit - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 842370546 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Base Unit</source>
+          <target state="translated">Item Base Unit</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Base Unit - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3747883524 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the exact inventory posting group. Blank resolves an unambiguous existing group.</source>
+          <target state="translated">Specifies the exact inventory posting group. Blank resolves an unambiguous existing group.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Inventory Group - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3747883524 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Inventory Posting Group</source>
+          <target state="translated">Item Inventory Posting Group</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Inventory Group - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 805667399 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the existing simple location for generated item relationships. Blank uses MAIN or RACK according to the profile.</source>
+          <target state="translated">Specifies the existing simple location for generated item relationships. Blank uses MAIN or RACK according to the profile.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Location Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 805667399 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Location</source>
+          <target state="translated">Item Location</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Location Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 104286318 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the existing carton unit. Blank uses KRT; the profile determines the conversion per item.</source>
+          <target state="translated">Specifies the existing carton unit. Blank uses KRT; the profile determines the conversion per item.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Pack Unit - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 104286318 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Purchase Pack Unit</source>
+          <target state="translated">Item Purchase Pack Unit</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Pack Unit - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2168599659 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the exact general product posting group. Blank resolves the company package or an unambiguous combination.</source>
+          <target state="translated">Specifies the exact general product posting group. Blank resolves the company package or an unambiguous combination.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Product Group - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2168599659 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Product Posting Group</source>
+          <target state="translated">Item Product Posting Group</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Product Group - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 287122474 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a second distinct existing supplier for the reference assortment.</source>
+          <target state="translated">Specifies a second distinct existing supplier for the reference assortment.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Second Vendor No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 287122474 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Second Existing Item Vendor</source>
+          <target state="translated">Second Existing Item Vendor</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Second Vendor No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 1141795838 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the exact VAT product group. Blank resolves the company package or an unambiguous combination.</source>
+          <target state="translated">Specifies the exact VAT product group. Blank resolves the company package or an unambiguous combination.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item VAT Product Group - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 1141795838 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item VAT Product Posting Group</source>
+          <target state="translated">Item VAT Product Posting Group</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item VAT Product Group - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3191936698 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies an existing vendor. Blank requires at least two vendors generated by this run.</source>
+          <target state="translated">Specifies an existing vendor. Blank requires at least two vendors generated by this run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Vendor No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 3191936698 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing Item Vendor</source>
+          <target state="translated">Existing Item Vendor</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Item Vendor No. - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 3536643086 - Field 2456069703 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the credit limit in local currency for large business customers. Zero means no credit limit.</source>
           <target state="translated">Specifies the credit limit in local currency for large business customers. Zero means no credit limit.</target>
@@ -6422,6 +6680,12 @@
           <target state="translated">Description</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3114165994 - Control 1682623676 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Assortment</source>
+          <target state="translated">Item Assortment</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Scenario Card - Control ItemSettings - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3114165994 - Control 2607913180 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Data Language Preview</source>

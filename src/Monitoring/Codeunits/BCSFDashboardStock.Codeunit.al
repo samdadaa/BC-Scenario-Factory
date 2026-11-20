@@ -12,6 +12,9 @@ using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Ledger;
 using Microsoft.FixedAssets.FixedAsset;
 using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Inventory.Item.Attribute;
+using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
@@ -27,6 +30,7 @@ using Microsoft.Sales.History;
 using Microsoft.Sales.Receivables;
 using Microsoft.Service.Item;
 using Microsoft.Warehouse.Ledger;
+using Microsoft.Warehouse.Structure;
 using System.Security.AccessControl;
 using System.Security.User;
 
@@ -104,7 +108,7 @@ codeunit 90369 "BCSF Dashboard Stock"
     Stock := Build('master', false, RunId);
     Stock.Get('metrics', Values);
     foreach Value in Values.AsArray() do
-      if TextProperty(Value.AsObject(), 'key') in ['customer', 'vendor', 'shipTo', 'orderAddress'] then
+      if TextProperty(Value.AsObject(), 'key') in ['customer', 'vendor', 'shipTo', 'orderAddress', 'item', 'category', 'itemUnit', 'attribute', 'attributeValue', 'attributeMapping', 'variant', 'itemReference', 'itemVendor', 'substitution', 'sku', 'bin', 'binContent'] then
         Metrics.Add(Value);
     Result.Add('metrics', Metrics);
     exit(Result);
@@ -134,7 +138,10 @@ codeunit 90369 "BCSF Dashboard Stock"
         end;
         if not CanOpen or (Count <> ExpectedCount) then
           Error(ChangedLbl);
-        OpenStandardPage(Rows, IntProperty(Metric, 'page'));
+        if Rows.Number() = Database::"Item Attribute Value Mapping" then
+          OpenAttributeMappings(Rows, StockRunId)
+        else
+          OpenStandardPage(Rows, IntProperty(Metric, 'page'));
         CloseRows(Rows, RowsOpened);
         exit;
       end;
@@ -159,6 +166,10 @@ codeunit 90369 "BCSF Dashboard Stock"
     Count := -1;
     CanOpen := false;
     PageId := IntProperty(Metric, 'page');
+    // The mapping table has no standard list. Reuse the existing provenance page
+    // only for generated data, where every displayed identity has one registry row.
+    if EntireCompany and (TextProperty(Metric, 'key') = 'attributeMapping') then
+      PageId := 0;
     Rows.Open(IntProperty(Metric, 'table'));
     RowsOpened := true;
     Rows.SecurityFiltering(SecurityFilter::Filtered);
@@ -370,6 +381,17 @@ codeunit 90369 "BCSF Dashboard Stock"
     VendorBankAccount: Record "Vendor Bank Account";
     GLAccount: Record "G/L Account";
     BankAccount: Record "Bank Account";
+    ItemCategory: Record "Item Category";
+    ItemUnit: Record "Item Unit of Measure";
+    ItemAttribute: Record "Item Attribute";
+    ItemAttributeValue: Record "Item Attribute Value";
+    ItemVariant: Record "Item Variant";
+    ItemReference: Record "Item Reference";
+    ItemVendor: Record "Item Vendor";
+    ItemSubstitution: Record "Item Substitution";
+    StockkeepingUnit: Record "Stockkeeping Unit";
+    Bin: Record "Bin";
+    BinContent: Record "Bin Content";
     Item: Record "Item";
     Location: Record "Location";
     SalesHeader: Record "Sales Header";
@@ -450,6 +472,61 @@ codeunit 90369 "BCSF Dashboard Stock"
         begin
           Rows.SetTable(Item);
           Page.Run(PageId, Item);
+        end;
+      Database::"Item Category":
+        begin
+          Rows.SetTable(ItemCategory);
+          Page.Run(PageId, ItemCategory);
+        end;
+      Database::"Item Unit of Measure":
+        begin
+          Rows.SetTable(ItemUnit);
+          Page.Run(PageId, ItemUnit);
+        end;
+      Database::"Item Attribute":
+        begin
+          Rows.SetTable(ItemAttribute);
+          Page.Run(PageId, ItemAttribute);
+        end;
+      Database::"Item Attribute Value":
+        begin
+          Rows.SetTable(ItemAttributeValue);
+          Page.Run(PageId, ItemAttributeValue);
+        end;
+      Database::"Item Variant":
+        begin
+          Rows.SetTable(ItemVariant);
+          Page.Run(PageId, ItemVariant);
+        end;
+      Database::"Item Reference":
+        begin
+          Rows.SetTable(ItemReference);
+          Page.Run(PageId, ItemReference);
+        end;
+      Database::"Item Vendor":
+        begin
+          Rows.SetTable(ItemVendor);
+          Page.Run(PageId, ItemVendor);
+        end;
+      Database::"Item Substitution":
+        begin
+          Rows.SetTable(ItemSubstitution);
+          Page.Run(PageId, ItemSubstitution);
+        end;
+      Database::"Stockkeeping Unit":
+        begin
+          Rows.SetTable(StockkeepingUnit);
+          Page.Run(PageId, StockkeepingUnit);
+        end;
+      Database::"Bin":
+        begin
+          Rows.SetTable(Bin);
+          Page.Run(PageId, Bin);
+        end;
+      Database::"Bin Content":
+        begin
+          Rows.SetTable(BinContent);
+          Page.Run(PageId, BinContent);
         end;
       Database::"Location":
         begin
@@ -585,6 +662,30 @@ codeunit 90369 "BCSF Dashboard Stock"
     end;
   end;
 
+  local procedure OpenAttributeMappings(var Rows: RecordRef; StockRunId: Guid)
+  var
+    Entry: Record "BCSF Generated Record";
+    Results: Page "BCSF Generated Records";
+    Identity: FieldRef;
+  begin
+    Entry.SecurityFiltering(SecurityFilter::Filtered);
+    Entry.SetRange("Table Id", Database::"Item Attribute Value Mapping");
+    if not IsNullGuid(StockRunId) then
+      Entry.SetRange("Run Id", StockRunId);
+    Rows.FilterGroup(10);
+    Identity := Rows.Field(Rows.SystemIdNo());
+    Entry.FilterGroup(10);
+    Entry.SetFilter("Record SystemId", Identity.GetFilter());
+    Entry.FilterGroup(0);
+    Rows.FilterGroup(0);
+    // ResultIdentity is unique. Never substitute a broader provenance list.
+    if Entry.Count() <> Rows.Count() then
+      Error(ChangedLbl);
+    Results.SetTableView(Entry);
+    Results.ShowAttributeMappings();
+    Results.Run();
+  end;
+
   local procedure LoadCatalog(GroupKey: Text; var Catalog: JsonArray)
   begin
     Clear(Catalog);
@@ -600,8 +701,20 @@ codeunit 90369 "BCSF Dashboard Stock"
           AddMetric(Catalog, 'vendorBank', Database::"Vendor Bank Account", Page::"Vendor Bank Account List", false, '');
           AddMetric(Catalog, 'glAccount', Database::"G/L Account", Page::"Chart of Accounts", false, '');
           AddMetric(Catalog, 'bank', Database::"Bank Account", Page::"Bank Account List", false, '');
-          AddMetric(Catalog, 'item', Database::"Item", Page::"Item List", false, '');
+          AddMetric(Catalog, 'item', Database::"Item", Page::"Item List", true, '');
           AddMetric(Catalog, 'location', Database::"Location", Page::"Location List", false, '');
+          AddMetric(Catalog, 'category', Database::"Item Category", Page::"Item Categories", true, '');
+          AddMetric(Catalog, 'itemUnit', Database::"Item Unit of Measure", Page::"Item Units of Measure", true, '');
+          AddMetric(Catalog, 'attribute', Database::"Item Attribute", Page::"Item Attributes", true, '');
+          AddMetric(Catalog, 'attributeValue', Database::"Item Attribute Value", Page::"Item Attribute Values", true, '');
+          AddMetric(Catalog, 'attributeMapping', Database::"Item Attribute Value Mapping", Page::"BCSF Generated Records", true, '');
+          AddMetric(Catalog, 'variant', Database::"Item Variant", Page::"Item Variants", true, '');
+          AddMetric(Catalog, 'itemReference', Database::"Item Reference", Page::"Item Reference Entries", true, '');
+          AddMetric(Catalog, 'itemVendor', Database::"Item Vendor", Page::"Item Vendor Catalog", true, '');
+          AddMetric(Catalog, 'substitution', Database::"Item Substitution", Page::"Item Substitutions", true, '');
+          AddMetric(Catalog, 'sku', Database::"Stockkeeping Unit", Page::"Stockkeeping Unit List", true, '');
+          AddMetric(Catalog, 'bin', Database::"Bin", Page::"Bin List", true, '');
+          AddMetric(Catalog, 'binContent', Database::"Bin Content", Page::"Bin Content", true, '');
         end;
       'sales':
         begin

@@ -747,5 +747,6 @@ if __name__ == '__main__':
     DE.update(SF040_DE)
     DE.update(json.loads((base.ROOT / 'sf041.de.json').read_text(encoding='utf-8')))
     DE.update(json.loads((base.ROOT / 'sf044.de.json').read_text(encoding='utf-8')))
+    DE.update(json.loads((base.ROOT / 'sf019.de.json').read_text(encoding='utf-8')))
     base.DE.update(DE)
     base.sync()

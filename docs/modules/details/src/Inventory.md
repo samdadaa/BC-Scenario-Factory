@@ -1,10 +1,10 @@
 # Inventory – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/Inventory/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** MVP / P1.
+**Status:** Sechs AL-Objekte für SF-019 implementiert, **Zur Prüfung**; reale BC-Nachprüfung offen. **Pfad:** `src/Inventory/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** MVP / P1.
 
 ## Fachlicher Auftrag
 
-Artikel, Varianten, Kategorien, Lagerorte, Anfangsbestände und Artikelposten.
+Artikel, Einheiten, Varianten, Kategorien/Merkmale, Referenzen/Bezugsquellen, Ersatzartikel, einfache Lagerstammdaten und gezielte SKUs. Bestands-/Postenprozesse bleiben Folgebausteine.
 
 ## Verantwortungen und gewünschte Ergebnisse
 
@@ -42,3 +42,14 @@ Geplante IDs, Namen und Dateipfade stehen im [zentralen Objektplan](../../../OBJ
 ## Ablage – SF-002, 16.11.2026
 
 Weiterhin kein AL-Code; der Modulmarker bleibt erhalten. Typordner entstehen erst mit vorhandenen Objekten. Zuordnung gemäß [Konventionen](../../../CONVENTIONS.md). Objektidentitäten und Modulverantwortung bleiben erhalten.
+
+## SF-019 – aktueller Vertrag (20.11.2026)
+
+- 90475 `BCSF Inventory Generator`, 90476 `BCSF Item Binding`, 90477 `BCSF Item Catalog`, 90478 `BCSF Item Setup`, 90479 `BCSF Item Relations`, 90480 `BCSF Item Masters`; Pfade `src/Inventory/Codeunits/` und `EnumExtensions/`.
+- TECH-TRADE/TECH-BINS Version 1 im bestehenden Vorlagen-/Snapshot-/Queuepfad. ITEM benötigt bei nicht expliziten vorhandenen Lieferanten einen VENDOR-Vorgänger mit mindestens zwei Einheiten; optionale Kundenreferenz benötigt den positiven CUSTOMER-Vorgänger. Keine automatisch hinzugefügten Zielmengen.
+- Vorab-/Hintergrundprüfung der konkreten Einrichtung, bestehende Ausführungsbesitz-/Guardprüfung, commitfreier Fachteil, Herkunft und Outputprüfung. Wiederverwendete Standardstämme zählen nicht als neue Ergebnisse.
+- Kein Bestand und keine direkte oder indirekt angeforderte Standardbuchung. Main-App ohne Test-Codeunits; separate ausdrücklich beauftragte Test-App 90700.
+
+[Sortiment, Quellen, Grenzen, Bedienung und Sandbox-Smoke](../../../INVENTORY_GENERATION.md), [tatsächlich ausgeführte Prüfungen und gemeldeter Item-Vendor-Schlüsselfehler](../../../TESTS.md#sf-019--artikelsortiment-und-lagerbasics-20112026). Historische Abschnitte „geplant/ohne Code“ oben gelten nur für den damaligen Stand.
+
+SF-019-Bedienkorrektur: elf Standardlistenrouten für die ergänzten Entitäten; Attributzuordnungen im erzeugten Umfang lesbar in der bestehenden Herkunftsseite. Einrichtung meldet erfolgreichen Abschluss; Fehler propagieren unverändert. Keine neuen Objekte/Tabellenfelder. Native Prüfung offen; Details im oben verlinkten Vertrag.

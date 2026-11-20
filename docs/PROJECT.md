@@ -147,3 +147,9 @@ Manifest unverändert 1.0.1.0, Application 28, Runtime 17. Aktuell 131 AL-Dateie
 ## SF-044 – kompakter Arbeitsplatz, 19.11.2026
 
 Verifizierter Ausgangs-/Endbestand: 121 AL-Dateien, davon 19 unter Monitoring. Keine neuen AL-Objekte, Tabellen oder Felder. App-ID, Publisher, Version 1.0.4.0, Application 28.0.0.0, Runtime 17, ID-Bereich 90100–90999 und Dependencies [] unverändert. Daten-/Laufreiter, Kachelraster und sichere Zählernavigation im bestehenden Dashboard ergänzt. [Bedienung und offene BC-Abnahme](DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026), [lokale Prüfungen](TESTS.md#sf-044--kompaktes-dashboard-und-direkte-kennzahlen). **Zur Prüfung**.
+
+## SF-019 – verifizierter Quellstand 20.11.2026
+
+Main-App 1.0.4.0 / Runtime 17 / Application 28.0 unverändert; keine neuen Main-App-Dependencies. 127 AL-Dateien in 15 Modulen, sechs neue Inventory-Objekte und acht optionale Felder in der bestehenden Szenariotabelle. `internalsVisibleTo` bindet nur die eigene separate SF-019-Test-App, keine Laufzeit-/SDK-Abhängigkeit und keine Standardrechteerhöhung. Test-App hat eigene Identität/Dependencies und nur Test-Codeunit 90700.
+
+[Implementierung, Testanleitung und Scope](INVENTORY_GENERATION.md), [echte lokale Prüfungen, Nutzer-Sandboxfehler und offene Korrekturabnahme](TESTS.md#sf-019--artikelsortiment-und-lagerbasics-20112026). Der Nutzer meldet einen fehlgeschlagenen Artikelstart durch vertauschte Item-Vendor-Schlüssel; die korrigierte Version ist deshalb nicht als fachlich abgenommen erklärt. **Zur Prüfung**.

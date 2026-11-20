@@ -129,6 +129,19 @@ page 90131 "BCSF Scenario Card"
           Editable = false;
         }
       }
+      group(ItemSettings)
+      {
+        Caption = 'Item Assortment';
+        Visible = HasItemTarget;
+        field("Item Base Unit"; Rec."Item Base Unit") { }
+        field("Item Pack Unit"; Rec."Item Pack Unit") { }
+        field("Item Inventory Group"; Rec."Item Inventory Group") { }
+        field("Item Product Group"; Rec."Item Product Group") { }
+        field("Item VAT Product Group"; Rec."Item VAT Product Group") { }
+        field("Item Location Code"; Rec."Item Location Code") { }
+        field("Item Vendor No."; Rec."Item Vendor No.") { }
+        field("Item Second Vendor No."; Rec."Item Second Vendor No.") { }
+      }
     }
   }
   actions
@@ -185,8 +198,13 @@ page 90131 "BCSF Scenario Card"
   }
   trigger OnAfterGetCurrRecord()
   var
+    ItemTarget: Record "BCSF Data Target";
     Manager: Codeunit "BCSF Scenario Manager";
   begin
+    ItemTarget.SetRange("Scenario Id", Rec."Scenario Id");
+    ItemTarget.SetRange(Entity, ItemTarget.Entity::Item);
+    ItemTarget.SetFilter(Quantity, '>0');
+    HasItemTarget := not ItemTarget.IsEmpty();
     CanRunTemplate := not IsNullGuid(Rec."Scenario Id") and Manager.IsPartnerTemplate(Rec);
     Manager.GetMinimumReferences(Rec."Scenario Id", MinimumCustomers, MinimumVendors);
     Manager.GetScenarioLanguagePreview(Rec, CustomerPreview, VendorPreview, ItemPreview);
@@ -194,6 +212,7 @@ page 90131 "BCSF Scenario Card"
 
   var
     CanRunTemplate: Boolean;
+    HasItemTarget: Boolean;
     CustomerPreview: Text[100];
     VendorPreview: Text[100];
     ItemPreview: Text[100];

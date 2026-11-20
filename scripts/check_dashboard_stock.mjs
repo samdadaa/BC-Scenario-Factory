@@ -16,6 +16,7 @@ const generated = [
   { key: 'item', caption: 'Artikel', status: 'No executable generator', noGenerator: true, canOpen: false },
   { key: 'bank', caption: 'Bankkonto', status: 'No access', canOpen: false }
 ];
+const inventoryKeys = ['category', 'itemUnit', 'attribute', 'attributeValue', 'attributeMapping', 'variant', 'itemReference', 'itemVendor', 'substitution', 'sku', 'bin', 'binContent'];
 const company = [{ key: 'invoice', caption: 'Invoices', count: 12, canOpen: true }];
 const document = { createElement: tag => new Element(tag), documentElement: {}, getElementById: () => root };
 const window = { Microsoft: { Dynamics: { NAV: { InvokeExtensibilityMethod(name, args, _skip, ok, failure) {
@@ -87,6 +88,13 @@ assert.equal(root.querySelectorAll('.sf-stock-row')[1].querySelector('.sf-stock-
 assert.deepEqual(root.querySelectorAll('.sf-stock-status').map(el => el.textContent), ['Kein Zugriff', 'Kein Generator verfügbar']);
 get('metric:customer').events.click();
 assert.deepEqual(calls.at(-1), ['Command', 'stockOpen', 'customer'], 'No page, table, filter, company or count round-tripped');
+for (const key of inventoryKeys) {
+  view.metrics = [{ key, caption: key, count: 2, canOpen: true }];
+  window.SetDashboard(JSON.stringify(payload));
+  assert.equal(get('metric:' + key).tag, 'button');
+  get('metric:' + key).events.click();
+  assert.deepEqual(calls.at(-1), ['Command', 'stockOpen', key]);
+}
 get('stockRun').value = picked;
 get('stockRun').events.change();
 assert.deepEqual(calls.at(-1), ['Command', 'stockRun', picked]);

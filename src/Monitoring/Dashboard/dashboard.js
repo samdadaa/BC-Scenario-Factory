@@ -271,7 +271,7 @@
     const results = model.runStock?.metrics || [];
     const matched = new Set();
     model.steps.filter(step => !step.external).forEach(step => {
-      const key = step.entityCode === "CUSTOMER" ? "customer" : step.entityCode === "VENDOR" ? "vendor" : "";
+      const key = step.entityCode === "CUSTOMER" ? "customer" : step.entityCode === "VENDOR" ? "vendor" : step.entityCode === "ITEM" ? "item" : "";
       const metric = results.find(item => item.key === key);
       const safe = metric?.canOpen && metric.count > 0 && metric.count === step.confirmed;
       if (metric && metric.count === step.confirmed) matched.add(key);

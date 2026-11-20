@@ -344,3 +344,17 @@ Beide vor Anlage im aktuellen Code und Objektplan frei; innerhalb des bestehende
 | Modul | ID | Typ | Objekt |
 | --- | --- | --- | --- |
 | Monitoring | 90369 | Codeunit | BCSF Dashboard Stock |
+
+## SF-019 – belegte Ergänzungen 20.11.2026
+
+| Modul | ID | Typ | Objekt | Pfad |
+| --- | --- | --- | --- | --- |
+| Inventory | 90475 | Codeunit | BCSF Inventory Generator | `src/Inventory/Codeunits/BCSFInventoryGenerator.Codeunit.al` |
+| Inventory | 90476 | EnumExtension | BCSF Item Binding | `src/Inventory/EnumExtensions/BCSFItemBinding.EnumExt.al` |
+| Inventory | 90477 | Codeunit | BCSF Item Catalog | `src/Inventory/Codeunits/BCSFItemCatalog.Codeunit.al` |
+| Inventory | 90478 | Codeunit | BCSF Item Setup | `src/Inventory/Codeunits/BCSFItemSetup.Codeunit.al` |
+| Inventory | 90479 | Codeunit | BCSF Item Relations | `src/Inventory/Codeunits/BCSFItemRelations.Codeunit.al` |
+| Inventory | 90480 | Codeunit | BCSF Item Masters | `src/Inventory/Codeunits/BCSFItemMasters.Codeunit.al` |
+| Separate SF-019-Test-App | 90700 | Test-Codeunit | BCSF Inventory Tests | `tests/SF019/BCSFInventoryTests.Codeunit.al` |
+
+Main-Objekte im freigegebenen Inventory-Block 90475–90499; Testbereich 90700–90709 für die ausdrücklich verlangte separate SF-019-Test-App aus der gemeinsamen Reserve gewählt, davon nur 90700 belegt. Keine neue Main-Tabelle oder Seite. Externe Fremd-App-Kollisionen bleiben in der Ziel-Sandbox zu prüfen. Core referenziert Inventory ausschließlich deklarativ im ADMIN-Permission-Set; keine neue ausführbare Rückabhängigkeit.

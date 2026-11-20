@@ -24,6 +24,8 @@ codeunit 90144 "BCSF Snapshot Writer"
     EnvironmentInformation: Codeunit "Environment Information";
     Payload: JsonObject;
     SyntheticRules: JsonObject;
+    InventorySettings: JsonObject;
+    PartnerSettings: JsonObject;
     Targets: JsonArray;
     Modules: JsonArray;
     Item: JsonObject;
@@ -93,7 +95,11 @@ codeunit 90144 "BCSF Snapshot Writer"
     Payload.Add('financeMode', FinanceMode.AsInteger());
     Payload.Add('financeYear', FinanceYear);
     Payload.Add('financeVersion', FinanceVersion);
-    Payload.Add('partnerSetup', CapturePartners(Scenario, FinanceMode));
+    PartnerSettings := CapturePartners(Scenario, FinanceMode);
+    Payload.Add('partnerSetup', PartnerSettings);
+    OnCaptureInventorySetup(Scenario, PartnerSettings, InventorySettings);
+    if InventorySettings.Keys().Count() > 0 then
+      Payload.Add('itemSetup', InventorySettings);
     ScenarioModule.SetRange("Scenario Id", ScenarioId);
     if ScenarioModule.FindSet() then
       repeat
@@ -182,6 +188,11 @@ codeunit 90144 "BCSF Snapshot Writer"
 
   [IntegrationEvent(false, false)]
   local procedure OnCaptureFinancePackage(var Mode: Enum "BCSF Finance Mode"; var Year: Integer; var PackageVersion: Code[20])
+  begin
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnCaptureInventorySetup(Scenario: Record "BCSF Scenario"; PartnerSettings: JsonObject; var Settings: JsonObject)
   begin
   end;
 

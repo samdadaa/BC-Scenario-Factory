@@ -21,7 +21,7 @@ Für neue oder geänderte Generatoren gelten die [SF-042-Qualitätsregeln](../AR
 | [Finance](details/src/Finance.md) | Fach | `src/Finance/` | 7 AL-Objekte: lesender Finanzcheck, versionierter Paketmanager/Paketvermerk, Auswahl/Vorschau und zwei PageExtensions; zur Prüfung. Keine Fachbuchungsgeneratoren. |
 | [Sales](details/src/Sales.md) | Fach | `src/Sales/` | 2 AL-Objekte: echter Customer-Generator und EnumExtension-Bindung; zur Prüfung. Beleggeneratoren geplant. |
 | [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | 2 AL-Objekte: echter Vendor-Generator und EnumExtension-Bindung; zur Prüfung. Beleggeneratoren geplant. |
-| [Inventory](details/src/Inventory.md) | Fach | `src/Inventory/` | Geplant, ohne Code |
+| [Inventory](details/src/Inventory.md) | Fach | `src/Inventory/` | Sechs SF-019-Objekte, Artikel-/Beziehungsstämme ohne Bestände, zur Prüfung |
 | [Warehouse](details/src/Warehouse.md) | Fach | `src/Warehouse/` | Geplant, ohne Code |
 | [Manufacturing](details/src/Manufacturing.md) | Fach | `src/Manufacturing/` | Geplant, ohne Code |
 | [Assembly](details/src/Assembly.md) | Fach | `src/Assembly/` | Geplant, ohne Code |
@@ -69,3 +69,7 @@ Aktueller Bestand: 129 AL-Dateien in 14 Modulen, zehn Module ohne AL-Code. Scena
 ## SF-044 – Monitoringdarstellung
 
 Bestand unverändert 121 AL-Dateien, davon 19 Monitoringobjekte. Bestehende Dashboard Part, Dashboard Data und Dashboard Stock sowie gebündelte Ressourcen angepasst. Daten und Läufe getrennt, einheitliches Kachelraster und geprüfte Zählernavigation; keine neuen Seiten oder Persistenz. [Vertrag und Abnahme](../DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026). **Zur Prüfung**.
+
+## SF-019 – Artikelstammdaten (20.11.2026)
+
+127 AL-Dateien in 15 Modulen; Inventory jetzt sechs Objekte. Drei ausführbare führende Entitäten: Customer, Vendor und ITEM für die ausdrücklich unterstützten technischen Großhandelsprofile. Keine neue Custom-Tabelle/Seite; acht optionale Vorlagenfelder. Test-App getrennt unter `tests/SF019/`. [Umfang/Bedienung](../INVENTORY_GENERATION.md), [Prüfungen und offene BC-Abnahme](../TESTS.md#sf-019--artikelsortiment-und-lagerbasics-20112026). **Zur Prüfung**.

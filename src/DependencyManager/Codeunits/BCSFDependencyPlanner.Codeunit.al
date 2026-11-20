@@ -36,7 +36,7 @@ codeunit 90201 "BCSF Dependency Planner"
     TempTargets.SetFilter(Quantity, '>0');
     if TempTargets.FindSet() then
       repeat
-        PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]);
+        PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]);
         EntityCode := Policy.GetEntityCode(TempTargets.Entity);
         Nodes.Init();
         Nodes."Node Code" := EntityCode;

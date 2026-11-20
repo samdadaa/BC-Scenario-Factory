@@ -132,3 +132,9 @@ Bei Modify-Prüfungen gespeicherten Vorzustand unter passender Sperre lesen; xRe
 ## SF-044 – Dashboardkacheln
 
 Datenfilter und Laufwahl getrennt halten. Fachliche Kennzahlen verwenden dasselbe responsive Raster; vollständige Kachel nur bei passendem berechtigtem Ziel als Button. Keine verschachtelten Buttons, keine Aktion für unzuverlässig leere Standardlisten. Bestätigte Arbeit nicht mit noch vorhandenen Live-Ergebnissen gleichsetzen. Technische Summen in Diagnose belassen. Texte bleiben AL-/XLIFF-basiert; `Translations/sf044.de.json` pflegt die neuen deutschen Texte für die Synchronisierung mit echten Compiler-IDs.
+
+## SF-019 – Testtrennung und Standardbeziehungen
+
+Die separate Test-App unter `tests/SF019/` wird mit `BCSFTESTS` gebaut; ihre AL-Quelle bleibt im normalen Main-Build per Präprozessor ausgeschlossen. Main-App hat keine Test-Dependency, nur eine ausdrücklich benannte Internals-Freigabe für diese Test-App. [Reproduzierbarer isolierter Build und Runner-Voraussetzungen](INVENTORY_GENERATION.md#automatisierte-test-app).
+
+Zusammengesetzte Standard-Primärschlüssel gegen die tatsächlichen Symbole prüfen; Felddeklarationsreihenfolge und Sekundärschlüssel sind kein Nachweis. Für Item Vendor ist die Reihenfolge Kreditor, Artikel, Variante; `GetItemVendor` bündelt die Lesestellen. Standard-Item-Reference-Insert erzeugt die Bezugsquelle, deshalb keine zweite Item-Vendor-Anlage. Core-Permission-Set darf deklarativ Inventory-Execute aufnehmen; Core-Geschäftslogik bleibt ohne Inventory-Aufruf.

@@ -127,3 +127,9 @@ Gemeinsamer bestätigter Finance-Pfad ohne Zwei-Konten-Fallback, neue SKR-Teilpa
 ## Kompaktes Dashboard (SF-044)
 
 Die Reiter **Daten** und **Läufe** trennen Bestandsfilter und Laufwahl. Einheitliche klickbare Kacheln zeigen den berechtigten Datenbestand bzw. den Fortschritt direkt bei der Entität; technische Details liegen unter Diagnose. [Bedienung und offene BC-Abnahme](docs/DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026), [lokale Prüfungen](docs/TESTS.md#sf-044--kompaktes-dashboard-und-direkte-kennzahlen). **Zur Prüfung**.
+
+## Artikel und technischer Großhandel (SF-019)
+
+Zwei zusätzliche Vorlagen erzeugen ein technisches Sortiment mit Kategorien/Merkmalen, Artikel-Einheiten, zwei angebotenen Kugelhahnvarianten, Referenzen/Bezugsquellen, Ersatzpaar und einer gezielten SKU. Wahlweise einfaches Lager ohne oder mit Platzführung; keine Bestände oder Buchungen. Der bestehende Vorlagenstart bleibt erhalten. Bei älterer initialisierter SKR-Firma kann die bestehende Einrichtung über **Stammdatenbasis ergänzen** vervollständigt werden.
+
+[Bedienung und Sandbox-Smoke](docs/INVENTORY_GENERATION.md), [Prüfstand einschließlich korrigiertem Item-Vendor-Schlüsselfehler](docs/TESTS.md#sf-019--artikelsortiment-und-lagerbasics-20112026). **Zur Prüfung**, reale Korrekturabnahme offen.

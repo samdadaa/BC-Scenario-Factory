@@ -3,8 +3,12 @@ namespace BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.ScenarioManagement;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Finance.VAT.Ledger;
+using Microsoft.Inventory.Item.Attribute;
+using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Location;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
 using Microsoft.Purchases.Payables;
@@ -13,6 +17,7 @@ using Microsoft.Sales.Customer;
 using Microsoft.Sales.Document;
 using Microsoft.Sales.History;
 using Microsoft.Sales.Receivables;
+using Microsoft.Warehouse.Structure;
 
 codeunit 90252 "BCSF Record Registry"
 {
@@ -129,7 +134,11 @@ codeunit 90252 "BCSF Record Registry"
 
   local procedure IsAllowedTable(TableId: Integer): Boolean
   begin
-    exit(TableId in [Database::Customer, Database::Vendor, Database::Item, Database::"Ship-to Address", Database::"Order Address",
+    exit(TableId in [Database::Customer, Database::Vendor, Database::Item,
+      Database::"Item Unit of Measure", Database::"Item Category", Database::"Item Attribute",
+      Database::"Item Attribute Value", Database::"Item Attribute Value Mapping", Database::"Item Variant",
+      Database::"Item Reference", Database::"Item Vendor", Database::"Item Substitution",
+      Database::"Stockkeeping Unit", Database::Bin, Database::"Bin Content", Database::"Ship-to Address", Database::"Order Address",
       Database::"Sales Header", Database::"Purchase Header", Database::"Sales Invoice Header",
       Database::"Sales Cr.Memo Header", Database::"Sales Shipment Header", Database::"Purch. Inv. Header",
       Database::"Purch. Cr. Memo Hdr.", Database::"Purch. Rcpt. Header", Database::"Cust. Ledger Entry",

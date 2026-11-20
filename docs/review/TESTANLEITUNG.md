@@ -105,3 +105,9 @@ Nutzer bestätigt den Befund „Erforderliche Standard-Lese- oder Schreibberecht
 5. Nach fehlerfreier Vorschau **Testpaket anwenden → Bestätigung**; erst danach den Partnerlauf fortsetzen. Datenbank-/Lizenz-/Sicherheitsfilteränderung zwischen Vorschau und Anwendung muss durch die frische Prüfung weiterhin blockiert werden. Buchungsschutz, Paketwechselverbot und vorhandene Laufdaten bleiben erhalten.
 
 Diese fünf nativen BC-Prüfungen sind **noch nicht ausgeführt**. Fehlende Standardrechte lassen sich nicht durch ein Codepaket ohne administrative Freigabe des Mandanten beheben. Der konkrete ursprüngliche Benutzerfall ist deshalb noch nicht als gelöst abgenommen.
+
+## SF-019 – Artikelsortiment, aktueller Smoke-Test
+
+In einer frischen Firma sind jetzt 58 Starter vorgesehen: 32 Partnerfälle, zwei technische Artikelsortimente und 24 Planungsfälle. **Einrichtung → Mandant initialisieren**, bei älterer SKR-Testfirma ggf. **Stammdatenbasis ergänzen**, dann **Vorlagen → Technischer Großhandel – Artikelsortiment → Vorlage ausführen**. Standard 1 Debitor / 2 Kreditoren / 8 Artikel bei Paketgröße 3. Anschließend die Variante **mit Lagerplätzen** prüfen.
+
+[Erwartete Mengen, Standardseiten, ungebuchte Einkaufs-/Verkaufszeilen, negative Fälle und ausführliche Anleitung](../INVENTORY_GENERATION.md#manueller-sandbox-smoke-test). Der gemeldete Fehler mit vertauschter Kreditoren-/Artikelnummer ist im Code korrigiert; alten nach Claim fehlgeschlagenen Lauf nicht blind neu starten. Nach Paketupdate bewusst neuen Lauf verwenden und bestätigte alte Partner erhalten. Keine fachliche Korrekturabnahme aus dem Build ableiten.

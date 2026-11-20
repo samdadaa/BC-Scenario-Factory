@@ -59,7 +59,7 @@ codeunit 90226 "BCSF Setup Manager"
     TempTargets.SetFilter(Quantity, '>0');
     if TempTargets.FindSet() then
       repeat
-        PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]);
+        PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]);
         NeedSales := NeedSales or (TempTargets.Module = "BCSF Module Type"::Sales);
         NeedPurchases := NeedPurchases or (TempTargets.Module = "BCSF Module Type"::Purchasing);
         NeedDocuments := NeedDocuments or Policy.IsDocument(TempTargets.Entity);
@@ -67,7 +67,7 @@ codeunit 90226 "BCSF Setup Manager"
         Policy.GetDistribution(TempTargets, UnpostedCount, PostedCount, PartialCount);
         Posting := Posting or (PostedCount > 0) or (PartialCount > 0);
         // The executable partner generators validate their exact frozen series, not an unrelated default.
-        if not (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]) then
+        if not (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]) then
           CheckTargetSeries(TempTargets, Header."Starting Date", (PostedCount > 0) or (PartialCount > 0), TempDiff);
       until TempTargets.Next() = 0;
     if CheckTable(Database::"General Ledger Setup", false, TempDiff) then begin

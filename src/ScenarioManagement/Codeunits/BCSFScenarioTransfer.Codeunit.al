@@ -151,6 +151,14 @@ codeunit 90147 "BCSF Scenario Transfer"
     Item.Add('paymentMethod', Scenario."Partner Payment Method");
     Item.Add('dimension1', Scenario."Partner Dimension 1");
     Item.Add('dimension2', Scenario."Partner Dimension 2");
+    Item.Add('itemBaseUnit', Scenario."Item Base Unit");
+    Item.Add('itemPackUnit', Scenario."Item Pack Unit");
+    Item.Add('itemInventoryGroup', Scenario."Item Inventory Group");
+    Item.Add('itemProductGroup', Scenario."Item Product Group");
+    Item.Add('itemVATProductGroup', Scenario."Item VAT Product Group");
+    Item.Add('itemLocation', Scenario."Item Location Code");
+    Item.Add('itemVendor', Scenario."Item Vendor No.");
+    Item.Add('itemSecondVendor', Scenario."Item Second Vendor No.");
 
     ScenarioModule.SetRange("Scenario Id", Scenario."Scenario Id");
     if ScenarioModule.FindSet() then
@@ -223,6 +231,22 @@ codeunit 90147 "BCSF Scenario Transfer"
       Scenario."Partner Dimension 1" := CopyStr(ReadText(Item, 'dimension1', MaxStrLen(Scenario."Partner Dimension 1")), 1, MaxStrLen(Scenario."Partner Dimension 1"));
     if Item.Contains('dimension2') then
       Scenario."Partner Dimension 2" := CopyStr(ReadText(Item, 'dimension2', MaxStrLen(Scenario."Partner Dimension 2")), 1, MaxStrLen(Scenario."Partner Dimension 2"));
+    if Item.Contains('itemBaseUnit') then
+      Scenario."Item Base Unit" := CopyStr(ReadText(Item, 'itemBaseUnit', MaxStrLen(Scenario."Item Base Unit")), 1, MaxStrLen(Scenario."Item Base Unit"));
+    if Item.Contains('itemPackUnit') then
+      Scenario."Item Pack Unit" := CopyStr(ReadText(Item, 'itemPackUnit', MaxStrLen(Scenario."Item Pack Unit")), 1, MaxStrLen(Scenario."Item Pack Unit"));
+    if Item.Contains('itemInventoryGroup') then
+      Scenario."Item Inventory Group" := CopyStr(ReadText(Item, 'itemInventoryGroup', MaxStrLen(Scenario."Item Inventory Group")), 1, MaxStrLen(Scenario."Item Inventory Group"));
+    if Item.Contains('itemProductGroup') then
+      Scenario."Item Product Group" := CopyStr(ReadText(Item, 'itemProductGroup', MaxStrLen(Scenario."Item Product Group")), 1, MaxStrLen(Scenario."Item Product Group"));
+    if Item.Contains('itemVATProductGroup') then
+      Scenario."Item VAT Product Group" := CopyStr(ReadText(Item, 'itemVATProductGroup', MaxStrLen(Scenario."Item VAT Product Group")), 1, MaxStrLen(Scenario."Item VAT Product Group"));
+    if Item.Contains('itemLocation') then
+      Scenario."Item Location Code" := CopyStr(ReadText(Item, 'itemLocation', MaxStrLen(Scenario."Item Location Code")), 1, MaxStrLen(Scenario."Item Location Code"));
+    if Item.Contains('itemVendor') then
+      Scenario."Item Vendor No." := CopyStr(ReadText(Item, 'itemVendor', MaxStrLen(Scenario."Item Vendor No.")), 1, MaxStrLen(Scenario."Item Vendor No."));
+    if Item.Contains('itemSecondVendor') then
+      Scenario."Item Second Vendor No." := CopyStr(ReadText(Item, 'itemSecondVendor', MaxStrLen(Scenario."Item Second Vendor No.")), 1, MaxStrLen(Scenario."Item Second Vendor No."));
     Scenario.Insert(true);
     Modules := ReadArray(Item, 'modules', 12);
     foreach Token in Modules do begin

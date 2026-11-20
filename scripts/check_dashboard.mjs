@@ -229,6 +229,10 @@ try {
   const dataShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true });
   await writeFile(join(tmpdir(), 'BCSF-dashboard-SF044-data.png'), Buffer.from(dataShot.data, 'base64'));
   await click('#sf-tab-runs');
+  await redraw('window.fixture.steps=[{node:"ITEM",entityCode:"ITEM",entity:"Items",target:8,confirmed:8,remaining:0,complete:true,external:false,state:"Completed"}];window.fixture.runStock={metrics:[{key:"item",caption:"Items",count:8,canOpen:true}]}');
+  await click('[data-stock-focus="result:item"]');
+  assert.equal(await evaluate('window.calls.at(-1).args[0]'), 'runOpen');
+  assert.equal(await evaluate('window.calls.at(-1).args[1]'), 'item');
   await redraw('window.fixture.hasSelection=false;window.fixture.runs=[]');
   assert.equal(await evaluate('document.querySelectorAll(".sf-action-groups").length'), 0);
   assert.equal(await evaluate('document.querySelector(".sf-empty").textContent'), germanTexts.empty);

@@ -5,6 +5,7 @@ using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.DependencyManager;
 using BCScenarioFactory.Finance;
 using BCScenarioFactory.IndustryProfiles;
+using BCScenarioFactory.Inventory;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.Monitoring;
@@ -129,5 +130,10 @@ permissionset 90105 "BCSF ADMIN"
     codeunit "BCSF Starter Catalog" = X,
     codeunit "BCSF Scenario Transfer" = X,
     codeunit "BCSF Demo Partner Setup" = X,
+    codeunit "BCSF Inventory Generator" = X,
+    codeunit "BCSF Item Catalog" = X,
+    codeunit "BCSF Item Setup" = X,
+    codeunit "BCSF Item Masters" = X,
+    codeunit "BCSF Item Relations" = X,
     codeunit "BCSF Quick Scenario Run" = X;
 }

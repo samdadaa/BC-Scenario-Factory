@@ -194,3 +194,9 @@ Der [Datenbestand](DASHBOARD_DATA_STOCK.md) ist ein separater lesender Bereich i
 ## SF-044 – getrennte Dashboardansichten
 
 Das bestehende Control Add-in trennt Datenfilter und ausgewählten Lauf. Die Part hält getrennte serverseitige Ansichten für Datenbestand und Laufresultate. Bestands- und Fortschrittskacheln verwenden den vorhandenen Herkunfts-/Standardlistendienst. Vorlagen-/Laufzähler öffnen bestehende gefilterte Seiten nach erneuter Prüfung von Rechten und Count. Tabellen, Objekte, Snapshots, Generatoren und Transaktionsgrenzen bleiben erhalten. [Darstellung, Grenzen und Abnahme](DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026). **Zur Prüfung**.
+
+## SF-019 – Artikelstammdaten und Betriebsarten
+
+Vorlagen-/Starterkatalog → optionales `itemSetup` Version 1 im unveränderten Snapshot-Schema 1 → reale ITEM-Registrybindung mit expliziten Partner-Vorgängern → vorhandener Dispatcher/Worker → Standard-Kategorien/-Attribute/-Artikel und begrenzte Beziehungen → Herkunft/Checkpoint/Outputvalidierung. Inventory verwendet den bereits vorhandenen unveränderten Snapshot-/Jobbesitzvertrag in DataGeneration; dessen Pflichtsubscriber in BackgroundProcessing schützt auch ITEM. Kein zusätzlicher Commit, keine Wiederholung unklarer Claims.
+
+Gemeinsame Basis ausschließlich im bestätigten Mandanteneinrichtungspfad; ergänzende Aktion auf bestehender Einrichtung für bereits angewendete SKR-Testpakete. Vorlagenstart erfasst nur und ändert keine globale Einrichtung. TECH-TRADE und TECH-BINS teilen einen Katalog, nur die Lagerbetriebsart unterscheidet sich. SKU und fixe Lagerplatzzuordnung sind Stammdaten, keine Bestandsnachweise. [Konkreter Umfang und offene Laufzeitabnahme](INVENTORY_GENERATION.md). **Zur Prüfung**.

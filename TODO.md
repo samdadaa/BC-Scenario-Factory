@@ -34,7 +34,7 @@ P0-Reihenfolge: [SF-038](#sf-038) Finanzsetup → [SF-039](#sf-039) Partnerdaten
 | [SF-039](#sf-039) | Stabilisierung | P0 | Realistische Geschäftspartner und nutzbare Partnerstammdaten | Zur Prüfung |
 | [SF-040](#sf-040) | Stabilisierung | P0 | Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten | Zur Prüfung |
 | [SF-041](#sf-041) | Stabilisierung | P0 | Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns | Zur Prüfung |
-| [SF-042](#sf-042) | Stabilisierung | P0 | Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben | Zur Prüfung |
+| [SF-042](#sf-042) | Stabilisierung | P0 | Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben | Offen |
 | [SF-044](#sf-044) | Bedienung | P1 | Dashboard kompakt gestalten und Kennzahlen direkt nutzbar machen | Zur Prüfung |
 | [SF-043](#sf-043) | Stabilisierung | P0 | Mandant einmalig initialisieren und Vorlagenstart vereinfachen | Zur Prüfung |
 | [SF-001](#sf-001) | 0 / Fundierung | P0 | Projektkonfiguration, Objekt-ID-Strategie und Ziel-Sandbox abstimmen | Blockiert |
@@ -55,7 +55,7 @@ P0-Reihenfolge: [SF-038](#sf-038) Finanzsetup → [SF-039](#sf-039) Partnerdaten
 | [SF-016](#sf-016) | 0 / Fundierung | P0 | Validierungsframework und Abschlussstatus | Zur Prüfung |
 | [SF-017](#sf-017) | 1 / MVP | P1 | Finanzsetup und auswertbare Testkontenpläne für SKR03 und SKR04 | Zur Prüfung |
 | [SF-018](#sf-018) | 1 / MVP | P1 | Debitoren und Kreditoren als kohärente Stammdaten | Zur Prüfung |
-| [SF-019](#sf-019) | 1 / MVP | P1 | Artikel, Kategorien, Varianten und Lagerbasics | Offen |
+| [SF-019](#sf-019) | 1 / MVP | P1 | Artikel, Kategorien, Varianten und Lagerbasics | Zur Prüfung |
 | [SF-020](#sf-020) | 1 / MVP | P1 | Einkaufsprozess: Bestellung bis gebuchte Rechnung | Offen |
 | [SF-021](#sf-021) | 1 / MVP | P1 | Verkaufsprozess: Angebot bis gebuchte Rechnung | Offen |
 | [SF-022](#sf-022) | 1 / MVP | P1 | Zahlungen, Ausgleich, Gutschriften und Folgeprozesse | Offen |
@@ -823,8 +823,6 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Nutzerstand / Korrektur:** Partnergeneratoren wurden laut Nutzer umgesetzt und haben Geschäftspartner angelegt. Der Backlog hält deshalb „Zur Prüfung“ fest. Die sichtbaren Platzhalter und noch nicht nachgewiesenen Partnerbeziehungen werden in [SF-039](#sf-039) korrigiert und nachgetestet. Keine Abnahme abgeleitet.
 
-**Nachprüfung 19.11.2026:** Bestehende Generatoren, Setup-/Seed-/Herkunftsvertrag und SF-039-Ergänzungen mit XERJ und aktuellen Dateien geprüft. Keine erneute Implementierung des Partnerpfads. Kleine belegte Vereinfachung: Der Debitoren-Preflight verlangt die zusätzliche Lieferadressberechtigung bei Partner-Setupversion 2 nur noch bei möglichem B2B-Anteil (`b2cPercent < 100`). Reine Privatkunden erzeugen keine zusätzliche Lieferadresse. B2B-/Mischlauf, Kreditoren-Bestelladresse und alle tatsächlichen Standard-Schreibprüfungen bleiben geschützt. Eine zunächst vermutete fehlende frühe Länderprüfung ist bereits vorhanden und wurde nicht geändert. [Umfang, echte Prüfungen und offene BC-Abnahme](docs/TESTS.md#sf-018--nachprüfung-und-privatkunden-vorprüfung-19112026). Status weiterhin **Zur Prüfung**, keine menschliche Abnahme oder Freigabe weiterer Tickets.
-
 **Ausgangslage / Problem:** B2B/B2C, Regionen, Zahlungsziele, Kreditlimits, Lieferantenklassen und Beziehungen plausibel und synthetisch anlegen.
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** BC-Validate verwenden; gleiche Adresse/Kontakte nicht wahllos kopieren, deutliche Variabilität.
@@ -855,7 +853,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-019 — Artikel, Kategorien, Varianten und Lagerbasics
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P1  
 **Abhängigkeiten:** SF-009,SF-010,SF-017, SF-042  
 **Verantwortung / betroffene Module:** Inventory  
@@ -866,6 +864,15 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Ausgangslage / Problem:** Lager-/Nichtlager-/Serviceartikel, Preise, Einheiten, Kategorien, Lagerorte und Bestandsvoraussetzungen.
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Artikelposten nur über Standardprozesse, keine direkten Ledger-Inserts.
+
+**Ausdrückliche Scope-Präzisierung:** Der detaillierte Nutzerauftrag verlangt SF-019 als reine Artikel-/Beziehungs-/Lagerstammdatenbasis ohne Anfangsbestand, Bewegungen oder Buchungen. Der direkte Auftrag erlaubt diese Umsetzung trotz offener SF-042-Abnahme; SF-042 wird dadurch nicht abgenommen. Keine Folgegeneratoren vorgezogen.
+
+**Implementierung 20.11.2026 – Zur Prüfung:** Sechs Inventory-Objekte und unmittelbare Integrationspunkte für ITEM-Registrybindung, versionierte Sortiments-/Einrichtungsdaten, reale Partner-Vorgänger, vorhandene Queue/Guards/Checkpoints, Herkunft und Dashboard. Zwei technische Großhandelsvorlagen ohne zusätzliche Pflichtseite oder Startdialog. Kategorien/Merkmale, Einheiten, zwei angebotene Varianten, Lieferanten-/Kunden-/Barcode-Referenzen, Bezugsquellen, gerichtetes Ersatzpaar, gezielte SKU und optionale fixe Lagerplätze. Gemeinsame KRT-/RACK-Basis nur im vorhandenen bestätigten Einrichtungspfad; optionales Ergänzen auf bestehender Setupseite für ältere SKR-Testfirmen. [Vollständiger Umfang, Grenzen und Smoke-Test](docs/INVENTORY_GENERATION.md).
+
+**Gemeldeter Fehler und Fix:** Im Nutzerlauf waren Partner abgeschlossen, Artikel 0/8; Item Vendor wurde mit vertauschter Artikel-/Kreditorennummer gelesen. Standard-Primärschlüssel gegen lokale Originalsymbole verifiziert; beide Leser auf `(Vendor No., Item No., Variant Code)` korrigiert und gemeinsamer Reader plus spezifischer Regressionstest ergänzt. Alte ungeklärte Claims bleiben gesperrt. [Wirklich ausgeführte Prüfungen und korrigiertes Paket](docs/TESTS.md#sf-019--artikelsortiment-und-lagerbasics-20112026).
+
+**Test-/Abnahmegrenze:** App und separate Test-App mit 13 Tests kompilieren; lokaler Schlüsselvertrag, Paket-/Übersetzungs-/Clientprüfungen bestehen. Strenger Analyzer bleibt bei denselben zwölf Ausgangsbefunden. Die AL-Tests, beide korrigierten Referenzläufe, Standardbeleg-/Rechte-/Wiederanlaufnachweise und menschliche Abnahme sind nicht ausgeführt bzw. noch offen. Kein Deployment.
+
 
 **Master-Data-Gate:** Die [SF-040-Matrix](docs/MASTER_DATA_READINESS.md#modul--und-entitätsmatrix) für die eigenen Entitäten konkretisieren. Abhängige Stämme und Einrichtung vor der ersten Verwendung prüfen. Im Hintergrund vor Beleganlage/Buchung die tatsächlich verwendeten Kombinationen und effektiven Rechte prüfen.
 
@@ -878,7 +885,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 - [ ] Modul-Dokumentation, Architektur-/Testnachweise und Ticketstatus aktualisieren, ohne ungefragt Folge-Tickets zu öffnen.
 
 **Akzeptanzkriterien:**
-- [ ] Artikelstamm für Verkauf und Beschaffung valide, gemischte Kategorien und Bestände plausibel.
+- [ ] Artikelstamm für Verkauf und Beschaffung valide, Kategorien und Beziehungen plausibel; keine Bestands-/Wertbewegungen aus diesem Stammdatenlauf.
 - [ ] Keine ungeplanten Änderungen an anderer Logik, keine echten Daten, keine neuen Abhängigkeiten auf XERJ.
 - [ ] Tatsächlich ausgeführte Tests samt BC-Version/Umgebung/Nachweisen dokumentiert; Unausgeführtes ausdrücklich als offen.
 - [ ] Menschliche Prüfung erfolgt; erst dann Status `Erledigt`.
@@ -890,6 +897,8 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
 
 ---
+
+**Bedienkorrektur 20.11.2026:** Abschlussmeldung für „Stammdatenbasis ergänzen“, konkrete Fehler bleiben sichtbar. Elf neue Standardlistenrouten; erzeugte Attributzuordnungen lesbar in bestehender Herkunftsseite. Keine neuen Seiten/Tabellen. Mandantenweite Attributzuordnungen weiterhin ohne Herkunftsroute; Nullzahlen ohne Link. [Prüfvertrag](docs/INVENTORY_GENERATION.md#sf-019--bedienkorrektur-20112026). Native Sandboxabnahme offen, Status **Zur Prüfung**.
 
 <a name="sf-020"></a>
 
@@ -1726,7 +1735,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-042 — Partnerpfad stabilisieren, Bedienung polieren und Ausbau freigeben
 
-**Status:** Zur Prüfung
+**Status:** Offen  
 **Priorität:** P0  
 **Abhängigkeiten:** SF-037, SF-038, SF-039, SF-040, SF-041, SF-043  
 **Verantwortung / betroffene Module:** ScenarioManagement, Monitoring, BackgroundProcessing, Validation, Finance, Querschnitt  
@@ -1736,17 +1745,13 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 **Soll-Verhalten / technischer Arbeitsauftrag:** Den vorhandenen Kernpfad stabilisieren und in einer frischen Sandbox abnehmen. Klarer Bedienweg: Vorlage auswählen → Voraussetzungen prüfen und bei Bedarf passende Einrichtung anbieten → Lauf im Hintergrund starten → Status ansehen → Daten öffnen. Erweiterte Einrichtung, Pakete, Checkpoints und technische Fehlerdetails bleiben erreichbar, stehen aber nicht im Standardpfad.
 
-**Prüfauftrag und Ergebnis 19.11.2026:** Nutzer beauftragt zuerst Soll-Ist-Prüfung mit XERJ; nur Verbesserungen übernehmen, die eine einfache, freundliche App unterstützen. Direkter Start mit einmaliger Mandanteneinrichtung, statusbezogene Hauptaktionen, eingeklappte Dashboarddiagnose, Queue-/Checkpointschutz und Standardlistenrouten sind bereits vorhanden. Deshalb keine zusätzliche UI oder neue Ausführungslogik. Veraltete Einsteigeranleitung auf den heutigen Weg korrigiert und Generatorregeln zentral in Architektur, AGENTS, Test- und Modulindex verlinkt. Betroffene Dateien, Risiken, Quellen und echte Prüfungen: [SF-042-Prüfbericht](docs/TESTS.md#sf-042--soll-ist-prüfung-des-partnerpfads). App-Version, Schema und Laufdaten unverändert.
-
-**Abnahmegrenze:** Lokal bestehen Dashboard-/Stock-, Partnerkatalog- und Übersetzungsprüfungen. Keine reale BC-Abnahme, kein neuer AL-Build und keine P0-Ausbau-Freigabe. Die native Laufkarte zählt weiterhin Herkunftseinträge; nach Löschung/Sichtbeschränkung kann ihre Partnerliste weniger Datensätze enthalten. Diesen Unterschied zu den Dashboard-Livezählern in der Bedienabnahme bewerten. Alle folgenden Sandbox-Akzeptanzkriterien bleiben offen; `Zur Prüfung` bezeichnet die vorliegende Bestandsprüfung und Dokumentationsverbesserung.
-
 **Vorgehen (einzeln abzuarbeiten):**
 
 - [ ] Standardweg mit wenigen eindeutigen Hauptaktionen prüfen und vereinfachen. Je Status die sinnvolle nächste Aktion prominent anbieten. Fehlertext nennt betroffene Entität, Ursache und mögliche nächste Aktion. Keine automatische Wiederholung eines ungeklärten Pakets. Vorlage und Daten bleiben nachvollziehbar verknüpft.
 - [ ] Ende-zu-Ende-Prüfung mit BC-Version, Lokalisierung, Umgebung, Rolle, Seed, Vorlage, erwartetem und tatsächlich erreichtem Ergebnis dokumentieren. Den realen Hintergrundlauf einschließlich mehrerer Pakete und Schließen der Sitzung nach Start prüfen. Die tatsächlich erzeugten Daten über den Dashboard-Drilldown im BC-Standard öffnen.
 - [ ] Regression von Startervorlagen, Sammeltransfer, Lösch-/Archivregeln und DE/EN anhand SF-037 prüfen. Beispieldaten dürfen bei korrekter deutscher UI weiterhin der bewusst gewählten Datensprache folgen.
-- [x] Verbindliche Generatorregeln in `AGENTS.md` verlinken und an bestehender Stelle in Architektur-/Test-/Moduldokumentation festhalten. Mindestens Datenrealismus, Setup-/Stammreihenfolge, BC-Standardvalidierung und -buchung, Herkunft/Idempotenz, Modulstatistik und Drilldown, Sprachtrennung sowie die Nachweise je Modul dokumentieren. Kurze Einsteiger-Testanleitung unter dem bestehenden Testpfad nachführen.
-- [x] Bei künftigen Tickets die Qualitätscheckliste als Vorbedingung und Abnahme übernehmen. Bei fehlender Generator- oder Setupabdeckung ein Folgeticket verlinken oder den Umfang konkret eingrenzen, nicht stillschweigend umgehen. Verbindlich über AGENTS-/Modulverweis; tatsächliche Anwendung und Abnahme erfolgen erst im jeweiligen ausdrücklich beauftragten Ticket.
+- [ ] Verbindliche Generatorregeln in `AGENTS.md` verlinken und an bestehender Stelle in Architektur-/Test-/Moduldokumentation festhalten. Mindestens Datenrealismus, Setup-/Stammreihenfolge, BC-Standardvalidierung und -buchung, Herkunft/Idempotenz, Modulstatistik und Drilldown, Sprachtrennung sowie die Nachweise je Modul dokumentieren. Kurze Einsteiger-Testanleitung unter dem bestehenden Testpfad nachführen.
+- [ ] Bei künftigen Tickets die Qualitätscheckliste als Vorbedingung und Abnahme übernehmen. Bei fehlender Generator- oder Setupabdeckung ein Folgeticket verlinken oder den Umfang konkret eingrenzen, nicht stillschweigend umgehen.
 
 **Akzeptanzkriterien:**
 
@@ -1802,11 +1807,11 @@ Anforderungen
 6. Laufansicht auf das Wesentliche kürzen. Im Normalfall reichen Laufname, Status, Ergebnis und die nächste sinnvolle Aktion. Ergebnisse öffnen bleibt bei einem abgeschlossenen Lauf gut sichtbar, aber nicht als Schaltfläche über die gesamte Breite. Den frühesten Start nur bei geplanten Läufen hervorheben. Bestanden darf nicht wie eine Warnung aussehen. Diagnose standardmäßig einklappen und leere Aktionsgruppen ausblenden.
 7. Kopf, Texte und Typografie vereinheitlichen. Die zusätzliche obere Linie des eigenen Dashboards, den doppelten Titel, wiederholte Navigation und allgemeine Einführungstexte entfernen. Den nativen BC-Rahmen unverändert lassen. Eine Schriftfamilie und wenige konsistente Größen für Überschriften, Fachbezeichnungen und Kennzahlen verwenden. Weniger Rahmen, keine verschachtelten Kacheln und einheitliche Abstände. Beim Scrollen dürfen Filter und Überschriften nicht unter dem BC-Kopf abgeschnitten werden.
 Akzeptanzkriterien
-- [ ] Datenbestand und Laufdetails sind über getrennte Reiter erreichbar. Niemand muss durch die Stammdaten scrollen, um zum aktuellen Lauf zu gelangen.
-- [ ] Alle Bestandsbereiche verwenden dasselbe Kachelraster. Die Kacheln sind mit Maus und Tastatur bedienbar, wo ein gültiges Ziel existiert.
-- [ ] Das Beispiel aus dem aktuellen Test ist eindeutig lesbar: 25 Debitoren im Mandanten und 20 Debitoren im ausgewählten Lauf sind unterschiedliche, klar beschriftete Zahlen. Beide öffnen bei vorhandener Berechtigung die jeweils passende gefilterte Liste.
-- [ ] Fortschritt steht direkt bei der Entität. Ein abgeschlossener Lauf lässt sich ohne technische Begriffe verstehen, die Diagnose bleibt erreichbar.
-- [ ] Ein leerer Bestand, ein fehlender Generator, fehlender Zugriff und ein fehlgeschlagener Lauf sind visuell und sprachlich unterscheidbar. Keine unnötigen Wiederholungen oder leeren Aktionsgruppen.
+- [x] Datenbestand und Laufdetails sind über getrennte Reiter erreichbar. Niemand muss durch die Stammdaten scrollen, um zum aktuellen Lauf zu gelangen.
+- [x] Alle Bestandsbereiche verwenden dasselbe Kachelraster. Die Kacheln sind mit Maus und Tastatur bedienbar, wo ein gültiges Ziel existiert.
+- [x] Das Beispiel aus dem aktuellen Test ist eindeutig lesbar: 25 Debitoren im Mandanten und 20 Debitoren im ausgewählten Lauf sind unterschiedliche, klar beschriftete Zahlen. Beide öffnen bei vorhandener Berechtigung die jeweils passende gefilterte Liste.
+- [x] Fortschritt steht direkt bei der Entität. Ein abgeschlossener Lauf lässt sich ohne technische Begriffe verstehen, die Diagnose bleibt erreichbar.
+- [x] Ein leerer Bestand, ein fehlender Generator, fehlender Zugriff und ein fehlgeschlagener Lauf sind visuell und sprachlich unterscheidbar. Keine unnötigen Wiederholungen oder leeren Aktionsgruppen.
 - [ ] Die Ansicht ist in Business Central bei breiter und schmaler Fenstergröße geprüft. Es gibt keine abgeschnittenen Filter, keine unnötigen horizontalen Scrollbalken und einen sichtbaren Tastaturfokus.
 
 

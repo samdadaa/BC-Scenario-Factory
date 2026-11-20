@@ -150,6 +150,24 @@ codeunit 90408 "BCSF Demo Partner Setup"
       Measure.Description := 'Stunde';
       if Packages.NeedsInsert(Measure, Fields, Write, AllowCreate, TempDiff) then
         Measure.Insert(true);
+      Clear(Measure);
+      Measure.Init();
+      Measure.Code := 'KRT';
+      Measure.Description := 'Karton';
+      if Packages.NeedsInsert(Measure, Fields, Write, AllowCreate, TempDiff) then
+        Measure.Insert(true);
+      Location.Reset();
+      if not Location.Get('RACK') then begin
+        Location.Init();
+        Location.Code := 'RACK';
+        Location.Name := 'Regallager';
+        Location."Bin Mandatory" := true;
+        Clear(Fields);
+        Fields.Add(Location.FieldNo("Bin Mandatory"));
+        if Packages.NeedsInsert(Location, Fields, Write, AllowCreate, TempDiff) then
+          Location.Insert(true);
+      end;
+      Clear(Fields);
       Payment.Init();
       Payment.Code := 'UBW';
       Payment.Description := 'Überweisung';

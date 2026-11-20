@@ -178,6 +178,7 @@ pageextension 90358 "BCSF Run Monitoring" extends "BCSF Run Card"
   trigger OnAfterGetCurrRecord()
   var
     Execution: Record "BCSF Run Execution";
+    Generated: Record "BCSF Generated Record";
     Log: Record "Job Queue Log Entry";
     Batch: Record "BCSF Batch";
     Header: Record "BCSF Run Header";
@@ -197,7 +198,8 @@ pageextension 90358 "BCSF Run Monitoring" extends "BCSF Run Card"
     QualityText := Validation.Describe(Rec."Run Id");
     CustomerCount := Monitor.CountPartners(Rec."Run Id", Database::Customer);
     VendorCount := Monitor.CountPartners(Rec."Run Id", Database::Vendor);
-    HasResults := CustomerCount + VendorCount > 0;
+    Generated.SetRange("Run Id", Rec."Run Id");
+    HasResults := not Generated.IsEmpty();
     CanShowErrors := Prepared and (Execution.Status in [Execution.Status::Failed, Execution.Status::ValidationFailed]);
     CanViewProgress := Prepared and (Execution.Status in [Execution.Status::Queued, Execution.Status::Scheduled, Execution.Status::Running]);
     CanStart := not Prepared or (Execution.Status = Execution.Status::Ready);
@@ -207,7 +209,7 @@ pageextension 90358 "BCSF Run Monitoring" extends "BCSF Run Card"
       PartnerOnly := not TempTarget.IsEmpty() and (Header."Process Mode" = "BCSF Process Mode"::SetupAndMasterData);
       if TempTarget.FindSet() then
         repeat
-          PartnerOnly := PartnerOnly and (TempTarget.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]);
+          PartnerOnly := PartnerOnly and (TempTarget.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]);
         until TempTarget.Next() = 0;
       CanStart := CanStart and PartnerOnly;
     end;

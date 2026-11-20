@@ -33,7 +33,7 @@ codeunit 90130 "BCSF Scenario Manager"
     if Target.FindSet() then
       repeat
         HasTarget := true;
-        if not (Target.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]) or
+        if not (Target.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]) or
           (Target."Process Mode" <> "BCSF Process Mode"::SetupAndMasterData) then
           exit(false);
       until Target.Next() = 0;
@@ -292,10 +292,16 @@ codeunit 90130 "BCSF Scenario Manager"
     Settings.Add('b2cPercent', Scenario."B2C Percent");
     Context.Add('partnerSetup', Settings);
     OnPreviewPartnerNames(Context, CustomerName, VendorName, ItemName);
+    OnPreviewItemName(Context, ItemName);
   end;
 
   [IntegrationEvent(false, false)]
   local procedure OnPreviewPartnerNames(Context: JsonObject; var CustomerName: Text[100]; var VendorName: Text[100]; var ItemName: Text[100])
+  begin
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnPreviewItemName(Context: JsonObject; var ItemName: Text[100])
   begin
   end;
 
@@ -315,6 +321,7 @@ codeunit 90130 "BCSF Scenario Manager"
       Rules.Get('version', Token);
       if Token.AsValue().AsInteger() = 2 then begin
         OnPreviewPartnerNames(Payload, CustomerName, VendorName, ItemName);
+        OnPreviewItemName(Payload, ItemName);
         exit;
       end;
     end;

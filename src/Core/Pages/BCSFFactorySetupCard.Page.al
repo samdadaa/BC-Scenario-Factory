@@ -65,6 +65,23 @@ page 90101 "BCSF Factory Setup Card"
     }
     area(Processing)
     {
+      action(RefreshCompanyFoundation)
+      {
+        ApplicationArea = All;
+        Caption = 'Complete Master Data Foundation';
+        ToolTip = 'Adds missing foundation from the already applied test package, including carton unit and simple bin location. Does not change the chart of accounts or start a run.';
+        Image = Setup;
+        Enabled = Initialized;
+        trigger OnAction()
+        var
+          Catalog: Codeunit "BCSF Starter Catalog";
+        begin
+          Catalog.RefreshCompanyFoundation();
+          RefreshSetup();
+          CurrPage.Update(false);
+          Message(FoundationCompletedLbl);
+        end;
+      }
       action(InitializeSetup)
       {
         ApplicationArea = All;
@@ -170,5 +187,6 @@ page 90101 "BCSF Factory Setup Card"
     Initialized: Boolean;
     InstalledChart: Text;
     ChartCaption: Text;
+    FoundationCompletedLbl: Label 'The master data foundation has been checked and completed successfully.';
     SetupAvailableMsg: Label 'Which chart of accounts should %1 use? This prepares the sandbox company and enables test data generation. Posting remains disabled for a new company.', Comment = '%1 = company name';
 }

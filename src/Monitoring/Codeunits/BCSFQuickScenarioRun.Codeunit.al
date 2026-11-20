@@ -42,7 +42,7 @@ codeunit 90367 "BCSF Quick Scenario Run"
     if not TempTarget.FindSet() then
       Error(PartnerOnlyErr);
     repeat
-      if not (TempTarget.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]) then
+      if not (TempTarget.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]) then
         Error(PartnerOnlyErr);
     until TempTarget.Next() = 0;
     Execution.LockTable();
@@ -98,7 +98,7 @@ codeunit 90367 "BCSF Quick Scenario Run"
     if Target.FindSet() then
       repeat
         Found := true;
-        if not (Target.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor]) then
+        if not (Target.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item]) then
           Error(PartnerOnlyErr);
       until Target.Next() = 0;
     if not Found then
@@ -106,6 +106,6 @@ codeunit 90367 "BCSF Quick Scenario Run"
   end;
 
   var
-    CapturedQst: Label 'Start this captured partner run after rechecking its setup and permissions? Existing or uncertain batches are not repeated.';
-    PartnerOnlyErr: Label 'Quick run supports only customer and vendor master data. This template depends on generators that are not available yet.';
+    CapturedQst: Label 'Start this captured master-data run after rechecking its setup and permissions? Existing or uncertain batches are not repeated.';
+    PartnerOnlyErr: Label 'Quick run supports customer, vendor and supported item master data. This template depends on generators that are not available yet.';
 }

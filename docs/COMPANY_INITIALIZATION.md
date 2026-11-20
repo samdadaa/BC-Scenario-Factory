@@ -37,3 +37,9 @@ Die Aktion zeigt den ersten konkreten Einrichtungs- oder Berechtigungsbefund sta
 - Vor und nach Initialisierung für einen Vorlagenstart prüfen: vorher ein konkreter Hinweis, nachher kein Finanz- oder Bestätigungsdialog. Zwei Mengen-/Seed-Varianten ausführen und das Fenster während des Jobs schließen. Status, Debitoren-/Kreditorenmengen und Adressen im BC-Standard vergleichen.
 - Eine bestehende Firma übernehmen, eine mit inkompatiblem Konto und einen Nutzer mit fehlenden Standardrechten prüfen. Keine teilweise dauerhafte Einspielung. Nach Abschalten der Generierung darf die Vorlage keinen neuen Job erzeugen.
 - Eine Kopie des Altstands mit normalen Schema-Synchronisierungseinstellungen aktualisieren. Historischen Lauf und ausstehende Pakete kontrollieren. Kein ForceSync und kein Löschen der alten Firma. SF-038-Standardbuchungen und SF-039-Partnerstichproben bleiben separat zu protokollieren.
+
+## SF-019 – ergänzte Artikelbasis
+
+Die bestätigte Paketgrundlage ergänzt jetzt KRT und einen fehlenden einfachen Lagerort RACK mit Platzführung. Die vorhandene Paketlogik liefert die exakten Lagerort-/Lagerbuchungsgruppenzuordnungen aus denselben bestehenden Konten. Bereits initialisierte SKR-Firmen können auf derselben Seite **Stammdatenbasis ergänzen** verwenden; ohne erneute Kontenplanwahl. Bestehende Konflikt-/Bebucht-/Rechtesperren bleiben bestehen. Vorhandene eigene Einrichtung wird nicht mit einem SKR-Paket überschrieben; dort passende vorhandene Einheiten/Gruppen/Lagerorte an der Vorlage wählen.
+
+Neben Partnern sind nun die beiden ausdrücklich unterstützten technischen Artikelsortimente ausführbar. Die acht optionalen Artikelfelder sind additive Änderungen an der vorhandenen Szenariotabelle. Keine neue Tabelle/Seite und kein ForceSync. [SF-019-Vertrag und Abnahme](INVENTORY_GENERATION.md). Frühere „nur Partner“-/Schemaangaben gelten für den damaligen SF-043-Stand.
