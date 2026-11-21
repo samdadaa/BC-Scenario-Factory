@@ -27,6 +27,7 @@ page 90364 "BCSF Factory Role Center"
         Caption = 'Scenario Factory';
         action(Scenarios)
         {
+          Visible = false;
           Caption = 'Scenarios';
           ToolTip = 'Defines, copies and configures scenario templates and their entity targets.';
           ApplicationArea = All;

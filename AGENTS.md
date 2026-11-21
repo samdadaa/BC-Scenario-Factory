@@ -126,3 +126,11 @@ XERJ ist der bevorzugte lokale Such- und Wissensdienst für dieses Projekt. Verw
 6. Ergebnis, relevante Tests und eventuelle Einschränkungen kurz berichten.
 
 Der Benutzer muss XERJ-Werkzeuge nicht ausdrücklich anfordern. XERJ ist Entwicklungsunterstützung und keine Laufzeitabhängigkeit der BC-App.
+
+## Verbindliche Unternehmenspakete ab SF-045 (Nutzerauftrag 21.11.2026)
+
+- Der Normalweg ist Kontenplan → Branche → Klein/Mittel/Groß → unterstützte Prozessstufe → Zusammenfassung und ein Hintergrundstart. Gemeinsame Einrichtung einmalig; keine erneute Kontenplanwahl in Fachgeneratoren.
+- Jeder weitere Generator fügt sich in diesen gemeinsamen Ablauf ein. Kein eigener Benutzerassistent, keine parallele Vorlagenverwaltung, keine zusätzliche Finanzinitialisierung und keine neuen Seiten ohne belegten Bedarf. Branchenspezifische Voraussetzungen automatisch vor Stammdaten, diese vor Bewegungsdaten bereitstellen.
+- Interne versionierte Branchenpakete konfigurieren die vorhandenen Generatoren, Snapshots, Registry, Queue, Checkpoints und Monitoring. Technische Vorlagen/Import/Export sind optionaler Expertenzugang. Eigene Vorlagen, entfernte/archivierte Starter und historische Läufe bleiben geschützt.
+- Zunächst nur das tatsächlich implementierte Großhandelspaket anbieten. Nicht unterstützte Branchen und Buchungsstufen bleiben gesperrt. Neue Artikel liefern ohne Standardwareneingang keinen Nachweis für gebuchte Verkäufe. Keine stillschweigende Buchungsfreigabe.
+- Diese aktuelle Produktvorgabe ersetzt frühere Beschreibungen des Normalwegs über manuell gewählte Module/Einzelmengen. Sie ist keine Behauptung einer nativen Sandbox-Abnahme. [Umsetzung, Grenzen und Referenzabnahme](docs/INDUSTRY_INITIALIZATION.md), [Audit](docs/ARCHITECTURE_AUDIT_SF045.md).

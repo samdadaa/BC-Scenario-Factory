@@ -9,6 +9,9 @@ using BCScenarioFactory.IndustryProfiles;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.Sales;
+using BCScenarioFactory.Purchasing;
+using BCScenarioFactory.DependencyManager;
+using BCScenarioFactory.Finance;
 using BCScenarioFactory.ProcessEngine;
 using BCScenarioFactory.ModuleRegistry;
 using Microsoft.Sales.History;
@@ -29,6 +32,130 @@ using Microsoft.Warehouse.Structure;
 codeunit 90700 "BCSF Inventory Tests"
 {
   Subtype = Test;
+
+  [Test]
+  procedure WholesaleQuantitiesAreIndustryRatios()
+  var
+    Profile: Codeunit "BCSF Wholesale Profile";
+  begin
+    Assert(Profile.Quantity(0, "BCSF Entity Type"::Customer) = 20, 'Small customer count.');
+    Assert(Profile.Quantity(0, "BCSF Entity Type"::Vendor) = 5, 'Small vendor count.');
+    Assert(Profile.Quantity(0, "BCSF Entity Type"::Item) = 40, 'Small item count.');
+    Assert(Profile.Quantity(0, "BCSF Entity Type"::PurchaseOrder) = 15, 'Small purchase count.');
+    Assert(Profile.Quantity(1, "BCSF Entity Type"::Item) = 400, 'Medium item count.');
+    Assert(Profile.Quantity(2, "BCSF Entity Type"::Item) = 4000, 'Large item count.');
+    asserterror Profile.Quantity(-1, "BCSF Entity Type"::Item);
+    asserterror Profile.Quantity(3, "BCSF Entity Type"::Item);
+  end;
+
+  [Test]
+  procedure WholesaleNeverApprovesUnsupportedPosting()
+  var
+    Profile: Codeunit "BCSF Wholesale Profile";
+  begin
+    asserterror Profile.CheckSelection(0, "BCSF Process Mode"::PostedMovements);
+    asserterror Profile.CheckSelection(0, "BCSF Process Mode"::FollowUpProcesses);
+  end;
+
+  [Test]
+  procedure PurchaseCapabilityExcludesPostingAndProbes()
+  var
+    Capabilities: Record "BCSF Generator Registry" temporary;
+    Generator: Codeunit "BCSF Purchase Generator";
+  begin
+    Generator.DescribeCapabilities(Capabilities);
+    Capabilities.Get('PURCHASE.DOCUMENT', 'PURCHASE.ORDER');
+    Capabilities.TestField("Contract Probe", false);
+    Capabilities.TestField("Minimum Mode", "BCSF Process Mode"::UnpostedDocuments);
+    Capabilities.TestField("Maximum Mode", "BCSF Process Mode"::UnpostedDocuments);
+    Assert(Capabilities.Count() = 1, 'Only supported purchase orders may be registered.');
+  end;
+
+  [Test]
+  procedure WholesaleReferenceHasNoExternalFinanceGate()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Nodes: Record "BCSF Plan Node" temporary;
+    Edges: Record "BCSF Dependency" temporary;
+    Planner: Codeunit "BCSF Dependency Planner";
+    RunId: Guid;
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    RunId := Setup."Industry Run Id";
+    Assert(not IsNullGuid(RunId), 'First run the documented fresh wholesale company reference.');
+    Assert(Planner.BuildFromRun(RunId, Nodes, Edges), 'Wholesale must have an executable dependency graph.');
+    Assert(not Nodes.Get('FINANCE.SETUP'), 'Company foundation is checked by the existing setup gate, not a missing finance generator.');
+    Edges.Get('PURCHASE.ORDER', 'ITEM');
+    Edges.Get('PURCHASE.ORDER', 'VENDOR');
+    Edges.Get('SALES.ORDER', 'ITEM');
+    Edges.Get('SALES.ORDER', 'PURCHASE.ORDER');
+  end;
+
+  [Test]
+  procedure CompletedSmallWholesaleReferenceUsesSameRunSources()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Header: Record "BCSF Run Header";
+    Execution: Record "BCSF Run Execution";
+    Entry: Record "BCSF Generated Record";
+    Source: Record "BCSF Generated Record";
+    Order: Record "Purchase Header";
+    Line: Record "Purchase Line";
+    Item: Record Item;
+    Supplier: Record Vendor;
+    RunId: Guid;
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Setup.TestField("Industry Size", 0);
+    Setup.TestField("Industry Process Mode", "BCSF Process Mode"::UnpostedDocuments);
+    RunId := Setup."Industry Run Id";
+    Header.Get(RunId);
+    Header.TestField("Profile Code", 'TRADE');
+    Header.TestField("Profile Version", '3');
+    Execution.Get(RunId);
+    Execution.TestField(Status, Execution.Status::Completed);
+    AssertWholesaleCount(RunId, 'CUSTOMER', 'CUSTOMER', 20);
+    AssertWholesaleCount(RunId, 'VENDOR', 'VENDOR', 5);
+    AssertWholesaleCount(RunId, 'ITEM', 'ITEM', 40);
+    AssertWholesaleCount(RunId, 'PURCHASE.ORDER', 'DOCUMENT', 15);
+    AssertWholesaleCount(RunId, 'SALES.QUOTE', 'DOCUMENT', 5);
+    AssertWholesaleCount(RunId, 'SALES.ORDER', 'DOCUMENT', 12);
+    AssertWholesaleCount(RunId, 'SALES.INVOICE', 'DOCUMENT', 3);
+    Entry.SetRange("Run Id", RunId);
+    Entry.SetRange("Node Code", 'PURCHASE.ORDER');
+    Entry.FindSet();
+    repeat
+      Order.GetBySystemId(Entry."Record SystemId");
+      Line.Get(Order."Document Type", Order."No.", 10000);
+      Line.TestField("Quantity Received", 0);
+      Line.TestField("Quantity Invoiced", 0);
+      Item.Get(Line."No.");
+      Order.TestField("Buy-from Vendor No.", Item."Vendor No.");
+      Supplier.Get(Item."Vendor No.");
+      Source.Reset();
+      Source.SetRange("Run Id", RunId);
+      Source.SetRange("Node Code", 'VENDOR');
+      Source.SetRange("Record SystemId", Supplier.SystemId);
+      Assert(not Source.IsEmpty(), 'Supplier must originate in the same run.');
+      Source.SetRange("Node Code", 'ITEM');
+      Source.SetRange("Record SystemId", Item.SystemId);
+      Assert(not Source.IsEmpty(), 'Item must originate in the same run.');
+    until Entry.Next() = 0;
+    Entry.Reset();
+    Entry.SetRange("Run Id", RunId);
+    Entry.SetFilter("Table Id", '%1|%2|%3', Database::"G/L Entry", Database::"Item Ledger Entry", Database::"VAT Entry");
+    Assert(Entry.IsEmpty(), 'Unposted company must not register posting entries.');
+  end;
+
+  local procedure AssertWholesaleCount(RunId: Guid; NodeCode: Code[30]; Artifact: Code[30]; Expected: Integer)
+  var
+    Entry: Record "BCSF Generated Record";
+  begin
+    Entry.SetRange("Run Id", RunId);
+    Entry.SetRange("Node Code", NodeCode);
+    Entry.SetRange("Artifact Code", Artifact);
+    Assert(Entry.Count() = Expected, StrSubstNo('Unexpected count for %1.', NodeCode));
+  end;
 
   [Test]
   procedure ItemVendorLookupUsesActualStandardPrimaryKey()

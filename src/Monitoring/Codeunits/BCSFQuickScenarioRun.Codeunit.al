@@ -25,8 +25,8 @@ codeunit 90367 "BCSF Quick Scenario Run"
   var
     Header: Record "BCSF Run Header";
     Execution: Record "BCSF Run Execution";
-    SetupMgt: Codeunit "BCSF Setup Management";
     TempTarget: Record "BCSF Data Target" temporary;
+    SetupMgt: Codeunit "BCSF Setup Management";
     Manager: Codeunit "BCSF Scenario Manager";
     Guard: Codeunit "BCSF Environment Guard";
     Plan: Codeunit "BCSF Plan Writer";

@@ -67,3 +67,9 @@ Zusätzlicher Pflichtsubscriber am Partner-Batchereignis prüft tatsächliche Sa
 ## SF-037 – Reparaturauftrag 18.11.2026
 
 Vorhandene gespeicherte Vorzustands-/Ready-/Identitätsfixes erhalten. Standardjob-Sitzungsprüfung und Runner-Claim-Sitzungsprüfung ergänzt; Originalprotokoll aus Paket zugänglich. Kein neuer Retry-/Commitpfad. [Aktueller Vertrag](../../../STARTER_TEMPLATES.md), [echte lokale Prüfungen und offene BC-Abnahme](../../../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**.
+
+## SF-045 – aktueller Bestand
+
+Vorhandene Batch-/Checkpoint-/Quality-/Recoverylogik bleibt erhalten; nur vorgeschaltete Vorbereitung im festen Standardjob 90361. Keine neue Wiederholungsfreigabe.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

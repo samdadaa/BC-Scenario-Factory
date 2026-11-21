@@ -19,6 +19,8 @@ execFileSync('python3', ['scripts/build_dashboard_translations.py', '--check'], 
 const work = await mkdtemp(join(tmpdir(), 'bcsf-dashboard-'));
 const source = await readFile(join(root, 'src/Monitoring/Codeunits/BCSFDashboardData.Codeunit.al'), 'utf8');
 const labels = Object.fromEntries([...source.matchAll(/(\w+Lbl): Label '((?:[^']|'')*)';/gu)].map(match => [match[1], match[2].replaceAll("''", "'")]));
+const textKeys = [...source.matchAll(/Texts\.Add\('([^']+)'/gu)].map(match => match[1]);
+assert.equal(new Set(textKeys).size, textKeys.length, 'Dashboard AL payload keys must be unique; duplicate JsonObject.Add would fail in BC.');
 const texts = Object.fromEntries([...source.matchAll(/Texts\.Add\('([^']+)', (\w+Lbl)\)/gu)].map(match => [match[1], labels[match[2]]]));
 assert.ok(Object.values(texts).every(Boolean), 'Every dashboard text must be an AL label.');
 const firstId = '{10000000-0000-0000-0000-000000000001}';
@@ -247,6 +249,31 @@ try {
   await redraw('window.fixture.hasSelection=false;window.fixture.runs=[]');
   assert.equal(await evaluate('document.querySelectorAll(".sf-action-groups").length'), 0);
   assert.equal(await evaluate('document.querySelector(".sf-empty").textContent'), germanTexts.empty);
+  // SF-045: the company path has one summary, hides technical templates and uses real confirmed steps.
+  await click('#sf-tab-data');
+  await redraw(`window.fixture.hasSelection=true;window.fixture.selected.id=${JSON.stringify(secondId)};window.fixture.company={name:"Wholesale Sandbox",industry:"Wholesale",chart:"SKR04",status:"Company initialized",phase:"Company foundation",error:"",runId:${JSON.stringify(secondId)}}`);
+  assert.equal(await evaluate('document.querySelector(".sf-experts").open'), false);
+  assert.equal(await evaluate('document.querySelector(".sf-toolbar [data-action=scenarios]")'), null);
+  assert.equal(await evaluate('document.querySelectorAll(".sf-company").length'), 1);
+  assert.equal(await evaluate('document.querySelector(".sf-company").textContent.includes("Großhandel")'), true);
+  assert.ok(await evaluate('document.querySelectorAll(".sf-step").length') > 0);
+  await redraw('window.fixture.company.hasJob=true;window.fixture.company.steps=[{entityCode:"PURCHASE.ORDER",entity:"Purchase Orders",target:15,confirmed:15,remaining:0,complete:true,external:false}];window.fixture.selected.id="different-historical-run"');
+  assert.equal(await evaluate('document.querySelector(".sf-step-value").textContent'), '15 / 15', 'Company progress is independent of historical run selection.');
+  await evaluate('document.querySelector(".sf-experts").open=true');
+  await click('[data-action=companyQueue]');
+  assert.equal(await evaluate('window.calls.at(-1).args[0]'), 'companyQueue');
+  await evaluate('document.querySelector(".sf-experts").open=false');
+  await redraw('window.fixture.company.error="<img src=x onerror=alert(1)>"');
+  assert.equal(await evaluate('document.querySelector(".sf-company img")'), null);
+  assert.equal(await evaluate('document.querySelector(".sf-company [role=alert]").textContent.includes("<img")'), true);
+  await redraw('window.fixture.company.error=""');
+  for (const width of [1440, 768, 320]) {
+    await cdp('Emulation.setDeviceMetricsOverride', { width, height: 500, deviceScaleFactor: 1, mobile: false });
+    assert.equal(await evaluate('document.querySelector("#controlAddIn").scrollWidth<=document.querySelector("#controlAddIn").clientWidth'), true);
+  }
+  const companyShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true });
+  await writeFile(join(tmpdir(), 'BCSF-dashboard-SF045-company.png'), Buffer.from(companyShot.data, 'base64'));
+  console.log('PASS: SF-045 company summary, collapsed expert templates, same-run confirmed progress, German labels, error/XSS and responsive widths. Client bridge only, no native BC execution.');
   console.log('PASS: SF-044 Chromium client regression: separate accessible tabs, scope isolation (25 company / 20 run), entire tile routing, child results, zero/ACL/generator states, stale result separation, summary routes, compact actions, diagnosis, status/quality, DE/EN, duplicate suppression, error/XSS, responsive grids and scrolling at 1440/768/320px.');
   console.log(`Synthetic previews: ${join(tmpdir(), 'BCSF-dashboard-SF044-runs.png')}, ${join(tmpdir(), 'BCSF-dashboard-SF044-data.png')}. No Business Central runtime, permissions or native target filters were executed.`);
 } finally {

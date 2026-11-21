@@ -1,5 +1,21 @@
 # Architekturdiagramme – Stand SF-018
 
+## SF-045 – aktueller Normalweg (21.11.2026)
+
+```mermaid
+flowchart TD
+  Wizard[Vorhandene Einrichtung: Kontenplan, Großhandel, Größe, Stufe, Start] --> Bootstrap[Ein Standard-Hintergrundauftrag]
+  Bootstrap --> Foundation[Gemeinsame Einrichtung + interne Vorlage + Snapshot + Plan]
+  Foundation --> Queue[Vorhandene Batchengine und Checkpoints]
+  Queue --> Masters[Partner vor Artikeln und Beziehungen]
+  Masters --> Purchase[Ungebuchte Einkaufsbestellungen]
+  Purchase --> Sales[Ungebuchte Verkaufsbelege]
+  Sales --> Quality[Ausgabeprüfung und Gesamtqualität]
+  Quality --> Dashboard[Dashboard: Ergebnisse und Standardlisten]
+```
+
+Stammdatenstufe endet vor Belegen. Keine Buchungsstufe ohne unterstützte Standardwareneingänge. Native Abnahme offen. [Vollständiger Audit](../ARCHITECTURE_AUDIT_SF045.md). Nachfolgende Diagramme sind historische Stände.
+
 Die Diagramme zeigen den vorhandenen Quellstand, nicht den kompletten geplanten Produktumfang. Dargestellt sind fachliche Daten- und Steuerflüsse, keine vollständige Auflistung der AL-Imports. Die Mermaid-Blöcke bleiben als Markdown editierbar.
 
 ## 1 · Vom Szenario zum Ergebnis

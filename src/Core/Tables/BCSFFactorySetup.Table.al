@@ -81,6 +81,14 @@ table 90100 "BCSF Factory Setup"
       Caption = 'Company Initialized', Locked = true;
       Editable = false;
     }
+    // SF-045: one company request; run/snapshot history remains in the existing execution model.
+    field(20; "Industry Job Id"; Guid) { Caption = 'Industry Job ID', Locked = true; Editable = false; }
+    field(21; "Industry Run Id"; Guid) { Caption = 'Industry Run ID', Locked = true; Editable = false; }
+    field(22; "Industry Finance Mode"; Enum "BCSF Finance Mode") { Caption = 'Industry Finance Mode', Locked = true; Editable = false; }
+    field(23; "Industry Size"; Integer) { Caption = 'Industry Size', Locked = true; Editable = false; }
+    field(24; "Industry Process Mode"; Enum "BCSF Process Mode") { Caption = 'Industry Process Mode', Locked = true; Editable = false; }
+    field(25; "Industry Date"; Date) { Caption = 'Industry Date', Locked = true; Editable = false; }
+
   }
 
   keys

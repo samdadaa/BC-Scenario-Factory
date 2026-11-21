@@ -26,6 +26,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     SyntheticRules: JsonObject;
     InventorySettings: JsonObject;
     SalesSettings: JsonObject;
+    PurchaseSettings: JsonObject;
     PartnerSettings: JsonObject;
     Targets: JsonArray;
     Modules: JsonArray;
@@ -104,6 +105,9 @@ codeunit 90144 "BCSF Snapshot Writer"
     OnCaptureSalesSetup(Scenario, InventorySettings, SalesSettings);
     if SalesSettings.Keys().Count() > 0 then
       Payload.Add('salesSetup', SalesSettings);
+    OnCapturePurchaseSetup(Scenario, InventorySettings, PurchaseSettings);
+    if PurchaseSettings.Keys().Count() > 0 then
+      Payload.Add('purchaseSetup', PurchaseSettings);
     ScenarioModule.SetRange("Scenario Id", ScenarioId);
     if ScenarioModule.FindSet() then
       repeat
@@ -208,4 +212,9 @@ codeunit 90144 "BCSF Snapshot Writer"
   var
     FinancePackageErr: Label 'The selected finance package could not be captured. Review the applied package before creating a run.';
     EmptyPlanErr: Label 'Enter at least one positive entity target before capturing a run.';
+  [IntegrationEvent(false, false)]
+  local procedure OnCapturePurchaseSetup(Scenario: Record "BCSF Scenario"; InventorySettings: JsonObject; var Settings: JsonObject)
+  begin
+  end;
+
 }

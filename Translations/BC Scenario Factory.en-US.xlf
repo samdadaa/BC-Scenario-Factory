@@ -1107,17 +1107,65 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 3901634850" size-unit="char" translate="yes" xml:space="preserve">
+          <source> Unposted purchase orders: %1; sales quotes: %2; sales orders: %3; sales invoices: %4. No posting.</source>
+          <target state="translated"> Unposted purchase orders: %1; sales quotes: %2; sales orders: %3; sales invoices: %4. No posting.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = purchases, %2 = quotes, %3 = orders, %4 = invoices</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType DocumentsLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 1788334240" size-unit="char" translate="yes" xml:space="preserve">
           <source>The master data foundation has been checked and completed successfully.</source>
           <target state="translated">The master data foundation has been checked and completed successfully.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType FoundationCompletedLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1896398021 - NamedType 1162456241" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Which chart of accounts should %1 use? This prepares the sandbox company and enables test data generation. Posting remains disabled for a new company.</source>
-          <target state="translated">Which chart of accounts should %1 use? This prepares the sandbox company and enables test data generation. Posting remains disabled for a new company.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = company name</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType SetupAvailableMsg</note>
+        <trans-unit id="Page 1896398021 - NamedType 1736975857" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Master data only,With unposted documents</source>
+          <target state="translated">Master data only,With unposted documents</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType ProcessesLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 2007738364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 · %2 · %3 · %4. Customers: %5; vendors: %6; items: %7.</source>
+          <target state="translated">%1 · %2 · %3 · %4. Customers: %5; vendors: %6; items: %7.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = chart, %2 = industry, %3 = size, %4 = process, %5 = customers, %6 = vendors, %7 = items</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType ReviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 3515927248" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Small,Medium,Large</source>
+          <target state="translated">Small,Medium,Large</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType SizesLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 3690483212" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale</source>
+          <target state="translated">Wholesale</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType WholesaleLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3847241394 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>1 - Chart of accounts</source>
+          <target state="translated">1 - Chart of accounts</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ChartStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 2286664889 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose the local test chart once. Existing company accounts and settings are preserved.</source>
+          <target state="translated">Choose the local test chart once. Existing company accounts and settings are preserved.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ChartChoice - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 2286664889 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Chart of accounts</source>
+          <target state="translated">Chart of accounts</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ChartChoice - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 2286664889 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>SKR03,SKR04,Use existing valid BC setup</source>
+          <target state="translated">SKR03,SKR04,Use existing valid BC setup</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ChartChoice - Property OptionCaption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 1100141636 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Scenario Defaults</source>
@@ -1125,17 +1173,107 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Defaults - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 1142048652 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>2 - Industry</source>
+          <target state="translated">2 - Industry</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control IndustryStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3331965390 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale is the first supported company package. Other industries are not yet executable.</source>
+          <target state="translated">Wholesale is the first supported company package. Other industries are not yet executable.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Industry - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3331965390 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Industry</source>
+          <target state="translated">Industry</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Industry - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - Control 2333062506 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Limits</source>
           <target state="translated">Limits</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Limits - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 558393067 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>4 - Data and processes</source>
+          <target state="translated">4 - Data and processes</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 681458388 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting is unavailable until purchase receipts and complete posting prerequisites are supported. No documents are posted.</source>
+          <target state="translated">Posting is unavailable until purchase receipts and complete posting prerequisites are supported. No documents are posted.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessChoice - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 681458388 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Data and processes</source>
+          <target state="translated">Data and processes</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessChoice - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 681458388 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Master data only,With unposted documents</source>
+          <target state="translated">Master data only,With unposted documents</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessChoice - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 1163864020 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>5 - Summary and start</source>
+          <target state="translated">5 - Summary and start</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ReviewStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 156978454 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the chart, industry, quantities and unposted process types before authorizing the background job.</source>
+          <target state="translated">Review the chart, industry, quantities and unposted process types before authorizing the background job.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Review - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 156978454 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planned company</source>
+          <target state="translated">Planned company</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Review - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - Control 2947605808 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Company Setup</source>
           <target state="translated">Company Setup</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Safety - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 2619614592 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the chart of accounts already selected for this company.</source>
+          <target state="translated">Shows the chart of accounts already selected for this company.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control InstalledChart - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3503818721 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>3 - Data size</source>
+          <target state="translated">3 - Data size</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SizeStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3857723770 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select the versioned wholesale quantities. Exact planned quantities appear before starting.</source>
+          <target state="translated">Select the versioned wholesale quantities. Exact planned quantities appear before starting.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SizeChoice - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3857723770 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Data size</source>
+          <target state="translated">Data size</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SizeChoice - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3857723770 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Small,Medium,Large</source>
+          <target state="translated">Small,Medium,Large</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SizeChoice - Property OptionCaption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Action 3649698641 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Choose the chart of accounts and prepare this sandbox company once. Does not post documents.</source>
@@ -1149,6 +1287,30 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action InitializeSetup - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 2805992183 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the next choice. No data is generated before Start.</source>
+          <target state="translated">Review the next choice. No data is generated before Start.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action NextStep - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 2805992183 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Next</source>
+          <target state="translated">Next</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action NextStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 1578878085 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Return to the previous choice without starting any work.</source>
+          <target state="translated">Return to the previous choice without starting any work.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action PreviousStep - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 1578878085 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Back</source>
+          <target state="translated">Back</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action PreviousStep - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - Action 3462005627 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Adds missing foundation from the already applied test package, including carton unit and simple bin location. Does not change the chart of accounts or start a run.</source>
           <target state="translated">Adds missing foundation from the already applied test package, including carton unit and simple bin location. Does not change the chart of accounts or start a run.</target>
@@ -1160,6 +1322,18 @@
           <target state="translated">Complete Master Data Foundation</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action RefreshCompanyFoundation - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 3400346577 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Authorize one background process for company setup and the displayed data. The browser can be closed afterwards.</source>
+          <target state="translated">Authorize one background process for company setup and the displayed data. The browser can be closed afterwards.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action StartCompany - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Action 3400346577 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set up company and generate data</source>
+          <target state="translated">Set up company and generate data</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action StartCompany - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1321738634 - EnumValue 683922871 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Automatic (BC Language)</source>
@@ -2373,6 +2547,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ExtraLinesLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2902468460 - NamedType 3132010052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gross operating result</source>
+          <target state="translated">Gross operating result</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType GrossLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 3474705795" size-unit="char" translate="yes" xml:space="preserve">
           <source>Scenario Factory Test Income Statement</source>
           <target state="translated">Scenario Factory Test Income Statement</target>
@@ -2427,6 +2607,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType OfficeLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2902468460 - NamedType 2045061673" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Operating statement (limited test scope)</source>
+          <target state="translated">Operating statement (limited test scope)</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType OperatingLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 3387379098" size-unit="char" translate="yes" xml:space="preserve">
           <source>Output VAT 19%</source>
           <target state="translated">Output VAT 19%</target>
@@ -2480,6 +2666,12 @@
           <target state="translated">Trade Receivables</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ReceivableLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2902468460 - NamedType 2375618440" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reconciliation difference (expected zero)</source>
+          <target state="translated">Reconciliation difference (expected zero)</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType ReconcileLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 129197026" size-unit="char" translate="yes" xml:space="preserve">
           <source>Review the standard BC setup or permissions before applying. No existing setup will be overwritten.</source>
@@ -2750,6 +2942,30 @@
           <target state="translated">Training Partners</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType TrainingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298024591 - NamedType 2836870124" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This size exceeds the configured entity limit. Select a smaller size or review Factory Setup.</source>
+          <target state="translated">This size exceeds the configured entity limit. Select a smaller size or review Factory Setup.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType LimitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298024591 - NamedType 2845165943" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale currently supports master data and unposted documents. Posted purchase receipts and follow-up processes are not yet available.</source>
+          <target state="translated">Wholesale currently supports master data and unposted documents. Posted purchase receipts and follow-up processes are not yet available.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType PostingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298024591 - NamedType 3052855244" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select Small, Medium or Large for the supported wholesale package.</source>
+          <target state="translated">Select Small, Medium or Large for the supported wholesale package.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType SizeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298024591 - NamedType 3690483212" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale company</source>
+          <target state="translated">Wholesale company</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType WholesaleLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1051735679 - NamedType 1981706351" size-unit="char" translate="yes" xml:space="preserve">
           <source>Technical Wholesale Items</source>
@@ -3507,6 +3723,30 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Step Metric - Field Total Batches - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2531880237 - NamedType 881921283" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This company already has a chart of accounts. Reuse it; another chart requires a new sandbox company.</source>
+          <target state="translated">This company already has a chart of accounts. Reuse it; another chart requires a new sandbox company.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType ChartErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2531880237 - NamedType 3423115058" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A company initialization request already exists. Review its progress or error in the dashboard; do not start a duplicate.</source>
+          <target state="translated">A company initialization request already exists. Review its progress or error in the dashboard; do not start a duplicate.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType ExistingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2531880237 - NamedType 2271880054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Company initialization requires an authorized standard background job. Review job queue permissions and its current status.</source>
+          <target state="translated">Company initialization requires an authorized standard background job. Review job queue permissions and its current status.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType JobErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2531880237 - NamedType 2698525383" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory company initialization</source>
+          <target state="translated">Scenario Factory company initialization</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType JobLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3261897160 - NamedType 1965247518" size-unit="char" translate="yes" xml:space="preserve">
           <source>Apply pending pause or cancellation requests at a safe boundary?</source>
           <target state="translated">Apply pending pause or cancellation requests at a safe boundary?</target>
@@ -3627,6 +3867,18 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ChooseLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1563050084" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Company generation progress</source>
+          <target state="translated">Company generation progress</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType CompanyProgressLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1496519112" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Current background job</source>
+          <target state="translated">Current background job</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType CompanyQueueLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 171110591" size-unit="char" translate="yes" xml:space="preserve">
           <source>Confirmed batches</source>
           <target state="translated">Confirmed batches</target>
@@ -3693,6 +3945,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ExecuteGroupLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 2105890513" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Diagnostics and expert templates</source>
+          <target state="translated">Diagnostics and expert templates</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ExpertToolsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 968509841" size-unit="char" translate="yes" xml:space="preserve">
           <source>External prerequisite</source>
           <target state="translated">External prerequisite</target>
@@ -3705,17 +3963,53 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType EyebrowLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 751038299" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Phase failed - review setup or the current batch before continuing</source>
+          <target state="translated">Phase failed - review setup or the current batch before continuing</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType FailedLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 2032949676" size-unit="char" translate="yes" xml:space="preserve">
           <source>Finished</source>
           <target state="translated">Finished</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType FinishedLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3971269539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Company foundation</source>
+          <target state="translated">Company foundation</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType FoundationLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 2629106428" size-unit="char" translate="yes" xml:space="preserve">
           <source>Status history</source>
           <target state="translated">Status history</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType HistoryLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 960351769" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set up company</source>
+          <target state="translated">Set up company</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType IndustrySetupLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3762062898" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Company initialized</source>
+          <target state="translated">Company initialized</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType InitializedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 978194777" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Company setup queued or running</source>
+          <target state="translated">Company setup queued or running</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType InitializingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 848467459" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Background job unavailable - review the existing request before continuing</source>
+          <target state="translated">Background job unavailable - review the existing request before continuing</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType MissingJobLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1473011991" size-unit="char" translate="yes" xml:space="preserve">
           <source>Open the native run list and execution FactBox.</source>
@@ -4124,6 +4418,12 @@
           <target state="translated">Read at</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType UpdatedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3690483212" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale</source>
+          <target state="translated">Wholesale</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType WholesaleLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1767065522" size-unit="char" translate="yes" xml:space="preserve">
           <source>Up to 25 recent runs. Open the run monitor for full history.</source>
@@ -5127,6 +5427,30 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Process Coordinator - NamedType ContractErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3500129312 - NamedType 1981706351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unposted Purchase Orders</source>
+          <target state="translated">Unposted Purchase Orders</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType NameLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3500129312 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read or write permission is missing for %1. Review standard purchase permissions.</source>
+          <target state="translated">Read or write permission is missing for %1. Review standard purchase permissions.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = table caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3500129312 - NamedType 2714761632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The purchase order or its source relationship is missing, changed or already recorded. Review the batch; uncertain work is not repeated.</source>
+          <target state="translated">The purchase order or its source relationship is missing, changed or already recorded. Review the batch; uncertain work is not repeated.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType ResultErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3500129312 - NamedType 2685700126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase orders require unposted mode, two vendors and items from this run, a simple location and valid captured purchase numbering.</source>
+          <target state="translated">Purchase orders require unposted mode, two vendors and items from this run, a simple location and valid captured purchase numbering.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType SetupErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3758100613 - NamedType 1981706351" size-unit="char" translate="yes" xml:space="preserve">
           <source>Synthetic Vendor Master Data</source>
           <target state="translated">Synthetic Vendor Master Data</target>
@@ -5144,6 +5468,12 @@
           <target state="translated">Partner results are missing, changed or already registered. Review the existing batch and checkpoint; do not recreate uncertain work.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Vendor Generator - NamedType ReplayErr</note>
+        </trans-unit>
+        <trans-unit id="Enum 224228713 - EnumValue 194670457 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Enum 224228713">
+          <source>Purchase Documents</source>
+          <target state="translated">Purchase Documents</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">EnumExtension BCSF Purchase Binding - EnumValue PurchaseDocuments - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 224228713 - EnumValue 1936001480 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Enum 224228713">
           <source>Synthetic Vendor Master Data</source>

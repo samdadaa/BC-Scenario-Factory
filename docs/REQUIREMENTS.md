@@ -1,5 +1,9 @@
 # Fachliche Anforderungen und nichtfunktionale Ziele
 
+## SF-045 – aktueller verbindlicher Ablauf
+
+Kontenplan einmalig → tatsächlich unterstützte Branche → drei Größen mit versionierten Mengenverhältnissen → unterstützte Prozessstufe → ein Hintergrundstart. Gemeinsame Einrichtung und Branchenvoraussetzungen kommen vor Stammdaten, diese vor Belegen/Buchungen. Neue Generatoren nutzen vorhandene Registry, Snapshots, Queue, Checkpoints, Qualitätsabschluss und Dashboard; keine zusätzlichen Assistenten oder parallele Vorlagen-/Finanzeinrichtung. Technische Konfiguration bleibt optionaler Expertenzugang. Aktuell Großhandel und ungebuchte Belege implementiert, native Abnahme offen; gebuchte Beschaffung und Folgeprozesse fehlen. [Konkreter Vertrag](INDUSTRY_INITIALIZATION.md). Frühere Normalabläufe dieses Dokuments sind historische Zwischenstände.
+
 **Quelle:** Gemeinsam festgelegte Produktvision; alle konkreten technischen Implementierungsdetails sind Planung, nicht implementierter Bestand.
 
 ## Nutzergruppen und Use Cases
@@ -49,4 +53,4 @@
 
 ## Außerhalb des initialen MVP
 
-Vollständige Einrichtung eines völlig leeren Firmenmandanten ohne verfügbare Basisdaten, beliebige Dritthersteller-Extensions, sämtliche Industriesektoren, sichere Löschung gebuchter Ledgerposten, garantiert identische Postings auf jeder Umgebung, autonomes Produktionstuning, XERJ-Laufzeitanbindung.
+Beliebige Dritthersteller-Extensions, sämtliche Industriesektoren, sichere Löschung gebuchter Ledgerposten, garantiert identische Postings auf jeder Umgebung, autonomes Produktionstuning, XERJ-Laufzeitanbindung.

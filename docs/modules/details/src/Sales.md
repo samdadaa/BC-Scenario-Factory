@@ -60,3 +60,9 @@ In 90425 Customer Generator wird die zusätzliche Lieferadress-Rechteprüfung be
 ## SF-021 – aktueller Stand, 20.11.2026
 
 Jetzt sieben AL-Objekte: vorhandene 90425/90427 und neue 90426 Sales Generator, 90428 Sales Binding, 90429 Sales Setup, 90430 Sales Documents, 90431 Sales Evidence. Quote/Order/Invoice in Modus 1/2 (Quote nur 1), normale MwSt./LCY/einfacher Lagerort, ausdrückliche synthetische Quelle und Freigabe. Quoten, Halbmenge, Standardumwandlung/-preis/-buchung, Ausgabe-/Postenbezug und bestehende Queue/Checkpoints. Keine Bestandsbeschaffung, Zahlungen/Gutschriften oder unsicherer Replay. [Umfang/Bedienung/Abnahme](../../../SALES_PROCESS.md), [echte Prüfungen](../../../TESTS.md#sf-021--verkaufsprozess-20112026). **Zur Prüfung**. Frühere Abschnitte ohne Beleggenerator sind historische Stände.
+
+## SF-045 – aktueller Bestand
+
+Bestehende Verkaufsgeneratoren unverändert wiederverwendet; bei positivem Einkaufsbestellziel besteht eine explizite PURCHASE.ORDER-Abhängigkeit. Same-run-Stämme und Bestands-/Buchungssperren bleiben wirksam.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

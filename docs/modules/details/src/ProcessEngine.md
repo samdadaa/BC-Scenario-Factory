@@ -46,3 +46,9 @@ Weiterhin kein AL-Code; der Modulmarker bleibt erhalten. Typordner entstehen ers
 ## SF-021 – aktueller Stand, 20.11.2026
 
 Ein reales Objekt 90275 BCSF Process Coordinator unter Codeunits/: generische deterministische Prozessquoten, gerade Basismengen für Halbteilung und Periodendatum. BC-Sales-APIs bleiben im Sales-Modul, keine Rückabhängigkeit auf Fachgeneratoren und keine neuen Tabellen/Seiten. [Vertrag](../../../SALES_PROCESS.md), [Prüfungen](../../../TESTS.md#sf-021--verkaufsprozess-20112026). **Zur Prüfung**. Historische Abschnitte „ohne Code“ oben gelten nur für den damaligen Stand.
+
+## SF-045 – aktueller Bestand
+
+Gemeinsame deterministische Datums-/Mengenableitung wird für Einkaufsbestellungen wiederverwendet; keine duplizierte Branchenprozessengine.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

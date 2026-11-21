@@ -1,5 +1,11 @@
 # Projektfakten und bestätigter Plan
 
+## Aktueller Quellstand SF-045 – 21.11.2026
+
+Manifest: App-ID `618c08c6-601b-430a-90d2-55f96866bfa4`, Name `BC Scenario Factory`, Publisher `Default Publisher`, Version `1.0.6.0`, Application `28.0.0.0`, Runtime `17.0`, IDs `90100–90999`, Dependencies `[]`. Identität/Range/Runtime unverändert; additive Featureversion. 137 AL-Objekte, keine neue Tabelle/Seite; vier neue Objekte für Wholesale Profile, Company Initialization, Purchase Generator und dessen Registrybindung. Sechs optionale Requestfelder im bestehenden Setup, optionales purchaseSetup im Snapshot-Schema 1. Separate Test-App `1.2.0.0` referenziert App `1.0.6.0`; Main-App hängt nicht von Tests ab.
+
+[Architektur und Grenzen](INDUSTRY_INITIALIZATION.md), [vollständiges Quellinventar](ARCHITECTURE_AUDIT_SF045.md). Kein Deployment und keine native Sandbox-/Upgradeabnahme. Nachfolgende Bestandszahlen sind historische Stände.
+
 ## SF-042 – aktueller Prüfstand 19.11.2026
 
 `app.json`: App-ID `618c08c6-601b-430a-90d2-55f96866bfa4`, Name `BC Scenario Factory`, Publisher `Default Publisher`, Version `1.0.4.0`, Application `28.0.0.0`, Runtime `17.0`, IDs `90100–90999`, Dependencies `[]`. Direkter Vorlagenstart, Queue und kompakte Dashboardansichten sind im aktuellen Code vorhanden. In SF-042 ausschließlich Anleitung und Qualitäts-/Prüfverweise nachgeführt; keine neue App-Funktion oder Kompatibilitätsänderung. [Soll-Ist-Abgleich und tatsächlich ausgeführte Prüfungen](TESTS.md#sf-042--soll-ist-prüfung-des-partnerpfads). Status **Zur Prüfung**; installierte Zielversion, fachliche Sandbox-Abnahme und menschliche P0-Freigabe bleiben **Zu prüfen**. Die folgenden Bestandszahlen sind historische Ticketstände.

@@ -69,3 +69,7 @@ summary { cursor: pointer; width: fit-content; max-width: 100%; padding: 5px 0; 
 .sf-empty { padding: 16px 0; color: #526976; }
 @media (max-width: 480px) { .sf-toolbar { gap: 8px; padding: 10px; } .sf-toolbar .sf-buttons { margin-left: 0; } .sf-main { padding: 4px 10px 14px; } .sf-run-heading { align-items: flex-start; flex-direction: column; } .sf-footer { padding: 8px 10px; } .sf-run-picker { align-items: stretch; flex-direction: column; } }
 @media (forced-colors: active) { .sf-tile, .sf-tab[aria-selected="true"], .sf-status { border: 1px solid CanvasText; } }
+
+.sf-company { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: baseline; margin-bottom: .75rem; }
+.sf-company .sf-error { flex-basis: 100%; }
+.sf-experts { margin-top: 1rem; }

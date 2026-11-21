@@ -262,15 +262,15 @@
     section.appendChild(quality);
     return section;
   }
-  function stepPanel() {
+  function stepPanel(view = model) {
     const section = node("section", "sf-steps");
-    append(section, node("h3", "", text("steps")),
-      node("p", "sf-scope", text("selectedRunScope") + " · " + model.selected.description));
-    if (!model.steps.length) return append(section, node("p", "sf-help", text("noSteps")));
+    append(section, node("h3", "", text(view.companyProgress ? "companyProgress" : "steps")),
+      node("p", "sf-scope", text("selectedRunScope") + " · " + view.selected.description));
+    if (!view.steps.length) return append(section, node("p", "sf-help", text("noSteps")));
     const grid = node("div", "sf-tile-grid");
-    const results = model.runStock?.metrics || [];
+    const results = view.runStock?.metrics || [];
     const matched = new Set();
-    model.steps.filter(step => !step.external).forEach(step => {
+    view.steps.filter(step => !step.external).forEach(step => {
       const key = step.entityCode === "CUSTOMER" ? "customer" : step.entityCode === "VENDOR" ? "vendor" : step.entityCode === "ITEM" ? "item" : step.entityCode === "SALES.QUOTE" ? "sales/quote" : step.entityCode === "SALES.ORDER" ? "sales/order" : step.entityCode === "SALES.INVOICE" ? "sales/invoice" : "";
       const metric = results.find(item => item.key === key);
       const safe = metric?.canOpen && metric.count > 0 && metric.count === step.confirmed;
@@ -350,7 +350,7 @@
     root.setAttribute("aria-label", text("title"));
     const toolbar = node("div", "sf-toolbar");
     const links = node("div", "sf-buttons");
-    if (activeTab === "data" || !model.summaryViews?.templates?.canOpen)
+    if (!model.company && (activeTab === "data" || !model.summaryViews?.templates?.canOpen))
       links.appendChild(button("scenarios", "sf-button", "scenarios"));
     links.appendChild(button("setup", "sf-button", "setup"));
     append(toolbar, tabs(), links, button("refresh", "sf-button sf-refresh", "refresh"));
@@ -358,12 +358,34 @@
     main.id = "sf-tab-panel";
     main.setAttribute("role", "tabpanel");
     main.setAttribute("aria-labelledby", "sf-tab-" + activeTab);
+    if (model.company) {
+      const company = node("section", "sf-company");
+      append(company, node("strong", "", [model.company.name, localized(model.company.industry)].filter(Boolean).join(" · ")),
+        node("span", "sf-help", model.company.chart + " · " + localized(model.company.status)));
+      if (model.company.error) {
+        const error = node("div", "sf-error", localized(model.company.phase) + ": " + model.company.error);
+        error.setAttribute("role", "alert");
+        company.appendChild(error);
+      }
+      main.appendChild(company);
+    }
     if (activeTab === "data") {
+      if (model.company?.steps)
+        main.appendChild(stepPanel({ selected: {description: model.company.industry}, steps: model.company.steps,
+          companyProgress: true, runStock: model.selected?.id === model.company.runId ? model.runStock : {metrics: []} }));
+      else if (model.company?.runId && model.selected?.id === model.company.runId)
+        main.appendChild(stepPanel());
       if (model.stock) main.appendChild(stockPanel(model.stock));
     } else {
-      main.appendChild(summaryPanel());
+      if (!model.company) main.appendChild(summaryPanel());
       if (model.hasSelection) append(main, selector(), runPanel(), stepPanel(), actionPanel());
       else append(main, node("section", "sf-empty", text("empty")));
+    }
+    if (model.company) {
+      const experts = node("details", "sf-experts");
+      append(experts, node("summary", "", text("expertTools")), button("scenarios", "sf-button", "scenarios"), button("runs", "sf-button", "runs"));
+      if (model.company.hasJob) experts.appendChild(button("companyQueue", "sf-button", "companyQueue"));
+      main.appendChild(experts);
     }
     const footer = node("footer", "sf-footer");
     const feedback = node("div", "sf-feedback");

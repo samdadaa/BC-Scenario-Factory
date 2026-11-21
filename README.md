@@ -1,5 +1,9 @@
 # BC Scenario Factory
 
+**SF-045 · Version 1.0.6.0 · Zur Prüfung:** Der normale Einstieg ist jetzt ein Assistent in der vorhandenen Einrichtung: **Kontenplan → Großhandel → Klein/Mittel/Groß → Stammdaten oder ungebuchte Belege → Start**. Ein Hintergrundjob bereitet die gemeinsame Einrichtung vor; die vorhandene Batchengine erzeugt anschließend zusammenhängende Partner, Artikel und Einkaufs-/Verkaufsbelege. Keine zusätzliche Vorlagenwahl. [Bedienung und echte Prüfgrenzen](docs/INDUSTRY_INITIALIZATION.md), [vollständiger Architektur-Audit](docs/ARCHITECTURE_AUDIT_SF045.md).
+
+**Nicht nativ abgenommen:** Frische SKR03-/SKR04-Firma, Hintergrundbetrieb, Wiederanlauf und Upgrade. Buchendes Unternehmenspaket und weitere Branchen sind nicht verfügbar. Bestehende Läufe und eigene Vorlagen werden erhalten. Die folgenden Ticketabschnitte dokumentieren frühere Zwischenstände und sind keine alternative aktuelle Einrichtungsanleitung.
+
 **Aktueller Einstieg ab 1.0.2.0:** Einrichtung öffnen, Mandant einmal mit SKR03/SKR04 oder vorhandener BC-Einrichtung initialisieren, danach eine Vorlage direkt in der Job Queue starten. [Mandanteneinrichtung und Vorlagenstart](docs/COMPANY_INITIALIZATION.md). Die nachfolgenden Ticketvermerke sind historische Zwischenstände.
 
 **Status: Grundlagen, Qualitätsabschluss, Finanztestpakete, Partner-/Artikelstammdaten und Verkaufsprozess (SF-021) implementiert, zur Prüfung; weitere Fachgeneratoren und native BC-End-to-End-Abnahme ausstehend.** Ein AL-Projekt für synthetische, fachlich zusammenhängende Business-Central-Demo-, Schulungs-, Funktions- und Lasttestumgebungen. Nicht nur Mengen generieren, sondern realistische Unternehmensdaten mit konfigurierbaren Szenarien, unterschiedlichen Geschäftsvorfällen, Abhängigkeiten und optional vollständig gebuchten Prozessen.
@@ -30,7 +34,7 @@
 - Kein direktes Insert in Standard-Postentabellen: Buchungen über freigegebene BC-Standardprozesse.
 - Branchenprofile sind **Parameter/Regelsets für wiederverwendbare Fachgeneratoren**, nicht Kopien der Fachlogik.
 - **XERJ wird nur lokal als Entwicklerwerkzeug für Codex getestet; es ist keine Abhängigkeit, Schnittstelle oder Laufzeitkomponente dieser AL-App.**
-- Eine verbindliche Aussage, dass ein kompletter *leerer* Mandant automatisch initialisiert werden kann, ist **nicht** getroffen; siehe `docs/DECISIONS.md`.
+- Der neue Auftrag umfasst eine frische Sandbox-Firma für den begrenzten Großhandelsfall. Die native Abnahme steht aus; keine universelle Zusage für beliebige BC-Prozesse.
 
 ## Stand und Installation
 

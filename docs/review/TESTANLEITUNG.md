@@ -1,5 +1,20 @@
 # Testanleitung – Vorlage wählen, starten, Ergebnis öffnen
 
+## SF-045 – zuerst den frischen Großhandelsfall prüfen
+
+**Alle folgenden BC-Prüfungen sind vorbereitet, nicht ausgeführt.** Nur eine neue isolierte SaaS-Sandbox-Firma verwenden. Eine Installation/Veröffentlichung ist separat freizugeben.
+
+1. Factory-Dashboard öffnen. Ohne Initialisierung/Anforderung erscheint die bestehende Einrichtung als Assistent. Abbrechen darf keine Standarddaten und keinen Job anlegen.
+2. SKR04 → Großhandel → Klein → Mit ungebuchten Belegen wählen. Zusammenfassung: 20 Debitoren, 5 Kreditoren, 40 Artikel, 15 Einkaufsbestellungen, 5 Verkaufsangebote, 12 Verkaufsaufträge, 3 Verkaufsrechnungen. Keine Buchungen. Vorhandene Katalog-Kinddaten kommen zusätzlich hinzu und sind keine führenden Ziele.
+3. **Unternehmen einrichten und Daten erzeugen** genau einmal wählen, Browser schließen. Im Standard-Queuejob müssen zuerst Foundation/Snapshot/Plan und anschließend die vorhandenen Batches laufen. Nach Wiederöffnen aktualisieren; tatsächlichen Fortschritt und ursprünglichen Fehler bei Abbruch ansehen.
+4. Nach Qualitätsabschluss dieselben Mengen über die Kacheln und gefilterten BC-Listen prüfen. An jeder Einkaufszeile Lieferant/Artikelbezugsquelle und Herkunft aus demselben Lauf, Einheiten, Preise und ungebuchte Mengen kontrollieren. Keine erzeugten Posten. Bilanz/GuV/BWA existieren; ungebucht sind daraus keine Salden zu erwarten.
+5. In der separaten Test-App die fünf neuen SF-045-Testmethoden ausführen; die beiden Referenzprüfungen brauchen den soeben abgeschlossenen kleinen Lauf. BC-Version, Firma, Rolle, App-/Paketstand, Seed, Datum, Job-/Run-ID sowie beobachtetes Ergebnis ohne sensible Daten protokollieren.
+6. In neuer Firma mit SKR03 wiederholen. Stammdatenstufe erzeugt ausschließlich 20/5/40. Mittel/Groß vor Start anhand Faktor 10/100 kontrollieren; bestehende Dashboard-Herkunftsfiltergrenzen für große Mengen sind offen.
+7. Doppelstart, erneute Initialisierung, fehlende Rechte, widersprüchliche vorhandene Einrichtung, Standardjobfehler vor Datenlauf und Fehler nach abgeschlossenem Batch prüfen. Keine Duplikate und keine automatische Wiederholung ungeklärter Arbeit. Fehlerbehebung erfolgt über die bestehenden Queue-/Batchdiagnosen.
+8. Vorhandene gültige Firma und Kopie eines Altstands separat prüfen: kein Überschreiben, eigene/archivierte/entfernte Starter und historische Snapshots/Jobs erhalten, normale Schemasynchronisierung ohne ForceSync. Keine Umstellung des gewählten Kontenplans.
+
+[Umsetzung und offene Abnahme](../INDUSTRY_INITIALIZATION.md), [lokale Nachweise](../TESTS.md#sf-045--branchengesteuerte-unternehmensinitialisierung). Frühere Anleitungen unten sind historische Wege bzw. Expertenprüfungen.
+
 Stand: 19.11.2026, Quellversion **1.0.4.0**, SF-042 **Zur Prüfung**. Die folgenden BC-Fälle sind noch nicht ausgeführt. [Aktueller Soll-Ist-Abgleich und lokale Prüfungen](../TESTS.md#sf-042--soll-ist-prüfung-des-partnerpfads). Keine ältere ZIP zurückkopieren.
 
 ## Kurzeinstieg

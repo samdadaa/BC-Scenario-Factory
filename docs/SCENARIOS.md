@@ -1,5 +1,9 @@
 # Anwendungsfälle, Profile und Szenariomodi
 
+## SF-045 – aktueller verbindlicher Ablauf
+
+Kontenplan einmalig → tatsächlich unterstützte Branche → drei Größen mit versionierten Mengenverhältnissen → unterstützte Prozessstufe → ein Hintergrundstart. Gemeinsame Einrichtung und Branchenvoraussetzungen kommen vor Stammdaten, diese vor Belegen/Buchungen. Neue Generatoren nutzen vorhandene Registry, Snapshots, Queue, Checkpoints, Qualitätsabschluss und Dashboard; keine zusätzlichen Assistenten oder parallele Vorlagen-/Finanzeinrichtung. Technische Konfiguration bleibt optionaler Expertenzugang. Aktuell Großhandel und ungebuchte Belege implementiert, native Abnahme offen; gebuchte Beschaffung und Folgeprozesse fehlen. [Konkreter Vertrag](INDUSTRY_INITIALIZATION.md). Frühere Normalabläufe dieses Dokuments sind historische Zwischenstände.
+
 ## Benutzerablauf
 
 Szenario-Vorlage wählen → Branchenkategorie → Module → Mengen je Entität → Datum/Region/Seed → Dokument-/Buchungsmodus → Preflight & Setup-Diff → Laufplan freigeben → Queue-Start oder Termin → Dashboard/Abweichungen → Ergebnis/Training/Demonstration.

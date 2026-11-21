@@ -47,6 +47,20 @@ codeunit 90400 "BCSF Finance Package Mgt"
         Apply(Mode);
     end;
 
+    procedure CheckInitialization(Mode: Enum "BCSF Finance Mode")
+    var
+        TempDiff: Record "BCSF Setup Diff" temporary;
+        SetupManager: Codeunit "BCSF Setup Manager";
+    begin
+        if not (Mode in [Mode::Existing, Mode::SKR03, Mode::SKR04]) then
+            Error(ApplyBlockedErr);
+        if (GetAppliedMode() <> "BCSF Finance Mode"::Existing) and (GetAppliedMode() <> Mode) then
+            Error(DifferentPackageLbl);
+        Inspect(Mode, WorkDate(), false, true, TempDiff);
+        if SetupManager.HasBlockers(TempDiff) then
+            ThrowFirstBlocker(TempDiff);
+    end;
+
     local procedure ThrowFirstBlocker(var TempDiff: Record "BCSF Setup Diff" temporary)
     begin
         TempDiff.Reset();
@@ -168,7 +182,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
             Ledger.LockTable();
         AllowCreate := Ledger.IsEmpty();
         if Package.Get(PackageKeyTok) then begin
-            if (Package.Mode <> Mode) or (Package."Reference Year" <> 2026) or not (Package.Version in ['1.0.0', VersionTok]) then begin
+            if (Package.Mode <> Mode) or (Package."Reference Year" <> 2026) or not (Package.Version in ['1.0.0', '2.0.0', VersionTok]) then begin
                 if Write then
                     Error(ApplyBlockedErr);
                 SetupManager.AddFinding(TempDiff, Format(Mode), true, DifferentPackageLbl, ResolveLbl);
@@ -720,8 +734,33 @@ codeunit 90400 "BCSF Finance Package Mgt"
         ReportLine(PL, 20000, 'COGS', CostLbl, Nos.Get('PURCHASES') + '|' + Nos.Get('COST'), false, Write, AllowCreate, TempDiff);
         ReportLine(PL, 30000, 'OPEX', ExpenseLbl, Nos.Get('EXPENSE') + '|' + Nos.Get('OFFICE'), false, Write, AllowCreate, TempDiff);
         ReportLine(PL, 40000, 'RESULT', ProfitLbl, 'SALES+COGS+OPEX', true, Write, AllowCreate, TempDiff);
+        if GetVersion(GetAppliedModeForPrefix(Prefix)) = '3.0.0' then
+            BuildOperatingReport(Prefix, PLCol, Nos, Write, AllowCreate, TempDiff);
         Report(BS, BSCol, BalanceLbl, Write, AllowCreate, TempDiff);
         Report(PL, PLCol, IncomeLbl, Write, AllowCreate, TempDiff);
+    end;
+
+    local procedure GetAppliedModeForPrefix(Prefix: Code[6]): Enum "BCSF Finance Mode"
+    begin
+        if Prefix = 'SF03' then
+            exit("BCSF Finance Mode"::SKR03);
+        exit("BCSF Finance Mode"::SKR04);
+    end;
+
+    local procedure BuildOperatingReport(Prefix: Code[6]; ColumnCode: Code[10]; Nos: Dictionary of [Code[20], Code[20]]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+    var
+        Code: Code[10];
+    begin
+        Code := Prefix + '-BWA';
+        CheckReportKeys(Code, ColumnCode, 60000, Write, TempDiff);
+        RowHeader(Code, OperatingLbl, Write, AllowCreate, TempDiff);
+        ReportLine(Code, 10000, 'SALES', SalesLbl, Nos.Get('SALES'), false, Write, AllowCreate, TempDiff);
+        ReportLine(Code, 20000, 'COGS', CostLbl, Nos.Get('PURCHASES') + '|' + Nos.Get('COST'), false, Write, AllowCreate, TempDiff);
+        ReportLine(Code, 30000, 'GROSS', GrossLbl, 'SALES+COGS', true, Write, AllowCreate, TempDiff);
+        ReportLine(Code, 40000, 'OPEX', ExpenseLbl, Nos.Get('EXPENSE') + '|' + Nos.Get('OFFICE'), false, Write, AllowCreate, TempDiff);
+        ReportLine(Code, 50000, 'RESULT', ProfitLbl, 'GROSS+OPEX', true, Write, AllowCreate, TempDiff);
+        ReportLine(Code, 60000, 'CHECK', ReconcileLbl, 'RESULT-(SALES+COGS+OPEX)', true, Write, AllowCreate, TempDiff);
+        Report(Code, ColumnCode, OperatingLbl, Write, AllowCreate, TempDiff);
     end;
 
     local procedure CheckReportKeys(ReportCode: Code[10]; ColumnCode: Code[10]; LastRow: Integer; Write: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
@@ -993,8 +1032,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
     local procedure ResolvePartnerDefaults(var Settings: JsonObject; PackageGroup: Code[20])
     var
         Country: Record "Country/Region";
-        CustomerGroup: Record "Customer Posting Group";
-        VendorGroup: Record "Vendor Posting Group";
+        CustomerPostingGroup: Record "Customer Posting Group";
+        VendorPostingGroup: Record "Vendor Posting Group";
         BusinessGroup: Record "Gen. Business Posting Group";
         VATGroup: Record "VAT Business Posting Group";
         GLAccount: Record "G/L Account";
@@ -1017,23 +1056,23 @@ codeunit 90400 "BCSF Finance Package Mgt"
         BusinessCode := PackageGroup;
         VATCode := PackageGroup;
         if PackageGroup = '' then begin
-            CustomerGroup.SecurityFiltering(SecurityFilter::Disallowed);
-            VendorGroup.SecurityFiltering(SecurityFilter::Disallowed);
+            CustomerPostingGroup.SecurityFiltering(SecurityFilter::Disallowed);
+            VendorPostingGroup.SecurityFiltering(SecurityFilter::Disallowed);
             BusinessGroup.SecurityFiltering(SecurityFilter::Disallowed);
             VATGroup.SecurityFiltering(SecurityFilter::Disallowed);
             GLAccount.SecurityFiltering(SecurityFilter::Disallowed);
-            if CustomerGroup.FindSet() then
+            if CustomerPostingGroup.FindSet() then
                 repeat
-                    if (CustomerGroup.Code <> 'BCSF-DEMO') and GLAccount.Get(CustomerGroup."Receivables Account") then
+                    if (CustomerPostingGroup.Code <> 'BCSF-DEMO') and GLAccount.Get(CustomerPostingGroup."Receivables Account") then
                         if not GLAccount.Blocked and not GLAccount."Direct Posting" and (GLAccount."Account Type" = GLAccount."Account Type"::Posting) then
-                            CustomerCode := CustomerGroup.Code;
-                until (CustomerGroup.Next() = 0) or (CustomerCode <> '');
-            if VendorGroup.FindSet() then
+                            CustomerCode := CustomerPostingGroup.Code;
+                until (CustomerPostingGroup.Next() = 0) or (CustomerCode <> '');
+            if VendorPostingGroup.FindSet() then
                 repeat
-                    if (VendorGroup.Code <> 'BCSF-DEMO') and GLAccount.Get(VendorGroup."Payables Account") then
+                    if (VendorPostingGroup.Code <> 'BCSF-DEMO') and GLAccount.Get(VendorPostingGroup."Payables Account") then
                         if not GLAccount.Blocked and not GLAccount."Direct Posting" and (GLAccount."Account Type" = GLAccount."Account Type"::Posting) then
-                            VendorCode := VendorGroup.Code;
-                until (VendorGroup.Next() = 0) or (VendorCode <> '');
+                            VendorCode := VendorPostingGroup.Code;
+                until (VendorPostingGroup.Next() = 0) or (VendorCode <> '');
             BusinessGroup.SetFilter("Code", '<>%1', 'BCSF-DEMO');
             VATGroup.SetFilter("Code", '<>%1', 'BCSF-DEMO');
             if BusinessGroup.FindFirst() then begin
@@ -1250,7 +1289,10 @@ codeunit 90400 "BCSF Finance Package Mgt"
     var
         UsePackageQst: Label 'Company setup stopped at %1. %2 %3', Comment = '%1 = requirement, %2 = error cause, %3 = next action';
         PackageKeyTok: Label 'APPLIED', Locked = true;
-        VersionTok: Label '2.0.0', Locked = true;
+        OperatingLbl: Label 'Operating statement (limited test scope)';
+        GrossLbl: Label 'Gross operating result';
+        ReconcileLbl: Label 'Reconciliation difference (expected zero)';
+        VersionTok: Label '3.0.0', Locked = true;
         PackageLbl: Label '%1 / reference year %2 / package version %3', Comment = '%1 = package name, %2 = reference year, %3 = package version';
         SourceLbl: Label 'Locally authored SKR03/SKR04-based subset, reference year 2026. No official chart data is imported.';
         TestOnlyLbl: Label 'For sandbox trade tests only. This is not a complete DATEV chart or statutory report.';

@@ -2,6 +2,8 @@ namespace BCScenarioFactory.Monitoring;
 
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
+using BCScenarioFactory.Finance;
+using System.Threading;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.Validation;
 using System.Globalization;
@@ -30,6 +32,7 @@ codeunit 90365 "BCSF Dashboard Data"
     AddTexts(Texts);
     Payload.Add('texts', Texts);
     Payload.Add('stock', StockView);
+    Payload.Add('company', DescribeCompany());
     Payload.Add('readAt', Format(CurrentDateTime()));
     AddSummary(Summary, SummaryViews);
     Payload.Add('summaryViews', SummaryViews);
@@ -62,6 +65,70 @@ codeunit 90365 "BCSF Dashboard Data"
     end;
     Payload.WriteTo(Result);
     exit(Result);
+  end;
+
+  local procedure DescribeCompany(): JsonObject
+  var
+    Setup: Record "BCSF Factory Setup";
+    Job: Record "Job Queue Entry";
+    Execution: Record "BCSF Run Execution";
+    Batch: Record "BCSF Batch";
+    Packages: Codeunit "BCSF Finance Package Mgt";
+    Policy: Codeunit "BCSF Scenario Policy";
+    Company: JsonObject;
+    JobId: Guid;
+  begin
+    Company.Add('name', CompanyName());
+    Company.Add('industry', '');
+    Company.Add('chart', '');
+    Company.Add('status', NotPreparedLbl);
+    Company.Add('error', '');
+    Company.Add('phase', FoundationLbl);
+    Company.Add('hasJob', false);
+    if not Setup.ReadPermission() then
+      exit(Company);
+    if not Setup.Get(Setup.GetSetupKey()) then
+      exit(Company);
+    if Setup."Company Initialized" then begin
+      Company.Replace('status', InitializedLbl);
+      Company.Replace('chart', Format(Packages.GetAppliedMode()));
+    end else
+      if not IsNullGuid(Setup."Industry Job Id") then
+        Company.Replace('chart', Format(Setup."Industry Finance Mode"));
+    JobId := Setup."Industry Job Id";
+    if not IsNullGuid(JobId) then
+      Company.Replace('industry', WholesaleLbl);
+    if not IsNullGuid(Setup."Industry Run Id") then begin
+      Company.Add('runId', Format(Setup."Industry Run Id", 0, 4));
+      Company.Add('steps', DescribeSteps(Setup."Industry Run Id"));
+      if Execution.ReadPermission() then
+        if Execution.Get(Setup."Industry Run Id") then begin
+          Company.Replace('status', Format(Execution.Status));
+          JobId := Execution."Job Queue Entry Id";
+        end;
+    end else
+      if not IsNullGuid(JobId) then
+        Company.Replace('status', InitializingLbl);
+    if not IsNullGuid(Setup."Industry Run Id") and not IsNullGuid(JobId) then begin
+      Batch.SetRange("Run Id", Setup."Industry Run Id");
+      Batch.SetRange("Job Queue Entry Id", JobId);
+      if Batch.ReadPermission() then
+        if Batch.FindFirst() then
+          Company.Replace('phase', Policy.GetEntityName(Batch."Node Code"));
+    end;
+    Job.SecurityFiltering(SecurityFilter::Filtered);
+    if Job.ReadPermission() and not IsNullGuid(JobId) then
+      if Job.Get(JobId) then begin
+        Company.Replace('hasJob', true);
+        if IsNullGuid(Setup."Industry Run Id") then
+          Company.Replace('status', Format(Job.Status));
+        if Job.Status = Job.Status::Error then begin
+          Company.Replace('status', FailedLbl);
+          Company.Replace('error', Job."Error Message");
+        end;
+      end else
+        Company.Replace('status', MissingJobLbl);
+    exit(Company);
   end;
 
   local procedure DescribeRun(Header: Record "BCSF Run Header"): JsonObject
@@ -370,6 +437,10 @@ codeunit 90365 "BCSF Dashboard Data"
     Texts.Add('updated', UpdatedLbl);
     Texts.Add('busy', BusyLbl);
     Texts.Add('error', ErrorLbl);
+    Texts.Add('industrySetup', IndustrySetupLbl);
+    Texts.Add('companyQueue', CompanyQueueLbl);
+    Texts.Add('companyProgress', CompanyProgressLbl);
+    Texts.Add('expertTools', ExpertToolsLbl);
     Texts.Add('requirements', RequirementsLbl);
     Texts.Add('notRecorded', NotRecordedLbl);
     Texts.Add('selected', SelectedLbl);
@@ -468,4 +539,15 @@ codeunit 90365 "BCSF Dashboard Data"
     RequirementsLbl: Label 'Missing generators or prerequisites block execution. Posting requires a separate authorization contract.';
     NotRecordedLbl: Label 'Not recorded';
     SelectedLbl: Label 'Selected';
+    CompanyQueueLbl: Label 'Current background job';
+    CompanyProgressLbl: Label 'Company generation progress';
+    FoundationLbl: Label 'Company foundation';
+    MissingJobLbl: Label 'Background job unavailable - review the existing request before continuing';
+    WholesaleLbl: Label 'Wholesale';
+    InitializedLbl: Label 'Company initialized';
+    InitializingLbl: Label 'Company setup queued or running';
+    FailedLbl: Label 'Phase failed - review setup or the current batch before continuing';
+    IndustrySetupLbl: Label 'Set up company';
+    ExpertToolsLbl: Label 'Diagnostics and expert templates';
+
 }

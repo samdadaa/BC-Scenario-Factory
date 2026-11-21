@@ -47,3 +47,9 @@ Die aktuellen AL-Objekte liegen in Codeunits/Enums/Pages/Tables; der Modulmarker
 ## SF-016/SF-017 – 18.11.2026
 
 90325 Validation Result, 90326 Validation Manager, 90327 Validation Severity, 90328 Validation Results. Append-only Prüfbefunde, Summary und Pflichtkennzeichen. Lifecycle-Guard als zusätzliche direkte Abhängigkeit; Ausführungsprüfung per Eventsubscriber aus BackgroundProcessing. Keine eigene Rückabhängigkeit. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.
+
+## SF-045 – aktueller Bestand
+
+Bestehende Output-/Herkunfts-/Checkpointprüfung und globale Summary entscheiden weiterhin über Completed. Bootstraperfolg ist kein Qualitätsabschluss.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

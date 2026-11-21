@@ -62,3 +62,9 @@ Für reine Customer-/Vendor-Ziele konkrete echte Prerequisites und temporäre De
 ## SF-040 – Stammdatenbasis und Startprüfung
 
 Die [Modulmatrix und der Startvertrag](../../../MASTER_DATA_READINESS.md) sind maßgeblich für die gemeinsamen, lesenden Prüfungen vor Queue-Ausführung und Fortsetzen. Keine zusätzlichen Schemaobjekte.
+
+## SF-045 – aktueller Bestand
+
+PURCHASE.ORDER ist im konkret ausführbaren Prüfumfang enthalten; bestehende Serien-, Rechte-, Finanz-/Artikel- und Generatorprüfungen bleiben verpflichtend. Keine Einrichtung durch ein lesendes Preflight.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

@@ -48,3 +48,7 @@ SF-013: versionierte, immutable technische Checkpoints ergänzen die Herkunft. S
 ## SF-018 – 18.11.2026
 
 Optionaler Snapshotuntervertrag partnerSetup Version 1 hält Land, explizite bzw. paketgebundene Gruppen, erfasste Kontenzuordnungen, Nummernserien, Zahlungsbedingungen/-formeln, CRM-Beziehungs-/Kontaktseriencodes, Privatkundenanteil und Kreditlimits. Vorhandene Schema-1-Snapshots und syntheticRules unverändert lesbar; neue Generatoren verlangen diese zusätzlichen Angaben. Führende Ergebnisse sind Standard Customer/Vendor plus Herkunftsrolle CUSTOMER/VENDOR und SystemId; Standardkontaktnebenwirkungen sind keine zusätzlichen primären Mengeneinheiten. [Vertrag](PARTNER_GENERATION.md).
+
+## SF-045 – additive Wiederverwendung
+
+Keine neue Tabelle. Factory Setup erhält sechs technische Requestfelder (20–25): Standardjob-/Ergebnislauf-ID, Finanzmodus, Größe, Prozessmodus und Datum. Der tatsächliche Run/Snapshot/Plan/Checkpoint bleibt im vorhandenen Datenmodell. purchaseSetup Version 1 ergänzt optional Schema 1 (Bestellnummernserie, Lagerort). Ältere Snapshots erhalten keine neuen Einkaufsziele oder Buchungsfreigaben. Keine Laufdatenmigration/ForceSync. [Kompatibilitätsgrenzen](INDUSTRY_INITIALIZATION.md).

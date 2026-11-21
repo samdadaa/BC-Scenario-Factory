@@ -1,5 +1,9 @@
 # Zielarchitektur und implementierte Grundlagen
 
+## SF-045 – aktueller verbindlicher Ablauf
+
+Kontenplan einmalig → tatsächlich unterstützte Branche → drei Größen mit versionierten Mengenverhältnissen → unterstützte Prozessstufe → ein Hintergrundstart. Gemeinsame Einrichtung und Branchenvoraussetzungen kommen vor Stammdaten, diese vor Belegen/Buchungen. Neue Generatoren nutzen vorhandene Registry, Snapshots, Queue, Checkpoints, Qualitätsabschluss und Dashboard; keine zusätzlichen Assistenten oder parallele Vorlagen-/Finanzeinrichtung. Technische Konfiguration bleibt optionaler Expertenzugang. Aktuell Großhandel und ungebuchte Belege implementiert, native Abnahme offen; gebuchte Beschaffung und Folgeprozesse fehlen. [Konkreter Vertrag](INDUSTRY_INITIALIZATION.md). Frühere Normalabläufe dieses Dokuments sind historische Zwischenstände.
+
 **Aktueller Stand ab 1.0.2.0:** Der reale Bedienweg ist in [Mandanteneinrichtung und Vorlagenstart](COMPANY_INITIALIZATION.md) beschrieben. Ältere Angaben zu Finanzauswahl je Vorlage, Vorschaufenster, Wizard, parallelen Lauflisten und Dashboard-Host sind historische Nachweise. Entfernte Objekt-IDs bleiben unbenutzt.
 
 **Status:** Das End-to-End-Bild bleibt Zielarchitektur. Core, Lifecycle-Sicherheit und Szenariokonfiguration sind seit SF-003–SF-006 in 32 AL-Objekten implementiert; die übrigen 21 Module enthalten noch keinen AL-Code. Build-/Laufzeitgrenzen siehe [FOUNDATION.md](FOUNDATION.md) und [TESTS.md](TESTS.md).
@@ -212,3 +216,20 @@ Die generische Besitzprüfung vergleicht den gespeicherten Stepmodus mit dem Tar
 Scenario Manager verwendet den bestehenden Generator-Katalog für Ziel-Unterstützung. Maximalumfang ist eine Obergrenze; Registry/Guards entscheiden anhand tatsächlicher Step-/Zielmodi. Finance-Vorprüfung für initialisierte reine Stammdaten richtet sich ebenfalls nach positiven tatsächlichen Zielen statt nach der Obergrenze. Neue Vorlagen starten mit gültigem Profil und kleinem Kundenstammziel. Scopewechsel werden zentral transaktional über ChangeProcessScope behandelt: erst höhere Elternobergrenze, dann Kinder; beim Senken umgekehrt. Zustimmung wird zurückgesetzt, Snapshots werden nicht verändert. Process Coordinator liest Quoten als Decimal.
 
 Starter Catalog aktualisiert nur exakt erkannte alte Standard-Belegkonfigurationen über bestehende feste IDs und Profilversion 2. Geänderte Ziel-/Profil-/Seed-/Modulwerte und archivierte/entfernte Starter werden nicht übergangen. Vorhandene ausdrückliche Ladeaktion liefert Rückmeldung; keine automatische Konfigurationsänderung bei Installation/Seitenöffnung. Die bestätigte Pflegepflicht nach jedem Ticket steht in AGENTS.md. [Vertrag und Grenzen](SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051).
+
+## SF-045 – reale Orchestrierung
+
+```mermaid
+flowchart LR
+  A[Bestehende Setupkarte: fünf Entscheidungen] --> B[Ein Standard-Queuejob]
+  B --> C[Gemeinsame Foundation + internes Großhandelspaket]
+  C --> D[Bestehender Snapshot + Plan + Batchqueue]
+  D --> E[Debitoren und Kreditoren]
+  E --> F[Artikel und Beziehungen]
+  F --> G[Ungebuchte Einkaufsbestellungen]
+  G --> H[Ungebuchte Verkaufsbelege]
+  H --> I[Bestehender Qualitätsabschluss]
+  I --> J[Dashboard und gefilterte Standardlisten]
+```
+
+Bei reinen Stammdaten entfallen G/H. B–D sind eine commitgeschützte Vorbereitungstransaktion, E–I verwenden vorhandene sichere Batchgrenzen. Kein Abschluss aus bloß erfolgreicher Vorbereitung. Technische Vorlagen, Snapshots, Historie und Checkpoints bleiben intern; keine Tabellen-/Objektlöschung. [Transaktionsvertrag und Einschränkungen](INDUSTRY_INITIALIZATION.md), [Objekte/Events/JSON](ARCHITECTURE_AUDIT_SF045.md).

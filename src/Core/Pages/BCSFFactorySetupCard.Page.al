@@ -4,6 +4,7 @@ using BCScenarioFactory.Finance;
 using BCScenarioFactory.IndustryProfiles;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.Lifecycle;
+using BCScenarioFactory.Monitoring;
 
 page 90101 "BCSF Factory Setup Card"
 {
@@ -21,13 +22,72 @@ page 90101 "BCSF Factory Setup Card"
   {
     area(Content)
     {
+      group(ChartStep)
+      {
+        Caption = '1 - Chart of accounts';
+        Visible = WizardStep = 1;
+        field(ChartChoice; ChartChoice)
+        {
+          Caption = 'Chart of accounts';
+          OptionCaption = 'SKR03,SKR04,Use existing valid BC setup';
+          Editable = not Initialized;
+          ToolTip = 'Choose the local test chart once. Existing company accounts and settings are preserved.';
+        }
+      }
+      group(IndustryStep)
+      {
+        Caption = '2 - Industry';
+        Visible = WizardStep = 2;
+        field(Industry; IndustryName)
+        {
+          Caption = 'Industry';
+          Editable = false;
+          ToolTip = 'Wholesale is the first supported company package. Other industries are not yet executable.';
+        }
+      }
+      group(SizeStep)
+      {
+        Caption = '3 - Data size';
+        Visible = WizardStep = 3;
+        field(SizeChoice; SizeChoice)
+        {
+          Caption = 'Data size';
+          OptionCaption = 'Small,Medium,Large';
+          ToolTip = 'Select the versioned wholesale quantities. Exact planned quantities appear before starting.';
+        }
+      }
+      group(ProcessStep)
+      {
+        Caption = '4 - Data and processes';
+        Visible = WizardStep = 4;
+        field(ProcessChoice; ProcessChoice)
+        {
+          Caption = 'Data and processes';
+          OptionCaption = 'Master data only,With unposted documents';
+          ToolTip = 'Posting is unavailable until purchase receipts and complete posting prerequisites are supported. No documents are posted.';
+        }
+      }
+      group(ReviewStep)
+      {
+        Caption = '5 - Summary and start';
+        Visible = WizardStep = 5;
+        field(Review; ReviewText)
+        {
+          Caption = 'Planned company';
+          MultiLine = true;
+          Editable = false;
+          ToolTip = 'Review the chart, industry, quantities and unposted process types before authorizing the background job.';
+        }
+      }
+
       group(Safety)
       {
         Caption = 'Company Setup';
-        Visible = Initialized;
+        Visible = Initialized and (WizardStep = 0);
         field(InstalledChart; InstalledChart)
         {
           CaptionClass = '3,' + ChartCaption;
+          ToolTip = 'Shows the chart of accounts already selected for this company.';
           Editable = false;
         }
         field("Generation Enabled"; Rec."Generation Enabled") { }
@@ -39,7 +99,7 @@ page 90101 "BCSF Factory Setup Card"
       {
         Caption = 'Scenario Defaults';
         Editable = Initialized;
-        Visible = Initialized;
+        Visible = Initialized and (WizardStep = 0);
         field("Default Process Mode"; Rec."Default Process Mode") { }
         field("Default Usage Mode"; Rec."Default Usage Mode") { }
         field("Default Seed"; Rec."Default Seed") { }
@@ -49,7 +109,7 @@ page 90101 "BCSF Factory Setup Card"
       {
         Caption = 'Limits';
         Editable = Initialized;
-        Visible = Initialized;
+        Visible = Initialized and (WizardStep = 0);
         field("Default Batch Size"; Rec."Default Batch Size") { }
         field("Maximum Batch Size"; Rec."Maximum Batch Size") { }
         field("Maximum Records per Entity"; Rec."Maximum Records per Entity") { }
@@ -61,10 +121,53 @@ page 90101 "BCSF Factory Setup Card"
   {
     area(Promoted)
     {
+      actionref(PreviousPromoted; PreviousStep) { }
+      actionref(NextPromoted; NextStep) { }
+      actionref(StartPromoted; StartCompany) { }
       actionref(InitializeCompanyPromoted; InitializeSetup) { }
     }
     area(Processing)
     {
+      action(PreviousStep)
+      {
+        ApplicationArea = All;
+        Caption = 'Back';
+        Image = PreviousRecord;
+        Visible = WizardStep > 1;
+        ToolTip = 'Return to the previous choice without starting any work.';
+        trigger OnAction()
+        begin
+          WizardStep -= 1;
+        end;
+      }
+      action(NextStep)
+      {
+        ApplicationArea = All;
+        Caption = 'Next';
+        Image = NextRecord;
+        Visible = (WizardStep > 0) and (WizardStep < 5);
+        ToolTip = 'Review the next choice. No data is generated before Start.';
+        trigger OnAction()
+        begin
+          WizardStep += 1;
+          UpdateReview();
+        end;
+      }
+      action(StartCompany)
+      {
+        ApplicationArea = All;
+        Caption = 'Set up company and generate data';
+        Image = Start;
+        Visible = WizardStep = 5;
+        ToolTip = 'Authorize one background process for company setup and the displayed data. The browser can be closed afterwards.';
+        trigger OnAction()
+        var
+          Initialization: Codeunit "BCSF Company Initialization";
+        begin
+          Initialization.Start(SelectedChart(), SizeChoice, SelectedProcess());
+          CurrPage.Close();
+        end;
+      }
       action(RefreshCompanyFoundation)
       {
         ApplicationArea = All;
@@ -87,33 +190,13 @@ page 90101 "BCSF Factory Setup Card"
         ApplicationArea = All;
         Caption = 'Initialize Company';
         Image = Setup;
-        Enabled = not Initialized;
+        Visible = WizardStep = 0;
         ToolTip = 'Choose the chart of accounts and prepare this sandbox company once. Does not post documents.';
 
         trigger OnAction()
-        var
-          Catalog: Codeunit "BCSF Starter Catalog";
-          Packages: Codeunit "BCSF Finance Package Mgt";
-          Mode: Enum "BCSF Finance Mode";
-          Choice: Integer;
-          DefaultChoice: Integer;
         begin
-          DefaultChoice := 2;
-          case Packages.GetAppliedMode() of
-            Mode::SKR03: DefaultChoice := 1;
-            Mode::SKR04: DefaultChoice := 2;
-          end;
-          Choice := StrMenu(StrSubstNo('%1,%2,%3', Format(Mode::SKR03), Format(Mode::SKR04), Format(Mode::Existing)),
-            DefaultChoice, StrSubstNo(SetupAvailableMsg, CompanyName()));
-          case Choice of
-            0: exit;
-            1: Mode := Mode::SKR03;
-            2: Mode := Mode::SKR04;
-            3: Mode := Mode::Existing;
-          end;
-          Catalog.InitializeCompany(Mode);
-          RefreshSetup();
-          CurrPage.Update(false);
+          WizardStep := 1;
+          UpdateReview();
         end;
       }
     }
@@ -122,6 +205,17 @@ page 90101 "BCSF Factory Setup Card"
   trigger OnOpenPage()
   begin
     RefreshSetup();
+    if not Initialized then
+      WizardStep := 1;
+    ChartChoice := ChartChoice::SKR04;
+    if Initialized then
+      case PackagesMode() of
+        "BCSF Finance Mode"::SKR03: ChartChoice := ChartChoice::SKR03;
+        "BCSF Finance Mode"::Existing: ChartChoice := ChartChoice::Existing;
+      end;
+    IndustryName := WholesaleLbl;
+    ProcessChoice := ProcessChoice::Documents;
+    UpdateReview();
   end;
 
   trigger OnModifyRecord(): Boolean
@@ -159,11 +253,47 @@ page 90101 "BCSF Factory Setup Card"
     exit(true);
   end;
 
+  local procedure PackagesMode(): Enum "BCSF Finance Mode"
+  var
+    Packages: Codeunit "BCSF Finance Package Mgt";
+  begin
+    exit(Packages.GetAppliedMode());
+  end;
+
+  local procedure SelectedChart(): Enum "BCSF Finance Mode"
+  begin
+    case ChartChoice of
+      ChartChoice::SKR03: exit("BCSF Finance Mode"::SKR03);
+      ChartChoice::SKR04: exit("BCSF Finance Mode"::SKR04);
+    end;
+    exit("BCSF Finance Mode"::Existing);
+  end;
+
+  local procedure SelectedProcess(): Enum "BCSF Process Mode"
+  begin
+    if ProcessChoice = ProcessChoice::Documents then
+      exit("BCSF Process Mode"::UnpostedDocuments);
+    exit("BCSF Process Mode"::SetupAndMasterData);
+  end;
+
+  local procedure UpdateReview()
+  var
+    Profile: Codeunit "BCSF Wholesale Profile";
+  begin
+    ReviewText := StrSubstNo(ReviewLbl, Format(SelectedChart()), IndustryName, SelectStr(SizeChoice + 1, SizesLbl), SelectStr(ProcessChoice + 1, ProcessesLbl),
+      Profile.Quantity(SizeChoice, "BCSF Entity Type"::Customer), Profile.Quantity(SizeChoice, "BCSF Entity Type"::Vendor),
+      Profile.Quantity(SizeChoice, "BCSF Entity Type"::Item));
+    if ProcessChoice = ProcessChoice::Documents then
+      ReviewText += StrSubstNo(DocumentsLbl, Profile.Quantity(SizeChoice, "BCSF Entity Type"::PurchaseOrder),
+        Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesQuote), Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesOrder),
+        Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesInvoice));
+  end;
+
   local procedure RefreshSetup()
   var
     Setup: Record "BCSF Factory Setup";
-    Packages: Codeunit "BCSF Finance Package Mgt";
     Scenario: Record "BCSF Scenario";
+    Packages: Codeunit "BCSF Finance Package Mgt";
     AlreadyDisplayed: Boolean;
   begin
     AlreadyDisplayed := Rec.Get(Rec.GetSetupKey());
@@ -184,9 +314,19 @@ page 90101 "BCSF Factory Setup Card"
   end;
 
   var
+    WizardStep: Integer;
+    ChartChoice: Option SKR03,SKR04,Existing;
+    SizeChoice: Option Small,Medium,Large;
+    ProcessChoice: Option Master,Documents;
+    IndustryName: Text;
+    ReviewText: Text;
+    SizesLbl: Label 'Small,Medium,Large';
+    ProcessesLbl: Label 'Master data only,With unposted documents';
+    WholesaleLbl: Label 'Wholesale';
+    ReviewLbl: Label '%1 · %2 · %3 · %4. Customers: %5; vendors: %6; items: %7.', Comment = '%1 = chart, %2 = industry, %3 = size, %4 = process, %5 = customers, %6 = vendors, %7 = items';
+    DocumentsLbl: Label ' Unposted purchase orders: %1; sales quotes: %2; sales orders: %3; sales invoices: %4. No posting.', Comment = '%1 = purchases, %2 = quotes, %3 = orders, %4 = invoices';
     Initialized: Boolean;
     InstalledChart: Text;
     ChartCaption: Text;
     FoundationCompletedLbl: Label 'The master data foundation has been checked and completed successfully.';
-    SetupAvailableMsg: Label 'Which chart of accounts should %1 use? This prepares the sandbox company and enables test data generation. Posting remains disabled for a new company.', Comment = '%1 = company name';
 }

@@ -146,3 +146,7 @@ Sales-Post öffentlich nur ohne booleschen Run-Rückgabewert, mit SetSuppressCom
 ### Verbindliche Vorlagenpflege nach jedem Implementierungsticket
 
 Vorhandene Starter gegen den aktuellen Generator-Katalog prüfen und zum Testen aktualisieren; Umfang/Quoten/Quellen und Native-Prüfschritte dokumentieren. Maximalumfang nicht mit tatsächlichem Stepmodus verwechseln. Geeignete Standard-Vorlagenmigration über feste IDs/erkannte ursprüngliche Konfiguration und explizite Ladeaktion; eigene/entfernte/archivierte Vorlagen und Captures schützen. Prozentwerte als Decimal transportieren. Keine automatische Buchungsfreigabe. [Aktueller SF-021-Vertrag](SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051).
+
+## SF-045 – gemeinsame Unternehmensinitialisierung
+
+Neue Generatoren nach dem [verbindlichen Unternehmenspaketvertrag](INDUSTRY_INITIALIZATION.md) integrieren: keine separaten Assistenten, Finanzbootstrap- oder Vorlagenframeworks. Snapshot-Schema 1 wird optional um versioniertes purchaseSetup ergänzt; Altstand nicht nachträglich verändern. Normalstart verwendet genau einen eingefrorenen Firmenrequest; dessen Identität/Parameter bleiben nach Einplanung unveränderlich, Ergebnislauf darf nur die gebundene Standardsitzung zuweisen. Keine zusätzlichen Standardtabellenrechte.

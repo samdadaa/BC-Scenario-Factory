@@ -371,3 +371,16 @@ Main-Objekte im freigegebenen Inventory-Block 90475–90499; Testbereich 90700�
 | Sales | 90431 | Codeunit | BCSF Sales Evidence | `src/Sales/Codeunits/BCSFSalesEvidence.Codeunit.al` |
 
 90275/90426 waren geplant und lokal unimplementiert; 90428–90431 vor Anlage frei, innerhalb des bestehenden Sales-Blocks. Main insgesamt 133 AL-Dateien, keine neue Tabelle/Seite; vorhandene Test-Codeunit 90700 um sechs Methoden ergänzt, keine neue Test-ID. Zwei additive Szenariofelder 41/42. Core referenziert ProcessEngine/Sales nur deklarativ im ADMIN-Execute-Permission-Set. Kein Standardtabledata-Recht hinzugefügt. Externe ID-Konflikte in der Ziel-Sandbox weiterhin zu prüfen.
+
+## SF-045 – belegte Ergänzungen
+
+Vor Erstellung gegen aktuelle app.json und Quellobjekte geprüft: 90153 war nur als Wholesale Profile geplant, 90361 unbesetzte Monitoringreserve, 90451 als Purchase Generator geplant, 90453 unbelegt. Alle liegen in 90100–90999. Keine bestehende ID/Enumzuordnung wiederverwendet oder umnummeriert.
+
+| Modul | ID | Typ | Objekt / Pfad |
+| --- | --- | --- | --- |
+| IndustryProfiles | 90153 | Codeunit | `src/IndustryProfiles/Codeunits/BCSFWholesaleProfile.Codeunit.al` |
+| Monitoring | 90361 | Codeunit | `src/Monitoring/Codeunits/BCSFCompanyInitialization.Codeunit.al` |
+| Purchasing | 90451 | Codeunit | `src/Purchasing/Codeunits/BCSFPurchaseGenerator.Codeunit.al` |
+| Purchasing | 90453 | EnumExtension | `src/Purchasing/EnumExtensions/BCSFPurchaseBinding.EnumExt.al` |
+
+Orchestrierung bleibt in Monitoring, die bestehende Setupkarte delegiert dorthin. Purchasing nutzt Inventory für eingefrorene Artikelmengen/Einrichtung, keine duplizierte Artikelauflösung und keine App-Dependency. Snapshot publiziert OnCapturePurchaseSetup, Purchasing abonniert mit beiden Skipflags false. [Vollinventar und Ereignisse](ARCHITECTURE_AUDIT_SF045.md).

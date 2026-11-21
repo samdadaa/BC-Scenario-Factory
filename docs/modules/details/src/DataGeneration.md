@@ -62,3 +62,9 @@ Neue Codeunit 90256 Partner Rules: gemeinsame versionierte Partnerwerte, lesende
 ## SF-039
 
 Neu 90257 Partner Catalog und 90258 Partner Children: versionierte natürliche Werte und Standard-Liefer-/Bestelladressen mit Parent-Herkunft. [Vertrag](../../../STABILIZATION_FINANCE_PARTNERS.md). Kein neuer Fachgenerator, alte Regelversion erhalten. **Zur Prüfung**.
+
+## SF-045 – aktueller Bestand
+
+Bestehende Seed-/Partnerkatalog-/Herkunftsdienste bleiben gemeinsam. Einkaufsbelege registrieren DOCUMENT-Köpfe mit Run/Batch/logischem Schlüssel und tatsächlicher Standard-SystemId.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

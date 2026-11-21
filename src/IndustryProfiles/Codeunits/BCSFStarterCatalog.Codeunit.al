@@ -20,6 +20,13 @@ codeunit 90155 "BCSF Starter Catalog"
 
     [CommitBehavior(CommitBehavior::Error)]
     procedure InitializeCompany(Mode: Enum "BCSF Finance Mode")
+    begin
+        InitializeFoundation(Mode);
+        Seed();
+    end;
+
+    [CommitBehavior(CommitBehavior::Error)]
+    procedure InitializeFoundation(Mode: Enum "BCSF Finance Mode")
     var
         Setup: Record "BCSF Factory Setup";
         Scenario: Record "BCSF Scenario";
@@ -40,7 +47,6 @@ codeunit 90155 "BCSF Starter Catalog"
         Setup."Company Initialized" := true;
         Setup.Validate("Generation Enabled", true);
         Setup.Modify(true);
-        Seed();
     end;
 
     [CommitBehavior(CommitBehavior::Error)]
@@ -76,6 +82,21 @@ codeunit 90155 "BCSF Starter Catalog"
             SeedIndustry(Industry, Setup);
         SeedItemTemplates(Setup);
         SeedSalesTemplate(Setup);
+        SeedWholesaleReference();
+    end;
+
+    local procedure SeedWholesaleReference()
+    var
+        Scenario: Record "BCSF Scenario";
+        Removed: Record "BCSF Removed Template";
+        Profile: Codeunit "BCSF Wholesale Profile";
+        Id: Guid;
+    begin
+        Evaluate(Id, '{B55C4500-AB51-4045-9C00-000000000001}');
+        // Explicit starter loading only. Never replace a custom, archived or intentionally removed template.
+        if Scenario.Get(Id) or Removed.Get(Id) then
+            exit;
+        Profile.CreateTemplateForId(Id, 0, "BCSF Process Mode"::UnpostedDocuments, WorkDate());
     end;
 
     local procedure SeedSalesTemplate(Setup: Record "BCSF Factory Setup")

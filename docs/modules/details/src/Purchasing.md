@@ -52,3 +52,9 @@ Vorhandene Objekte liegen in Codeunits/ und EnumExtensions/; der Modulmarker ble
 ## SF-039
 
 Vendor Generator unterstützt neue Regel-/Setupversion 2, optional validierte Einstellungen und registrierte Bestelladressen. [Vertrag](../../../STABILIZATION_FINANCE_PARTNERS.md). **Zur Prüfung**.
+
+## SF-045 – aktueller Bestand
+
+Purchase Generator 90451 plus EnumExtension 90453 implementieren ausschließlich PURCHASE.ORDER im ungebuchten Modus. purchaseSetup Version 1 friert Bestellserie/Lagerort ein. Zwei Kreditoren und Artikel aus demselben Lauf sind Pflicht; Bestellungen folgen dem tatsächlichen Item Vendor. Standard-Validate/Insert, keine Buchung. DOCUMENT-Herkunft am Kopf; Output prüft Lieferant, Artikel, Datum, Einheit, Menge und ungebuchten Zustand. Dashboard purchase/order öffnet die passende gefilterte Standardliste. Gebuchte Wareneingänge/Rechnungen und Folgeprozesse bleiben SF-020/SF-022.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

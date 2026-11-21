@@ -62,3 +62,9 @@ Partner-Capture-Subscriber liefert paketabhängige Gruppen und erfasste Standard
 ## SF-038
 
 Gemeinsamer Finance-Einstieg, neue Teilpakete 2.0.0 mit bestätigter Foundation, kein Zwei-Konten-Fallback. Altversion 1.0.0 bleibt unverändert. [Rollen und Abnahme](../../../STABILIZATION_FINANCE_PARTNERS.md). **Zur Prüfung**.
+
+## SF-045 – aktueller Bestand
+
+Lokale SKR03-/SKR04-Neupakete 3.0.0 enthalten zusätzlich begrenzte BWA mit Erlösen, Warenkosten, Rohergebnis, Betriebskosten, Ergebnis und Abstimmungsdifferenz. Bilanz/GuV und Kontenbasis bleiben erhalten. 1.0.0/2.0.0 werden nicht umgeschrieben; Existing übernimmt nur gültige Einrichtung. Keine Voll-DATEV-/Voll-BWA-Behauptung.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

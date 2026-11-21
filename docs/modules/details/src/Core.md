@@ -78,3 +78,9 @@ Vorhandene AL-Objekte liegen unter `src/Core/Codeunits/`, `src/Core/Enums/`, `sr
 ## SF-016/SF-017 – 18.11.2026
 
 Vorhandenes Enum 90113 Finance Mode mit Existing/SKR03/SKR04 im Inventar erfasst; ValidationFailed bleibt Endzustand 13. Keine neue App-Abhängigkeit. [Vertrag und BC-Abnahmefälle](../../../VALIDATION_FINANCE.md), [lokale Nachweise](../../../TESTS.md#sf-016sf-017--lokaler-prüfnachweis-18112026). **Zur Prüfung**, keine nachgewiesene BC-Laufzeitabnahme.
+
+## SF-045 – aktueller Bestand
+
+Sechs additive technische Requestfelder im vorhandenen Factory Setup; bestehende Setupkarte wird fünfstufiger Unternehmensassistent. Keine zusätzliche Benutzerseite.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

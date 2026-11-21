@@ -22,6 +22,10 @@ permissionset 90105 "BCSF ADMIN"
   Assignable = true;
   Caption = 'Scenario Factory Setup Admin';
   Permissions =
+    codeunit "BCSF Wholesale Profile" = X,
+    codeunit "BCSF Company Initialization" = X,
+    codeunit "BCSF Purchase Generator" = X,
+
     tabledata "BCSF Factory Setup" = RIM,
     table "BCSF Factory Setup" = X,
     page "BCSF Factory Setup Card" = X,

@@ -60,6 +60,9 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
   procedure GetDependencies(Context: JsonObject; Target: JsonObject; var Dependencies: JsonArray)
   var
     Setup: Codeunit "BCSF Sales Setup";
+    Contract: Codeunit "BCSF Contract JSON";
+    Targets: JsonToken;
+    Token: JsonToken;
   begin
     Clear(Dependencies);
     if not Setup.UsesRunMasters(Context) then
@@ -67,6 +70,11 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     AddPredecessor(Dependencies, 'CUSTOMER', 'SALES');
     AddPredecessor(Dependencies, 'VENDOR', 'PURCHASING');
     AddPredecessor(Dependencies, 'ITEM', 'INVENTORY');
+    Context.Get('targets', Targets);
+    foreach Token in Targets.AsArray() do
+      if (Contract.GetInteger(Token.AsObject(), 'entity') = "BCSF Entity Type"::PurchaseOrder.AsInteger()) and
+        (Contract.GetInteger(Token.AsObject(), 'quantity') > 0) then
+        AddPredecessor(Dependencies, 'PURCHASE.ORDER', 'PURCHASING');
   end;
 
   local procedure AddPredecessor(var Dependencies: JsonArray; EntityCode: Code[30]; ModuleCode: Code[30])

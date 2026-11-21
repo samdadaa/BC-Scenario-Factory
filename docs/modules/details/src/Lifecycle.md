@@ -75,3 +75,9 @@ Vorhandene AL-Objekte liegen unter `src/Lifecycle/Codeunits/`. Zuordnung gemäß
 ## SF-037 – Reparaturauftrag 18.11.2026
 
 Vier verpflichtende Datenbanksubscriber schützen den neuen firmenbezogenen Remove-Vermerk auch ohne RunTrigger. Bestehende Sandbox-/Firmen-/Standarddatengrenzen erhalten. [Aktueller Vertrag](../../../STARTER_TEMPLATES.md), [echte lokale Prüfungen und offene BC-Abnahme](../../../TESTS.md#sf-037--reparatur-vorlage-bis-ergebnis-18112026). **Zur Prüfung**.
+
+## SF-045 – aktueller Bestand
+
+Vorhandene Umgebungs-/Firmen-/Rechte-/Generierungs-/Buchungsprüfungen bleiben verpflichtend. Requestparameter nach Einplanung immutable; Ergebnislauf nur durch gebundene Jobsitzung.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

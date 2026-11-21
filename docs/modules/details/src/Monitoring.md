@@ -74,3 +74,9 @@ Zustandsabhängige Hauptaktionen, Diagnosebereich, ursprünglicher Standardfehle
 Bestehende Objekte 90362, 90365 und 90369 um getrennte Ansichten und direkte Zählernavigation ergänzt. Einheitliches responsives Kachelraster; Live-Herkunftsergebnisse getrennt von bestätigter Arbeit; Summary-Drilldowns mit aktuellem Rechte-/Countvergleich und begrenztem Status-ID-Filter. Kein neuer Generator, keine Tabelle/Seite oder Rechteerhöhung. [Bedienung und Grenzen](../../../DASHBOARD_DATA_STOCK.md#sf-044--kompakter-arbeitsplatz-19112026), [tatsächliche Prüfungen](../../../TESTS.md#sf-044--kompaktes-dashboard-und-direkte-kennzahlen). **Zur Prüfung**, BC-Abnahme offen.
 
 SF-019-Bedienkorrektur 20.11.2026: Dashboard Stock ergänzt elf bestehende BC-Listenrouten für Artikelstämme/-beziehungen; erzeugte Attributzuordnungen werden in der vorhandenen Herkunftsseite lesbar geöffnet. Rechte, SystemId-Herkunftsfilter, Begrenzung und Neuzählung bleiben wirksam. Keine zusätzlichen AL-Objekte. [Vertrag und Grenzen](../../../INVENTORY_GENERATION.md#sf-019--bedienkorrektur-20112026), [Prüfungen](../../../TESTS.md#sf-019--rückmeldung-und-datenkacheln-20112026). Zur Prüfung.
+
+## SF-045 – aktueller Bestand
+
+Company Initialization 90361 orchestriert genau einen gespeicherten Request in der vorhandenen Setupkarte. Dashboard liest Firmen-/Branchen-/Kontenplan-/Jobzustand, zeigt bestätigte Schritte und Fehlerphase, verbirgt technische Vorlagen im Normalweg. Bestehende Diagnosen bleiben im eingeklappten Expertenbereich.
+
+[Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.

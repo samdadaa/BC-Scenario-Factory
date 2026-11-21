@@ -64,3 +64,7 @@ Pausen-/Abbruchanforderungen sind separat dauerhaft; Anwendung vor Übernahme/n�
 ## SF-018 – 18.11.2026
 
 CUSTOMER/VENDOR sind nun echte Generatorbindungen für reine Stammdaten. Vor dem ersten Standardinsert prüfen gemeinsame Partner Rules und verpflichtender BackgroundProcessing-Subscriber die unveränderte Snapshotbindung, konkreten Batch-/Jobbesitz sowie Session-/Server-ID und Session-GUID. Vorhandener Claimcommit/Runner/Checkpoint/Recovery bleiben erhalten; keine neue Commit- oder Retrygrenze. Generator.Resume bleibt gesperrt. Abgeleitete Standardkontakte teilen den Batch, Zähler beziehen sich auf führende Partner. [Vertrag und noch offene Laufzeitfälle](PARTNER_GENERATION.md).
+
+## SF-045 – vorgeschalteter Unternehmensauftrag
+
+Company Initialization 90361 ist ein nicht wiederkehrender Standardjob mit Autoretry 0. Gespeicherte Objekt-, Firmen-, RecordId-, Session-/Server- und Anforderungsbindung werden geprüft. Foundation, Paketvorlage, Snapshot, Plan, erster Datenjob und Run-ID sind commitgeschützt atomar. Erfolgreiche Vorbereitung setzt keinen Abschlussstatus. Danach gelten die vorhandenen Claims, Checkpoints, Qualitäts- und Recoveryregeln. Keine neue Queue-/Protokolltabelle. [Audit und Ablauf](INDUSTRY_INITIALIZATION.md).

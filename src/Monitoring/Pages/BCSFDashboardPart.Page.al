@@ -1,5 +1,7 @@
 namespace BCScenarioFactory.Monitoring;
 
+using BCScenarioFactory.Core;
+
 page 90362 "BCSF Dashboard Part"
 {
     ApplicationArea = All;
@@ -13,12 +15,25 @@ page 90362 "BCSF Dashboard Part"
             {
                 ApplicationArea = All;
                 trigger Ready()
+                var
+                    Setup: Record "BCSF Factory Setup";
                 begin
                     IsReady := true;
                     if StockGroup = '' then
                         StockGroup := 'master';
                     ReloadStock();
                     RenderDashboard();
+                    if not WizardOpened then begin
+                        WizardOpened := true;
+                        if Setup.ReadPermission() then
+                            if not Setup.Get(Setup.GetSetupKey()) then
+                                Page.RunModal(Page::"BCSF Factory Setup Card")
+                            else
+                                if not Setup."Company Initialized" and IsNullGuid(Setup."Industry Job Id") then
+                                    Page.RunModal(Page::"BCSF Factory Setup Card");
+                        ReloadStock();
+                        RenderDashboard();
+                    end;
                 end;
 
                 trigger Command(ActionCode: Text; RunId: Text)
@@ -112,6 +127,7 @@ page 90362 "BCSF Dashboard Part"
     var
         SelectedRunId: Guid;
         IsReady: Boolean;
+        WizardOpened: Boolean;
         StockGroup: Text;
         EntireCompany: Boolean;
         StockRunId: Guid;

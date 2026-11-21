@@ -1,5 +1,9 @@
 # Bedienkonzept, Seiten und Dashboard
 
+## SF-045 – aktueller verbindlicher Ablauf
+
+Kontenplan einmalig → tatsächlich unterstützte Branche → drei Größen mit versionierten Mengenverhältnissen → unterstützte Prozessstufe → ein Hintergrundstart. Gemeinsame Einrichtung und Branchenvoraussetzungen kommen vor Stammdaten, diese vor Belegen/Buchungen. Neue Generatoren nutzen vorhandene Registry, Snapshots, Queue, Checkpoints, Qualitätsabschluss und Dashboard; keine zusätzlichen Assistenten oder parallele Vorlagen-/Finanzeinrichtung. Technische Konfiguration bleibt optionaler Expertenzugang. Aktuell Großhandel und ungebuchte Belege implementiert, native Abnahme offen; gebuchte Beschaffung und Folgeprozesse fehlen. [Konkreter Vertrag](INDUSTRY_INITIALIZATION.md). Frühere Normalabläufe dieses Dokuments sind historische Zwischenstände.
+
 **Aktueller Stand ab 1.0.2.0:** Der reale Bedienweg ist in [Mandanteneinrichtung und Vorlagenstart](COMPANY_INITIALIZATION.md) beschrieben. Ältere Angaben zu Finanzauswahl je Vorlage, Vorschaufenster, Wizard, parallelen Lauflisten und Dashboard-Host sind historische Nachweise. Entfernte Objekt-IDs bleiben unbenutzt.
 
 **Status:** JavaScript-Dashboard mit eigenem Role-Center und wiederverwendbarer CardPart sowie fünfstufiger Wizard implementiert, **Zur Prüfung**. Fachgeneratoren und echte BC-Laufzeitabnahme ausstehend. Details: [MONITORING_WIZARD.md](MONITORING_WIZARD.md).

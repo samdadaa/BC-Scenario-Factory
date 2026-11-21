@@ -40,6 +40,7 @@ codeunit 90369 "BCSF Dashboard Stock"
 
   procedure Build(GroupKey: Text; EntireCompany: Boolean; StockRunId: Guid): JsonObject
   var
+    Rows: RecordRef;
     Stock: JsonObject;
     Groups: JsonArray;
     Catalog: JsonArray;
@@ -47,7 +48,6 @@ codeunit 90369 "BCSF Dashboard Stock"
     Entry: JsonToken;
     Metric: JsonObject;
     View: JsonObject;
-    Rows: RecordRef;
     Status: Text;
     Count: Integer;
     CanOpen: Boolean;
@@ -140,10 +140,10 @@ codeunit 90369 "BCSF Dashboard Stock"
 
   procedure OpenMetric(GroupKey: Text; MetricKey: Text; EntireCompany: Boolean; StockRunId: Guid; LastStock: JsonObject)
   var
+    Rows: RecordRef;
     Catalog: JsonArray;
     Item: JsonToken;
     Metric: JsonObject;
-    Rows: RecordRef;
     Count: Integer;
     ExpectedCount: Integer;
     Status: Text;
@@ -766,7 +766,7 @@ codeunit 90369 "BCSF Dashboard Stock"
         begin
           AddMetric(Catalog, 'quote', Database::"Purchase Header", Page::"Purchase Quotes", false, Doc0Lbl);
           AddMetric(Catalog, 'blanket', Database::"Purchase Header", Page::"Blanket Purchase Orders", false, Doc1Lbl);
-          AddMetric(Catalog, 'order', Database::"Purchase Header", Page::"Purchase Order List", false, Doc2Lbl);
+          AddMetric(Catalog, 'order', Database::"Purchase Header", Page::"Purchase Order List", true, Doc2Lbl);
           AddMetric(Catalog, 'invoice', Database::"Purchase Header", Page::"Purchase Invoices", false, Doc3Lbl);
           AddMetric(Catalog, 'credit', Database::"Purchase Header", Page::"Purchase Credit Memos", false, Doc4Lbl);
           AddMetric(Catalog, 'return', Database::"Purchase Header", Page::"Purchase Return Order List", false, Doc5Lbl);
@@ -791,30 +791,20 @@ codeunit 90369 "BCSF Dashboard Stock"
           AddMetric(Catalog, 'postingSetup', Database::"General Posting Setup", Page::"General Posting Setup", false, '');
         end;
       'warehouse':
-        begin
-          AddMetric(Catalog, 'warehouseEntry', Database::"Warehouse Entry", Page::"Warehouse Entries", false, '');
-        end;
+        AddMetric(Catalog, 'warehouseEntry', Database::"Warehouse Entry", Page::"Warehouse Entries", false, '');
       'manufacturing':
         begin
           AddMetric(Catalog, 'productionBom', Database::"Production BOM Header", Page::"Production BOM List", false, '');
           AddMetric(Catalog, 'assembly', Database::"Assembly Header", Page::"Assembly Orders", false, '');
         end;
       'projects':
-        begin
-          AddMetric(Catalog, 'job', Database::"Job", Page::"Job List", false, '');
-        end;
+        AddMetric(Catalog, 'job', Database::"Job", Page::"Job List", false, '');
       'service':
-        begin
-          AddMetric(Catalog, 'serviceItem', Database::"Service Item", Page::"Service Item List", false, '');
-        end;
+        AddMetric(Catalog, 'serviceItem', Database::"Service Item", Page::"Service Item List", false, '');
       'assets':
-        begin
-          AddMetric(Catalog, 'asset', Database::"Fixed Asset", Page::"Fixed Asset List", false, '');
-        end;
+        AddMetric(Catalog, 'asset', Database::"Fixed Asset", Page::"Fixed Asset List", false, '');
       'contacts':
-        begin
-          AddMetric(Catalog, 'relation', Database::"Contact Business Relation", 0, false, '');
-        end;
+        AddMetric(Catalog, 'relation', Database::"Contact Business Relation", 0, false, '');
     end;
   end;
 

@@ -35,6 +35,7 @@ codeunit 90366 "BCSF Dashboard Commands"
       'runs': Page.Run(Page::"BCSF Factory Dashboard");
       'monitor': Page.Run(Page::"BCSF Factory Dashboard");
       'setup': Page.Run(Page::"BCSF Factory Setup Card");
+      'companyQueue': OpenCompanyQueue();
       'run', 'scenario', 'progress', 'plan', 'savePlan', 'readiness', 'preflight', 'synthetic',
       'prepare', 'schedule', 'pause', 'cancel', 'apply', 'resume', 'batches', 'history', 'records', 'queue', 'primary':
         begin
@@ -44,6 +45,25 @@ codeunit 90366 "BCSF Dashboard Commands"
       else
         Error(UnknownActionErr);
     end;
+  end;
+
+  local procedure OpenCompanyQueue()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Execution: Record "BCSF Run Execution";
+    Job: Record "Job Queue Entry";
+    JobId: Guid;
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    JobId := Setup."Industry Job Id";
+    if not IsNullGuid(Setup."Industry Run Id") then
+      if Execution.Get(Setup."Industry Run Id") then
+        JobId := Execution."Job Queue Entry Id";
+    Job.Get(JobId);
+    if (Job."Object Type to Run" <> Job."Object Type to Run"::Codeunit) or
+      not (Job."Object ID to Run" in [Codeunit::"BCSF Company Initialization", Codeunit::"BCSF Batch Worker"]) then
+      Error(UnknownActionErr);
+    Page.Run(Page::"Job Queue Entry Card", Job);
   end;
 
   local procedure ExecuteRunAction(ActionCode: Text; Header: Record "BCSF Run Header")

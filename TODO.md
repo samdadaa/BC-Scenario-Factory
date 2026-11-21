@@ -1,5 +1,11 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
+
+## Aktueller Nutzerauftrag SF-045 – 21.11.2026
+
+Der ausdrücklich beauftragte Architekturwechsel ist ein zusammenhängendes Ticket und hat Vorrang vor weiterem Generatorausbau. Gemeinsame Einrichtung einmalig, Branchenvoraussetzungen automatisch, Stämme vor Bewegungsdaten, Prozesse nach freigegebener Stufe, interne versionierte Pakete, vorhandene Hintergrundverarbeitung und einheitliches Monitoring. Alle späteren Tickets müssen sich diesem Vertrag unterordnen; keine zusätzlichen Benutzerassistenten/Seiten ohne belegten Bedarf. [Verbindlicher Ablauf](docs/INDUSTRY_INITIALIZATION.md).
+
+
 **Stand:** 19.11.2026 – SF-040 nach Nutzerangabe eingespielt. SF-041 umgesetzt und zur gemeinsamen Sandbox-Prüfung bereit. SF-044 umgesetzt, zur Prüfung; reale BC-Abnahme offen.
 
 ## Verbindliche Arbeitsregeln (aus dem vorhandenen TODO/AGENTS.md übernommen)
@@ -29,6 +35,7 @@ P0-Reihenfolge: [SF-038](#sf-038) Finanzsetup → [SF-039](#sf-039) Partnerdaten
 
 | Ticket | Phase | Prio | Titel | Status |
 | --- | --- | --- | --- | --- |
+| [SF-045](#sf-045) | Architektur | P0 | Branchengesteuerte Unternehmensinitialisierung | Zur Prüfung |
 | [SF-037](#sf-037) | Stabilisierung | P0 | Reparatur Vorlage → Start → Ergebnis | Zur Prüfung |
 | [SF-038](#sf-038) | Stabilisierung | P0 | Realistische Kontenpläne und vollständige Buchungseinrichtung im Starterpfad | Zur Prüfung |
 | [SF-039](#sf-039) | Stabilisierung | P0 | Realistische Geschäftspartner und nutzbare Partnerstammdaten | Zur Prüfung |
@@ -1835,16 +1842,44 @@ Akzeptanzkriterien
 
 ---
 
+<a name="sf-045"></a>
+
+### SF-045 — Branchengesteuerte Unternehmensinitialisierung und Architekturvereinfachung
+
+**Status:** Zur Prüfung
+**Priorität:** P0
+**Abhängigkeiten:** Bestehende Foundation, SF-019/SF-021, Queue/Checkpoint/Qualitätsabschluss
+**Scope:** Der eingefügte Nutzerauftrag vom 21.11.2026; zuerst Großhandel, keine neun unfertigen Branchen.
+
+**Ausgangslage:** Normalweg benötigt getrennte Einrichtung und technische Vorlagenparameter. Einkauf besitzt bisher nur einen Vendor-Generator. Alte Modul-/Planungsbeschreibungen sind keine ausführbaren Unternehmenspakete.
+
+**Ziel und Schritte:**
+
+- [x] Aktuelle Module, Objekte, Events, JSON, Ausführung und Persistenz inventarisieren und Behalten/Zusammenführen/Intern verbergen/Entfernen bewerten.
+- [x] Bestehende Setupkarte zum fünfstufigen Assistenten und einen Hintergrundstart mit atomarer Foundation/Planvorbereitung ergänzen.
+- [x] Bestehende Partner-/Artikel-/Verkaufslogik nutzen, fehlende ungebuchte Einkaufsbestellungen mit echten Same-run-Beziehungen ergänzen.
+- [x] Drei konkrete Größen, Ergebnis-/Fehleranzeige und interne Expertennavigation; neuer geschützter Großhandelsreferenzstarter und fünf Methoden im vorhandenen isolierten Testhost.
+- [x] Neue lokale Finanzpaketversion 3.0.0 mit begrenzter BWA; Altversionen/Snapshots/persistente Tabellen erhalten.
+- [ ] Frische SKR04- und SKR03-Sandboxfirmen ohne weitere manuelle Einrichtung fachlich abnehmen; reale DE/EN-UI, Hintergrund nach Browserende, Rechte, Fehler nach Batch und Upgrade prüfen.
+- [ ] Buchende Unternehmensstufe erst nach unterstützter Standardbeschaffung und nachgewiesener Buchungsfähigkeit freigeben; weitere Branchen bleiben gesperrt.
+- [ ] Menschliche Abnahme.
+
+**Akzeptanz und Risiken:** Kleiner ungebuchter Referenzfall 20 Debitoren, 5 Kreditoren, 40 Artikel, 15 Einkaufsbestellungen, 5 Angebote, 12 Verkaufsaufträge und 3 Verkaufsrechnungen; korrekte Beziehungen, keine Posten, echte Qualitätsfreigabe und Listenfilter. Keine doppelten Starts/unsicheren Retries, keine Überschreibung vorhandener Konfiguration, kein ForceSync oder historische Datenlöschung. Bestehende Dashboardfiltergrenzen für große Mengen offen. Keine Voll-DATEV-/Voll-BWA-Zusage.
+
+**Nachweise:** [Umsetzung/Plan/Kompatibilität](docs/INDUSTRY_INITIALIZATION.md), [Audit aller Komponenten](docs/ARCHITECTURE_AUDIT_SF045.md), [echte lokale Prüfungen und offene Native-Abnahme](docs/TESTS.md#sf-045--branchengesteuerte-unternehmensinitialisierung). Kein Deployment, Commit oder Push.
+
+---
+
 ## Ticketvorlage für zukünftige Änderungen
 
 ### SF-XXX — Titel
-**Status:** Offen  
-**Priorität:** P0/P1/P2/P3  
-**Abhängigkeiten:** Konkrete Tickets  
-**Betroffene Module:** Nach realem Code prüfen  
-**Ziel:** ...  
-**Umfang / Nicht-Ziele:** ...  
-**Schritte:** [ ] Analyse [ ] Design [ ] Implementierung [ ] echte Tests [ ] Dokumentation  
-**Akzeptanz:** Nachweisbarer fachlicher Sollzustand, keine Regression. Bei Generatoren zusätzlich Qualitätsregeln und SF-042 berücksichtigen.  
-**Testprotokoll:** BC-Version, Umgebung, Inputs, Erwartung, tatsächliches Ergebnis, bekannte Grenzen  
+**Status:** Offen
+**Priorität:** P0/P1/P2/P3
+**Abhängigkeiten:** Konkrete Tickets
+**Betroffene Module:** Nach realem Code prüfen
+**Ziel:** ...
+**Umfang / Nicht-Ziele:** ...
+**Schritte:** [ ] Analyse [ ] Design [ ] Implementierung [ ] echte Tests [ ] Dokumentation
+**Akzeptanz:** Gemeinsamen SF-045-Unternehmensablauf ohne separate Assistenten/Finanzinitialisierung/Vorlagenverwaltung verwenden; interne versionierte Branchenvorgaben, automatische Voraussetzungen, Stämme vor Bewegungen, Modusgrenzen, einheitliche Queue/Monitoring. Nachweisbarer fachlicher Sollzustand, keine Regression. Bei Generatoren zusätzlich Qualitätsregeln und SF-042 berücksichtigen.
+**Testprotokoll:** BC-Version, Umgebung, Inputs, Erwartung, tatsächliches Ergebnis, bekannte Grenzen
 **Freigabe:** [ ] Menschlich bestätigt.

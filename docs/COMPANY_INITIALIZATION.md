@@ -1,5 +1,9 @@
 # Einmalige Mandanteneinrichtung und Vorlagenstart
 
+## SF-045 – aktueller verbindlicher Ablauf
+
+Kontenplan einmalig → tatsächlich unterstützte Branche → drei Größen mit versionierten Mengenverhältnissen → unterstützte Prozessstufe → ein Hintergrundstart. Gemeinsame Einrichtung und Branchenvoraussetzungen kommen vor Stammdaten, diese vor Belegen/Buchungen. Neue Generatoren nutzen vorhandene Registry, Snapshots, Queue, Checkpoints, Qualitätsabschluss und Dashboard; keine zusätzlichen Assistenten oder parallele Vorlagen-/Finanzeinrichtung. Technische Konfiguration bleibt optionaler Expertenzugang. Aktuell Großhandel und ungebuchte Belege implementiert, native Abnahme offen; gebuchte Beschaffung und Folgeprozesse fehlen. [Konkreter Vertrag](INDUSTRY_INITIALIZATION.md). Frühere Normalabläufe dieses Dokuments sind historische Zwischenstände.
+
 **Stand:** 19.11.2026, Quellversion 1.0.2.0. **Zur Prüfung.** Der bisherige Finanzdialog pro Vorlage ist entfallen. Eine Einrichtung gehört zu einem Sandbox-Mandanten, nicht zu einer Vorlage.
 
 ## Bedienung
