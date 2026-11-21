@@ -118,3 +118,8 @@ Globaler Buchungsschalter bleibt erforderlich. Neue Vorlagenzustimmung standardm
 ## SF-045 – Unternehmensjob
 
 Expliziter Start autorisiert die angezeigte fehlende Foundation und ungebuchte Daten. Der Job prüft tatsächliche Sandbox/Firma, effektive Rechte und gespeicherte Standardjob-/Sitzungsidentität erneut. Requestdaten werden auch bei Modify(false) gegen den gespeicherten Vorzustand geschützt; vorhandene Anfrage blockiert Doppelstart. CommitBehavior::Error umschließt Vorbereitung und spätere fachliche Batches. Autoretry 0; keine Veröffentlichung, Rechteerhöhung, Fremdskriptinstallation oder Standard-Ledger-Inserts. Standardfehler werden nur lesend aus der aktuellen Queue angezeigt, nicht in neue Logs kopiert. Native Sicherheits-/Parallelitätsabnahme offen.
+
+
+## 1.0.7.0 – indirekte Standardbuchungsrechte
+
+Gebuchte Tabellen werden durch BC-Standardcodeunits geschrieben. Environment Guard prüft effektive zugewiesene Insertrechte Yes/Indirect, bei Ausgleich zusätzlich Modify sowie Leserecht und Standard-Codeunit-Ausführungsrecht. Keine direkte WritePermission-Pflicht auf gebuchten Tabellen, keine neuen Ledgerrechte in BCSF ADMIN. Ungebuchte Belege benötigen weiterhin direkte Schreibrechte. Explizite separate Buchungsfreigaben werden beim Kopieren/Import zurückgesetzt; paymentSetup bindet nur synthetische Bank ohne externe Kennungen. Laufzeit-/Sandbox-/Claim-/Transaktionsgrenzen gelten auch im Hintergrund. [Gemeldeter Fehler und Korrektur](INDUSTRY_INITIALIZATION.md#gemeldeter-berechtigungsfehler-und-korrektur). Rechteprüfung mit realen Standardrollen noch offen.

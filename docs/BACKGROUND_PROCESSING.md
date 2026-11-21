@@ -68,3 +68,8 @@ CUSTOMER/VENDOR sind nun echte Generatorbindungen für reine Stammdaten. Vor dem
 ## SF-045 – vorgeschalteter Unternehmensauftrag
 
 Company Initialization 90361 ist ein nicht wiederkehrender Standardjob mit Autoretry 0. Gespeicherte Objekt-, Firmen-, RecordId-, Session-/Server- und Anforderungsbindung werden geprüft. Foundation, Paketvorlage, Snapshot, Plan, erster Datenjob und Run-ID sind commitgeschützt atomar. Erfolgreiche Vorbereitung setzt keinen Abschlussstatus. Danach gelten die vorhandenen Claims, Checkpoints, Qualitäts- und Recoveryregeln. Keine neue Queue-/Protokolltabelle. [Audit und Ablauf](INDUSTRY_INITIALIZATION.md).
+
+
+## 1.0.7.0 – Buchung und Zahlung im bestätigten Batch
+
+Neue Einkaufs-/Zahlungslogik nutzt vorhandene Claim-/Checkpoint-Verträge. Payment rekonstruiert den unveränderlichen Snapshot und prüft über EnsureExecution den tatsächlichen Worker vor dem Buchen. Ein transienter executingBatch-Kontext wird nur nach der Generatorbesitzprüfung weitergereicht. Buchung, Herkunft und Ausgleich stehen unter CommitBehavior::Error; keine direkten Standardpostenmutation/Commits. Unklare Arbeit bleibt prüfpflichtig, kein neuer automatischer Retry. [Vertrag](INDUSTRY_INITIALIZATION.md).

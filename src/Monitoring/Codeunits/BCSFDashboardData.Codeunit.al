@@ -441,6 +441,7 @@ codeunit 90365 "BCSF Dashboard Data"
     Texts.Add('companyQueue', CompanyQueueLbl);
     Texts.Add('companyProgress', CompanyProgressLbl);
     Texts.Add('expertTools', ExpertToolsLbl);
+    Texts.Add('workflow', WorkflowLbl);
     Texts.Add('requirements', RequirementsLbl);
     Texts.Add('notRecorded', NotRecordedLbl);
     Texts.Add('selected', SelectedLbl);
@@ -539,6 +540,7 @@ codeunit 90365 "BCSF Dashboard Data"
     RequirementsLbl: Label 'Missing generators or prerequisites block execution. Posting requires a separate authorization contract.';
     NotRecordedLbl: Label 'Not recorded';
     SelectedLbl: Label 'Selected';
+    WorkflowLbl: Label 'Generate company data';
     CompanyQueueLbl: Label 'Current background job';
     CompanyProgressLbl: Label 'Company generation progress';
     FoundationLbl: Label 'Company foundation';

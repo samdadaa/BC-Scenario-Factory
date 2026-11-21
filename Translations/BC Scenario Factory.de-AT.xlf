@@ -250,14 +250,14 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Safety - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Action 3649698641 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Choose the chart of accounts and prepare this sandbox company once. Does not post documents.</source>
-          <target state="translated">Wählt den Kontenplan und richtet diesen Sandbox-Mandanten einmalig ein. Bucht keine Belege.</target>
+          <source>Use the existing company foundation and choose the data size and process scope. A new run requires the previous company run to have completed.</source>
+          <target state="translated">Vorhandene Mandantenbasis nutzen sowie Datenumfang und Prozessstufe wählen. Für einen neuen Lauf muss der vorherige Unternehmenslauf abgeschlossen sein.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action InitializeSetup - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Action 3649698641 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Initialize Company</source>
-          <target state="translated">Mandant initialisieren</target>
+          <source>Set up company or start another run</source>
+          <target state="translated">Unternehmen einrichten oder weiteren Lauf starten</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action InitializeSetup - Property Caption</note>
         </trans-unit>
@@ -7654,8 +7654,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType LegacyPostedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2085679885 - NamedType 2757287588" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posted sales from newly generated items require an earlier posted purchase receipt in the same run. Use unposted documents until purchase generation is available.</source>
-          <target state="translated">Die Verkaufsbuchung für neu erzeugte Artikel benötigt einen vorherigen gebuchten Wareneingang im selben Lauf. Verwenden Sie bis zur Umsetzung des Einkaufs ungebuchte Belege.</target>
+          <source>Posted sales from newly generated items require approved standard purchase receipts in the same run. Review purchase targets, quotas and posting approval.</source>
+          <target state="translated">Gebuchte Verkäufe neu erzeugter Artikel benötigen freigegebene Standard-Einkaufswareneingänge desselben Laufs. Einkaufsziele, Quoten und Buchungsfreigabe prüfen.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType ReceiptRequiredErr</note>
         </trans-unit>
@@ -7666,14 +7666,14 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType SameRunErr</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 3901634850" size-unit="char" translate="yes" xml:space="preserve">
-          <source> Unposted purchase orders: %1; sales quotes: %2; sales orders: %3; sales invoices: %4. No posting.</source>
-          <target state="translated"> Ungebuchte Einkaufsbestellungen: %1; Verkaufsangebote: %2; Verkaufsaufträge: %3; Verkaufsrechnungen: %4. Keine Buchung.</target>
+          <source> Planned purchase orders: %1; sales quotes: %2; sales orders: %3; sales invoices: %4. Quotes remain unposted; posting follows the selected process and approval.</source>
+          <target state="translated"> Geplante Einkaufsbestellungen: %1; Verkaufsangebote: %2; Verkaufsaufträge: %3; Verkaufsrechnungen: %4. Angebote bleiben ungebucht; Buchungen folgen der gewählten Prozessstufe und Freigabe.</target>
           <note from="Developer" annotates="general" priority="2">%1 = purchases, %2 = quotes, %3 = orders, %4 = invoices</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType DocumentsLbl</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 1736975857" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Master data only,With unposted documents</source>
-          <target state="translated">Nur Stammdaten,Mit ungebuchten Belegen</target>
+          <source>Master data only,With unposted documents,With posted documents,With payments and application</source>
+          <target state="translated">Nur Stammdaten,Mit ungebuchten Belegen,Mit gebuchten Belegen,Mit Zahlungen und Ausgleich</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType ProcessesLbl</note>
         </trans-unit>
@@ -7744,8 +7744,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessStep - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 681458388 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posting is unavailable until purchase receipts and complete posting prerequisites are supported. No documents are posted.</source>
-          <target state="translated">Buchungen sind erst mit unterstützten Wareneingängen und vollständigen Buchungsvoraussetzungen verfügbar. Es werden keine Belege gebucht.</target>
+          <source>Select unposted documents, standard purchase and sales posting, or additional payments and application. Posting requires explicit approval.</source>
+          <target state="translated">Ungebuchte Belege, Standard-Einkaufs- und Verkaufsbuchungen oder zusätzliche Zahlungen und Ausgleich wählen. Buchungen benötigen eine ausdrückliche Freigabe.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessChoice - Property ToolTip</note>
         </trans-unit>
@@ -7756,8 +7756,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessChoice - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 681458388 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Master data only,With unposted documents</source>
-          <target state="translated">Nur Stammdaten,Mit ungebuchten Belegen</target>
+          <source>Master data only,With unposted documents,With posted documents,With payments and application</source>
+          <target state="translated">Nur Stammdaten,Mit ungebuchten Belegen,Mit gebuchten Belegen,Mit Zahlungen und Ausgleich</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessChoice - Property OptionCaption</note>
         </trans-unit>
@@ -7870,8 +7870,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType LimitErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3298024591 - NamedType 2845165943" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Wholesale currently supports master data and unposted documents. Posted purchase receipts and follow-up processes are not yet available.</source>
-          <target state="translated">Großhandel unterstützt derzeit Stammdaten und ungebuchte Belege. Gebuchte Einkaufswareneingänge und Folgeprozesse sind noch nicht verfügbar.</target>
+          <source>Select master data, unposted documents, posted documents or approved payments and application for wholesale.</source>
+          <target state="translated">Für Großhandel Stammdaten, ungebuchte Belege, gebuchte Belege oder freigegebene Zahlungen und Ausgleich wählen.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType PostingErr</note>
         </trans-unit>
@@ -7972,8 +7972,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType WholesaleLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3500129312 - NamedType 1981706351" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Unposted Purchase Orders</source>
-          <target state="translated">Ungebuchte Einkaufsbestellungen</target>
+          <source>Purchase Orders, Receipts and Invoices</source>
+          <target state="translated">Einkaufsbestellungen, Wareneingänge und Rechnungen</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType NameLbl</note>
         </trans-unit>
@@ -7990,8 +7990,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType ResultErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3500129312 - NamedType 2685700126" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Purchase orders require unposted mode, two vendors and items from this run, a simple location and valid captured purchase numbering.</source>
-          <target state="translated">Einkaufsbestellungen benötigen den ungebuchten Modus, zwei Kreditoren und Artikel aus diesem Lauf, einen einfachen Lagerort und gültige erfasste Einkaufsnummernserien.</target>
+          <source>Purchase orders require a supported document mode, two vendors and items from this run, a simple location and valid captured purchase numbering.</source>
+          <target state="translated">Einkaufsbestellungen benötigen einen unterstützten Belegmodus, zwei Kreditoren und Artikel aus diesem Lauf, einen einfachen Lagerort und gültige erfasste Einkaufsnummernserien.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType SetupErr</note>
         </trans-unit>
@@ -8000,6 +8000,168 @@
           <target state="translated">Einkaufsbelege</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">EnumExtension BCSF Purchase Binding - EnumValue PurchaseDocuments - Property Caption</note>
+        </trans-unit>
+      <trans-unit id="Page 1896398021 - NamedType 3584415651" size-unit="char" translate="yes" xml:space="preserve">
+          <source> All resulting posted purchase and sales invoices are fully paid and applied through standard journal posting; unposted documents remain open.</source>
+          <target state="translated"> Alle daraus gebuchten Einkaufs- und Verkaufsrechnungen werden über die Standard-Buchblattbuchung vollständig bezahlt und ausgeglichen; ungebuchte Belege bleiben offen.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType PaymentsReviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 3123272234" size-unit="char" translate="yes" xml:space="preserve">
+          <source> Purchase orders: 20% unposted, 20% partial, 60% fully invoiced; sales orders: 25% unposted, 25% partial, 50% fully invoiced; sales invoices: 33% unposted, 67% posted. Rounded down per target; remaining units stay unposted.</source>
+          <target state="translated"> Einkaufsbestellungen: 20% ungebucht, 20% teilweise, 60% vollständig fakturiert; Verkaufsaufträge: 25% ungebucht, 25% teilweise, 50% vollständig fakturiert; Verkaufsrechnungen: 33% ungebucht, 67% gebucht. Je Ziel wird abgerundet; verbleibende Einheiten bleiben ungebucht.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType PostingMixLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3451286186 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting approval</source>
+          <target state="translated">Buchungsfreigabe</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PostingConsent - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 78775189 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explicitly authorizes standard receipts, shipments and invoices. Payment mode also posts and applies customer and vendor payments using a synthetic bank account without bank transmission.</source>
+          <target state="translated">Gibt Standardwareneingänge, Lieferungen und Rechnungen ausdrücklich frei. Der Zahlungsmodus bucht und gleicht zusätzlich Debitoren- und Kreditorenzahlungen über ein synthetisches Bankkonto ohne Bankübermittlung aus.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PostingApproved - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 78775189 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Approve posting and selected follow-up processes</source>
+          <target state="translated">Buchungen und gewählte Folgeprozesse freigeben</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PostingApproved - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2583907404 - NamedType 1698880782" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payments require the captured follow-up approval and enabled posting in this sandbox.</source>
+          <target state="translated">Zahlungen benötigen die erfasste Freigabe für Folgeprozesse und aktivierte Buchungen in dieser Sandbox.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Payment Processor - NamedType ApprovalErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2583907404 - NamedType 308753192" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Synthetic payment clearing (no bank connection)</source>
+          <target state="translated">Synthetische Zahlungsverrechnung (ohne Bankanbindung)</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Payment Processor - NamedType BankLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2583907404 - NamedType 2714761632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment or application could not be verified. Keep the batch blocked for review; do not repeat an uncertain payment.</source>
+          <target state="translated">Zahlung oder Ausgleich konnte nicht bestätigt werden. Paket zur Prüfung gesperrt lassen; unklare Zahlungen nicht wiederholen.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Payment Processor - NamedType ResultErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2583907404 - NamedType 2685700126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment setup, synthetic clearing bank or standard posting permissions are missing or changed. Review the company foundation; no bank data is sent.</source>
+          <target state="translated">Zahlungseinrichtung, synthetisches Verrechnungsbankkonto oder Standard-Buchungsrechte fehlen oder wurden geändert. Mandantenbasis prüfen; es werden keine Bankdaten gesendet.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Payment Processor - NamedType SetupErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 2195544840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale - payments and application</source>
+          <target state="translated">Großhandel - Zahlungen und Ausgleich</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PaidWholesaleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 2108339611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale - mixed posted documents</source>
+          <target state="translated">Großhandel - gemischte gebuchte Belege</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PostedWholesaleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2531880237 - NamedType 1698880782" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explicitly approve standard posting and, for follow-up mode, payments and application before starting.</source>
+          <target state="translated">Vor dem Start Standardbuchungen und bei Folgeprozessen auch Zahlungen und Ausgleich ausdrücklich freigeben.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType ApprovalErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 997528235" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generate company data</source>
+          <target state="translated">Unternehmensdaten erzeugen</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType WorkflowLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1050560864 - NamedType 1422195362" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase posting did not produce the expected vendor, inventory and accounting evidence. Keep the batch blocked for review.</source>
+          <target state="translated">Die Einkaufsbuchung lieferte nicht die erwarteten Kreditoren-, Artikel- und Buchungsnachweise. Paket zur Prüfung gesperrt lassen.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Evidence - NamedType EvidenceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3500129312 - NamedType 1698880782" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Approve purchase posting on this template and enable posting in Factory Setup before capturing a posted run.</source>
+          <target state="translated">Vor dem Erfassen eines gebuchten Laufs Einkaufsbuchungen an dieser Vorlage freigeben und Buchungen in der Factory-Einrichtung aktivieren.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType ApprovalErr</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 847034531 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explicitly approves standard customer and vendor payments and application for a newly captured follow-up run. No bank transmission is performed.</source>
+          <target state="translated">Gibt Standardzahlungen und Ausgleich für Debitoren und Kreditoren in einem neu erfassten Folgelauf ausdrücklich frei. Es erfolgt keine Bankübermittlung.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Payment Posting Approved - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 847034531 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Approve Payments and Application</source>
+          <target state="translated">Zahlungen und Ausgleich freigeben</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Payment Posting Approved - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2426675300 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explicitly approves standard purchase receipts and invoices for a newly captured run. Global posting permission is also required.</source>
+          <target state="translated">Gibt Standard-Einkaufswareneingänge und Rechnungen für einen neu erfassten Lauf ausdrücklich frei. Die globale Buchungsfreigabe ist ebenfalls erforderlich.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Purchase Posting Approved - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2426675300 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Approve Purchase Posting</source>
+          <target state="translated">Einkaufsbuchungen freigeben</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Purchase Posting Approved - Property Caption</note>
+        </trans-unit>
+      <trans-unit id="Codeunit 3043848220 - NamedType 1892776461" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale company</source>
+          <target state="translated">Großhandelsunternehmen</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType WholesaleReferenceLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 616362993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer payments</source>
+          <target state="translated">Debitorenzahlungen</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType CustomerPaymentsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 126709513" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor payments</source>
+          <target state="translated">Kreditorenzahlungen</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType VendorPaymentsLbl</note>
+        </trans-unit>
+      <trans-unit id="Page 1896398021 - NamedType 3474692067" size-unit="char" translate="yes" xml:space="preserve">
+          <source> Automatic inventory cost posting is enabled only in a company without posted activity; an existing conflicting cost policy stops the run.</source>
+          <target state="translated"> Die automatische Lagerkostenbuchung wird nur in einem Mandanten ohne Buchungen aktiviert; eine bestehende widersprüchliche Kosteneinstellung stoppt den Lauf.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType CostPostingLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 2246299024" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A new run creates the displayed synthetic records in this company. </source>
+          <target state="translated">Ein neuer Lauf erzeugt die angezeigten synthetischen Datensätze in diesem Mandanten. </target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType NewDatasetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2902468460 - NamedType 62106829" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted company scenarios require automatic inventory cost posting. Existing posted activity prevents changing this policy automatically. Review Inventory Setup or use a fresh sandbox company.</source>
+          <target state="translated">Gebuchte Unternehmensszenarien benötigen die automatische Lagerkostenbuchung. Vorhandene Buchungen verhindern die automatische Änderung dieser Einstellung. Lagereinrichtung prüfen oder einen frischen Sandboxmandanten verwenden.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType AutomaticCostErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 160728166" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Execution permission is missing for standard codeunit %1. Review the purchase, sales or journal posting role.</source>
+          <target state="translated">Das Ausführungsrecht für Standard-Codeunit %1 fehlt. Rolle für Einkaufs-, Verkaufs- oder Buchblattbuchung prüfen.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = standard codeunit ID</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType PostingExecuteErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 3019542234" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Standard posting requires read access and assigned direct or indirect insert permission for %1, and modify permission when applying entries. Review standard posting permissions; no direct ledger rights are granted.</source>
+          <target state="translated">Standardbuchungen benötigen Leserechte und zugewiesene direkte oder indirekte Einfügerechte für %1 sowie Änderungsrechte beim Ausgleich. Standard-Buchungsrechte prüfen; direkte Postenrechte werden nicht vergeben.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = table caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType PostingPermissionErr</note>
         </trans-unit>
       </group>
     </body>

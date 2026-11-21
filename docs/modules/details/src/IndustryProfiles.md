@@ -64,3 +64,8 @@ SF-021-Vorlagenkorrektur 1.0.5.1: neue gemischte Verkaufsvorlage und explizites 
 Wholesale Profile 90153 definiert versionierte TRADE-3-Mengen 20/5/40 und 15/5/12/3 im kleinen Belegpaket; Faktoren 10/100 für Mittel/Groß. Nur Master/Unposted. Seed lädt einen zusätzlichen festen Großhandelsreferenzstarter ausschließlich explizit und schützt vorhandene/entfernte/archivierte Vorlagen. Bestehende Branchenstarter werden nicht zu vollständigen Unternehmenspaketen erklärt.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## 1.0.7.0 – aktueller Folgeumfang
+
+TRADE Paketversion 4 mit vier Stufen, gemischten Buchungsquoten und zusätzlichen geschützten Referenzstartern. Alte Version 3, eigene/archivierte/entfernte Starter bleiben erhalten. [Gemeinsamer Vertrag](../../../INDUSTRY_INITIALIZATION.md). **Zur Prüfung**, native Abnahme offen.

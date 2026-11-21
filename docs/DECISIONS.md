@@ -130,3 +130,8 @@ Ein explizit geclaimter Queuebatch mit unverändertem Snapshot ist der einzige n
 Der aktuelle Nutzerauftrag ersetzt den früheren Vorbehalt einer frischen leeren Firma für den ausdrücklich unterstützten Großhandelsfall. Ziel ist ein durchgängiger Assistent ohne manuelle Buchungsmatrizen. Die bestehende Setupkarte wird wiederverwendet; Wholesale Profile 90153 nutzt vorhandene TRADE-3-Kataloge und Vorlagentabellen. Company Initialization 90361 ist ein fester Standard-Queuejob zur atomaren Vorbereitung; anschließend unveränderte Batchengine. Kein neues Branchenframework und keine neue Persistenztabelle.
 
 Nur zwei Stufen sind heute verfügbar: Stammdaten und ungebuchte Belege. Mit Buchungen bleibt wegen fehlender vorgelagerter Standardwareneingänge gesperrt (SF-020/SF-022). Weitere Branchen folgen erst mit realer Generator-/Setupabdeckung. Keine automatische Aufwertung früherer Profil-/Planungsdefinitionen zu Unternehmenspaketen. Lokale SKR-Testpakete 3.0.0 ergänzen die BWA; alte Paketversionen bleiben unverändert. Native Abnahme, Zielrechte, bestehende Firmen und Upgrade sind **Zu prüfen**. [Audit und Entscheidungen je Struktur](ARCHITECTURE_AUDIT_SF045.md).
+
+
+## Bestätigter Folgeauftrag 21.11.2026
+
+Nutzer wählt Zahlungen und Ausgleich für Einkaufs- und Verkaufsrechnungen als SF-022-Teilumfang. Dashboard alle zwei Sekunden im Hintergrund ohne Flackern, gebuchte Stufe und Einkauf im gemeinsamen Workflow. Keine Gutschriften/Retouren oder Teilzahlungen abgeleitet. XERJ lokal aktivieren, ausschließlich bcsf-docs; keine BC-Integration. Querschnittspflicht für Dashboard, Workflow, Stammdaten, Einrichtungen und Übersetzungen in AGENTS.md ergänzt. [Implementierungsvertrag](INDUSTRY_INITIALIZATION.md).

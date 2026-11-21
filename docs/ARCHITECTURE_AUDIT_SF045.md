@@ -1,5 +1,8 @@
 # SF-045 – Architektur-Audit und Objektinventar
 
+**Aktueller Nachtrag 1.0.7.0:** Der nachfolgende vollständige Inventarstand ist der Erststand 1.0.6.0 (137 Objekte). Zwei Ergänzungen: [Payment Processor 90401](../src/Finance/Codeunits/BCSFPaymentProcessor.Codeunit.al), [Purchase Evidence 90454](../src/Purchasing/Codeunits/BCSFPurchaseEvidence.Codeunit.al), insgesamt 139 Objekte/66 Codeunits. Bestehende Objekte behalten Identität/Pfad. [Neue Datenflüsse, Verträge und Grenzen](INDUSTRY_INITIALIZATION.md#aktueller-folgeumfang-1070--einkauf-buchung-und-ausgleich). Keine neue Tabelle/Seite, keine Entfernung.
+
+
 Stand 21.11.2026; ausschließlich aktueller lokaler Quellcode. **Zur Prüfung.** Referenzzahlen sind statische Nennungen, keine installierten Datensätze oder Laufzeitabdeckung. Native Upgrade-/Datenprüfung bleibt offen.
 
 ## Alt und neu

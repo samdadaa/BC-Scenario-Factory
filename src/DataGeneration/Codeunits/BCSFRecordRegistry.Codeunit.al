@@ -1,6 +1,7 @@
 namespace BCScenarioFactory.DataGeneration;
 
 using BCScenarioFactory.ScenarioManagement;
+using Microsoft.Bank.Ledger;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Finance.VAT.Ledger;
 using Microsoft.Inventory.Item.Attribute;
@@ -143,6 +144,7 @@ codeunit 90252 "BCSF Record Registry"
       Database::"Sales Cr.Memo Header", Database::"Sales Shipment Header", Database::"Purch. Inv. Header",
       Database::"Purch. Cr. Memo Hdr.", Database::"Purch. Rcpt. Header", Database::"Cust. Ledger Entry",
       Database::"Vendor Ledger Entry", Database::"G/L Entry", Database::"VAT Entry",
+      Database::"Detailed Cust. Ledg. Entry", Database::"Detailed Vendor Ledg. Entry", Database::"Bank Account Ledger Entry",
       Database::"Item Ledger Entry", Database::"Value Entry"]);
   end;
 

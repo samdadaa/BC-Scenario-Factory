@@ -1,7 +1,11 @@
 namespace BCScenarioFactory.Sales;
 
+using Microsoft.Sales.Posting;
+
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
+using BCScenarioFactory.Finance;
+using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ProcessEngine;
 using BCScenarioFactory.ScenarioManagement;
 using Microsoft.Bank.BankAccount;
@@ -45,7 +49,10 @@ codeunit 90429 "BCSF Sales Setup"
     if (Scenario."Item Second Vendor No." <> '') or not Contract.GetBoolean(InventorySettings, 'generatedVendors') then
       Error(SameRunErr);
     LocationCode := CopyStr(Contract.GetText(InventorySettings, 'location'), 1, MaxStrLen(LocationCode));
-    Settings.Add('version', 2);
+    if Scenario."Purchase Posting Approved" then
+      Settings.Add('version', 3)
+    else
+      Settings.Add('version', 2);
     Settings.Add('location', LocationCode);
     Settings.Add('postingApproved', Scenario."Sales Posting Approved");
     Sales.Get();
@@ -63,7 +70,7 @@ codeunit 90429 "BCSF Sales Setup"
   begin
     if not Context.Get('salesSetup', Token) then
       exit(false);
-    exit(Contract.GetInteger(Token.AsObject(), 'version') = 2);
+    exit(Contract.GetInteger(Token.AsObject(), 'version') in [2, 3]);
   end;
 
   procedure WithRunMasters(Context: JsonObject): JsonObject
@@ -144,7 +151,7 @@ codeunit 90429 "BCSF Sales Setup"
   begin
     if not Context.Get('salesSetup', Token) then
       Error(SourceErr);
-    if not (Contract.GetInteger(Token.AsObject(), 'version') in [1, 2]) then
+    if not (Contract.GetInteger(Token.AsObject(), 'version') in [1, 2, 3]) then
       Error(SourceErr);
     exit(Token.AsObject());
   end;
@@ -195,8 +202,12 @@ codeunit 90429 "BCSF Sales Setup"
     Location: Record Location;
     Sales: Record "Sales & Receivables Setup";
     GL: Record "General Ledger Setup";
+    Inventory: Record "Inventory Setup";
     Contract: Codeunit "BCSF Contract JSON";
+    Payments: Codeunit "BCSF Payment Processor";
+    Guard: Codeunit "BCSF Environment Guard";
     Values: JsonObject;
+    PurchaseToken: JsonToken;
     Ids: JsonToken;
     DateFrom: Date;
     DateTo: Date;
@@ -211,8 +222,13 @@ codeunit 90429 "BCSF Sales Setup"
         (TargetQuantity(Context, "BCSF Entity Type"::Vendor) < 2) or
         (TargetQuantity(Context, "BCSF Entity Type"::Item) < 1) then
         Error(SameRunErr);
-      if Contract.GetInteger(Target, 'processMode') = 2 then
-        Error(ReceiptRequiredErr);
+      if Contract.GetInteger(Target, 'processMode') = 2 then begin
+        if (Contract.GetInteger(Values, 'version') <> 3) or not Context.Get('purchaseSetup', PurchaseToken) then
+          Error(ReceiptRequiredErr);
+        if (Contract.GetInteger(PurchaseToken.AsObject(), 'version') <> 2) or
+          not Contract.GetBoolean(PurchaseToken.AsObject(), 'postingApproved') then
+          Error(ReceiptRequiredErr);
+      end;
     end else
       if Contract.GetText(Values, 'masterFingerprint') <> MasterFingerprint(Context) then
         Error(DriftErr);
@@ -243,6 +259,7 @@ codeunit 90429 "BCSF Sales Setup"
       'SALES.QUOTE': CheckSeries(CopyStr(Contract.GetCode(Values, 'quoteSeries'), 1, 20), DateFrom, DateTo);
       'SALES.ORDER':
         begin
+          Guard.EnsureCodeunitAccess(Codeunit::"Sales-Quote to Order");
           Sales.TestField("Archive Quotes", Sales."Archive Quotes"::Never);
           CheckSeries(CopyStr(Contract.GetCode(Values, 'quoteSeries'), 1, 20), DateFrom, DateTo);
           CheckSeries(CopyStr(Contract.GetCode(Values, 'orderSeries'), 1, 20), DateFrom, DateTo);
@@ -252,21 +269,28 @@ codeunit 90429 "BCSF Sales Setup"
     CheckPermission(Database::"Sales Header", true);
     CheckPermission(Database::"Sales Line", true);
     if Posting then begin
+      Guard.EnsureCodeunitAccess(Codeunit::"Sales-Post");
+      if Contract.GetInteger(Values, 'version') = 3 then begin
+        Inventory.Get();
+        Inventory.TestField("Automatic Cost Posting", true);
+      end;
+      if Payments.Enabled(Context) then
+        Payments.Check(Context);
       CheckSeries(CopyStr(Contract.GetCode(Values, 'postedInvoiceSeries'), 1, 20), DateFrom, DateTo);
       if Code = 'SALES.ORDER' then
         CheckSeries(CopyStr(Contract.GetCode(Values, 'shipmentSeries'), 1, 20), DateFrom, DateTo);
-      CheckPermission(Database::"Sales Invoice Header", true);
-      CheckPermission(Database::"Sales Invoice Line", true);
+      Guard.EnsurePostingTableAccess(Database::"Sales Invoice Header", false);
+      Guard.EnsurePostingTableAccess(Database::"Sales Invoice Line", false);
       if Code = 'SALES.ORDER' then begin
-        CheckPermission(Database::"Sales Shipment Header", true);
-        CheckPermission(Database::"Sales Shipment Line", true);
+        Guard.EnsurePostingTableAccess(Database::"Sales Shipment Header", false);
+        Guard.EnsurePostingTableAccess(Database::"Sales Shipment Line", false);
       end;
-      CheckPermission(Database::"Cust. Ledger Entry", true);
-      CheckPermission(Database::"Detailed Cust. Ledg. Entry", true);
-      CheckPermission(Database::"G/L Entry", true);
-      CheckPermission(Database::"VAT Entry", true);
-      CheckPermission(Database::"Item Ledger Entry", true);
-      CheckPermission(Database::"Value Entry", true);
+      Guard.EnsurePostingTableAccess(Database::"Cust. Ledger Entry", false);
+      Guard.EnsurePostingTableAccess(Database::"Detailed Cust. Ledg. Entry", false);
+      Guard.EnsurePostingTableAccess(Database::"G/L Entry", false);
+      Guard.EnsurePostingTableAccess(Database::"VAT Entry", false);
+      Guard.EnsurePostingTableAccess(Database::"Item Ledger Entry", false);
+      Guard.EnsurePostingTableAccess(Database::"Value Entry", false);
       GL.Get();
       if ((GL."Allow Posting From" <> 0D) and (DateFrom < GL."Allow Posting From")) or
         ((GL."Allow Posting To" <> 0D) and (DateTo > GL."Allow Posting To")) then
@@ -560,7 +584,7 @@ codeunit 90429 "BCSF Sales Setup"
     DriftErr: Label 'Source sales master data has changed since capture. Review the source and capture a new run.';
     SourceErr: Label 'The captured sales setup is missing or unsupported. Start the template again after checking its sales and item targets.';
     SameRunErr: Label 'Sales requires at least one customer, two vendors and one item from the same template. Use the technical wholesale assortment and leave the existing item vendors blank.';
-    ReceiptRequiredErr: Label 'Posted sales from newly generated items require an earlier posted purchase receipt in the same run. Use unposted documents until purchase generation is available.';
+    ReceiptRequiredErr: Label 'Posted sales from newly generated items require approved standard purchase receipts in the same run. Review purchase targets, quotas and posting approval.';
     UnsupportedErr: Label 'This sales process supports quotes, orders and invoices in local currency with a simple location and no tracking, mandatory variant, intercompany or automatic payment.';
     ApprovalErr: Label 'Approve sales posting on this template and enable posting in Factory Setup before capturing a posted run.';
     DateErr: Label 'The sales dates or captured number series are unavailable or incompatible with atomic posting.';

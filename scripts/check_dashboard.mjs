@@ -273,6 +273,28 @@ try {
   }
   const companyShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true });
   await writeFile(join(tmpdir(), 'BCSF-dashboard-SF045-company.png'), Buffer.from(companyShot.data, 'base64'));
+  // SF-045 follow-up: real two-second polling preserves nodes and never disables controls.
+  await redraw('window.fixture.company.hasJob=false;window.fixture.stock.metrics=[{key:"customer",caption:"Customers",count:25,canOpen:true}];window.fixture.readAt="before"');
+  await evaluate(`window.stableTile=document.querySelector('[data-stock-focus="metric:customer"]');window.stableNumber=window.stableTile.querySelector("strong");window.stableFilter=document.querySelector("select");window.stableExpert=document.querySelector(".sf-experts");window.stableExpert.open=true;window.fixture.stock.metrics[0].count=26;window.fixture.readAt="after";window.hold=true;window.calls=[]`);
+  await until('window.calls.some(call=>call.args[0]==="autoRefresh")');
+  const autoCalls = await evaluate('window.calls.length');
+  assert.equal(await evaluate('document.querySelector("#controlAddIn").getAttribute("aria-busy")'), 'false');
+  assert.equal(await evaluate('document.querySelector("[data-action=workflow]").disabled'), false);
+  await pause(2200);
+  assert.equal(await evaluate('window.calls.length'), autoCalls, 'Slow polls never overlap.');
+  await evaluate('window.hold=false;window.pending()');
+  await until('document.querySelector(".sf-footer").textContent.includes("after")');
+  assert.equal(await evaluate(`window.stableTile===document.querySelector('[data-stock-focus="metric:customer"]')`), true, 'Tile node survives background refresh.');
+  assert.equal(await evaluate('window.stableNumber===window.stableTile.querySelector("strong")'), true, 'Changed count updates the existing text node.');
+  assert.equal(await evaluate('window.stableNumber.textContent'), '26');
+  assert.equal(await evaluate('window.stableExpert===document.querySelector(".sf-experts") && window.stableExpert.open'), true);
+  assert.equal(await evaluate('window.stableFilter===document.querySelector("select")'), true);
+  await evaluate('window.failNext=true');
+  await until('document.querySelector(".sf-feedback").textContent===window.fixture.texts.error');
+  assert.equal(await evaluate('document.querySelector("[data-action=workflow]").disabled'), false);
+  await click('[data-action=refresh]');
+  assert.equal(await evaluate('document.querySelector(".sf-feedback").textContent'), '');
+  console.log('PASS: two-second silent refresh, stable tile/text/filter/details nodes, changed live count, single-flight slow polling and recoverable polling errors.');
   console.log('PASS: SF-045 company summary, collapsed expert templates, same-run confirmed progress, German labels, error/XSS and responsive widths. Client bridge only, no native BC execution.');
   console.log('PASS: SF-044 Chromium client regression: separate accessible tabs, scope isolation (25 company / 20 run), entire tile routing, child results, zero/ACL/generator states, stale result separation, summary routes, compact actions, diagnosis, status/quality, DE/EN, duplicate suppression, error/XSS, responsive grids and scrolling at 1440/768/320px.');
   console.log(`Synthetic previews: ${join(tmpdir(), 'BCSF-dashboard-SF044-runs.png')}, ${join(tmpdir(), 'BCSF-dashboard-SF044-data.png')}. No Business Central runtime, permissions or native target filters were executed.`);

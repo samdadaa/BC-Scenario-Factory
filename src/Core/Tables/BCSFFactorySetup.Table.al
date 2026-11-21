@@ -87,6 +87,7 @@ table 90100 "BCSF Factory Setup"
     field(22; "Industry Finance Mode"; Enum "BCSF Finance Mode") { Caption = 'Industry Finance Mode', Locked = true; Editable = false; }
     field(23; "Industry Size"; Integer) { Caption = 'Industry Size', Locked = true; Editable = false; }
     field(24; "Industry Process Mode"; Enum "BCSF Process Mode") { Caption = 'Industry Process Mode', Locked = true; Editable = false; }
+    field(26; "Industry Posting Approved"; Boolean) { Caption = 'Industry Posting Approved', Locked = true; Editable = false; }
     field(25; "Industry Date"; Date) { Caption = 'Industry Date', Locked = true; Editable = false; }
 
   }

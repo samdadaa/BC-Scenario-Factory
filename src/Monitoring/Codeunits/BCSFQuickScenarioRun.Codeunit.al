@@ -2,6 +2,7 @@ namespace BCScenarioFactory.Monitoring;
 
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
+using BCScenarioFactory.Finance;
 using BCScenarioFactory.DependencyManager;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ScenarioManagement;
@@ -67,6 +68,8 @@ codeunit 90367 "BCSF Quick Scenario Run"
     Snapshot: Codeunit "BCSF Snapshot Writer";
     Plan: Codeunit "BCSF Plan Writer";
     Dispatcher: Codeunit "BCSF Queue Dispatcher";
+    Payments: Codeunit "BCSF Payment Processor";
+    Packages: Codeunit "BCSF Finance Package Mgt";
     RunId: Guid;
   begin
     // Snapshot, configuration editors and module/target writes coordinate on the same scenario lock.
@@ -77,6 +80,10 @@ codeunit 90367 "BCSF Quick Scenario Run"
     Guard.EnsureCanConfigure(Scenario.CurrentCompany());
     CheckTargets(Scenario);
 
+    if Scenario."Purchase Posting Approved" then
+      Packages.PreparePostingFoundation();
+    if Scenario."Payment Posting Approved" then
+      Payments.PrepareFoundation();
     RunId := Snapshot.CreateSnapshot(ScenarioId);
     Plan.SavePlan(RunId);
     Dispatcher.Prepare(RunId);

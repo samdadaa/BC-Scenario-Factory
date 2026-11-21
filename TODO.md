@@ -1,10 +1,12 @@
 # TODO – BC Scenario Factory: vollständiger geplanter Backlog
 
 
-## Aktueller Nutzerauftrag SF-045 – 21.11.2026
+## Aktueller Nutzerauftrag SF-045 mit ausgewähltem SF-020-/SF-022-Folgeumfang – 21.11.2026
 
 Der ausdrücklich beauftragte Architekturwechsel ist ein zusammenhängendes Ticket und hat Vorrang vor weiterem Generatorausbau. Gemeinsame Einrichtung einmalig, Branchenvoraussetzungen automatisch, Stämme vor Bewegungsdaten, Prozesse nach freigegebener Stufe, interne versionierte Pakete, vorhandene Hintergrundverarbeitung und einheitliches Monitoring. Alle späteren Tickets müssen sich diesem Vertrag unterordnen; keine zusätzlichen Benutzerassistenten/Seiten ohne belegten Bedarf. [Verbindlicher Ablauf](docs/INDUSTRY_INITIALIZATION.md).
 
+
+**Bestätigte Fortsetzung:** Nutzer beauftragt stilles Zwei-Sekunden-Dashboard, gebuchte Belege im gemeinsamen Workflow, Einkauf sowie ausdrücklich Zahlungen/Ausgleich für Einkaufs- und Verkaufsrechnungen. Das ist der ausgewählte Folgeumfang; keine automatische Umsetzung von Gutschriften/Retouren. Quellstand 1.0.7.0 **Zur Prüfung**, native Abnahme offen. [Aktueller Vertrag](docs/INDUSTRY_INITIALIZATION.md), [echte Tests](docs/TESTS.md#sf-020sf-022--gebuchter-großhandel-und-zahlungsausgleich).
 
 **Stand:** 19.11.2026 – SF-040 nach Nutzerangabe eingespielt. SF-041 umgesetzt und zur gemeinsamen Sandbox-Prüfung bereit. SF-044 umgesetzt, zur Prüfung; reale BC-Abnahme offen.
 
@@ -63,9 +65,9 @@ P0-Reihenfolge: [SF-038](#sf-038) Finanzsetup → [SF-039](#sf-039) Partnerdaten
 | [SF-017](#sf-017) | 1 / MVP | P1 | Finanzsetup und auswertbare Testkontenpläne für SKR03 und SKR04 | Zur Prüfung |
 | [SF-018](#sf-018) | 1 / MVP | P1 | Debitoren und Kreditoren als kohärente Stammdaten | Zur Prüfung |
 | [SF-019](#sf-019) | 1 / MVP | P1 | Artikel, Kategorien, Varianten und Lagerbasics | Zur Prüfung |
-| [SF-020](#sf-020) | 1 / MVP | P1 | Einkaufsprozess: Bestellung bis gebuchte Rechnung | Offen |
+| [SF-020](#sf-020) | 1 / MVP | P1 | Einkaufsprozess: Bestellung bis gebuchte Rechnung | Zur Prüfung |
 | [SF-021](#sf-021) | 1 / MVP | P1 | Verkaufsprozess: Angebot bis gebuchte Rechnung | Offen |
-| [SF-022](#sf-022) | 1 / MVP | P1 | Zahlungen, Ausgleich, Gutschriften und Folgeprozesse | Offen |
+| [SF-022](#sf-022) | 1 / MVP | P1 | Zahlungen, Ausgleich, Gutschriften und Folgeprozesse | Zur Prüfung (Zahlung/Ausgleich); Rest offen |
 | [SF-023](#sf-023) | 1 / MVP | P1 | Großhandel als erstes Branchenprofil | Offen |
 | [SF-024](#sf-024) | 1 / MVP | P1 | End-to-End-MVP und fachliche Qualitätsgate | Offen |
 | [SF-025](#sf-025) | 1 / MVP | P1 | AL-Test-App und fachliche Regressionssuite | Offen |
@@ -822,7 +824,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-018 — Debitoren und Kreditoren als kohärente Stammdaten
 
-**Status:** Zur Prüfung  
+**Status:** Zur Prüfung
 **Priorität:** P1  
 **Abhängigkeiten:** SF-010,SF-011,SF-017  
 **Verantwortung / betroffene Module:** Sales, Purchasing  
@@ -914,7 +916,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-020 — Einkaufsprozess: Bestellung bis gebuchte Rechnung
 
-**Status:** Offen  
+**Status:** Zur Prüfung
 **Priorität:** P1  
 **Abhängigkeiten:** SF-018,SF-019,SF-013  
 **Verantwortung / betroffene Module:** Purchasing, ProcessEngine  
@@ -947,6 +949,9 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Risiken / Entscheidungen:** Zielversions- und Lokalisierungsabhängigkeit, Rechte, Datenvolumen und eventuell unklarer Commit-/Retry-Zustand nachprüfen. Bei Blocker konkrete Frage stellen und `Blockiert` statt mutmaßlich erfolgreich setzen.
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+
+
+**Umsetzung 1.0.7.0:** Standardbestellung, voller/halber Eingang mit Rechnung und offenem Rest, native Herkunfts-/Outputprüfung; Same-run-Stämme und bestandsdeckende Beschaffung vor Verkauf. Neue Evidence 90454. Gemeinsamer Workflow/Starter/Dashboard/DE-EN nachgeführt. Nutzerfehler mit direkt verlangten Schreibrechten auf Einkaufsrechnungskopf korrigiert; direkte oder indirekte effektive Standardbuchungsrechte akzeptiert. Native End-to-End-/Rechte-/Wiederanlaufabnahme offen; keine menschliche Abnahme. Gutschriften nicht Teil dieses ausgewählten Umfangs. [Umfang und Risiken](docs/INDUSTRY_INITIALIZATION.md), [ausgeführte Prüfungen und offene Abnahme](docs/TESTS.md#sf-020sf-022--gebuchter-großhandel-und-zahlungsausgleich).
 
 ---
 
@@ -1005,7 +1010,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-022 — Zahlungen, Ausgleich, Gutschriften und Folgeprozesse
 
-**Status:** Offen  
+**Status:** Zur Prüfung (ausgewählter Zahlungs-/Ausgleichsumfang); übriger Scope offen
 **Priorität:** P1  
 **Abhängigkeiten:** SF-020,SF-021  
 **Verantwortung / betroffene Module:** Finance, Sales, Purchasing, ProcessEngine  
@@ -1038,6 +1043,9 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 **Risiken / Entscheidungen:** Zielversions- und Lokalisierungsabhängigkeit, Rechte, Datenvolumen und eventuell unklarer Commit-/Retry-Zustand nachprüfen. Bei Blocker konkrete Frage stellen und `Blockiert` statt mutmaßlich erfolgreich setzen.
 
 **Abnahme:** [ ] Nutzer hat dieses Ticket ausdrücklich abgenommen.
+
+
+**Ausgewählter Teilumfang 1.0.7.0:** Zahlungen und vollständiger Ausgleich für tatsächlich gebuchte Einkaufs-/Verkaufsrechnungen, Codeunit 90401 mit temporärer Standardjournalzeile, synthetischer Verrechnungsbank und tatsächlicher Herkunft/Restbetragsprüfung. Snapshot-/Live-Approval und tatsächlicher Batchclaim geprüft. Keine Teilzahlungen, anderen Zahlungszeitpunkte, Gutschriften/Retouren implementiert; Restticket offen. Native Buchungs-/Ausgleichs-/Fehler-/Replay-/Rechteabnahme weiterhin offen. [Umfang und Risiken](docs/INDUSTRY_INITIALIZATION.md), [ausgeführte Prüfungen und offene Abnahme](docs/TESTS.md#sf-020sf-022--gebuchter-großhandel-und-zahlungsausgleich).
 
 ---
 
@@ -1579,7 +1587,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-037 — Reparatur Vorlage → Start → Ergebnis (Nutzerauftrag 18.11.2026)
 
-**Status:** Zur Prüfung  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 
 **Nutzerstand:** Vorlage und Lauf funktionieren nach Nutzerbericht wieder. Die Abnahme und die Stabilisierungskorrekturen [SF-038](#sf-038) bis [SF-042](#sf-042) bleiben davon getrennt.
@@ -1600,7 +1608,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-038 — Realistische Kontenpläne und vollständige Buchungseinrichtung im Starterpfad
 
-**Status:** Zur Prüfung  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-009, SF-017, SF-037  
 **Verantwortung / betroffene Module:** Finance, SetupManager, IndustryProfiles, ScenarioManagement  
@@ -1640,7 +1648,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-039 — Realistische Geschäftspartner und nutzbare Partnerstammdaten
 
-**Status:** Zur Prüfung  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-010, SF-011, SF-018, SF-038  
 **Verantwortung / betroffene Module:** DataGeneration, IndustryProfiles, Sales, Purchasing, Finance  
@@ -1679,7 +1687,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-040 — Vollständige Stammdatenbasis vor Belegen und Bewegungsdaten
 
-**Status:** Zur Prüfung  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-007, SF-008, SF-009, SF-016, SF-038, SF-039, SF-043  
 **Verantwortung / betroffene Module:** Core, ModuleRegistry, Planning, SetupManager, DataGeneration, ProcessEngine  
@@ -1716,7 +1724,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-041 — Dashboard mit Datenbestand, Modulbereichen und prüfbaren Drilldowns
 
-**Status:** Zur Prüfung  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-011, SF-014, SF-037  
 **Verantwortung / betroffene Module:** Monitoring, UI, ModuleRegistry, Sales, Purchasing, Finance, Inventory  
@@ -1793,7 +1801,7 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-043 — Mandant einmalig initialisieren und Vorlagenstart vereinfachen
 
-**Status:** Zur Prüfung  
+**Status:** Zur Prüfung
 **Priorität:** P0  
 **Abhängigkeiten:** SF-038, SF-039  
 **Betroffene Module:** Core, Finance, IndustryProfiles, ScenarioManagement, Monitoring

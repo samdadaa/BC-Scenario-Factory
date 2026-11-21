@@ -36,7 +36,7 @@ codeunit 90153 "BCSF Wholesale Profile"
     Ordinal: Integer;
   begin
     Quantity(Size, "BCSF Entity Type"::Item);
-    if not (Mode in [Mode::SetupAndMasterData, Mode::UnpostedDocuments]) then
+    if not (Mode in [Mode::SetupAndMasterData, Mode::UnpostedDocuments, Mode::PostedMovements, Mode::FollowUpProcesses]) then
       Error(PostingErr);
     if Setup.Get(Setup.GetSetupKey()) then
       foreach Ordinal in Entity.Ordinals() do begin
@@ -75,7 +75,7 @@ codeunit 90153 "BCSF Wholesale Profile"
     Scenario.Description := WholesaleLbl;
     // Reuse the versioned trade assortment, partner catalog and immutable snapshot contract.
     Scenario."Profile Code" := 'TRADE';
-    Scenario."Profile Version" := '3';
+    Scenario."Profile Version" := '4';
     Scenario."Usage Mode" := "BCSF Usage Mode"::Functional;
     Scenario."Process Mode" := Mode;
     Scenario.Seed := Setup."Default Seed";
@@ -102,15 +102,36 @@ codeunit 90153 "BCSF Wholesale Profile"
     foreach Ordinal in Entity.Ordinals() do begin
       Entity := "BCSF Entity Type".FromInteger(Ordinal);
       if (Entity in [Entity::Customer, Entity::Vendor, Entity::Item]) or
-        ((Mode = Mode::UnpostedDocuments) and (Entity in [Entity::PurchaseOrder, Entity::SalesQuote, Entity::SalesOrder, Entity::SalesInvoice])) then begin
+        ((Mode <> Mode::SetupAndMasterData) and (Entity in [Entity::PurchaseOrder, Entity::SalesQuote, Entity::SalesOrder, Entity::SalesInvoice])) then begin
         Target.Init();
         Target."Scenario Id" := Scenario."Scenario Id";
         Target.Validate(Entity, Entity);
         Target.Quantity := Quantity(Size, Entity);
         Target."Process Mode" := "BCSF Process Mode"::SetupAndMasterData;
-        if Policy.IsDocument(Entity) then
+        if Policy.IsDocument(Entity) then begin
           Target."Process Mode" := Mode;
+          if Mode = Mode::FollowUpProcesses then
+            Target."Process Mode" := Mode::PostedMovements;
+          if Entity = Entity::SalesQuote then
+            Target."Process Mode" := Mode::UnpostedDocuments;
+        end;
         Target."Unposted Percent" := 100;
+        if (Mode.AsInteger() >= 2) and Policy.IsDocument(Entity) and (Entity <> Entity::SalesQuote) then begin
+          case Entity of
+            Entity::PurchaseOrder:
+              begin
+                Target."Posted Percent" := 60;
+                Target."Partial Percent" := 20;
+              end;
+            Entity::SalesOrder:
+              begin
+                Target."Posted Percent" := 50;
+                Target."Partial Percent" := 25;
+              end;
+            Entity::SalesInvoice: Target."Posted Percent" := 67;
+          end;
+          Target."Unposted Percent" := 100 - Target."Posted Percent" - Target."Partial Percent";
+        end;
         Target.Insert(true);
       end;
     end;
@@ -120,6 +141,6 @@ codeunit 90153 "BCSF Wholesale Profile"
   var
     WholesaleLbl: Label 'Wholesale company';
     SizeErr: Label 'Select Small, Medium or Large for the supported wholesale package.';
-    PostingErr: Label 'Wholesale currently supports master data and unposted documents. Posted purchase receipts and follow-up processes are not yet available.';
+    PostingErr: Label 'Select master data, unposted documents, posted documents or approved payments and application for wholesale.';
     LimitErr: Label 'This size exceeds the configured entity limit. Select a smaller size or review Factory Setup.';
 }

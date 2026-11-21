@@ -80,3 +80,8 @@ SF-019-Bedienkorrektur 20.11.2026: Dashboard Stock ergänzt elf bestehende BC-Li
 Company Initialization 90361 orchestriert genau einen gespeicherten Request in der vorhandenen Setupkarte. Dashboard liest Firmen-/Branchen-/Kontenplan-/Jobzustand, zeigt bestätigte Schritte und Fehlerphase, verbirgt technische Vorlagen im Normalweg. Bestehende Diagnosen bleiben im eingeklappten Expertenbereich.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## 1.0.7.0 – aktueller Folgeumfang
+
+Lesender Zwei-Sekunden-Poll mit serialisierten Aufrufen und inkrementellem DOM. Workflowstart auch nach abgeschlossenem Lauf, zusätzliche Herkunftskennzahlen für Eingang/Rechnung/Zahlung; Filter/Drilldown erneut geprüft. [Gemeinsamer Vertrag](../../../INDUSTRY_INITIALIZATION.md). **Zur Prüfung**, native Abnahme offen.

@@ -9,6 +9,7 @@ for entries still present in the generated catalogue.
 from copy import deepcopy
 from pathlib import Path
 import re
+import json
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent
@@ -122,6 +123,7 @@ def note(unit):
     return next((n.text for n in unit.findall(Q("note")) if n.get("from") == "Xliff Generator"), "")
 
 def sync():
+    DE.update(json.loads((ROOT / "sf020.de.json").read_text(encoding="utf-8")))
     generated = ET.parse(ROOT / f"{NAME}.g.xlf")
     units = list(generated.iter(Q("trans-unit")))
     gen_ids = [u.attrib["id"] for u in units]

@@ -81,3 +81,8 @@ Vier verpflichtende Datenbanksubscriber schützen den neuen firmenbezogenen Remo
 Vorhandene Umgebungs-/Firmen-/Rechte-/Generierungs-/Buchungsprüfungen bleiben verpflichtend. Requestparameter nach Einplanung immutable; Ergebnislauf nur durch gebundene Jobsitzung.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## 1.0.7.0 – aktueller Folgeumfang
+
+Gemeinsame effektive Standardbuchungsprüfung akzeptiert zugewiesene direkte oder indirekte Insert-/gegebenenfalls Modifyrechte; prüft Read und Standard-Codeunit Execute, keine neuen Standardtabellenrechte. [Gemeinsamer Vertrag](../../../INDUSTRY_INITIALIZATION.md). **Zur Prüfung**, native Abnahme offen.

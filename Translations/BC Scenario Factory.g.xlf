@@ -923,8 +923,13 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 3474692067" size-unit="char" translate="yes" xml:space="preserve">
+          <source> Automatic inventory cost posting is enabled only in a company without posted activity; an existing conflicting cost policy stops the run.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType CostPostingLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 3901634850" size-unit="char" translate="yes" xml:space="preserve">
-          <source> Unposted purchase orders: %1; sales quotes: %2; sales orders: %3; sales invoices: %4. No posting.</source>
+          <source> Planned purchase orders: %1; sales quotes: %2; sales orders: %3; sales invoices: %4. Quotes remain unposted; posting follows the selected process and approval.</source>
           <note from="Developer" annotates="general" priority="2">%1 = purchases, %2 = quotes, %3 = orders, %4 = invoices</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType DocumentsLbl</note>
         </trans-unit>
@@ -933,8 +938,23 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType FoundationCompletedLbl</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 2246299024" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A new run creates the displayed synthetic records in this company. </source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType NewDatasetLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 3584415651" size-unit="char" translate="yes" xml:space="preserve">
+          <source> All resulting posted purchase and sales invoices are fully paid and applied through standard journal posting; unposted documents remain open.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType PaymentsReviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 3123272234" size-unit="char" translate="yes" xml:space="preserve">
+          <source> Purchase orders: 20% unposted, 20% partial, 60% fully invoiced; sales orders: 25% unposted, 25% partial, 50% fully invoiced; sales invoices: 33% unposted, 67% posted. Rounded down per target; remaining units stay unposted.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType PostingMixLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 1736975857" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Master data only,With unposted documents</source>
+          <source>Master data only,With unposted documents,With posted documents,With payments and application</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType ProcessesLbl</note>
         </trans-unit>
@@ -998,13 +1018,28 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Limits - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3451286186 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting approval</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PostingConsent - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 78775189 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explicitly authorizes standard receipts, shipments and invoices. Payment mode also posts and applies customer and vendor payments using a synthetic bank account without bank transmission.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PostingApproved - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 78775189 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Approve posting and selected follow-up processes</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PostingApproved - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - Control 558393067 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>4 - Data and processes</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessStep - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 681458388 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posting is unavailable until purchase receipts and complete posting prerequisites are supported. No documents are posted.</source>
+          <source>Select unposted documents, standard purchase and sales posting, or additional payments and application. Posting requires explicit approval.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessChoice - Property ToolTip</note>
         </trans-unit>
@@ -1014,7 +1049,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessChoice - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 681458388 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Master data only,With unposted documents</source>
+          <source>Master data only,With unposted documents,With posted documents,With payments and application</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessChoice - Property OptionCaption</note>
         </trans-unit>
@@ -1064,12 +1099,12 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SizeChoice - Property OptionCaption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Action 3649698641 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Choose the chart of accounts and prepare this sandbox company once. Does not post documents.</source>
+          <source>Use the existing company foundation and choose the data size and process scope. A new run requires the previous company run to have completed.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action InitializeSetup - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Action 3649698641 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Initialize Company</source>
+          <source>Set up company or start another run</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Action InitializeSetup - Property Caption</note>
         </trans-unit>
@@ -2068,6 +2103,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType AssetsLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2902468460 - NamedType 62106829" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted company scenarios require automatic inventory cost posting. Existing posted activity prevents changing this policy automatically. Review Inventory Setup or use a fresh sandbox company.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Package Mgt - NamedType AutomaticCostErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 965223736" size-unit="char" translate="yes" xml:space="preserve">
           <source>Scenario Factory Test Balance Sheet</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -2298,6 +2338,26 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Finance Setup Check - NamedType PermissionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2583907404 - NamedType 1698880782" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payments require the captured follow-up approval and enabled posting in this sandbox.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Payment Processor - NamedType ApprovalErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2583907404 - NamedType 308753192" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Synthetic payment clearing (no bank connection)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Payment Processor - NamedType BankLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2583907404 - NamedType 2714761632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment or application could not be verified. Keep the batch blocked for review; do not repeat an uncertain payment.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Payment Processor - NamedType ResultErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2583907404 - NamedType 2685700126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment setup, synthetic clearing bank or standard posting permissions are missing or changed. Review the company foundation; no bank data is sent.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Payment Processor - NamedType SetupErr</note>
+        </trans-unit>
         <trans-unit id="Page 1160320011 - Control 4154419203 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
           <source>Shows the finance setup mode in the immutable run snapshot.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -2398,6 +2458,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType MixedSalesLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 2195544840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale - payments and application</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PaidWholesaleLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 429102550" size-unit="char" translate="yes" xml:space="preserve">
           <source>Partner Volume Test</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -2407,6 +2472,11 @@
           <source>Sales: Mixed Posted Documents</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PostedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 2108339611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale - mixed posted documents</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PostedWholesaleLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 1955077898" size-unit="char" translate="yes" xml:space="preserve">
           <source>Restore all removed or archived built-in starter templates? Custom names are retained.</source>
@@ -2453,13 +2523,18 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType TrainingLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 1892776461" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale company</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType WholesaleReferenceLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3298024591 - NamedType 2836870124" size-unit="char" translate="yes" xml:space="preserve">
           <source>This size exceeds the configured entity limit. Select a smaller size or review Factory Setup.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType LimitErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3298024591 - NamedType 2845165943" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Wholesale currently supports master data and unposted documents. Posted purchase receipts and follow-up processes are not yet available.</source>
+          <source>Select master data, unposted documents, posted documents or approved payments and application for wholesale.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType PostingErr</note>
         </trans-unit>
@@ -2562,6 +2637,16 @@
           <source>Explicitly approve posting for this invocation before requesting posted movements or follow-up processes.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType PostingApprovalErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 160728166" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Execution permission is missing for standard codeunit %1. Review the purchase, sales or journal posting role.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = standard codeunit ID</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType PostingExecuteErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2111972200 - NamedType 3019542234" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Standard posting requires read access and assigned direct or indirect insert permission for %1, and modify permission when applying entries. Review standard posting permissions; no direct ledger rights are granted.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = table caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Environment Guard - NamedType PostingPermissionErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2111972200 - NamedType 1290204698" size-unit="char" translate="yes" xml:space="preserve">
           <source>Scenario Factory cannot write data in a production environment. Use an approved sandbox.</source>
@@ -3102,6 +3187,11 @@
           <source>Total Batches</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Step Metric - Field Total Batches - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2531880237 - NamedType 1698880782" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explicitly approve standard posting and, for follow-up mode, payments and application before starting.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType ApprovalErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2531880237 - NamedType 881921283" size-unit="char" translate="yes" xml:space="preserve">
           <source>This company already has a chart of accounts. Reuse it; another chart requires a new sandbox company.</source>
@@ -3693,6 +3783,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType WindowLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 997528235" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generate company data</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType WorkflowLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 2111354730" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fixed assets</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3707,6 +3802,11 @@
           <source>Relationship management</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType ContactsGroupLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 616362993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer payments</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType CustomerPaymentsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 1170946478" size-unit="char" translate="yes" xml:space="preserve">
           <source>Quotes</source>
@@ -3827,6 +3927,11 @@
           <source>This view cannot be matched reliably to the standard list.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType UnverifiedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 126709513" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor payments</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType VendorPaymentsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 2713158916" size-unit="char" translate="yes" xml:space="preserve">
           <source>Warehouse and logistics</source>
@@ -4523,8 +4628,18 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Process Coordinator - NamedType ContractErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1050560864 - NamedType 1422195362" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase posting did not produce the expected vendor, inventory and accounting evidence. Keep the batch blocked for review.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Evidence - NamedType EvidenceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3500129312 - NamedType 1698880782" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Approve purchase posting on this template and enable posting in Factory Setup before capturing a posted run.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType ApprovalErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3500129312 - NamedType 1981706351" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Unposted Purchase Orders</source>
+          <source>Purchase Orders, Receipts and Invoices</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType NameLbl</note>
         </trans-unit>
@@ -4539,7 +4654,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType ResultErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3500129312 - NamedType 2685700126" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Purchase orders require unposted mode, two vendors and items from this run, a simple location and valid captured purchase numbering.</source>
+          <source>Purchase orders require a supported document mode, two vendors and items from this run, a simple location and valid captured purchase numbering.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Purchase Generator - NamedType SetupErr</note>
         </trans-unit>
@@ -4634,7 +4749,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType PriceErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2085679885 - NamedType 2757287588" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posted sales from newly generated items require an earlier posted purchase receipt in the same run. Use unposted documents until purchase generation is available.</source>
+          <source>Posted sales from newly generated items require approved standard purchase receipts in the same run. Review purchase targets, quotas and posting approval.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Setup - NamedType ReceiptRequiredErr</note>
         </trans-unit>
@@ -5418,6 +5533,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Partner Payment Method - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 847034531 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explicitly approves standard customer and vendor payments and application for a newly captured follow-up run. No bank transmission is performed.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Payment Posting Approved - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 847034531 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Approve Payments and Application</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Payment Posting Approved - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 3536643086 - Field 3206867468 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the highest process mode allowed for entity targets.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -5447,6 +5572,16 @@
           <source>Profile Version</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Profile Version - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2426675300 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Explicitly approves standard purchase receipts and invoices for a newly captured run. Global posting permission is also required.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Purchase Posting Approved - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2426675300 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Approve Purchase Posting</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Purchase Posting Approved - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 3536643086 - Field 2718661101 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the revision, including module and target changes.</source>

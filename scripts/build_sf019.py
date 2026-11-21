@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--analyzers', action='store_true', help='Run the installed CodeCop and UICop on the main app with warnings as errors.')
     parser.add_argument('--dotnet', type=Path)
     parser.add_argument('--compiler', type=Path)
     args = parser.parse_args()
@@ -24,6 +25,7 @@ def main():
         parser.error('Pass --compiler and --dotnet for an existing AL compiler and matching .NET host; no tools are installed.')
     subprocess.run([sys.executable, str(ROOT / 'scripts/check_inventory_contracts.py')], cwd=ROOT, check=True)
     subprocess.run([sys.executable, str(ROOT / 'scripts/check_sales_contracts.py')], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, str(ROOT / 'scripts/check_purchase_contracts.py')], cwd=ROOT, check=True)
     subprocess.run([sys.executable, str(ROOT / 'scripts/check_template_contracts.py')], cwd=ROOT, check=True)
     output = (args.output or Path(tempfile.mkdtemp(prefix='bcsf-sf019-build-'))).resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -49,7 +51,10 @@ def main():
         if result.returncode:
             raise SystemExit(result.returncode)
 
-    compile_project(app, 'BCScenarioFactory.app')
+    analysis = ()
+    if args.analyzers:
+        analysis = ('/warnaserror+', '/analyzer:' + ','.join(str(compiler.parent / name) for name in ('Microsoft.Dynamics.Nav.CodeCop.dll', 'Microsoft.Dynamics.Nav.UICop.dll')))
+    compile_project(app, 'BCScenarioFactory.app', analysis)
     shutil.copy2(output / 'BCScenarioFactory.app', cache / 'BCScenarioFactory.app')
     compile_project(tests, 'BCScenarioFactory-SF019-Tests.app', ('/define:BCSFTESTS',))
     print('Compiled app and separate test app:', output)

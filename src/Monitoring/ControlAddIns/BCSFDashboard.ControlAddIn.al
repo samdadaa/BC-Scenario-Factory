@@ -20,4 +20,5 @@ controladdin "BCSF Dashboard"
   event Ready();
   event Command(ActionCode: Text; RunId: Text);
   procedure SetDashboard(Payload: Text);
+  procedure AutoRefreshFailed();
 }

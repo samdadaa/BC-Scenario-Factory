@@ -17,6 +17,7 @@ using Microsoft.Foundation.Address;
 using Microsoft.Foundation.PaymentTerms;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Setup;
 using Microsoft.Purchases.Setup;
 using Microsoft.Purchases.Vendor;
@@ -45,6 +46,45 @@ codeunit 90400 "BCSF Finance Package Mgt"
             exit;
         end;
         Apply(Mode);
+    end;
+
+    procedure CheckPostingFoundation()
+    var
+        Inventory: Record "Inventory Setup";
+        Ledger: Record "G/L Entry";
+        ItemLedger: Record "Item Ledger Entry";
+    begin
+        Inventory.Get();
+        if Inventory."Automatic Cost Posting" then
+            exit;
+        Ledger.SecurityFiltering(SecurityFilter::Disallowed);
+        ItemLedger.SecurityFiltering(SecurityFilter::Disallowed);
+        if not Ledger.IsEmpty() or not ItemLedger.IsEmpty() or not Inventory.WritePermission() then
+            Error(AutomaticCostErr);
+    end;
+
+    [CommitBehavior(CommitBehavior::Error)]
+    procedure PreparePostingFoundation()
+    var
+        Inventory: Record "Inventory Setup";
+        Ledger: Record "G/L Entry";
+        ItemLedger: Record "Item Ledger Entry";
+        Guard: Codeunit "BCSF Environment Guard";
+    begin
+        Guard.EnsureCanConfigure(CompanyName());
+        Inventory.LockTable();
+        Inventory.Get();
+        if Inventory."Automatic Cost Posting" then
+            exit;
+        // Never silently change cost policy in a company that already has posted activity.
+        Ledger.SecurityFiltering(SecurityFilter::Disallowed);
+        ItemLedger.SecurityFiltering(SecurityFilter::Disallowed);
+        Ledger.LockTable();
+        ItemLedger.LockTable();
+        if not Ledger.IsEmpty() or not ItemLedger.IsEmpty() then
+            Error(AutomaticCostErr);
+        Inventory.Validate("Automatic Cost Posting", true);
+        Inventory.Modify(true);
     end;
 
     procedure CheckInitialization(Mode: Enum "BCSF Finance Mode")
@@ -1289,6 +1329,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
     var
         UsePackageQst: Label 'Company setup stopped at %1. %2 %3', Comment = '%1 = requirement, %2 = error cause, %3 = next action';
         PackageKeyTok: Label 'APPLIED', Locked = true;
+        AutomaticCostErr: Label 'Posted company scenarios require automatic inventory cost posting. Existing posted activity prevents changing this policy automatically. Review Inventory Setup or use a fresh sandbox company.';
         OperatingLbl: Label 'Operating statement (limited test scope)';
         GrossLbl: Label 'Gross operating result';
         ReconcileLbl: Label 'Reconciliation difference (expected zero)';

@@ -42,6 +42,13 @@ page 90362 "BCSF Dashboard Part"
                     Data: Codeunit "BCSF Dashboard Data";
                     Stock: Codeunit "BCSF Dashboard Stock";
                 begin
+                    if ActionCode = 'autoRefresh' then begin
+                        if not TryAutoRefresh() then begin
+                            ClearLastError();
+                            CurrPage.Dashboard.AutoRefreshFailed();
+                        end;
+                        exit;
+                    end;
                     case ActionCode of
                         'select':
                             SelectedRunId := Commands.ParseRunId(RunId);
@@ -108,6 +115,14 @@ page 90362 "BCSF Dashboard Part"
                 end;
         end;
         ReloadStock();
+    end;
+
+    // Read-only polling: surface failures in the dashboard without repeating modal server errors.
+    [TryFunction]
+    local procedure TryAutoRefresh()
+    begin
+        ReloadStock();
+        RenderDashboard();
     end;
 
     local procedure ReloadStock()

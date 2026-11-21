@@ -52,3 +52,8 @@ Ein reales Objekt 90275 BCSF Process Coordinator unter Codeunits/: generische de
 Gemeinsame deterministische Datums-/Mengenableitung wird für Einkaufsbestellungen wiederverwendet; keine duplizierte Branchenprozessengine.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## 1.0.7.0 – aktueller Folgeumfang
+
+Beschaffungsdatum am Zeitraumstart, ausreichend beschaffte Menge vor geplanten Verkaufsbuchungen; echte halbe Bestelleingänge. Bestehende deterministische Quoten-/Datumsableitung bleibt gemeinsam. [Gemeinsamer Vertrag](../../../INDUSTRY_INITIALIZATION.md). **Zur Prüfung**, native Abnahme offen.

@@ -2,6 +2,7 @@ namespace BCScenarioFactory.Sales;
 
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
+using BCScenarioFactory.Finance;
 using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.ProcessEngine;
 using BCScenarioFactory.ScenarioManagement;
@@ -113,6 +114,7 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     Rules.EnsureExecution(Context, Target, Batch, 'SALES.DOCUMENT', RunId, BatchId);
     Setup.Check(Context, Target);
     Context := Setup.WithRunMasters(Context);
+    Context.Add('executingBatch', Contract.Clone(Batch));
     EntityCode := Contract.GetCode(Target, 'entityCode');
     Entry.SetRange("Run Id", RunId);
     Entry.SetRange("Node Code", EntityCode);
@@ -146,6 +148,7 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     Registry: Codeunit "BCSF Record Registry";
     Contract: Codeunit "BCSF Contract JSON";
     Coordinator: Codeunit "BCSF Process Coordinator";
+    Payments: Codeunit "BCSF Payment Processor";
     RunId: Guid;
     BatchId: Guid;
     LogicalKey: Integer;
@@ -172,6 +175,8 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
         Invoice.GetBySystemId(Entry."Record SystemId");
         Invoice.TestField("Posting Date", Coordinator.DocumentDate(Context, EntityCode, LogicalKey));
         Invoice.TestField("Sell-to Customer No.", Customer."No.");
+        if Payments.Enabled(Context) then
+          Payments.ValidatePayment(RunId, EntityCode, LogicalKey, Invoice."Cust. Ledger Entry No.", true);
         InvoiceLine.Get(Invoice."No.", 10000);
         InvoiceLine.TestField(Type, InvoiceLine.Type::Item);
         InvoiceLine.TestField("No.", Item."No.");

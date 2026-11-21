@@ -274,6 +274,17 @@ table 90125 "BCSF Scenario"
       ToolTip = 'Explicitly approves posting for sales runs captured from this template. Global posting permission in Factory Setup is also required.';
     }
 
+    field(43; "Purchase Posting Approved"; Boolean)
+    {
+      Caption = 'Approve Purchase Posting';
+      ToolTip = 'Explicitly approves standard purchase receipts and invoices for a newly captured run. Global posting permission is also required.';
+    }
+    field(44; "Payment Posting Approved"; Boolean)
+    {
+      Caption = 'Approve Payments and Application';
+      ToolTip = 'Explicitly approves standard customer and vendor payments and application for a newly captured follow-up run. No bank transmission is performed.';
+    }
+
   }
 
   keys

@@ -52,3 +52,8 @@ Optionaler Snapshotuntervertrag partnerSetup Version 1 hält Land, explizite bzw
 ## SF-045 – additive Wiederverwendung
 
 Keine neue Tabelle. Factory Setup erhält sechs technische Requestfelder (20–25): Standardjob-/Ergebnislauf-ID, Finanzmodus, Größe, Prozessmodus und Datum. Der tatsächliche Run/Snapshot/Plan/Checkpoint bleibt im vorhandenen Datenmodell. purchaseSetup Version 1 ergänzt optional Schema 1 (Bestellnummernserie, Lagerort). Ältere Snapshots erhalten keine neuen Einkaufsziele oder Buchungsfreigaben. Keine Laufdatenmigration/ForceSync. [Kompatibilitätsgrenzen](INDUSTRY_INITIALIZATION.md).
+
+
+## 1.0.7.0 – additive Buchungsverträge
+
+Scenario Felder 43 Purchase Posting Approved und 44 Payment Posting Approved; Factory Setup Feld 26 Industry Posting Approved. Keine neue Tabelle. Optionales purchaseSetup v2 und paymentSetup v1 im Snapshot-Schema 1; salesSetup v3 für beschaffte Same-run-Verkäufe. Historische Snapshots werden nicht umgeschrieben. Aktuelle Requestreferenz darf erst nach abgeschlossenem bisherigen Lauf einem neuen Datensatz weichen; Runhistorie bleibt unverändert. [Details](INDUSTRY_INITIALIZATION.md).

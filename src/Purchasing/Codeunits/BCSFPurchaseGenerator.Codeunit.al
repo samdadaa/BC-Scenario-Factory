@@ -3,6 +3,8 @@ namespace BCScenarioFactory.Purchasing;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Inventory;
+using BCScenarioFactory.Lifecycle;
+using BCScenarioFactory.Finance;
 using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.ProcessEngine;
 using BCScenarioFactory.ScenarioManagement;
@@ -13,8 +15,15 @@ using Microsoft.Foundation.NoSeries;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Setup;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.Setup;
+using Microsoft.Purchases.History;
+using Microsoft.Purchases.Payables;
+using Microsoft.Purchases.Posting;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Finance.GeneralLedger.Ledger;
+using Microsoft.Finance.VAT.Ledger;
 using Microsoft.Purchases.Vendor;
 
 codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
@@ -31,7 +40,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Capabilities.Version := '1';
     Capabilities."Contract Version" := 1;
     Capabilities."Minimum Mode" := "BCSF Process Mode"::UnpostedDocuments;
-    Capabilities."Maximum Mode" := "BCSF Process Mode"::UnpostedDocuments;
+    Capabilities."Maximum Mode" := "BCSF Process Mode"::PostedMovements;
     Capabilities."Maximum Batch Size" := 100;
     Capabilities.Insert();
   end;
@@ -53,7 +62,10 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     if not Contract.GetBoolean(InventorySettings, 'generatedVendors') then
       Error(SetupErr);
     Purchases.Get();
-    Settings.Add('version', 1);
+    Settings.Add('version', 2);
+    Settings.Add('postingApproved', Scenario."Purchase Posting Approved");
+    Settings.Add('invoiceSeries', Purchases."Posted Invoice Nos.");
+    Settings.Add('receiptSeries', Purchases."Posted Receipt Nos.");
     Settings.Add('orderSeries', Purchases."Order Nos.");
     Settings.Add('location', Contract.GetText(InventorySettings, 'location'));
   end;
@@ -82,9 +94,13 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Purchases: Record "Purchases & Payables Setup";
     Location: Record Location;
     Series: Record "No. Series";
+    GL: Record "General Ledger Setup";
+    Inventory: Record "Inventory Setup";
     ItemSetup: Codeunit "BCSF Item Setup";
     Contract: Codeunit "BCSF Contract JSON";
     Numbers: Codeunit "No. Series";
+    Payments: Codeunit "BCSF Payment Processor";
+    Guard: Codeunit "BCSF Environment Guard";
     Token: JsonToken;
     Settings: JsonObject;
     DateFrom: Date;
@@ -93,12 +109,12 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Contract.CheckTarget(Context, Target);
     if (Contract.GetCode(Target, 'entityCode') <> 'PURCHASE.ORDER') or
       (Contract.GetCode(Target, 'moduleCode') <> 'PURCHASING') or
-      (Contract.GetInteger(Target, 'processMode') <> 1) then
+      not (Contract.GetInteger(Target, 'processMode') in [1, 2]) then
       Error(SetupErr);
     if not Context.Get('purchaseSetup', Token) then
       Error(SetupErr);
     Settings := Token.AsObject();
-    if (Contract.GetInteger(Settings, 'version') <> 1) or
+    if not (Contract.GetInteger(Settings, 'version') in [1, 2]) or
       (ItemSetup.Quantity(Context, "BCSF Entity Type"::Vendor) < 2) or
       (ItemSetup.Quantity(Context, "BCSF Entity Type"::Item) < 1) then
       Error(SetupErr);
@@ -120,6 +136,46 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
       Error(SetupErr);
     CheckPermission(Database::"Purchase Header");
     CheckPermission(Database::"Purchase Line");
+    if Contract.GetInteger(Target, 'processMode') = 2 then begin
+      Guard.EnsureCodeunitAccess(Codeunit::"Purch.-Post");
+      Inventory.Get();
+      Inventory.TestField("Automatic Cost Posting", true);
+      if (Contract.GetInteger(Settings, 'version') <> 2) or not Contract.GetBoolean(Settings, 'postingApproved') then
+        Error(ApprovalErr);
+      Purchases.TestField("Posted Invoice Nos.", Contract.GetText(Settings, 'invoiceSeries'));
+      Purchases.TestField("Posted Receipt Nos.", Contract.GetText(Settings, 'receiptSeries'));
+      CheckSeries(Purchases."Posted Invoice Nos.", DateFrom, DateTo);
+      CheckSeries(Purchases."Posted Receipt Nos.", DateFrom, DateTo);
+      Guard.EnsurePostingTableAccess(Database::"Purch. Inv. Header", false);
+      Guard.EnsurePostingTableAccess(Database::"Purch. Inv. Line", false);
+      Guard.EnsurePostingTableAccess(Database::"Purch. Rcpt. Header", false);
+      Guard.EnsurePostingTableAccess(Database::"Purch. Rcpt. Line", false);
+      Guard.EnsurePostingTableAccess(Database::"Vendor Ledger Entry", false);
+      Guard.EnsurePostingTableAccess(Database::"Detailed Vendor Ledg. Entry", false);
+      Guard.EnsurePostingTableAccess(Database::"G/L Entry", false);
+      Guard.EnsurePostingTableAccess(Database::"VAT Entry", false);
+      Guard.EnsurePostingTableAccess(Database::"Item Ledger Entry", false);
+      Guard.EnsurePostingTableAccess(Database::"Value Entry", false);
+      GL.Get();
+      if ((GL."Allow Posting From" <> 0D) and (DateFrom < GL."Allow Posting From")) or
+        ((GL."Allow Posting To" <> 0D) and (DateTo > GL."Allow Posting To")) then
+        Error(SetupErr);
+      if Payments.Enabled(Context) then
+        Payments.Check(Context);
+    end;
+
+  end;
+
+  local procedure CheckSeries(Code: Code[20]; DateFrom: Date; DateTo: Date)
+  var
+    Series: Record "No. Series";
+    Numbers: Codeunit "No. Series";
+  begin
+    Series.Get(Code);
+    Series.TestField("Date Order", false);
+    Series.TestField("Default Nos.", true);
+    if (Numbers.PeekNextNo(Code, DateFrom) = '') or (Numbers.PeekNextNo(Code, DateTo) = '') then
+      Error(SetupErr);
   end;
 
   local procedure CheckPermission(TableId: Integer)
@@ -142,14 +198,14 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Requirement.Add('moduleCode', 'PURCHASING');
     Requirement.Add('kind', "BCSF Dependency Kind"::Required.AsInteger());
     Requirement.Add('minimumMode', 1);
-    Requirement.Add('maximumMode', 1);
+    Requirement.Add('maximumMode', 2);
     Dependencies.Add(Requirement);
     Clear(Requirement);
     Requirement.Add('entityCode', 'ITEM');
     Requirement.Add('moduleCode', 'INVENTORY');
     Requirement.Add('kind', "BCSF Dependency Kind"::Required.AsInteger());
     Requirement.Add('minimumMode', 1);
-    Requirement.Add('maximumMode', 1);
+    Requirement.Add('maximumMode', 2);
     Dependencies.Add(Requirement);
   end;
 
@@ -172,6 +228,12 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
   begin
     Rules.EnsureExecution(Context, Target, Batch, 'PURCHASE.DOCUMENT', RunId, BatchId);
     Check(Context, Target);
+    Context.Add('executingBatch', Contract.Clone(Batch));
+    Entry.SetRange("Run Id", RunId);
+    Entry.SetRange("Node Code", 'PURCHASE.ORDER');
+    Entry.SetRange("Logical Key", Contract.GetInteger(Batch, 'firstKey'), Contract.GetInteger(Batch, 'lastKey'));
+    if not Entry.IsEmpty() then
+      Error(ResultErr);
     for LogicalKey := Contract.GetInteger(Batch, 'firstKey') to Contract.GetInteger(Batch, 'lastKey') do begin
       if Entry.Get(RunId, 'PURCHASE.ORDER', LogicalKey, 'DOCUMENT') then
         Error(ResultErr);
@@ -219,6 +281,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
       Error(ResultErr);
   end;
 
+  [CommitBehavior(CommitBehavior::Error)]
   local procedure CreateOrder(Context: JsonObject; RunId: Guid; BatchId: Guid; LogicalKey: Integer)
   var
     Header: Record "Purchase Header";
@@ -228,12 +291,22 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     General: Record "General Posting Setup";
     VAT: Record "VAT Posting Setup";
     ItemVendor: Record "Item Vendor";
+    Invoice: Record "Purch. Inv. Header";
+    Receipt: Record "Purch. Rcpt. Header";
     Registry: Codeunit "BCSF Record Registry";
     Coordinator: Codeunit "BCSF Process Coordinator";
     Contract: Codeunit "BCSF Contract JSON";
     Dimensions: Codeunit DimensionManagement;
+    Evidence: Codeunit "BCSF Purchase Evidence";
+    Payments: Codeunit "BCSF Payment Processor";
+    PurchasePost: Codeunit "Purch.-Post";
     Token: JsonToken;
     NoParent: Guid;
+    ParentId: Guid;
+    HeaderId: Guid;
+    Mode: Integer;
+    Quantity: Decimal;
+    PostingQuantity: Decimal;
     Date: Date;
     Tables: array[10] of Integer;
     Nos: array[10] of Code[20];
@@ -252,7 +325,12 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     VAT.Get(Vendor."VAT Bus. Posting Group", Item."VAT Prod. Posting Group");
     VAT.TestField(Blocked, false);
     VAT.TestField("VAT Calculation Type", VAT."VAT Calculation Type"::"Normal VAT");
-    Date := Coordinator.DocumentDate(Context, 'PURCHASE.ORDER', LogicalKey);
+    Mode := Coordinator.Disposition(Context, 'PURCHASE.ORDER', LogicalKey);
+    Quantity := Coordinator.PurchaseQuantity(Context, LogicalKey);
+    PostingQuantity := Quantity;
+    if Mode = 2 then
+      PostingQuantity := Quantity / 2;
+    Date := Coordinator.PurchaseDate(Context, LogicalKey);
     Header.Init();
     Header.SetHideValidationDialog(true);
     Header."Document Type" := Header."Document Type"::Order;
@@ -265,7 +343,9 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Header.Validate("Expected Receipt Date", Date);
     Context.Get('purchaseSetup', Token);
     Header.Validate("Location Code", CopyStr(Contract.GetText(Token.AsObject(), 'location'), 1, 10));
+    Header.Validate("Vendor Invoice No.", Header."No.");
     Header.Modify(true);
+    HeaderId := Header.SystemId;
     Line.Init();
     Line.Validate("Document Type", Header."Document Type");
     Line.Validate("Document No.", Header."No.");
@@ -275,7 +355,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Line.Validate("No.", Item."No.");
     Line.Validate("Location Code", Header."Location Code");
     Line.Validate("Unit of Measure Code", Item."Base Unit of Measure");
-    Line.Validate(Quantity, Coordinator.Quantity(Context, 'PURCHASE.ORDER', LogicalKey));
+    Line.Validate(Quantity, Quantity);
     Line.Validate("Direct Unit Cost", Item."Unit Cost");
     if Line."Line Amount" <= 0 then
       Error(ResultErr);
@@ -288,7 +368,29 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
       not Dimensions.CheckDimValuePosting(Tables, Nos, Line."Dimension Set ID") then
       Error(ResultErr);
     Line.Modify(true);
-    Registry.RegisterResult(RunId, 'PURCHASE.ORDER', LogicalKey, 'DOCUMENT', BatchId, Header.RecordId(), NoParent);
+    if Mode = 0 then begin
+      Registry.RegisterResult(RunId, 'PURCHASE.ORDER', LogicalKey, 'DOCUMENT', BatchId, Header.RecordId(), NoParent);
+      exit;
+    end;
+    Line.Validate("Qty. to Receive", PostingQuantity);
+    Line.Validate("Qty. to Invoice", PostingQuantity);
+    Line.Modify(true);
+    Header.Receive := true;
+    Header.Invoice := true;
+    PurchasePost.SetSuppressCommit(true);
+    PurchasePost.Run(Header);
+    Invoice.Get(Header."Last Posting No.");
+    Receipt.Get(Header."Last Receiving No.");
+    Invoice.TestField("Buy-from Vendor No.", Vendor."No.");
+    ParentId := Registry.RegisterResult(RunId, 'PURCHASE.ORDER', LogicalKey, 'INVOICE', BatchId, Invoice.RecordId(), NoParent);
+    Registry.RegisterResult(RunId, 'PURCHASE.ORDER', LogicalKey, 'RECEIPT', BatchId, Receipt.RecordId(), ParentId);
+    if Mode = 2 then begin
+      Header.GetBySystemId(HeaderId);
+      Registry.RegisterResult(RunId, 'PURCHASE.ORDER', LogicalKey, 'DOCUMENT', BatchId, Header.RecordId(), ParentId);
+    end;
+    Evidence.RegisterPosting(RunId, LogicalKey, BatchId, Invoice, Receipt, ParentId);
+    if Payments.Enabled(Context) then
+      Payments.Pay(Context, RunId, 'PURCHASE.ORDER', LogicalKey, BatchId, Invoice."Vendor Ledger Entry No.", false, ParentId);
   end;
 
   procedure ValidateOutput(Context: JsonObject; Target: JsonObject; Batch: JsonObject; Result: JsonObject; var Findings: JsonArray)
@@ -296,14 +398,23 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Entry: Record "BCSF Generated Record";
     Header: Record "Purchase Header";
     Line: Record "Purchase Line";
+    Invoice: Record "Purch. Inv. Header";
+    InvoiceLine: Record "Purch. Inv. Line";
+    Receipt: Record "Purch. Rcpt. Header";
+    ReceiptLine: Record "Purch. Rcpt. Line";
     Item: Record Item;
     Vendor: Record Vendor;
     Contract: Codeunit "BCSF Contract JSON";
     Coordinator: Codeunit "BCSF Process Coordinator";
+    Registry: Codeunit "BCSF Record Registry";
+    Payments: Codeunit "BCSF Payment Processor";
     RunId: Guid;
     BatchId: Guid;
     LogicalKey: Integer;
+    Mode: Integer;
     Count: Integer;
+    Quantity: Decimal;
+    PostedQuantity: Decimal;
     Token: JsonToken;
   begin
     Clear(Findings);
@@ -312,26 +423,65 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Evaluate(BatchId, Contract.GetText(Context, 'batchId'));
     Context.Get('purchaseSetup', Token);
     for LogicalKey := Contract.GetInteger(Batch, 'firstKey') to Contract.GetInteger(Batch, 'lastKey') do begin
-      Entry.Get(RunId, 'PURCHASE.ORDER', LogicalKey, 'DOCUMENT');
-      Entry.TestField("Batch Id", BatchId);
-      Entry.TestField("Table Id", Database::"Purchase Header");
-      Header.GetBySystemId(Entry."Record SystemId");
-      Header.TestField("Document Type", Header."Document Type"::Order);
-      Header.TestField("Location Code", Contract.GetText(Token.AsObject(), 'location'));
-      Header.TestField("Posting Date", Coordinator.DocumentDate(Context, 'PURCHASE.ORDER', LogicalKey));
+      Mode := Coordinator.Disposition(Context, 'PURCHASE.ORDER', LogicalKey);
+      Quantity := Coordinator.PurchaseQuantity(Context, LogicalKey);
+      PostedQuantity := Quantity;
+      if Mode = 2 then
+        PostedQuantity := Quantity / 2;
       Sources(Context, RunId, LogicalKey, Item, Vendor);
-      Header.TestField("Buy-from Vendor No.", Vendor."No.");
-      Line.Get(Header."Document Type", Header."No.", 10000);
-      Line.TestField(Type, Line.Type::Item);
-      Line.TestField("No.", Item."No.");
-      Line.TestField("Unit of Measure Code", Item."Base Unit of Measure");
-      Line.TestField(Quantity, Coordinator.Quantity(Context, 'PURCHASE.ORDER', LogicalKey));
-      Line.TestField("Quantity Received", 0);
-      Line.TestField("Quantity Invoiced", 0);
+      if Mode > 0 then begin
+        Entry.Get(RunId, 'PURCHASE.ORDER', LogicalKey, 'INVOICE');
+        Entry.TestField("Batch Id", BatchId);
+        Invoice.GetBySystemId(Entry."Record SystemId");
+        Invoice.TestField("Buy-from Vendor No.", Vendor."No.");
+        Invoice.TestField("Posting Date", Coordinator.PurchaseDate(Context, LogicalKey));
+        InvoiceLine.Get(Invoice."No.", 10000);
+        InvoiceLine.TestField(Type, InvoiceLine.Type::Item);
+        InvoiceLine.TestField("No.", Item."No.");
+        InvoiceLine.TestField("Unit of Measure Code", Item."Base Unit of Measure");
+        InvoiceLine.TestField(Quantity, PostedQuantity);
+        Entry.Get(RunId, 'PURCHASE.ORDER', LogicalKey, 'RECEIPT');
+        Receipt.GetBySystemId(Entry."Record SystemId");
+        ReceiptLine.Get(Receipt."No.", 10000);
+        ReceiptLine.TestField("No.", Item."No.");
+        ReceiptLine.TestField(Quantity, PostedQuantity);
+        if Payments.Enabled(Context) then
+          Payments.ValidatePayment(RunId, 'PURCHASE.ORDER', LogicalKey, Invoice."Vendor Ledger Entry No.", false);
+      end;
+      if Mode <> 1 then begin
+        Entry.Get(RunId, 'PURCHASE.ORDER', LogicalKey, 'DOCUMENT');
+        Entry.TestField("Batch Id", BatchId);
+        Entry.TestField("Table Id", Database::"Purchase Header");
+        Header.GetBySystemId(Entry."Record SystemId");
+        Header.TestField("Document Type", Header."Document Type"::Order);
+        Header.TestField("Location Code", Contract.GetText(Token.AsObject(), 'location'));
+        Header.TestField("Posting Date", Coordinator.PurchaseDate(Context, LogicalKey));
+        Header.TestField("Buy-from Vendor No.", Vendor."No.");
+        Line.Get(Header."Document Type", Header."No.", 10000);
+        Line.TestField(Type, Line.Type::Item);
+        Line.TestField("No.", Item."No.");
+        Line.TestField("Unit of Measure Code", Item."Base Unit of Measure");
+        Line.TestField(Quantity, Quantity);
+        if Mode = 0 then begin
+          Line.TestField("Quantity Received", 0);
+          Line.TestField("Quantity Invoiced", 0);
+        end else begin
+          Line.TestField("Quantity Received", PostedQuantity);
+          Line.TestField("Quantity Invoiced", PostedQuantity);
+          Line.TestField("Outstanding Quantity", Quantity - PostedQuantity);
+        end;
+      end;
       Count += 1;
     end;
-    if (Count <> Contract.GetInteger(Result, 'processedUnits')) or (Count <> Contract.GetInteger(Result, 'createdRecords')) then
+    Entry.Reset();
+    Entry.SetRange("Batch Id", BatchId);
+    if (Count <> Contract.GetInteger(Result, 'processedUnits')) or (Entry.Count() <> Contract.GetInteger(Result, 'createdRecords')) then
       Error(ResultErr);
+    if Entry.FindSet() then
+      repeat
+        if not Registry.ExistsByIdentity(Entry) then
+          Error(ResultErr);
+      until Entry.Next() = 0;
   end;
 
   procedure Resume(Context: JsonObject; Target: JsonObject; Batch: JsonObject; var Result: JsonObject)
@@ -340,8 +490,9 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
   end;
 
   var
-    NameLbl: Label 'Unposted Purchase Orders';
-    SetupErr: Label 'Purchase orders require unposted mode, two vendors and items from this run, a simple location and valid captured purchase numbering.';
+    NameLbl: Label 'Purchase Orders, Receipts and Invoices';
+    ApprovalErr: Label 'Approve purchase posting on this template and enable posting in Factory Setup before capturing a posted run.';
+    SetupErr: Label 'Purchase orders require a supported document mode, two vendors and items from this run, a simple location and valid captured purchase numbering.';
     PermissionErr: Label 'Read or write permission is missing for %1. Review standard purchase permissions.', Comment = '%1 = table caption';
     ResultErr: Label 'The purchase order or its source relationship is missing, changed or already recorded. Review the batch; uncertain work is not repeated.';
 }

@@ -1,5 +1,22 @@
 # Testanleitung – Vorlage wählen, starten, Ergebnis öffnen
 
+## 1.0.7.0 – Einkauf, Buchung, Zahlung und Berechtigungsfehler
+
+**Vorbereitet, nicht nativ ausgeführt.** Paket zuerst manuell nach bestehender Freigabe bereitstellen. [Lokales Prüfprotokoll und Prüfsumme](../TESTS.md#sf-020sf-022--gebuchter-großhandel-und-zahlungsausgleich). Nicht versehentlich den während der Entwicklung erzeugten älteren 1.0.7.0-Build verwenden: aktuelles Paket `artifacts/BCScenarioFactory-1.0.7.0-Purchase-Payments-Permissions.app`.
+
+1. Gemeldeten Fehler prüfen: **Aktueller Hintergrundauftrag** öffnen. Nach Update kann bei fehlender Ergebnislauf-ID die gescheiterte atomare Vorbereitung mit demselben Queuejob erneut bereitgestellt werden. Bei bereits gebundenem Ergebnislauf dessen Batchdiagnose verwenden. Kein Datenreset, keine neue Initialisierung als Fehlerbehelf, keine Wiederholung einer unklaren Buchung.
+2. Frische isolierte SKR03- und SKR04-Firmen getrennt prüfen: Großhandel → Klein → gebuchte Bewegungen, Zustimmung zunächst aus. Start muss gesperrt sein. Mit Zustimmung einmal starten, Browser schließen, nach Wiederöffnung abgeschlossenen Lauf/Qualität prüfen. Referenzmengen 20 Debitoren, 5 Kreditoren, 40 Artikel, 15 Einkaufsziele, 5 Angebote, 12 Verkaufsauftragsziele, 3 direkte Rechnungsziele.
+3. Gebuchtes Ergebnis: 12 Einkaufsrechnungen und 12 Eingänge, 6 verbleibende Bestellungen; 9 Auftragsrechnungen, 6 verbleibende Verkaufsaufträge; 2 direkte gebuchte Rechnungen, 1 ungebuchte Rechnung; 5 ungebuchte Angebote. Je 3 teilgebuchte Aufträge auf beiden Seiten mit echter halber Menge. Lieferant/Artikel/Herkunft desselben Laufs, Bestand vor Verkauf und Beträge/MwSt. kontrollieren. Debitoren-/Kreditorenrechnungen in dieser Stufe offen.
+4. Separat denselben kleinen Referenzfall mit **Zahlungen und Ausgleich** ausführen. Erwartung: 12 Kreditorenzahlungen + 11 Debitorenzahlungen, 23 Bankposten auf BCSF-PAY, alle 23 gebuchten Rechnungen und deren Zahlungen geschlossen/Restbetrag 0. Ungebuchte Reste unverändert. Rechnungsdatum = Zahlungsbuchungsdatum. Keine Bankübermittlung/externen Kennungen.
+5. Sach-/MwSt.-/Artikel-/Wertposten und Lagerwert, Bankbewegungen, Bilanz/GuV/BWA gegen die tatsächlichen Belegzeilen abstimmen. Automatische Lagerwertbuchung muss für neue Buchungsläufe aktiv sein. Bestehende Firma mit Posten und deaktivierter automatischer Lagerwertbuchung muss mit Konflikt stoppen, ohne die Kostenpolitik zu ändern.
+6. Bestehende Test-App 1.3.0.0 bereitstellen und die fünf neuen Methoden ausführen; reine Methoden benötigen keinen neuen Datensatz, Referenz-/Replaymethoden den dokumentierten abgeschlossenen Lauf. Zusätzlich fehlende Zahlungseinrichtung, manipulierte Bankzuordnung und fehlende Approval prüfen. Fehlende Standardbuchungsrechte bleiben blockiert; reguläre indirekte Rechte dürfen nicht schon wegen fehlender direkter WritePermission abgewiesen werden. Mit tatsächlichem Hintergrundnutzer prüfen.
+7. Fehler nach Buchung/vor Checkpoint und nach bestätigtem Batch gezielt prüfen: entweder vollständiger Rollback oder gesperrte unklare Arbeit; keine Doppelrechnung/-zahlung beim Replay. Tatsächliche Job-/Batch-/Run-IDs und Ergebnisse ohne sensible Daten protokollieren.
+8. Dashboard mindestens mehrere Pollzyklen beobachten: Änderungen erscheinen ohne Flackern, Fokus/Scroll/Filter/Reiter/Details bleiben erhalten; langsame Serverantwort, ausgeblendeter Tab und Abruffehler prüfen. Zahlungs-/Eingangs-/Rechnungskacheln öffnen genau die angezeigte berechtigte Menge. Große Provenienzmengen bleiben gesonderte Grenze.
+9. Nach abgeschlossenem Lauf neuen Datensatz über **Unternehmensdaten erzeugen** anlegen: gleiche Einrichtung, keine erneute Kontenplanwahl, alte Läufe/Starter/eigene Namen/Entfernungsvermerke erhalten. Upgrade ohne ForceSync; alte Snapshotverträge nicht umschreiben. Drei Referenzstarter nur explizit laden, keine automatische Buchungsfreigabe beim Laden/Kopieren/Import.
+
+Die folgenden Abschnitte dokumentieren ältere Abnahmestände.
+
+
 ## SF-045 – zuerst den frischen Großhandelsfall prüfen
 
 **Alle folgenden BC-Prüfungen sind vorbereitet, nicht ausgeführt.** Nur eine neue isolierte SaaS-Sandbox-Firma verwenden. Eine Installation/Veröffentlichung ist separat freizugeben.

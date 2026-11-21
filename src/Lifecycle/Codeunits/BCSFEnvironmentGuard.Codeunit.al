@@ -2,6 +2,8 @@ namespace BCScenarioFactory.Lifecycle;
 
 using BCScenarioFactory.Core;
 using System.Environment;
+using System.Security.AccessControl;
+using System.Security.User;
 
 codeunit 90375 "BCSF Environment Guard"
 {
@@ -51,6 +53,41 @@ codeunit 90375 "BCSF Environment Guard"
       else
         Error(UnknownModeErr);
     end;
+  end;
+
+  /// <summary>Posting owns its writes. Accept assigned indirect rights without granting direct ledger access.</summary>
+  procedure EnsurePostingTableAccess(TableId: Integer; ModifyRequired: Boolean)
+  var
+    TempPermission: Record "Expanded Permission" temporary;
+    UserPermissions: Codeunit "User Permissions";
+    Row: RecordRef;
+    Caption: Text;
+  begin
+    Row.Open(TableId);
+    Row.SecurityFiltering(SecurityFilter::Disallowed);
+    Caption := Row.Caption();
+    if not Row.ReadPermission() then
+      Error(PostingPermissionErr, Caption);
+    TempPermission := UserPermissions.GetEffectivePermission(TempPermission."Object Type"::"Table Data", TableId);
+    if not AllowsStandardPosting(TempPermission, ModifyRequired) then
+      Error(PostingPermissionErr, Caption);
+    Row.Close();
+  end;
+
+  procedure AllowsStandardPosting(TempPermission: Record "Expanded Permission" temporary; ModifyRequired: Boolean): Boolean
+  begin
+    exit((TempPermission."Insert Permission" in [TempPermission."Insert Permission"::Yes, TempPermission."Insert Permission"::Indirect]) and
+      (not ModifyRequired or (TempPermission."Modify Permission" in [TempPermission."Modify Permission"::Yes, TempPermission."Modify Permission"::Indirect])));
+  end;
+
+  procedure EnsureCodeunitAccess(CodeunitId: Integer)
+  var
+    TempPermission: Record "Expanded Permission" temporary;
+    UserPermissions: Codeunit "User Permissions";
+  begin
+    TempPermission := UserPermissions.GetEffectivePermission(TempPermission."Object Type"::Codeunit, CodeunitId);
+    if TempPermission."Execute Permission" <> TempPermission."Execute Permission"::Yes then
+      Error(PostingExecuteErr, CodeunitId);
   end;
 
   local procedure EnsureSandbox()
@@ -127,6 +164,8 @@ codeunit 90375 "BCSF Environment Guard"
   end;
 
   var
+    PostingPermissionErr: Label 'Standard posting requires read access and assigned direct or indirect insert permission for %1, and modify permission when applying entries. Review standard posting permissions; no direct ledger rights are granted.', Comment = '%1 = table caption';
+    PostingExecuteErr: Label 'Execution permission is missing for standard codeunit %1. Review the purchase, sales or journal posting role.', Comment = '%1 = standard codeunit ID';
     ProductionErr: Label 'Scenario Factory cannot write data in a production environment. Use an approved sandbox.';
     SandboxErr: Label 'Scenario Factory requires a confirmed sandbox environment. Unknown and on-premises environments are blocked.';
     CompanyErr: Label 'Use the approved test company in the current session. Cross-company generation and setup writes are blocked.';

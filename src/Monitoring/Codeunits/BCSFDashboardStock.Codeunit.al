@@ -111,6 +111,7 @@ codeunit 90369 "BCSF Dashboard Stock"
       if TextProperty(Value.AsObject(), 'key') in ['customer', 'vendor', 'shipTo', 'orderAddress', 'item', 'category', 'itemUnit', 'attribute', 'attributeValue', 'attributeMapping', 'variant', 'itemReference', 'itemVendor', 'substitution', 'sku', 'bin', 'binContent'] then
         Metrics.Add(Value);
     AddRunMetrics('sales', RunId, Metrics);
+    AddRunMetrics('purchase', RunId, Metrics);
     AddRunMetrics('entries', RunId, Metrics);
     Result.Add('metrics', Metrics);
     exit(Result);
@@ -129,7 +130,7 @@ codeunit 90369 "BCSF Dashboard Stock"
     foreach Value in Values.AsArray() do begin
       Metric := Value.AsObject();
       MetricKey := TextProperty(Metric, 'key');
-      if (GroupKey = 'entries') or (MetricKey in ['quote', 'order', 'invoice', 'postedShipment', 'postedInvoice']) then
+      if (GroupKey = 'entries') or (MetricKey in ['quote', 'order', 'invoice', 'postedShipment', 'postedReceipt', 'postedInvoice']) then
         if Metric.Contains('count') then
           if IntProperty(Metric, 'count') > 0 then begin
             Metric.Replace('key', GroupKey + '/' + MetricKey);
@@ -194,6 +195,9 @@ codeunit 90369 "BCSF Dashboard Stock"
   local procedure TryBuildView(GroupKey: Text; Metric: JsonObject; EntireCompany: Boolean; StockRunId: Guid; var Rows: RecordRef; var Count: Integer; var Status: Text; var CanOpen: Boolean; var RowsOpened: Boolean)
   var
     Entry: Record "BCSF Generated Record";
+    CustomerEntry: Record "Cust. Ledger Entry";
+    VendorEntry: Record "Vendor Ledger Entry";
+    FilterField: FieldRef;
     PageId: Integer;
   begin
     Count := -1;
@@ -225,6 +229,18 @@ codeunit 90369 "BCSF Dashboard Stock"
         Status := NoAccessLbl;
         exit;
       end;
+    end;
+    case TextProperty(Metric, 'key') of
+      'customerPayment':
+        begin
+          FilterField := Rows.Field(CustomerEntry.FieldNo("Document Type"));
+          FilterField.SetRange(CustomerEntry."Document Type"::Payment);
+        end;
+      'vendorPayment':
+        begin
+          FilterField := Rows.Field(VendorEntry.FieldNo("Document Type"));
+          FilterField.SetRange(VendorEntry."Document Type"::Payment);
+        end;
     end;
     if not ApplyBaseFilters(GroupKey, PageId, Rows) then begin
       Status := UnverifiedLbl;
@@ -770,8 +786,8 @@ codeunit 90369 "BCSF Dashboard Stock"
           AddMetric(Catalog, 'invoice', Database::"Purchase Header", Page::"Purchase Invoices", false, Doc3Lbl);
           AddMetric(Catalog, 'credit', Database::"Purchase Header", Page::"Purchase Credit Memos", false, Doc4Lbl);
           AddMetric(Catalog, 'return', Database::"Purchase Header", Page::"Purchase Return Order List", false, Doc5Lbl);
-          AddMetric(Catalog, 'postedReceipt', Database::"Purch. Rcpt. Header", Page::"Posted Purchase Receipts", false, PostedReceiptLbl);
-          AddMetric(Catalog, 'postedInvoice', Database::"Purch. Inv. Header", Page::"Posted Purchase Invoices", false, PostedInvoiceLbl);
+          AddMetric(Catalog, 'postedReceipt', Database::"Purch. Rcpt. Header", Page::"Posted Purchase Receipts", true, PostedReceiptLbl);
+          AddMetric(Catalog, 'postedInvoice', Database::"Purch. Inv. Header", Page::"Posted Purchase Invoices", true, PostedInvoiceLbl);
           AddMetric(Catalog, 'postedCredit', Database::"Purch. Cr. Memo Hdr.", Page::"Posted Purchase Credit Memos", false, PostedCreditLbl);
           AddMetric(Catalog, 'postedReturn', Database::"Return Shipment Header", Page::"Posted Return Shipments", false, PostedReturnLbl);
         end;
@@ -779,8 +795,10 @@ codeunit 90369 "BCSF Dashboard Stock"
         begin
           AddMetric(Catalog, 'glEntry', Database::"G/L Entry", Page::"General Ledger Entries", true, '');
           AddMetric(Catalog, 'customerEntry', Database::"Cust. Ledger Entry", Page::"Customer Ledger Entries", true, '');
-          AddMetric(Catalog, 'vendorEntry', Database::"Vendor Ledger Entry", Page::"Vendor Ledger Entries", false, '');
-          AddMetric(Catalog, 'bankEntry', Database::"Bank Account Ledger Entry", Page::"Bank Account Ledger Entries", false, '');
+          AddMetric(Catalog, 'vendorEntry', Database::"Vendor Ledger Entry", Page::"Vendor Ledger Entries", true, '');
+          AddMetric(Catalog, 'bankEntry', Database::"Bank Account Ledger Entry", Page::"Bank Account Ledger Entries", true, '');
+          AddMetric(Catalog, 'customerPayment', Database::"Cust. Ledger Entry", Page::"Customer Ledger Entries", true, CustomerPaymentsLbl);
+          AddMetric(Catalog, 'vendorPayment', Database::"Vendor Ledger Entry", Page::"Vendor Ledger Entries", true, VendorPaymentsLbl);
           AddMetric(Catalog, 'vatEntry', Database::"VAT Entry", Page::"VAT Entries", true, '');
           AddMetric(Catalog, 'itemEntry', Database::"Item Ledger Entry", Page::"Item Ledger Entries", true, '');
           AddMetric(Catalog, 'valueEntry', Database::"Value Entry", Page::"Value Entries", true, '');
@@ -863,6 +881,8 @@ codeunit 90369 "BCSF Dashboard Stock"
   var
     MasterGroupLbl: Label 'Master data';
     SalesGroupLbl: Label 'Sales';
+    CustomerPaymentsLbl: Label 'Customer payments';
+    VendorPaymentsLbl: Label 'Vendor payments';
     PurchaseGroupLbl: Label 'Purchasing';
     EntriesGroupLbl: Label 'Ledger entries';
     FinanceGroupLbl: Label 'Finance and banking';

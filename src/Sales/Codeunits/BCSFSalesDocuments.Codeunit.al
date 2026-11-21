@@ -2,6 +2,7 @@ namespace BCScenarioFactory.Sales;
 
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
+using BCScenarioFactory.Finance;
 using BCScenarioFactory.ProcessEngine;
 using BCScenarioFactory.ScenarioManagement;
 using Microsoft.Finance.Dimension;
@@ -33,6 +34,7 @@ codeunit 90430 "BCSF Sales Documents"
     Contract: Codeunit "BCSF Contract JSON";
     Registry: Codeunit "BCSF Record Registry";
     Evidence: Codeunit "BCSF Sales Evidence";
+    Payments: Codeunit "BCSF Payment Processor";
     SalesPost: Codeunit "Sales-Post";
     QuoteToOrder: Codeunit "Sales-Quote to Order";
     ParentId: Guid;
@@ -136,6 +138,8 @@ codeunit 90430 "BCSF Sales Documents"
       Line.TestField("Quantity Invoiced", PostingQuantity);
     end;
     Evidence.RegisterPosting(Context, RunId, EntityCode, LogicalKey, BatchId, Invoice, Shipment, ParentId);
+    if Payments.Enabled(Context) then
+      Payments.Pay(Context, RunId, EntityCode, LogicalKey, BatchId, Invoice."Cust. Ledger Entry No.", true, ParentId);
   end;
 
   local procedure ApplyShipTo(Context: JsonObject; var Header: Record "Sales Header"; Customer: Record Customer)

@@ -66,3 +66,8 @@ Jetzt sieben AL-Objekte: vorhandene 90425/90427 und neue 90426 Sales Generator, 
 Bestehende Verkaufsgeneratoren unverändert wiederverwendet; bei positivem Einkaufsbestellziel besteht eine explizite PURCHASE.ORDER-Abhängigkeit. Same-run-Stämme und Bestands-/Buchungssperren bleiben wirksam.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## 1.0.7.0 – aktueller Folgeumfang
+
+salesSetup Version 3 bindet Standardbeschaffung desselben Laufs vor gebuchten Verkäufen; alte Version 2 bleibt für Buchung gesperrt. Optionale Zahlungen für gebuchte Auftrags-/Direktrechnungen über gemeinsamen Finance-Dienst. Keine neue Seite/Objekte. [Gemeinsamer Vertrag](../../../INDUSTRY_INITIALIZATION.md). **Zur Prüfung**, native Abnahme offen.

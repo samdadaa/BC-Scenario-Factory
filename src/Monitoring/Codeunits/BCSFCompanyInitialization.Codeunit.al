@@ -63,6 +63,7 @@ codeunit 90361 "BCSF Company Initialization"
     Packages: Codeunit "BCSF Finance Package Mgt";
     Profile: Codeunit "BCSF Wholesale Profile";
     QuickRun: Codeunit "BCSF Quick Scenario Run";
+    Payments: Codeunit "BCSF Payment Processor";
     ScenarioId: Guid;
   begin
     if Setup."Company Initialized" then begin
@@ -71,8 +72,20 @@ codeunit 90361 "BCSF Company Initialization"
         Error(ChartErr);
     end else
       Catalog.InitializeFoundation(Setup."Industry Finance Mode");
+    if Setup."Industry Process Mode".AsInteger() >= 2 then begin
+      Setup.TestField("Industry Posting Approved", true);
+      Packages.PreparePostingFoundation();
+    end;
+    if Setup."Industry Process Mode" = "BCSF Process Mode"::FollowUpProcesses then
+      Payments.PrepareFoundation();
     ScenarioId := Profile.CreateTemplate(Setup."Industry Size", Setup."Industry Process Mode", Setup."Industry Date");
     Scenario.Get(ScenarioId);
+    if Setup."Industry Process Mode".AsInteger() >= 2 then begin
+      Scenario."Sales Posting Approved" := Setup."Industry Posting Approved";
+      Scenario."Purchase Posting Approved" := Setup."Industry Posting Approved";
+      Scenario."Payment Posting Approved" := Setup."Industry Process Mode" = "BCSF Process Mode"::FollowUpProcesses;
+      Scenario.Modify(true);
+    end;
     Setup.Get(Setup.GetSetupKey());
     Setup."Industry Run Id" := QuickRun.RunScenario(Scenario);
     Setup.Modify(true);
@@ -80,6 +93,12 @@ codeunit 90361 "BCSF Company Initialization"
 
   [CommitBehavior(CommitBehavior::Error)]
   procedure Start(Mode: Enum "BCSF Finance Mode"; Size: Integer; ProcessMode: Enum "BCSF Process Mode")
+  begin
+    Start(Mode, Size, ProcessMode, false);
+  end;
+
+  [CommitBehavior(CommitBehavior::Error)]
+  procedure Start(Mode: Enum "BCSF Finance Mode"; Size: Integer; ProcessMode: Enum "BCSF Process Mode"; PostingApproved: Boolean)
   var
     Setup: Record "BCSF Factory Setup";
     Scenario: Record "BCSF Scenario";
@@ -96,8 +115,9 @@ codeunit 90361 "BCSF Company Initialization"
     Guard.EnsureCanConfigure(CompanyName());
     Setup.LockTable();
     Setup.Get(Setup.GetSetupKey());
-    if not IsNullGuid(Setup."Industry Job Id") or not IsNullGuid(Setup."Industry Run Id") then
-      Error(ExistingErr);
+    EnsureCanStartNewRequest(Setup);
+    if (ProcessMode.AsInteger() >= 2) and not PostingApproved then
+      Error(ApprovalErr);
     Profile.CheckSelection(Size, ProcessMode);
     if Setup."Company Initialized" then begin
       Setup.TestField("Generation Enabled", true);
@@ -106,9 +126,15 @@ codeunit 90361 "BCSF Company Initialization"
     end;
     // Read-only finance preflight before accepting the background request.
     Packages.CheckInitialization(Mode);
+    if Setup."Company Initialized" and (ProcessMode.AsInteger() >= 2) then
+      Packages.CheckPostingFoundation();
     Job.CheckRequiredPermissions();
     if not Job.WritePermission() then
       Error(JobErr);
+    Clear(Setup."Industry Run Id");
+    Setup."Industry Posting Approved" := PostingApproved and (ProcessMode.AsInteger() >= 2);
+    if Setup."Industry Posting Approved" then
+      Setup.Validate("Posting Enabled", true);
     Setup."Industry Finance Mode" := Mode;
     Setup."Industry Size" := Size;
     Setup."Industry Process Mode" := ProcessMode;
@@ -140,12 +166,12 @@ codeunit 90361 "BCSF Company Initialization"
       exit;
     Previous.LockTable();
     Previous.Get(Rec.GetSetupKey());
-    if not IsNullGuid(Previous."Industry Job Id") then begin
-      Rec.TestField("Industry Job Id", Previous."Industry Job Id");
+    if (Previous."Industry Job Id" = Rec."Industry Job Id") and not IsNullGuid(Previous."Industry Job Id") then begin
       Rec.TestField("Industry Finance Mode", Previous."Industry Finance Mode");
       Rec.TestField("Industry Size", Previous."Industry Size");
       Rec.TestField("Industry Process Mode", Previous."Industry Process Mode");
       Rec.TestField("Industry Date", Previous."Industry Date");
+      Rec.TestField("Industry Posting Approved", Previous."Industry Posting Approved");
       if not IsNullGuid(Previous."Industry Run Id") then
         Rec.TestField("Industry Run Id", Previous."Industry Run Id")
       else
@@ -157,8 +183,12 @@ codeunit 90361 "BCSF Company Initialization"
         end;
     end else
       if not IsNullGuid(Rec."Industry Job Id") then begin
+        EnsureCanStartNewRequest(Previous);
+        Rec.TestField("Industry Run Id", CreateEmptyGuid());
         Rec.TestField("Industry Date");
         Profile.CheckSelection(Rec."Industry Size", Rec."Industry Process Mode");
+        if Rec."Industry Process Mode".AsInteger() >= 2 then
+          Rec.TestField("Industry Posting Approved", true);
         Job.Get(Rec."Industry Job Id");
         Job.TestField("Object Type to Run", Job."Object Type to Run"::Codeunit);
         Job.TestField("Object ID to Run", Codeunit::"BCSF Company Initialization");
@@ -166,10 +196,33 @@ codeunit 90361 "BCSF Company Initialization"
         Job.TestField("Recurring Job", false);
         if Job."Record ID to Process" <> Rec.RecordId() then
           Error(JobErr);
-      end;
+      end else
+        if not IsNullGuid(Previous."Industry Job Id") then
+          Error(ExistingErr);
+  end;
+
+  local procedure EnsureCanStartNewRequest(Setup: Record "BCSF Factory Setup")
+  var
+    Execution: Record "BCSF Run Execution";
+  begin
+    if IsNullGuid(Setup."Industry Job Id") and IsNullGuid(Setup."Industry Run Id") then
+      exit;
+    if IsNullGuid(Setup."Industry Run Id") then
+      Error(ExistingErr);
+    Execution.Get(Setup."Industry Run Id");
+    if not (Execution.Status in [Execution.Status::Completed, Execution.Status::CompletedWithWarnings]) then
+      Error(ExistingErr);
+  end;
+
+  local procedure CreateEmptyGuid(): Guid
+  var
+    EmptyId: Guid;
+  begin
+    exit(EmptyId);
   end;
 
   var
+    ApprovalErr: Label 'Explicitly approve standard posting and, for follow-up mode, payments and application before starting.';
     JobLbl: Label 'Scenario Factory company initialization';
     JobErr: Label 'Company initialization requires an authorized standard background job. Review job queue permissions and its current status.';
     ExistingErr: Label 'A company initialization request already exists. Review its progress or error in the dashboard; do not start a duplicate.';

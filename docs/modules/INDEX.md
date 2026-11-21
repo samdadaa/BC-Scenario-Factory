@@ -1,5 +1,8 @@
 # Modulindex – Zielarchitektur
 
+**Aktuell 1.0.7.0:** 139 AL-Objekte. Purchasing jetzt fünf Objekte einschließlich Purchase Evidence 90454, Finance neun einschließlich Payment Processor 90401. Großhandel mit vier Prozessstufen und Zwei-Sekunden-Dashboard; native Abnahme offen. [Aktueller Vertrag](../INDUSTRY_INITIALIZATION.md#aktueller-folgeumfang-1070--einkauf-buchung-und-ausgleich). Die nachfolgenden Objektzahlen sind historische Ticketstände.
+
+
 **SF-045, 21.11.2026:** Aktuell 137 AL-Objekte; [vollständiger geprüfter Quellbestand und Einstufung je Objekt](../ARCHITECTURE_AUDIT_SF045.md). Neu: Wholesale Profile 90153, Company Initialization 90361, Purchase Generator 90451 und Binding 90453. Keine neue Tabelle/Seite. Großhandel mit Stammdaten oder ungebuchten Einkaufs-/Verkaufsbelegen; native Abnahme offen. Nachfolgende Modulzahlen sind historische Stände.
 
 Für neue oder geänderte Generatoren gelten die [SF-042-Qualitätsregeln](../ARCHITECTURE.md#generator-qualitätscheckliste-sf-042) und der [Prüfumfang je Modul](../TESTS.md#sf-042--prüfumfang-je-generator). In der jeweiligen Moduldatei unterstützte Entitäten/Modi, konkrete Setup-/Stammvorgänger, Herkunft, Statistikroute und echte Soll-/Ist-Nachweise festhalten. Nicht unterstützte Fälle mit bestehendem Ticket und Grenze benennen. [Aktueller Partnerpfad und offene Abnahme](../TESTS.md#sf-042--soll-ist-prüfung-des-partnerpfads).

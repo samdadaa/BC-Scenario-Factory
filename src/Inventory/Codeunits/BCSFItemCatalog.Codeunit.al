@@ -24,6 +24,8 @@ codeunit 90477 "BCSF Item Catalog"
   begin
     if Version = '1' then
       exit(Profile in ['TECH-TRADE', 'TECH-BINS']);
+    if (Version = '4') and (Profile = 'TRADE') then
+      exit(true);
     exit((Version = '3') and (Profile in ['TECH-SALES', 'GENERAL', 'TRADE', 'ECOMMERCE', 'DISTRIBUTION', 'MANUFACTURING', 'CONSULTING', 'CONSTRUCTION', 'SERVICE']));
   end;
 

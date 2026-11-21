@@ -57,3 +57,8 @@ Normalpfad: **Vorlage wählen → Partnerszenario ausführen → bestätigen →
 **Fehler anzeigen** öffnet den frühesten verfügbaren fehlgeschlagenen Standard-Queueeintrag dieses Laufs, einschließlich früherer Jobbindungen aus der Historie. Registrierte Standardfehlerdetails und Aufrufliste bleiben im Standardprotokoll; keine Kopie in das eigene Audit. Ohne Protokoll wird der fehlende Nachweis konkret benannt und die betroffene Paketliste geöffnet. Unsichere übernommene Arbeit bleibt gesperrt; Diagnose ist keine Retryfreigabe.
 
 Seit 1.0.5.2 enthalten die unterstützten Verkaufsvorlagen Stammdaten und Verkaufsziele gemeinsam. „Startvorlagen laden“ ergänzt die Vorgänger bei erkannten Verkaufsstartern. Der ungebuchte Testlauf benötigt keine Auswahl einer Lauf-GUID. Den aktuellen Ablauf und die Grenze für gebuchte Verkäufe beschreibt [Stammdaten und Verkauf in einem Lauf](SALES_PROCESS.md#stammdaten-und-verkauf-in-einem-lauf).
+
+
+## 1.0.7.0 – drei Großhandelsreferenzen
+
+Explizites Laden ergänzt geschützte feste Referenzen für ungebucht, gebucht und Zahlung/Ausgleich. Der vorhandene ungebuchte Starter wird nicht überschrieben. Gebuchte Referenzen verwenden TRADE v4 mit PO 60/20/Rest, SO 50/25/Rest und direkten Rechnungen 67/0/Rest; Angebote ungebucht. Neue Starter, Kopien und Importe übernehmen keine Buchungsfreigabe. Eigene Namen/Werte, Archivierung und Entfernungsvermerke bleiben erhalten. [Aktueller gemeinsamer Workflow](INDUSTRY_INITIALIZATION.md), [native Referenzprüfung](review/TESTANLEITUNG.md#1070--einkauf-buchung-zahlung-und-berechtigungsfehler).

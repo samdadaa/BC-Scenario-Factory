@@ -63,8 +63,22 @@ page 90101 "BCSF Factory Setup Card"
         field(ProcessChoice; ProcessChoice)
         {
           Caption = 'Data and processes';
-          OptionCaption = 'Master data only,With unposted documents';
-          ToolTip = 'Posting is unavailable until purchase receipts and complete posting prerequisites are supported. No documents are posted.';
+          OptionCaption = 'Master data only,With unposted documents,With posted documents,With payments and application';
+          ToolTip = 'Select unposted documents, standard purchase and sales posting, or additional payments and application. Posting requires explicit approval.';
+          trigger OnValidate()
+          begin
+            PostingApproved := false;
+          end;
+        }
+      }
+      group(PostingConsent)
+      {
+        Caption = 'Posting approval';
+        Visible = (WizardStep = 4) and (ProcessChoice >= 2);
+        field(PostingApproved; PostingApproved)
+        {
+          Caption = 'Approve posting and selected follow-up processes';
+          ToolTip = 'Explicitly authorizes standard receipts, shipments and invoices. Payment mode also posts and applies customer and vendor payments using a synthetic bank account without bank transmission.';
         }
       }
       group(ReviewStep)
@@ -164,7 +178,7 @@ page 90101 "BCSF Factory Setup Card"
         var
           Initialization: Codeunit "BCSF Company Initialization";
         begin
-          Initialization.Start(SelectedChart(), SizeChoice, SelectedProcess());
+          Initialization.Start(SelectedChart(), SizeChoice, SelectedProcess(), PostingApproved);
           CurrPage.Close();
         end;
       }
@@ -188,10 +202,10 @@ page 90101 "BCSF Factory Setup Card"
       action(InitializeSetup)
       {
         ApplicationArea = All;
-        Caption = 'Initialize Company';
+        Caption = 'Set up company or start another run';
         Image = Setup;
         Visible = WizardStep = 0;
-        ToolTip = 'Choose the chart of accounts and prepare this sandbox company once. Does not post documents.';
+        ToolTip = 'Use the existing company foundation and choose the data size and process scope. A new run requires the previous company run to have completed.';
 
         trigger OnAction()
         begin
@@ -205,7 +219,7 @@ page 90101 "BCSF Factory Setup Card"
   trigger OnOpenPage()
   begin
     RefreshSetup();
-    if not Initialized then
+    if not Initialized or OpenAsWorkflow then
       WizardStep := 1;
     ChartChoice := ChartChoice::SKR04;
     if Initialized then
@@ -253,6 +267,11 @@ page 90101 "BCSF Factory Setup Card"
     exit(true);
   end;
 
+  procedure OpenWorkflow()
+  begin
+    OpenAsWorkflow := true;
+  end;
+
   local procedure PackagesMode(): Enum "BCSF Finance Mode"
   var
     Packages: Codeunit "BCSF Finance Package Mgt";
@@ -271,8 +290,11 @@ page 90101 "BCSF Factory Setup Card"
 
   local procedure SelectedProcess(): Enum "BCSF Process Mode"
   begin
-    if ProcessChoice = ProcessChoice::Documents then
-      exit("BCSF Process Mode"::UnpostedDocuments);
+    case ProcessChoice of
+      ProcessChoice::Documents: exit("BCSF Process Mode"::UnpostedDocuments);
+      ProcessChoice::Posted: exit("BCSF Process Mode"::PostedMovements);
+      ProcessChoice::Payments: exit("BCSF Process Mode"::FollowUpProcesses);
+    end;
     exit("BCSF Process Mode"::SetupAndMasterData);
   end;
 
@@ -280,13 +302,17 @@ page 90101 "BCSF Factory Setup Card"
   var
     Profile: Codeunit "BCSF Wholesale Profile";
   begin
-    ReviewText := StrSubstNo(ReviewLbl, Format(SelectedChart()), IndustryName, SelectStr(SizeChoice + 1, SizesLbl), SelectStr(ProcessChoice + 1, ProcessesLbl),
+    ReviewText := NewDatasetLbl + StrSubstNo(ReviewLbl, Format(SelectedChart()), IndustryName, SelectStr(SizeChoice + 1, SizesLbl), SelectStr(ProcessChoice + 1, ProcessesLbl),
       Profile.Quantity(SizeChoice, "BCSF Entity Type"::Customer), Profile.Quantity(SizeChoice, "BCSF Entity Type"::Vendor),
       Profile.Quantity(SizeChoice, "BCSF Entity Type"::Item));
-    if ProcessChoice = ProcessChoice::Documents then
+    if ProcessChoice >= ProcessChoice::Documents then
       ReviewText += StrSubstNo(DocumentsLbl, Profile.Quantity(SizeChoice, "BCSF Entity Type"::PurchaseOrder),
         Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesQuote), Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesOrder),
         Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesInvoice));
+    if ProcessChoice >= ProcessChoice::Posted then
+      ReviewText += PostingMixLbl + CostPostingLbl;
+    if ProcessChoice = ProcessChoice::Payments then
+      ReviewText += PaymentsReviewLbl;
   end;
 
   local procedure RefreshSetup()
@@ -314,17 +340,23 @@ page 90101 "BCSF Factory Setup Card"
   end;
 
   var
+    OpenAsWorkflow: Boolean;
     WizardStep: Integer;
     ChartChoice: Option SKR03,SKR04,Existing;
     SizeChoice: Option Small,Medium,Large;
-    ProcessChoice: Option Master,Documents;
+    ProcessChoice: Option Master,Documents,Posted,Payments;
+    PostingApproved: Boolean;
     IndustryName: Text;
     ReviewText: Text;
+    NewDatasetLbl: Label 'A new run creates the displayed synthetic records in this company. ';
+    CostPostingLbl: Label ' Automatic inventory cost posting is enabled only in a company without posted activity; an existing conflicting cost policy stops the run.';
+    PostingMixLbl: Label ' Purchase orders: 20% unposted, 20% partial, 60% fully invoiced; sales orders: 25% unposted, 25% partial, 50% fully invoiced; sales invoices: 33% unposted, 67% posted. Rounded down per target; remaining units stay unposted.';
+    PaymentsReviewLbl: Label ' All resulting posted purchase and sales invoices are fully paid and applied through standard journal posting; unposted documents remain open.';
     SizesLbl: Label 'Small,Medium,Large';
-    ProcessesLbl: Label 'Master data only,With unposted documents';
+    ProcessesLbl: Label 'Master data only,With unposted documents,With posted documents,With payments and application';
     WholesaleLbl: Label 'Wholesale';
     ReviewLbl: Label '%1 · %2 · %3 · %4. Customers: %5; vendors: %6; items: %7.', Comment = '%1 = chart, %2 = industry, %3 = size, %4 = process, %5 = customers, %6 = vendors, %7 = items';
-    DocumentsLbl: Label ' Unposted purchase orders: %1; sales quotes: %2; sales orders: %3; sales invoices: %4. No posting.', Comment = '%1 = purchases, %2 = quotes, %3 = orders, %4 = invoices';
+    DocumentsLbl: Label ' Planned purchase orders: %1; sales quotes: %2; sales orders: %3; sales invoices: %4. Quotes remain unposted; posting follows the selected process and approval.', Comment = '%1 = purchases, %2 = quotes, %3 = orders, %4 = invoices';
     Initialized: Boolean;
     InstalledChart: Text;
     ChartCaption: Text;

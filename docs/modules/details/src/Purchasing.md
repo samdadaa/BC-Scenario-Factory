@@ -58,3 +58,8 @@ Vendor Generator unterstützt neue Regel-/Setupversion 2, optional validierte Ei
 Purchase Generator 90451 plus EnumExtension 90453 implementieren ausschließlich PURCHASE.ORDER im ungebuchten Modus. purchaseSetup Version 1 friert Bestellserie/Lagerort ein. Zwei Kreditoren und Artikel aus demselben Lauf sind Pflicht; Bestellungen folgen dem tatsächlichen Item Vendor. Standard-Validate/Insert, keine Buchung. DOCUMENT-Herkunft am Kopf; Output prüft Lieferant, Artikel, Datum, Einheit, Menge und ungebuchten Zustand. Dashboard purchase/order öffnet die passende gefilterte Standardliste. Gebuchte Wareneingänge/Rechnungen und Folgeprozesse bleiben SF-020/SF-022.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## SF-020 / 1.0.7.0 – aktueller Umfang
+
+Fünf AL-Objekte. Purchase Generator 90451 unterstützt PURCHASE.ORDER bis PostedMovements, neue Evidence 90454 registriert echte gebuchte Rechnung/Eingang, Kreditoren-, Sach-, MwSt.-, Artikel- und Wertposten. purchaseSetup v2, Same-run-Lieferant und Artikel, Standard-Purch.-Post mit Commitunterdrückung, Mengen-/Datumsdeckung vor Verkauf und Outputprüfung. Optional inline Zahlungsdienst aus Finance; kein neuer Benutzerablauf. Ungebuchte v1-Snapshots bleiben gültig. Einkaufsbestellungen/-eingänge/-rechnungen und Kreditorenposten werden im Dashboard gezählt und gefiltert geöffnet. Gutschriften/Retouren nicht implementiert. [Aktueller Vertrag](../../../INDUSTRY_INITIALIZATION.md), [Prüfung](../../../TESTS.md#sf-020sf-022--gebuchter-großhandel-und-zahlungsausgleich). **Zur Prüfung**, native Abnahme offen.

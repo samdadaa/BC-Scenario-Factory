@@ -44,7 +44,7 @@ function Element(tag) {
   this.setAttribute = (k, v) => this.attrs[k] = v;
   this.appendChild = x => this.children.push(x);
   this.prepend = x => this.children.unshift(x);
-  this.replaceChildren = () => this.children = [];
+  this.replaceChildren = (...elements) => this.children = elements;
   this.addEventListener = (event, handler) => this.events[event] = handler;
   this.focus = () => { document.activeElement = this; };
   this.querySelectorAll = s => {
@@ -65,7 +65,7 @@ const picked = '{BC9C1259-8DDF-4C14-9068-8F19996E1215}';
 const payload = { schemaVersion: 1, language: 'de-DE', locale: 'de-DE', texts, readAt: '2026-11-19',
   summary: { templates: 1, runs: 1, active: 0, review: 0 }, hasSelection: false,
   runs: [{ id: picked, description: 'Kleine Sandbox', createdAt: '19.11.2026', profile: 'GENERAL' }], stock: view };
-const context = vm.createContext({ window, document, Intl });
+const context = vm.createContext({ window, document, Intl, setTimeout: () => 1, clearTimeout: () => {} });
 for (const file of ['translations.js', 'dashboard.js'])
   vm.runInContext(fs.readFileSync('src/Monitoring/Dashboard/' + file, 'utf8'), context);
 const get = key => root.querySelectorAll('[data-stock-focus]').find(el => el.dataset.stockFocus === key);
@@ -96,10 +96,10 @@ for (const key of inventoryKeys) {
   assert.deepEqual(calls.at(-1), ['Command', 'stockOpen', key]);
 }
 get('stockRun').value = picked;
-get('stockRun').events.change();
+get('stockRun').events.change({currentTarget: get('stockRun')});
 assert.deepEqual(calls.at(-1), ['Command', 'stockRun', picked]);
 get('stockScope').value = 'company';
-get('stockScope').events.change();
+get('stockScope').events.change({currentTarget: get('stockScope')});
 assert.deepEqual(calls.at(-1), ['Command', 'stockScope', 'company']);
 assert.equal(get('stockRun'), undefined);
 assert.equal(view.runId, '');

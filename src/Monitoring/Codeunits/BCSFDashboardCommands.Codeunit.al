@@ -28,6 +28,7 @@ codeunit 90366 "BCSF Dashboard Commands"
   procedure Execute(ActionCode: Text; RunIdText: Text)
   var
     Header: Record "BCSF Run Header";
+    SetupPage: Page "BCSF Factory Setup Card";
   begin
     // No client-supplied page, table, method, company, filter or approval is accepted.
     case ActionCode of
@@ -35,6 +36,11 @@ codeunit 90366 "BCSF Dashboard Commands"
       'runs': Page.Run(Page::"BCSF Factory Dashboard");
       'monitor': Page.Run(Page::"BCSF Factory Dashboard");
       'setup': Page.Run(Page::"BCSF Factory Setup Card");
+      'workflow':
+        begin
+          SetupPage.OpenWorkflow();
+          SetupPage.RunModal();
+        end;
       'companyQueue': OpenCompanyQueue();
       'run', 'scenario', 'progress', 'plan', 'savePlan', 'readiness', 'preflight', 'synthetic',
       'prepare', 'schedule', 'pause', 'cancel', 'apply', 'resume', 'batches', 'history', 'records', 'queue', 'primary':

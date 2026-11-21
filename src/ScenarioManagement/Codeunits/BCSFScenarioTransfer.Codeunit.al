@@ -236,6 +236,8 @@ codeunit 90147 "BCSF Scenario Transfer"
     if Item.Contains('salesSourceRunId') then
       Evaluate(Scenario."Sales Source Run Id", ReadText(Item, 'salesSourceRunId', 50));
     Scenario."Sales Posting Approved" := false;
+    Scenario."Purchase Posting Approved" := false;
+    Scenario."Payment Posting Approved" := false;
     if Item.Contains('itemBaseUnit') then
       Scenario."Item Base Unit" := CopyStr(ReadText(Item, 'itemBaseUnit', MaxStrLen(Scenario."Item Base Unit")), 1, MaxStrLen(Scenario."Item Base Unit"));
     if Item.Contains('itemPackUnit') then

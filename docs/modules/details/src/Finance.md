@@ -68,3 +68,11 @@ Gemeinsamer Finance-Einstieg, neue Teilpakete 2.0.0 mit bestätigter Foundation,
 Lokale SKR03-/SKR04-Neupakete 3.0.0 enthalten zusätzlich begrenzte BWA mit Erlösen, Warenkosten, Rohergebnis, Betriebskosten, Ergebnis und Abstimmungsdifferenz. Bilanz/GuV und Kontenbasis bleiben erhalten. 1.0.0/2.0.0 werden nicht umgeschrieben; Existing übernimmt nur gültige Einrichtung. Keine Voll-DATEV-/Voll-BWA-Behauptung.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## SF-022 / 1.0.7.0 – ausgewählte Zahlungen und Ausgleich
+
+Neun AL-Objekte. Neue Codeunit 90401 Payment Processor: synthetische Bank BCSF-PAY, eingefrorenes paymentSetup v1 und Freigabe, wirklicher Batchclaim vor Standardzahlung und vollständigem Ausgleich der im selben Batch gebuchten Einkaufs-/Verkaufsrechnung. Temporäre General-Buchblattzeile, Gen. Jnl.-Post Line.RunWithCheck ohne impliziten Commit, Herkunft aller tatsächlichen Zahlungs-/Bank-/Sach-/Ausgleichsposten, Restbetragprüfung. Keine externen Bankdaten, Übermittlung, Teilzahlungen oder Gutschriften. Keine Abhängigkeit auf BackgroundProcessing; vorhandener EnsureExecution-Vertrag verifiziert den Claim. Package Mgt bereitet automatische Lagerwertbuchung nur ohne Sach-/Artikelposten vor, sonst Konflikt statt Änderung. [Vertrag und Grenzen](../../../INDUSTRY_INITIALIZATION.md), [Prüfung](../../../TESTS.md#sf-020sf-022--gebuchter-großhandel-und-zahlungsausgleich). **Zur Prüfung**, native Abnahme offen.
+
+
+Herkunftsregistry: Bank Account Ledger Entry, Detailed Cust. Ledg. Entry und Detailed Vendor Ledg. Entry sind explizit als Standardergebnisse zugelassen. Die bestehende eindeutige physische Ergebnisidentität und Batchbesitzprüfung gelten unverändert.

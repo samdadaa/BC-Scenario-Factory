@@ -150,3 +150,8 @@ Vorhandene Starter gegen den aktuellen Generator-Katalog prüfen und zum Testen 
 ## SF-045 – gemeinsame Unternehmensinitialisierung
 
 Neue Generatoren nach dem [verbindlichen Unternehmenspaketvertrag](INDUSTRY_INITIALIZATION.md) integrieren: keine separaten Assistenten, Finanzbootstrap- oder Vorlagenframeworks. Snapshot-Schema 1 wird optional um versioniertes purchaseSetup ergänzt; Altstand nicht nachträglich verändern. Normalstart verwendet genau einen eingefrorenen Firmenrequest; dessen Identität/Parameter bleiben nach Einplanung unveränderlich, Ergebnislauf darf nur die gebundene Standardsitzung zuweisen. Keine zusätzlichen Standardtabellenrechte.
+
+
+## 1.0.7.0 – Querschnitt und Standardbuchungsrechte
+
+Bei jeder Anfrage Dashboard, Workflow, Stammdaten, Einrichtungen und Übersetzungen gemeinsam prüfen (AGENTS.md). Indirekte Standardbuchungsrechte nicht durch direkte WritePermission-Vorprüfungen auf gebuchten Tabellen ausschließen; den gemeinsamen Environment Guard verwenden. Der Standardbuchungsdienst behält seine eigenen Berechtigungsprüfungen.

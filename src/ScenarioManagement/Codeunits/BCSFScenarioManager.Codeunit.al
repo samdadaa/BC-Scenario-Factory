@@ -29,17 +29,27 @@ codeunit 90130 "BCSF Scenario Manager"
     Context: JsonObject;
     Token: JsonToken;
   begin
-    if not (NodeCode in ['SALES.ORDER', 'SALES.INVOICE']) then
-      exit(false);
     if not Step.Get(RunId, NodeCode) then
       exit(false);
-    if (Step."Generator Code" <> 'SALES.DOCUMENT') or (Step."Generator Version" <> '1') or
-      (Step."Contract Version" <> 1) or (Step."Process Mode" <> "BCSF Process Mode"::PostedMovements) then
+    if (Step."Generator Version" <> '1') or (Step."Contract Version" <> 1) or
+      (Step."Process Mode" <> "BCSF Process Mode"::PostedMovements) then
       exit(false);
     ReadSnapshot(RunId, Context);
-    if not Context.Get('salesSetup', Token) then
-      exit(false);
-    exit((Contract.GetInteger(Token.AsObject(), 'version') = 1) and Contract.GetBoolean(Token.AsObject(), 'postingApproved'));
+    case NodeCode of
+      'SALES.ORDER', 'SALES.INVOICE':
+        begin
+          if (Step."Generator Code" <> 'SALES.DOCUMENT') or not Context.Get('salesSetup', Token) then
+            exit(false);
+          exit((Contract.GetInteger(Token.AsObject(), 'version') in [1, 3]) and Contract.GetBoolean(Token.AsObject(), 'postingApproved'));
+        end;
+      'PURCHASE.ORDER':
+        begin
+          if (Step."Generator Code" <> 'PURCHASE.DOCUMENT') or not Context.Get('purchaseSetup', Token) then
+            exit(false);
+          exit((Contract.GetInteger(Token.AsObject(), 'version') = 2) and Contract.GetBoolean(Token.AsObject(), 'postingApproved'));
+        end;
+    end;
+    exit(false);
   end;
 
   procedure SupportsTarget(Target: Record "BCSF Data Target"): Boolean
@@ -143,6 +153,8 @@ codeunit 90130 "BCSF Scenario Manager"
     if NewScope.AsInteger() > PreviousScope.AsInteger() then begin
       Scenario."Process Mode" := NewScope;
       Scenario."Sales Posting Approved" := false;
+      Scenario."Purchase Posting Approved" := false;
+      Scenario."Payment Posting Approved" := false;
       Scenario.Modify(true);
     end;
     if NewScope.AsInteger() >= NewScope::PostedMovements.AsInteger() then
@@ -161,6 +173,8 @@ codeunit 90130 "BCSF Scenario Manager"
     Scenario.Get(ScenarioId);
     Scenario."Process Mode" := NewScope;
     Scenario."Sales Posting Approved" := false;
+    Scenario."Purchase Posting Approved" := false;
+    Scenario."Payment Posting Approved" := false;
     Scenario.Modify(true);
   end;
 
@@ -275,6 +289,8 @@ codeunit 90130 "BCSF Scenario Manager"
     Copy.Init();
     Copy.TransferFields(Source, false);
     Copy."Sales Posting Approved" := false;
+    Copy."Purchase Posting Approved" := false;
+    Copy."Payment Posting Approved" := false;
     Copy."Scenario Id" := CreateGuid();
     Copy.Archived := false;
     Copy.Description := CopyStr(StrSubstNo(CopyScenarioLbl, Source.Description), 1, MaxStrLen(Copy.Description));

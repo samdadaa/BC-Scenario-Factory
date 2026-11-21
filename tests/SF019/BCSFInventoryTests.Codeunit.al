@@ -23,15 +23,38 @@ using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Purchases.Document;
+using Microsoft.Purchases.History;
+using Microsoft.Purchases.Payables;
+using Microsoft.Bank.Ledger;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Customer;
 using Microsoft.Sales.Document;
 using Microsoft.Warehouse.Ledger;
 using Microsoft.Warehouse.Structure;
+using System.Security.AccessControl;
 
 codeunit 90700 "BCSF Inventory Tests"
 {
   Subtype = Test;
+
+  [Test]
+  procedure StandardPostingAcceptsAssignedIndirectRights()
+  var
+    TempPermission: Record "Expanded Permission" temporary;
+    Guard: Codeunit "BCSF Environment Guard";
+  begin
+    TempPermission."Insert Permission" := TempPermission."Insert Permission"::Indirect;
+    TempPermission."Modify Permission" := TempPermission."Modify Permission"::Indirect;
+    Assert(Guard.AllowsStandardPosting(TempPermission, true), 'Standard posting must accept assigned indirect insert and modify rights.');
+    TempPermission."Modify Permission" := TempPermission."Modify Permission"::" ";
+    Assert(Guard.AllowsStandardPosting(TempPermission, false), 'Posting new evidence does not require direct modify rights.');
+    Assert(not Guard.AllowsStandardPosting(TempPermission, true), 'Application requires assigned modify rights.');
+    TempPermission."Insert Permission" := TempPermission."Insert Permission"::" ";
+    Assert(not Guard.AllowsStandardPosting(TempPermission, false), 'Missing insert permission must remain blocked.');
+    TempPermission."Insert Permission" := TempPermission."Insert Permission"::Yes;
+    TempPermission."Modify Permission" := TempPermission."Modify Permission"::Yes;
+    Assert(Guard.AllowsStandardPosting(TempPermission, true), 'Assigned direct permissions must also work.');
+  end;
 
   [Test]
   procedure WholesaleQuantitiesAreIndustryRatios()
@@ -49,16 +72,15 @@ codeunit 90700 "BCSF Inventory Tests"
   end;
 
   [Test]
-  procedure WholesaleNeverApprovesUnsupportedPosting()
+  procedure WholesaleRejectsUnknownProcessMode()
   var
     Profile: Codeunit "BCSF Wholesale Profile";
   begin
-    asserterror Profile.CheckSelection(0, "BCSF Process Mode"::PostedMovements);
-    asserterror Profile.CheckSelection(0, "BCSF Process Mode"::FollowUpProcesses);
+    asserterror Profile.CheckSelection(0, "BCSF Process Mode".FromInteger(99));
   end;
 
   [Test]
-  procedure PurchaseCapabilityExcludesPostingAndProbes()
+  procedure PurchaseCapabilityAllowsOnlySupportedModes()
   var
     Capabilities: Record "BCSF Generator Registry" temporary;
     Generator: Codeunit "BCSF Purchase Generator";
@@ -67,7 +89,7 @@ codeunit 90700 "BCSF Inventory Tests"
     Capabilities.Get('PURCHASE.DOCUMENT', 'PURCHASE.ORDER');
     Capabilities.TestField("Contract Probe", false);
     Capabilities.TestField("Minimum Mode", "BCSF Process Mode"::UnpostedDocuments);
-    Capabilities.TestField("Maximum Mode", "BCSF Process Mode"::UnpostedDocuments);
+    Capabilities.TestField("Maximum Mode", "BCSF Process Mode"::PostedMovements);
     Assert(Capabilities.Count() = 1, 'Only supported purchase orders may be registered.');
   end;
 
@@ -111,7 +133,7 @@ codeunit 90700 "BCSF Inventory Tests"
     RunId := Setup."Industry Run Id";
     Header.Get(RunId);
     Header.TestField("Profile Code", 'TRADE');
-    Header.TestField("Profile Version", '3');
+    Assert(Header."Profile Version" in ['3', '4'], 'Wholesale reference must use its supported immutable version.');
     Execution.Get(RunId);
     Execution.TestField(Status, Execution.Status::Completed);
     AssertWholesaleCount(RunId, 'CUSTOMER', 'CUSTOMER', 20);
@@ -145,6 +167,195 @@ codeunit 90700 "BCSF Inventory Tests"
     Entry.SetRange("Run Id", RunId);
     Entry.SetFilter("Table Id", '%1|%2|%3', Database::"G/L Entry", Database::"Item Ledger Entry", Database::"VAT Entry");
     Assert(Entry.IsEmpty(), 'Unposted company must not register posting entries.');
+  end;
+
+  [Test]
+  procedure PlannedReceiptsCoverSalesAcrossAllSizes()
+  var
+    Profile: Codeunit "BCSF Wholesale Profile";
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Context: JsonObject;
+    Targets: JsonArray;
+    Received: Dictionary of [Integer, Decimal];
+    Size: Integer;
+    LogicalKey: Integer;
+    ItemKey: Integer;
+    Items: Integer;
+    SourceItems: Integer;
+    Orders: Integer;
+    Invoices: Integer;
+    Quantity: Decimal;
+    Total: Decimal;
+    Required: Decimal;
+  begin
+    for Size := 0 to 2 do begin
+      Clear(Received);
+      Context := ContextFixture();
+      Context.Replace('processMode', 3);
+      Context.Add('startingDate', Format(WorkDate(), 0, 9));
+      Context.Add('endingDate', Format(WorkDate() + 30, 0, 9));
+      Items := Profile.Quantity(Size, "BCSF Entity Type"::Item);
+      Orders := Profile.Quantity(Size, "BCSF Entity Type"::SalesOrder);
+      Invoices := Profile.Quantity(Size, "BCSF Entity Type"::SalesInvoice);
+      Clear(Targets);
+      AddMixedTarget(Targets, "BCSF Entity Type"::Item, Items, 0, 0);
+      AddMixedTarget(Targets, "BCSF Entity Type"::PurchaseOrder, Profile.Quantity(Size, "BCSF Entity Type"::PurchaseOrder), 60, 20);
+      AddMixedTarget(Targets, "BCSF Entity Type"::SalesOrder, Orders, 50, 25);
+      AddMixedTarget(Targets, "BCSF Entity Type"::SalesInvoice, Invoices, 67, 0);
+      Context.Replace('targets', Targets);
+      for LogicalKey := 1 to Profile.Quantity(Size, "BCSF Entity Type"::PurchaseOrder) do
+        if Coordinator.Disposition(Context, 'PURCHASE.ORDER', LogicalKey) > 0 then begin
+          Quantity := Coordinator.PurchaseQuantity(Context, LogicalKey);
+          if Coordinator.Disposition(Context, 'PURCHASE.ORDER', LogicalKey) = 2 then
+            Quantity /= 2;
+          ItemKey := 1 + ((LogicalKey - 1) mod Items);
+          if not Received.Get(ItemKey, Total) then
+            Total := 0;
+          Received.Set(ItemKey, Total + Quantity);
+          Assert(Coordinator.PurchaseDate(Context, LogicalKey) = WorkDate(), 'Receipts must precede all dated sales.');
+        end;
+      SourceItems := Items;
+      if SourceItems > 100 then
+        SourceItems := 100;
+      for ItemKey := 1 to SourceItems do begin
+        Required := SalesDemandFor(Context, Coordinator, 'SALES.ORDER', ItemKey, SourceItems, Orders) +
+          SalesDemandFor(Context, Coordinator, 'SALES.INVOICE', ItemKey, SourceItems, Invoices);
+        if not Received.Get(ItemKey, Total) then
+          Total := 0;
+        Assert(Total >= Required, 'Confirmed planned receipts must cover every stock-consuming sales item.');
+      end;
+    end;
+  end;
+
+  [Test]
+  procedure PaymentContractWithoutApprovalIsRejected()
+  var
+    Payments: Codeunit "BCSF Payment Processor";
+    Context: JsonObject;
+    Settings: JsonObject;
+  begin
+    Context := ContextFixture();
+    Assert(not Payments.Enabled(Context), 'An old snapshot never enables payments.');
+    Settings.Add('version', 1);
+    Settings.Add('approved', false);
+    Context.Add('paymentSetup', Settings);
+    Assert(not Payments.Enabled(Context), 'Absent consent must stay disabled.');
+    asserterror Payments.Check(Context);
+    Settings.Replace('version', 99);
+    Settings.Replace('approved', true);
+    Context.Replace('paymentSetup', Settings);
+    Assert(not Payments.Enabled(Context), 'Unknown payment contract must stay disabled.');
+  end;
+
+  [Test]
+  procedure CompletedSmallPostedCompanyHasStandardEvidence()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Execution: Record "BCSF Run Execution";
+    Entry: Record "BCSF Generated Record";
+    Invoice: Record "Purch. Inv. Header";
+    VendorEntry: Record "Vendor Ledger Entry";
+    BankEntry: Record "Bank Account Ledger Entry";
+    RunId: Guid;
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Setup.TestField("Industry Size", 0);
+    Assert(Setup."Industry Process Mode".AsInteger() >= 2, 'First complete the small posted or follow-up company reference.');
+    RunId := Setup."Industry Run Id";
+    Execution.Get(RunId);
+    Execution.TestField(Status, Execution.Status::Completed);
+    AssertWholesaleCount(RunId, 'PURCHASE.ORDER', 'INVOICE', 12);
+    AssertWholesaleCount(RunId, 'PURCHASE.ORDER', 'RECEIPT', 12);
+    AssertWholesaleCount(RunId, 'PURCHASE.ORDER', 'DOCUMENT', 6);
+    AssertWholesaleCount(RunId, 'SALES.ORDER', 'INVOICE', 9);
+    AssertWholesaleCount(RunId, 'SALES.INVOICE', 'INVOICE', 2);
+    AssertWholesaleCount(RunId, 'SALES.QUOTE', 'DOCUMENT', 5);
+    Entry.SetRange("Run Id", RunId);
+    Entry.SetRange("Node Code", 'PURCHASE.ORDER');
+    Entry.SetRange("Artifact Code", 'INVOICE');
+    Entry.FindSet();
+    repeat
+      Invoice.GetBySystemId(Entry."Record SystemId");
+      VendorEntry.Get(Invoice."Vendor Ledger Entry No.");
+      VendorEntry.TestField("Document No.", Invoice."No.");
+      VendorEntry.TestField("Vendor No.", Invoice."Pay-to Vendor No.");
+      VendorEntry.TestField(Open, Setup."Industry Process Mode" <> "BCSF Process Mode"::FollowUpProcesses);
+    until Entry.Next() = 0;
+    if Setup."Industry Process Mode" = "BCSF Process Mode"::FollowUpProcesses then begin
+      AssertWholesaleCount(RunId, 'PURCHASE.ORDER', 'PAYMENT', 12);
+      AssertWholesaleCount(RunId, 'SALES.ORDER', 'PAYMENT', 9);
+      AssertWholesaleCount(RunId, 'SALES.INVOICE', 'PAYMENT', 2);
+      Entry.Reset();
+      Entry.SetRange("Run Id", RunId);
+      Entry.SetRange("Table Id", Database::"Bank Account Ledger Entry");
+      Assert(Entry.Count() = 23, 'Each of the 23 posted invoices requires a standard bank payment.');
+      Entry.FindSet();
+      repeat
+        BankEntry.GetBySystemId(Entry."Record SystemId");
+        BankEntry.TestField("Bank Account No.", 'BCSF-PAY');
+      until Entry.Next() = 0;
+    end;
+  end;
+
+  [Test]
+  procedure CompletedPaymentCannotBeReplayedOutsideClaim()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Entry: Record "BCSF Generated Record";
+    Invoice: Record "Purch. Inv. Header";
+    Batch: Record "BCSF Batch";
+    GL: Record "G/L Entry";
+    Manager: Codeunit "BCSF Scenario Manager";
+    Payments: Codeunit "BCSF Payment Processor";
+    Context: JsonObject;
+    BatchJson: JsonObject;
+    BeforeCount: Integer;
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Setup.TestField("Industry Process Mode", "BCSF Process Mode"::FollowUpProcesses);
+    Entry.SetRange("Run Id", Setup."Industry Run Id");
+    Entry.SetRange("Node Code", 'PURCHASE.ORDER');
+    Entry.SetRange("Artifact Code", 'INVOICE');
+    Entry.FindFirst();
+    Invoice.GetBySystemId(Entry."Record SystemId");
+    Manager.ReadSnapshot(Entry."Run Id", Context);
+    Context.Add('batchId', Format(Entry."Batch Id", 0, 4));
+    Batch.Get(Entry."Batch Id");
+    BatchJson.Add('batchKey', Batch."Batch Key");
+    BatchJson.Add('firstKey', Batch."First Key");
+    BatchJson.Add('lastKey', Batch."Last Key");
+    Context.Add('executingBatch', BatchJson);
+    BeforeCount := GL.Count();
+    asserterror Payments.Pay(Context, Entry."Run Id", Entry."Node Code", Entry."Logical Key", Entry."Batch Id",
+      Invoice."Vendor Ledger Entry No.", false, Entry."Entry Id");
+    Assert(GL.Count() = BeforeCount, 'An unclaimed/completed payment must not create any new ledger entry.');
+  end;
+
+  local procedure AddMixedTarget(var Targets: JsonArray; Entity: Enum "BCSF Entity Type"; Quantity: Integer; Posted: Decimal; Partial: Decimal)
+  var
+    Target: JsonObject;
+  begin
+    Target.Add('entity', Entity.AsInteger());
+    Target.Add('quantity', Quantity);
+    Target.Add('postedPercent', Posted);
+    Target.Add('partialPercent', Partial);
+    Targets.Add(Target);
+  end;
+
+  local procedure SalesDemandFor(Context: JsonObject; Coordinator: Codeunit "BCSF Process Coordinator"; EntityCode: Code[30]; FirstKey: Integer; ItemCount: Integer; Quantity: Integer): Decimal
+  var
+    LogicalKey: Integer;
+    Required: Decimal;
+  begin
+    LogicalKey := FirstKey;
+    while LogicalKey <= Quantity do begin
+      case Coordinator.Disposition(Context, EntityCode, LogicalKey) of
+        1: Required += Coordinator.Quantity(Context, EntityCode, LogicalKey);
+        2: Required += Coordinator.Quantity(Context, EntityCode, LogicalKey) / 2;
+      end;
+      LogicalKey += ItemCount;
+    end;
+    exit(Required);
   end;
 
   local procedure AssertWholesaleCount(RunId: Guid; NodeCode: Code[30]; Artifact: Code[30]; Expected: Integer)

@@ -74,6 +74,8 @@ page 90131 "BCSF Scenario Card"
           ToolTip = 'Specifies the shared simple location for items and sales. Leave blank to use the assortment location.';
         }
         field("Sales Posting Approved"; Rec."Sales Posting Approved") { }
+        field("Purchase Posting Approved"; Rec."Purchase Posting Approved") { }
+        field("Payment Posting Approved"; Rec."Payment Posting Approved") { }
       }
       group(PartnerGeneration)
       {

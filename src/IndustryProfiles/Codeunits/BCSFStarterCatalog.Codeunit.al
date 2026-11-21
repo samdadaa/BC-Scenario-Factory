@@ -91,12 +91,30 @@ codeunit 90155 "BCSF Starter Catalog"
         Removed: Record "BCSF Removed Template";
         Profile: Codeunit "BCSF Wholesale Profile";
         Id: Guid;
+        VariantNo: Integer;
+        Mode: Enum "BCSF Process Mode";
     begin
-        Evaluate(Id, '{B55C4500-AB51-4045-9C00-000000000001}');
-        // Explicit starter loading only. Never replace a custom, archived or intentionally removed template.
-        if Scenario.Get(Id) or Removed.Get(Id) then
-            exit;
-        Profile.CreateTemplateForId(Id, 0, "BCSF Process Mode"::UnpostedDocuments, WorkDate());
+        for VariantNo := 1 to 3 do begin
+            Evaluate(Id, '{B55C4500-AB51-4045-9C00-00000000000' + Format(VariantNo, 0, 9) + '}');
+            // Never replace a custom, archived or intentionally removed template.
+            if not Scenario.Get(Id) and not Removed.Get(Id) then begin
+                case VariantNo of
+                    1: Mode := Mode::UnpostedDocuments;
+                    2: Mode := Mode::PostedMovements;
+                    3: Mode := Mode::FollowUpProcesses;
+                end;
+                Profile.CreateTemplateForId(Id, 0, Mode, WorkDate());
+                if VariantNo > 1 then begin
+                    Scenario.Get(Id);
+                    if VariantNo = 2 then
+                        Scenario.Description := PostedWholesaleLbl
+                    else
+                        Scenario.Description := PaidWholesaleLbl;
+                    // Loading a test template never grants posting or payment approval.
+                    Scenario.Modify(true);
+                end;
+            end;
+        end;
     end;
 
     local procedure SeedSalesTemplate(Setup: Record "BCSF Factory Setup")
@@ -569,6 +587,21 @@ codeunit 90155 "BCSF Starter Catalog"
         VariantNo: Integer;
         Id: Guid;
     begin
+        Evaluate(Id, '{B55C4500-AB51-4045-9C00-000000000001}');
+        if (Scenario."Scenario Id" = Id) and (Scenario.Description in ['Wholesale company', 'Großhandelsunternehmen']) then begin
+            Name := WholesaleReferenceLbl;
+            exit;
+        end;
+        Evaluate(Id, '{B55C4500-AB51-4045-9C00-000000000002}');
+        if (Scenario."Scenario Id" = Id) and (Scenario.Description in ['Wholesale - mixed posted documents', 'Großhandel - gemischte gebuchte Belege']) then begin
+            Name := PostedWholesaleLbl;
+            exit;
+        end;
+        Evaluate(Id, '{B55C4500-AB51-4045-9C00-000000000003}');
+        if (Scenario."Scenario Id" = Id) and (Scenario.Description in ['Wholesale - payments and application', 'Großhandel - Zahlungen und Ausgleich']) then begin
+            Name := PaidWholesaleLbl;
+            exit;
+        end;
         Evaluate(Id, '{B55C2100-AB51-4021-9C00-000000000001}');
         if (Scenario."Scenario Id" = Id) and (Scenario.Description in ['Sales – Quotes, Orders and Invoices', 'Verkauf – Angebote, Aufträge und Rechnungen']) then begin
             Name := SalesDocumentsLbl;
@@ -709,6 +742,9 @@ codeunit 90155 "BCSF Starter Catalog"
         ExistingFoundationErr: Label 'For existing company setup, select the existing item units, posting groups and compatible location under Item Assortment. No test package will be applied.';
         MixedSalesLbl: Label 'Sales – Mixed Posted Documents';
         SalesDocumentsLbl: Label 'Sales – Quotes, Orders and Invoices';
+        WholesaleReferenceLbl: Label 'Wholesale company';
+        PostedWholesaleLbl: Label 'Wholesale - mixed posted documents';
+        PaidWholesaleLbl: Label 'Wholesale - payments and application';
         TechnicalItemsLbl: Label 'Technical Wholesale – Item Assortment';
         TechnicalBinsLbl: Label 'Technical Wholesale – Item Assortment with Bins';
         RestoreQst: Label 'Restore all removed or archived built-in starter templates? Custom names are retained.';

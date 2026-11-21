@@ -384,3 +384,8 @@ Vor Erstellung gegen aktuelle app.json und Quellobjekte geprüft: 90153 war nur 
 | Purchasing | 90453 | EnumExtension | `src/Purchasing/EnumExtensions/BCSFPurchaseBinding.EnumExt.al` |
 
 Orchestrierung bleibt in Monitoring, die bestehende Setupkarte delegiert dorthin. Purchasing nutzt Inventory für eingefrorene Artikelmengen/Einrichtung, keine duplizierte Artikelauflösung und keine App-Dependency. Snapshot publiziert OnCapturePurchaseSetup, Purchasing abonniert mit beiden Skipflags false. [Vollinventar und Ereignisse](ARCHITECTURE_AUDIT_SF045.md).
+
+
+## 1.0.7.0 – tatsächlich ergänzte Objekte
+
+Codeunit 90401 BCSF Payment Processor (bereits für SF-022 geplant) und Codeunit 90454 BCSF Purchase Evidence (vor Erstellung unbesetzte Purchasingreserve) innerhalb des freigegebenen app.json-Bereichs. Keine Kollision/Umnummerierung. Beide intern; BCSF ADMIN ergänzt nur Codeunit-Ausführung. Keine neue Standardtabellenberechtigung oder App-Abhängigkeit. Purchasing nutzt den gemeinsamen Finance-Dienst, dieser verifiziert Claims über DataGeneration ohne direkte BackgroundProcessing-Abhängigkeit.

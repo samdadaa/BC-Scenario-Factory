@@ -794,3 +794,26 @@ Die neuen fünf AL-Testmethoden im bestehenden Testhost prüfen Mengenverhältni
 **Native Pflichtabnahme weiterhin vollständig offen:** Je frische SKR04- und SKR03-Sandbox-Firma; 20 Debitoren/5 Kreditoren/40 Artikel/15 Einkaufsbestellungen/5 Angebote/12 Verkaufsaufträge/3 Verkaufsrechnungen ohne manuelle Buchungsmatrix; gültige vorhandene Firma; fehlende Rechte/Lizenz; Konflikt statt Überschreiben; Browser nach Start schließen; Wiederholung/Doppelstart; Fehler vor Vorbereitung und nach bestätigtem Batch; DE/EN; reale Standardlisten; Berichtsformeln/Salden; normale Altstand-Synchronisierung mit historischen Läufen und eigenen/entfernten/archivierten Vorlagen. [Konkrete Schritte](review/TESTANLEITUNG.md#sf-045--zuerst-den-frischen-großhandelsfall-prüfen).
 
 **Verbleibende Grenzen:** Keine gebuchten Einkaufswareneingänge und keine buchende Unternehmensstufe, keine Zahlung/Ausgleich oder weiteren Unternehmenspakete. Lokale SKR-Pakete sind begrenzte Testkontenrahmen; BWA begrenzter Testumfang, Altversionen nicht migriert. Bestehende Dashboard-Herkunftsfiltergrenzen (150 sichtbare Datensätze/1.200 Herkunftseinträge je Kennzahl) verhindern für größere Größen teils vollständige Zähler-/Drilldownanzeige; bestätigter Fortschritt bleibt separat. Keine Laufzeit-/Durchsatz-/Upgradegarantie und keine menschliche Abnahme.
+
+
+## SF-020/SF-022 – gebuchter Großhandel und Zahlungsausgleich
+
+21.11.2026 · Quellstand **1.0.7.0** · **Zur Prüfung**. Ausdrücklich beauftragter Folgeumfang SF-045: Einkauf bis Standardrechnung und Zahlungen/Ausgleich für Einkaufs-/Verkaufsrechnungen sowie stilles Zwei-Sekunden-Dashboard. [Vertrag, Dateien, Risiken und Berechtigungskorrektur](INDUSTRY_INITIALIZATION.md#aktueller-folgeumfang-1070--einkauf-buchung-und-ausgleich).
+
+Tatsächlich lokal ausgeführt:
+
+| Prüfung | Ergebnis |
+| --- | --- |
+| `python3 scripts/build_sf019.py --output /tmp/bcsf-purchasing-build --analyzers` | Exit 0, Main **139 AL-Objekte**, separate Test-App mit **36 Testmethoden** kompiliert. Compiler 18.1.43.24897, vorhandener .NET-10-Host und lokale BC-28.5-DE-/Systemsymbole. Main CodeCop/UICop mit warnaserror+, keine Fehler/Warnungen; Informationsbefunde bleiben sichtbar. Keine Regelunterdrückung. |
+| `scripts/check_inventory_contracts.py`, `check_sales_contracts.py`, `check_purchase_contracts.py`, `check_template_contracts.py` durch den Build | PASS. Native Schlüssel/API, Commitunterdrückung, öffentliches atomisches Journalposting, kein direkter Ledgerwriter, effektive direkte/indirekte Rechte und Standard-Codeunit-Prüfung, Registryfreigabe für Bank-/detaillierte Ausgleichsposten, Approval-/Claimvertrag sowie Schutz eigener/archivierter Vorlagen. Quellprüfungen, keine BC-Ausführung. |
+| `node scripts/check_dashboard.mjs` | PASS im echten lokalen Chromium: Zwei-Sekunden-Poll, stabile Kachel/Text/Filter/Details-DOM-Identität bei geändertem Wert, kein deaktivierendes Overlay, keine überlappenden langsamen Abrufe, Fehler/Erholung. Bestehende Reiter-/Filter-/Drilldown-/DE/EN-/XSS-/1440/768/320px-Regression PASS. Synthetische BC-Brücke, kein BC-Clienttest. |
+| `node scripts/check_dashboard_stock.mjs` | PASS: Client-/Command-Brücke, Scope-/Laufisolation, deutsche Fallbacks, sichere Aktionen und Zustandsanzeige. |
+| `python3 scripts/check_translations.py`, `python3 scripts/build_dashboard_translations.py` | PASS: **1.360** Compiler-IDs in fünf deutschen Kulturen und en-US, Platzhalter/Breiten/Quellen konsistent; Dashboardfallback entspricht XLIFF. |
+| `python3 scripts/check_package.py /tmp/bcsf-purchasing-build/BCScenarioFactory.app` | PASS: Identität/Version, 139 aktuelle AL-Quellen, sieben XLIFF-Dateien und vier Dashboardressourcen. SHA256 `096ce0709cdfdc57fe439abc454296ce6db4dd7d4a59c962a8f4dc4c4c660e1b`. |
+| `git diff --check` | PASS. |
+
+Neue Methoden im bestehenden isolierten Testhost (nur kompiliert, **nicht ausgeführt**): `PlannedReceiptsCoverSalesAcrossAllSizes`, `PaymentContractWithoutApprovalIsRejected`, `CompletedSmallPostedCompanyHasStandardEvidence`, `CompletedPaymentCannotBeReplayedOutsideClaim`, `StandardPostingAcceptsAssignedIndirectRights`. Die letzte prüft zugewiesene indirekte Insert-/Modifyrechte, fehlende Rechte und direkte Rechte. Der native Referenztest benötigt einen tatsächlich abgeschlossenen kleinen Unternehmenslauf. Vorhandene Modus-/Capability-/Versionsprüfungen angepasst. Keine neue Test-Codeunit in der Main-App.
+
+**Nutzerbefund:** Screenshot meldet fehlendes Lese-/Schreibrecht für Einkaufsrechnungskopf vor PURCHASE.ORDER. Zu strenge direkte WritePermission-Vorprüfung auf Standardbuchungstabellen korrigiert. Noch **kein** nativer Nachweis mit dem korrigierten Paket und echten Standardrollen. Nicht daraus ableiten, dass jede Lizenz-/Rollenkombination freigegeben ist.
+
+**Offen / nicht ausgeführt:** Native SKR03-/SKR04-Läufe in vier Stufen, echte Standardbuchungs-/Ausgleichsrechte, G/L-/VAT-/Artikel-/Wert-/Bankpostenabstimmung, Bilanz/GuV/BWA, Queue nach Browserende, Unterbrechung/Checkpoint/unsicherer Retry, DE/EN in BC und additives Upgrade. Mittel/Groß einschließlich Mengen-/Leistungsprüfung und Dashboard-Herkunftsfiltergrenzen 150/1.200 offen. Kein Deployment, keine Installation/BC-Anmeldung, kein Commit/Push, keine menschliche Abnahme. [Konkrete Sandboxfälle](review/TESTANLEITUNG.md#1070--einkauf-buchung-zahlung-und-berechtigungsfehler).

@@ -6,6 +6,15 @@
   let busy = false;
   let failed = false;
   let stockFocus = "";
+  let pollTimer;
+  let polling = false;
+  let queuedAction;
+  const refreshInterval = 2000;
+  const listen = (element, event, handler) => {
+    element.sfHandlers = element.sfHandlers || {};
+    element.sfHandlers[event] = handler;
+    element.addEventListener(event, handler);
+  };
   let activeTab = "data";
   const tabScroll = { data: 0, runs: 0 };
   const groups = {
@@ -32,7 +41,7 @@
     element.type = "button";
     element.dataset.action = action || key;
     element.disabled = busy;
-    element.addEventListener("click", () => request(action || key, runId || ""));
+    listen(element, "click", () => request(action || key, runId || ""));
     return element;
   };
   function setBusy(value) {
@@ -53,6 +62,7 @@
     } catch (_) { failure(); }
   }
   function request(action, runId) {
+    if (polling) { queuedAction = [action, runId]; return; }
     if (busy) return;
     failed = false;
     setBusy(true);
@@ -68,6 +78,73 @@
       restoreStockFocus();
     });
   }
+  function scheduleRefresh() {
+    clearTimeout(pollTimer);
+    pollTimer = setTimeout(() => {
+      scheduleRefresh();
+      if (!model || busy || polling || document.hidden || document.activeElement?.tagName === "SELECT") return;
+      polling = true;
+      invoke("Command", ["autoRefresh", ""], () => finishPoll(false), () => finishPoll(true));
+    }, refreshInterval);
+  }
+  function finishPoll(error) {
+    polling = false;
+    if (error) {
+      failed = true;
+      const feedback = root?.querySelector(".sf-feedback");
+      if (feedback && model) feedback.textContent = text("error");
+    }
+    if (queuedAction) {
+      const [action, runId] = queuedAction;
+      queuedAction = undefined;
+      request(action, runId);
+    }
+  }
+  // Keep live nodes, focus, open details and selection stable. Only changed attributes/text are written.
+  function domKey(element) {
+    if (element.nodeType !== 1) return "";
+    return element.id || element.dataset.renderKey || element.dataset.stockFocus || element.dataset.action ||
+      (element.tagName === "OPTION" ? "option:" + element.value : element.tagName + ":" + element.className);
+  }
+  function patchNode(current, next) {
+    if (current.nodeType !== next.nodeType || current.nodeName !== next.nodeName) {
+      current.replaceWith(next); return next;
+    }
+    if (current.nodeType === 3) {
+      if (current.nodeValue !== next.nodeValue) current.nodeValue = next.nodeValue;
+      return current;
+    }
+    const open = current.tagName === "DETAILS" ? current.open : undefined;
+    for (const attribute of Array.from(current.attributes))
+      if (!next.hasAttribute(attribute.name)) current.removeAttribute(attribute.name);
+    for (const attribute of Array.from(next.attributes))
+      if (current.getAttribute(attribute.name) !== attribute.value) current.setAttribute(attribute.name, attribute.value);
+    for (const [event, handler] of Object.entries(current.sfHandlers || {})) current.removeEventListener(event, handler);
+    current.sfHandlers = next.sfHandlers || {};
+    for (const [event, handler] of Object.entries(current.sfHandlers)) current.addEventListener(event, handler);
+    patchChildren(current, Array.from(next.childNodes));
+    if (current.tagName === "OPTION") current.selected = next.selected;
+    if (current.tagName === "SELECT" && current.value !== next.value) current.value = next.value;
+    if ("disabled" in next) current.disabled = next.disabled;
+    if (open !== undefined) current.open = open;
+    return current;
+  }
+  function patchChildren(parent, children) {
+    // Deterministic non-browser test doubles can still exercise the command bridge.
+    if (!parent.childNodes) { parent.replaceChildren(...children); return; }
+    const available = Array.from(parent.childNodes);
+    let cursor = parent.firstChild;
+    for (const next of children) {
+      const key = domKey(next);
+      const match = available.find(candidate => candidate.nodeType === next.nodeType &&
+        candidate.nodeName === next.nodeName && domKey(candidate) === key);
+      const child = match ? patchNode(match, next) : next;
+      if (match) available.splice(available.indexOf(match), 1);
+      if (child !== cursor) parent.insertBefore(child, cursor);
+      cursor = child.nextSibling;
+    }
+    for (const obsolete of available) obsolete.remove();
+  }
   function summaryPanel() {
     const summary = node("section", "sf-summary sf-tile-grid");
     [["templateCount", "templates"], ["runCount", "runs"], ["activeCount", "active"], ["reviewCount", "review"]].forEach(([label, key]) => {
@@ -80,7 +157,7 @@
         card.type = "button";
         card.dataset.action = "summary:" + key;
         card.disabled = busy;
-        card.addEventListener("click", () => request("summary", key));
+        listen(card, "click", () => request("summary", key));
       }
       if (metric?.status) card.appendChild(node("span", "sf-help", localized(metric.status)));
       summary.appendChild(card);
@@ -100,7 +177,7 @@
       tab.setAttribute("aria-selected", String(activeTab === key));
       tab.tabIndex = activeTab === key ? 0 : -1;
       tab.disabled = busy;
-      tab.addEventListener("click", () => {
+      listen(tab, "click", () => {
         if (busy) return;
         tabScroll[activeTab] = root.scrollTop;
         activeTab = key;
@@ -108,7 +185,7 @@
         root.scrollTop = tabScroll[key];
         root.querySelectorAll(".sf-tab")[index].focus({ preventScroll: true });
       });
-      tab.addEventListener("keydown", event => {
+      listen(tab, "keydown", event => {
         if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
           event.preventDefault();
           const next = event.key === "Home" ? 0 : event.key === "End" ? 1 : 1 - index;
@@ -124,6 +201,7 @@
     // Zero is not routed: current stock service does not promise an empty native view.
     const canOpen = metric.canOpen && hasCount && metric.count > 0;
     const card = node(canOpen ? "button" : "div", "sf-tile sf-stock-row");
+    card.dataset.renderKey = action + ":" + metric.key;
     const caption = localized(metric.caption);
     append(card, node("span", "sf-stock-label", caption),
       node("strong", "sf-stock-number", hasCount ? number(metric.count) : "—"));
@@ -133,7 +211,7 @@
       card.dataset.stockFocus = (action === "stockOpen" ? "metric:" : "result:") + metric.key;
       card.disabled = busy;
       card.setAttribute("aria-label", caption + " · " + number(metric.count) + " · " + text("stockOpen"));
-      card.addEventListener("click", () => request(action, metric.key));
+      listen(card, "click", () => request(action, metric.key));
     }
     if (metric.status) card.appendChild(node("span", "sf-help sf-stock-status", localized(metric.status)));
     return card;
@@ -159,7 +237,7 @@
       option.selected = value === selected;
       select.appendChild(option);
     });
-    select.addEventListener("change", () => request(command, select.value));
+    listen(select, "change", (event) => request(command, event.currentTarget.value));
     return append(label, select);
   }
 
@@ -192,7 +270,7 @@
       group.dataset.stockFocus = "group:" + entry.key;
       group.setAttribute("aria-pressed", String(stock.group === entry.key));
       group.disabled = busy;
-      group.addEventListener("click", () => request("stockGroup", entry.key));
+      listen(group, "click", () => request("stockGroup", entry.key));
       (index < 4 ? topGroups : extraGroups).appendChild(group);
     });
     const extra = node("details", "sf-stock-extra");
@@ -238,7 +316,7 @@
       option.selected = model.hasSelection && run.id === model.selected.id;
       select.appendChild(option);
     });
-    select.addEventListener("change", () => request("select", select.value));
+    listen(select, "change", (event) => request("select", event.currentTarget.value));
     append(section, label, select);
     return section;
   }
@@ -271,11 +349,12 @@
     const results = view.runStock?.metrics || [];
     const matched = new Set();
     view.steps.filter(step => !step.external).forEach(step => {
-      const key = step.entityCode === "CUSTOMER" ? "customer" : step.entityCode === "VENDOR" ? "vendor" : step.entityCode === "ITEM" ? "item" : step.entityCode === "SALES.QUOTE" ? "sales/quote" : step.entityCode === "SALES.ORDER" ? "sales/order" : step.entityCode === "SALES.INVOICE" ? "sales/invoice" : "";
+      const key = step.entityCode === "CUSTOMER" ? "customer" : step.entityCode === "VENDOR" ? "vendor" : step.entityCode === "ITEM" ? "item" : step.entityCode === "SALES.QUOTE" ? "sales/quote" : step.entityCode === "SALES.ORDER" ? "sales/order" : step.entityCode === "SALES.INVOICE" ? "sales/invoice" : step.entityCode === "PURCHASE.ORDER" ? "purchase/order" : "";
       const metric = results.find(item => item.key === key);
       const safe = metric?.canOpen && metric.count > 0 && metric.count === step.confirmed;
       if (metric && metric.count === step.confirmed) matched.add(key);
       const card = node(safe ? "button" : "div", "sf-tile sf-step");
+      card.dataset.renderKey = "step:" + step.entityCode;
       append(card, node("span", "sf-stock-label", localized(step.entity)),
         node("strong", "sf-step-value", number(step.confirmed) + " / " + number(step.target)),
         node("span", "sf-help", text("created") + " / " + text("target") + " · " + text("remaining") + " " + number(step.remaining)),
@@ -285,7 +364,7 @@
         card.dataset.stockFocus = "result:" + key;
         card.title = text("stockOpen");
         card.disabled = busy;
-        card.addEventListener("click", () => request("runOpen", key));
+        listen(card, "click", () => request("runOpen", key));
       }
       grid.appendChild(card);
     });
@@ -345,14 +424,14 @@
     const diagnosticsOpen = root.querySelector(".sf-diagnostics")?.open || false;
     const extraStockOpen = root.querySelector(".sf-stock-extra")?.open || false;
     const unavailableOpen = root.querySelector(".sf-stock-unavailable")?.open || false;
-    root.replaceChildren();
     root.className = "sf-dashboard";
     root.setAttribute("aria-label", text("title"));
     const toolbar = node("div", "sf-toolbar");
     const links = node("div", "sf-buttons");
     if (!model.company && (activeTab === "data" || !model.summaryViews?.templates?.canOpen))
       links.appendChild(button("scenarios", "sf-button", "scenarios"));
-    links.appendChild(button("setup", "sf-button", "setup"));
+    if (model.company) links.appendChild(button("workflow", "sf-button sf-primary", "workflow"));
+    else links.appendChild(button("setup", "sf-button", "setup"));
     append(toolbar, tabs(), links, button("refresh", "sf-button sf-refresh", "refresh"));
     const main = node("main", "sf-main");
     main.id = "sf-tab-panel";
@@ -383,7 +462,7 @@
     }
     if (model.company) {
       const experts = node("details", "sf-experts");
-      append(experts, node("summary", "", text("expertTools")), button("scenarios", "sf-button", "scenarios"), button("runs", "sf-button", "runs"));
+      append(experts, node("summary", "", text("expertTools")), button("setup", "sf-button", "setup"), button("scenarios", "sf-button", "scenarios"), button("runs", "sf-button", "runs"));
       if (model.company.hasJob) experts.appendChild(button("companyQueue", "sf-button", "companyQueue"));
       main.appendChild(experts);
     }
@@ -392,7 +471,7 @@
     feedback.setAttribute("role", "status");
     feedback.setAttribute("aria-live", "polite");
     append(footer, feedback, node("span", "sf-help", text("updated") + " " + model.readAt));
-    append(root, toolbar, main, footer);
+    patchChildren(root, [toolbar, main, footer]);
     const diagnostics = root.querySelector(".sf-diagnostics");
     if (diagnostics) diagnostics.open = diagnosticsOpen;
     const unavailable = root.querySelector(".sf-stock-unavailable");
@@ -422,6 +501,11 @@
       setBusy(false);
     }
   };
+  window.AutoRefreshFailed = function () {
+    failed = true;
+    const feedback = root?.querySelector(".sf-feedback");
+    if (feedback && model) feedback.textContent = text("error");
+  };
   window.BCSFStart = function () {
     root = document.getElementById("controlAddIn");
     if (!root) return;
@@ -429,6 +513,7 @@
     root.setAttribute("role", "region");
     root.setAttribute("aria-busy", "true");
     busy = true;
-    invoke("Ready", [], () => setBusy(false), () => { failed = true; setBusy(false); });
+    clearTimeout(pollTimer);
+    invoke("Ready", [], () => { setBusy(false); scheduleRefresh(); }, () => { failed = true; setBusy(false); scheduleRefresh(); });
   };
 }());
