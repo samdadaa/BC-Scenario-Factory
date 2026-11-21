@@ -50,13 +50,62 @@ codeunit 90275 "BCSF Process Coordinator"
   procedure PurchaseDate(Context: JsonObject; LogicalKey: Integer): Date
   var
     Contract: Codeunit "BCSF Contract JSON";
+    Seed: Codeunit "BCSF Seed Engine";
     StartingDate: Date;
   begin
     if Disposition(Context, 'PURCHASE.ORDER', LogicalKey) > 0 then begin
       Evaluate(StartingDate, Contract.GetText(Context, 'startingDate'), 9);
+      if Contract.GetDatePolicyVersion(Context) = 1 then
+        exit(Seed.SampleDate(Context, 'PURCHASE.ORDER', Format(LogicalKey, 0, 9), 'PURCHASE-DATE', StartingDate, EarliestSaleDate(Context, LogicalKey), false));
       exit(StartingDate);
     end;
     exit(DocumentDate(Context, 'PURCHASE.ORDER', LogicalKey));
+  end;
+
+  local procedure EarliestSaleDate(Context: JsonObject; PurchaseKey: Integer): Date
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+    Policy: Codeunit "BCSF Scenario Policy";
+    Targets: JsonToken;
+    Token: JsonToken;
+    Target: JsonObject;
+    ItemCount: Integer;
+    SourceCount: Integer;
+    ItemKey: Integer;
+    SalesKey: Integer;
+    EntityCode: Code[30];
+    LatestDate: Date;
+    SalesDate: Date;
+  begin
+    Evaluate(LatestDate, Contract.GetText(Context, 'endingDate'), 9);
+    Context.Get('targets', Targets);
+    foreach Token in Targets.AsArray() do
+      if Contract.GetInteger(Token.AsObject(), 'entity') = "BCSF Entity Type"::Item.AsInteger() then
+        ItemCount := Contract.GetInteger(Token.AsObject(), 'quantity');
+    if ItemCount < 1 then
+      Error(ContractErr);
+    SourceCount := ItemCount;
+    if SourceCount > 100 then
+      SourceCount := 100;
+    ItemKey := 1 + ((PurchaseKey - 1) mod ItemCount);
+    if ItemKey > SourceCount then
+      exit(LatestDate);
+    foreach Token in Targets.AsArray() do begin
+      Target := Token.AsObject();
+      EntityCode := Policy.GetEntityCode("BCSF Entity Type".FromInteger(Contract.GetInteger(Target, 'entity')));
+      if EntityCode in ['SALES.ORDER', 'SALES.INVOICE'] then begin
+        SalesKey := ItemKey;
+        while SalesKey <= Contract.GetInteger(Target, 'quantity') do begin
+          if Disposition(Context, EntityCode, SalesKey) > 0 then begin
+            SalesDate := DocumentDate(Context, EntityCode, SalesKey);
+            if SalesDate < LatestDate then
+              LatestDate := SalesDate;
+          end;
+          SalesKey += SourceCount;
+        end;
+      end;
+    end;
+    exit(LatestDate);
   end;
 
   procedure PurchaseQuantity(Context: JsonObject; LogicalKey: Integer): Decimal

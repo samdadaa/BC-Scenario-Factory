@@ -76,3 +76,8 @@ Neun AL-Objekte. Neue Codeunit 90401 Payment Processor: synthetische Bank BCSF-P
 
 
 Herkunftsregistry: Bank Account Ledger Entry, Detailed Cust. Ledg. Entry und Detailed Vendor Ledg. Entry sind explizit als Standardergebnisse zugelassen. Die bestehende eindeutige physische Ergebnisidentität und Batchbesitzprüfung gelten unverändert.
+
+
+## SF-022 – Datumszeitraum 1.0.7.3
+
+Payment Processor verteilt neue Zahlungsbuchungen zwischen Rechnung und erfasstem Ende, setzt Zahlungs-Belegdatum und prüft tatsächliche Datumswerte. Historische Captures ohne Marker bleiben beim Rechnungsdatum; vollständiger Ausgleich und synthetische Bank erhalten. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.

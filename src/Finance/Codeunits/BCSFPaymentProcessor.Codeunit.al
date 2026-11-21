@@ -99,6 +99,18 @@ codeunit 90401 "BCSF Payment Processor"
     Settings.Add('sourceCode', JournalTemplate."Source Code");
   end;
 
+  procedure PaymentDate(Context: JsonObject; NodeCode: Code[30]; LogicalKey: Integer; InvoiceDate: Date): Date
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+    Seed: Codeunit "BCSF Seed Engine";
+    EndingDate: Date;
+  begin
+    if Contract.GetDatePolicyVersion(Context) = 0 then
+      exit(InvoiceDate);
+    Evaluate(EndingDate, Contract.GetText(Context, 'endingDate'), 9);
+    exit(Seed.SampleDate(Context, NodeCode, Format(LogicalKey, 0, 9), 'PAYMENT-DATE', InvoiceDate, EndingDate, false));
+  end;
+
   procedure Enabled(Context: JsonObject): Boolean
   var
     Contract: Codeunit "BCSF Contract JSON";
@@ -262,7 +274,9 @@ codeunit 90401 "BCSF Payment Processor"
     TempLine."Journal Template Name" := CopyStr(Contract.GetText(Settings, 'template'), 1, 10);
     TempLine."Journal Batch Name" := CopyStr(Contract.GetText(Settings, 'batch'), 1, 10);
     TempLine."Line No." := LogicalKey;
+    PostingDate := PaymentDate(Stored, NodeCode, LogicalKey, PostingDate);
     TempLine.Validate("Posting Date", PostingDate);
+    TempLine.Validate("Document Date", PostingDate);
     TempLine.Validate("Document Type", TempLine."Document Type"::Payment);
     TempLine.Validate("Document No.", DocumentNo);
     if CustomerPayment then
@@ -341,24 +355,37 @@ codeunit 90401 "BCSF Payment Processor"
     Entry: Record "BCSF Generated Record";
     CustomerEntry: Record "Cust. Ledger Entry";
     VendorEntry: Record "Vendor Ledger Entry";
+    Manager: Codeunit "BCSF Scenario Manager";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    InvoiceDate: Date;
   begin
+    Manager.ReadSnapshot(RunId, Context);
     Entry.Get(RunId, NodeCode, LogicalKey, 'PAYMENT');
     if CustomerPayment then begin
       CustomerEntry.Get(InvoiceEntryNo);
+      InvoiceDate := CustomerEntry."Posting Date";
       CustomerEntry.CalcFields("Remaining Amount");
       CustomerEntry.TestField(Open, false);
       CustomerEntry.TestField("Remaining Amount", 0);
       CustomerEntry.GetBySystemId(Entry."Record SystemId");
+      CustomerEntry.TestField("Posting Date", PaymentDate(Context, NodeCode, LogicalKey, InvoiceDate));
+      if Contract.GetDatePolicyVersion(Context) = 1 then
+        CustomerEntry.TestField("Document Date", CustomerEntry."Posting Date");
       CustomerEntry.TestField("Document Type", CustomerEntry."Document Type"::Payment);
       CustomerEntry.CalcFields("Remaining Amount");
       CustomerEntry.TestField("Remaining Amount", 0);
       CustomerEntry.TestField(Open, false);
     end else begin
       VendorEntry.Get(InvoiceEntryNo);
+      InvoiceDate := VendorEntry."Posting Date";
       VendorEntry.CalcFields("Remaining Amount");
       VendorEntry.TestField(Open, false);
       VendorEntry.TestField("Remaining Amount", 0);
       VendorEntry.GetBySystemId(Entry."Record SystemId");
+      VendorEntry.TestField("Posting Date", PaymentDate(Context, NodeCode, LogicalKey, InvoiceDate));
+      if Contract.GetDatePolicyVersion(Context) = 1 then
+        VendorEntry.TestField("Document Date", VendorEntry."Posting Date");
       VendorEntry.TestField("Document Type", VendorEntry."Document Type"::Payment);
       VendorEntry.CalcFields("Remaining Amount");
       VendorEntry.TestField("Remaining Amount", 0);

@@ -1,5 +1,7 @@
 # AL-Konventionen — BC Scenario Factory
 
+**SF-022 / 1.0.7.2, aktueller Nachauftrag:** Temporäre Modulansicht wiederverwenden: Auswahlmodus nur durch interne Methoden setzen; historische Captures bleiben feldweise gesperrt. Planungszusätze verwenden bestehende Modularten, erhalten keine Entitätsziele. Kanonischen Request vor Start und im Hintergrund prüfen; nach Einplanung auch ohne Tabellentrigger schützen. [Umsetzung und Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072). **Zur Prüfung**.
+
 > SF-002, 11.11.2026: Projektkonventionen zur Prüfung. SF-003/SF-004 implementieren inzwischen die ersten neun AL-Objekte. Die folgenden Regeln konkretisieren den beauftragten Objektplan; der ausdrücklich beauftragte Strukturwechsel vom 16.11.2026 ist in Abschnitt 2 festgehalten.
 
 ## 1. Namen und Dateien

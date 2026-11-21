@@ -938,15 +938,25 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType FoundationCompletedLbl</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 3098967772" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale requires Sales, Purchasing, Inventory and the shared Finance foundation. Select additional modules for planning; they do not generate data until supported by the company package.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType ModulesHintLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 2246299024" size-unit="char" translate="yes" xml:space="preserve">
           <source>A new run creates the displayed synthetic records in this company. </source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType NewDatasetLbl</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 3584415651" size-unit="char" translate="yes" xml:space="preserve">
-          <source> All resulting posted purchase and sales invoices are fully paid and applied through standard journal posting; unposted documents remain open.</source>
+          <source> All resulting posted purchase and sales invoices are fully paid and applied between their invoice date and the period end through standard journal posting; unposted documents remain open.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType PaymentsReviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 894566561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business dates: %1 to %2 (inclusive). Technical creation timestamps remain the actual creation time.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = starting date, %2 = ending date</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType PeriodLbl</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 3123272234" size-unit="char" translate="yes" xml:space="preserve">
           <source> Purchase orders: 20% unposted, 20% partial, 60% fully invoiced; sales orders: 25% unposted, 25% partial, 50% fully invoiced; sales invoices: 33% unposted, 67% posted. Rounded down per target; remaining units stay unposted.</source>
@@ -1018,6 +1028,26 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Limits - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 522027044 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>3 - Modules</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ModuleStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3164853298 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Industry modules and optional additions</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control CompanyModules - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 2612941371 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Required modules remain selected to preserve the connected wholesale process. Additional modules are planning selections only.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ModuleExplanation - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 2612941371 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Module selection</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ModuleExplanation - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - Control 3451286186 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting approval</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -1034,9 +1064,19 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PostingApproved - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 558393067 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>4 - Data and processes</source>
+          <source>5 - Data and processes</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3592094765 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows yesterday, fixed when the request is submitted. Background batches use this captured boundary even after midnight.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control EndingDate - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3592094765 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generate data through</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control EndingDate - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 681458388 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select unposted documents, standard purchase and sales posting, or additional payments and application. Posting requires explicit approval.</source>
@@ -1053,8 +1093,18 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessChoice - Property OptionCaption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 543275552 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the first business date. Dates are distributed from this date through yesterday; technical creation timestamps show the actual creation time.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control StartingDate - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 543275552 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generate data from</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control StartingDate - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - Control 1163864020 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>5 - Summary and start</source>
+          <source>6 - Summary and start</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ReviewStep - Property Caption</note>
         </trans-unit>
@@ -1079,7 +1129,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control InstalledChart - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 3503818721 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>3 - Data size</source>
+          <source>4 - Data size</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SizeStep - Property Caption</note>
         </trans-unit>
@@ -2458,6 +2508,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType MixedSalesLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 2720121627" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale - Warehouse and CRM planned</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType ModulesWholesaleLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 2195544840" size-unit="char" translate="yes" xml:space="preserve">
           <source>Wholesale - payments and application</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -2528,10 +2583,30 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType WholesaleReferenceLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3298024591 - NamedType 1477128594" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a starting date no later than yesterday and an ending date within the approved period.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType DateRangeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298024591 - NamedType 1904129885" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Industry modules: %1.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = included module names</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType IncludedModulesLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3298024591 - NamedType 2836870124" size-unit="char" translate="yes" xml:space="preserve">
           <source>This size exceeds the configured entity limit. Select a smaller size or review Factory Setup.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType LimitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298024591 - NamedType 587403608" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select valid additional modules once. Required wholesale modules must remain selected.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType ModulesErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298024591 - NamedType 24706745" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Additional modules (planning only, no generated data): %1.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = planned module names</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType PlannedModulesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3298024591 - NamedType 2845165943" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select master data, unposted documents, posted documents or approved payments and application for wholesale.</source>
@@ -3213,6 +3288,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType JobLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2531880237 - NamedType 2532771334" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The period must end yesterday. Reopen company initialization to refresh the displayed period.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType PeriodChangedErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3261897160 - NamedType 1965247518" size-unit="char" translate="yes" xml:space="preserve">
           <source>Apply pending pause or cancellation requests at a safe boundary?</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3482,6 +3562,11 @@
           <source>Pause requested</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PauseRequestedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 894566561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business dates: %1 to %2 (inclusive).</source>
+          <note from="Developer" annotates="general" priority="2">%1 = starting date, %2 = ending date</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PeriodLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 4049492834" size-unit="char" translate="yes" xml:space="preserve">
           <source>Plan &amp; inspect</source>
@@ -6107,6 +6192,26 @@
           <source>Captured Modules</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Modules - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2572083249 - NamedType 433293878" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Included in industry package</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Modules - NamedType IncludedLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 2572083249 - NamedType 1189112345" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning only; no data generation</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Modules - NamedType PlanningLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 2572083249 - Control 3531180567 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows whether the module belongs to the executable industry package or is selected only for future planning without generated data.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Modules - Control CompanyScope - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2572083249 - Control 3531180567 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Company package scope</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Modules - Control CompanyScope - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2344503928 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Captured Entity Targets</source>

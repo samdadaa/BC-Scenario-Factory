@@ -264,8 +264,21 @@ try {
   assert.equal(await evaluate('document.querySelector(".sf-toolbar [data-action=scenarios]")'), null);
   assert.equal(await evaluate('document.querySelectorAll(".sf-company").length'), 1);
   assert.equal(await evaluate('document.querySelector(".sf-company").textContent.includes("Großhandel")'), true);
+  await redraw('window.fixture.company.period="Fachlicher Zeitraum: 01.01.2026 bis 20.11.2026 (einschließlich)."');
+  assert.ok(await evaluate('document.querySelector(".sf-company").textContent.includes("01.01.2026 bis 20.11.2026")'));
+  await redraw('window.fixture.company.period="<img src=x onerror=alert(1)>"');
+  assert.equal(await evaluate('document.querySelector(".sf-company img")'), null);
+  await redraw('window.fixture.company.period=""');
+
   assert.ok(await evaluate('document.querySelectorAll(".sf-step").length') > 0);
   assert.ok(await evaluate('document.querySelector(".sf-company").textContent.includes("Gebuchte Belege ohne Zahlungen")'));
+  await redraw('window.fixture.company.modules="Branchenmodule: Verkauf, Einkauf, Artikel, Finanzen. Zusätzliche Module (nur Planung, keine Datenerzeugung): Lager, CRM."');
+  assert.ok(await evaluate('document.querySelector(".sf-company").textContent.includes("nur Planung, keine Datenerzeugung")'));
+  assert.ok(await evaluate('document.querySelector(".sf-company").textContent.includes("Lager, CRM")'));
+  await redraw('window.fixture.company.modules="<img src=x onerror=alert(1)>"');
+  assert.equal(await evaluate('document.querySelector(".sf-company img")'), null);
+  await redraw('window.fixture.company.modules=""');
+  assert.ok(!await evaluate('document.querySelector(".sf-company").textContent.includes("Lager, CRM")'));
   await redraw('window.fixture.company.processMode="Posted documents with payments and application"');
   assert.ok(await evaluate('document.querySelector(".sf-company").textContent.includes("Gebuchte Belege mit Zahlungen und Ausgleich")'));
   await redraw('window.fixture.company.hasJob=true;window.fixture.company.steps=[{entityCode:"PURCHASE.ORDER",entity:"Purchase Orders",target:15,confirmed:15,remaining:0,complete:true,external:false}];window.fixture.selected.id="different-historical-run"');

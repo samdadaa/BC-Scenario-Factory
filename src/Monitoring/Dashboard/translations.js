@@ -14,6 +14,7 @@ window.BCSFDashboardTranslations = {
     "Blanket orders": "Rahmenauftr\u00e4ge / -bestellungen",
     "Blanket purchase orders": "Rahmeneinkaufsbestellungen",
     "Blanket sales orders": "Rahmenverkaufsauftr\u00e4ge",
+    "Business dates: %1 to %2 (inclusive).": "Fachlicher Zeitraum: %1 bis %2 (einschlie\u00dflich).",
     "CRM": "CRM",
     "Cancellation requested": "Abbruch angefordert",
     "Cancelled": "Abgebrochen",

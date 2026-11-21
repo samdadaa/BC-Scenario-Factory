@@ -57,3 +57,8 @@ Gemeinsame deterministische Datums-/Mengenableitung wird für Einkaufsbestellung
 ## 1.0.7.0 – aktueller Folgeumfang
 
 Beschaffungsdatum am Zeitraumstart, ausreichend beschaffte Menge vor geplanten Verkaufsbuchungen; echte halbe Bestelleingänge. Bestehende deterministische Quoten-/Datumsableitung bleibt gemeinsam. [Gemeinsamer Vertrag](../../../INDUSTRY_INITIALIZATION.md). **Zur Prüfung**, native Abnahme offen.
+
+
+## SF-022 – Datumszeitraum 1.0.7.3
+
+Neue Datumsregel verteilt gebuchte Beschaffung bis zum frühesten abhängigen Verkaufsdatum je Artikel; alte Captures behalten Beschaffung am Zeitraumstart. Bestehende Seed-/Mengen-/Quotenlogik bleibt Grundlage. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.

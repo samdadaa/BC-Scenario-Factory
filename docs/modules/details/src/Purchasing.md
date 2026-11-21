@@ -63,3 +63,8 @@ Purchase Generator 90451 plus EnumExtension 90453 implementieren ausschließlich
 ## SF-020 / 1.0.7.0 – aktueller Umfang
 
 Fünf AL-Objekte. Purchase Generator 90451 unterstützt PURCHASE.ORDER bis PostedMovements, neue Evidence 90454 registriert echte gebuchte Rechnung/Eingang, Kreditoren-, Sach-, MwSt.-, Artikel- und Wertposten. purchaseSetup v2, Same-run-Lieferant und Artikel, Standard-Purch.-Post mit Commitunterdrückung, Mengen-/Datumsdeckung vor Verkauf und Outputprüfung. Optional inline Zahlungsdienst aus Finance; kein neuer Benutzerablauf. Ungebuchte v1-Snapshots bleiben gültig. Einkaufsbestellungen/-eingänge/-rechnungen und Kreditorenposten werden im Dashboard gezählt und gefiltert geöffnet. Gutschriften/Retouren nicht implementiert. [Aktueller Vertrag](../../../INDUSTRY_INITIALIZATION.md), [Prüfung](../../../TESTS.md#sf-020sf-022--gebuchter-großhandel-und-zahlungsausgleich). **Zur Prüfung**, native Abnahme offen.
+
+
+## SF-022 – Datumszeitraum 1.0.7.3
+
+Gebuchte Eingangs-/Rechnungsdaten über Process Coordinator verteilt, spätestens zum artikelbezogenen ersten Verkauf. Ausgabe validiert tatsächliche Datumsfelder, Standardposting/Claim/Commitgrenzen erhalten. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.

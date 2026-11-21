@@ -835,3 +835,60 @@ Tatsächlich ausgeführt:
 Zwei neue Methoden im bestehenden isolierten Testhost: `DashboardMarksRetainExistingFilters` (Marken-/Basisfilterübergabe) und `CompletedMediumDashboardShowsLiveCounts` (fünf Kennzahlen gegen tatsächlich sichtbare überlebende Herkunftsidentitäten). **Nur kompiliert, nicht in BC ausgeführt.** Keine neue Test-Codeunit. Die zweite benötigt den abgeschlossenen mittleren Firmenlauf und die vorgesehenen Leserechte.
 
 Native offene Prüfung: bestehenden mittleren Lauf nach Paketupdate ohne Neugenerierung öffnen; 200/400/800 und tatsächliche Kinddatenzahlen in Lauf-/Mandantensicht sowie jeweilige Ziellisten abgleichen. Mappingliste 1.154 bzw. aktuelle tatsächliche Zahl, Varianten/Referenzen/Lieferanten, Einkaufsklicks und Prozessstufe prüfen. Security-/Zuständigkeitsfilter, umbenannte/gelöschte Identitäten, keine leere Markierung als unbeschränkte Liste, DE/EN, native Seitentrigger sowie Laufzeit/Speicher bei großen Mengen und Polling prüfen. Keine BC-Anmeldung, Veröffentlichung, Installation, Commit/Push oder menschliche Vollabnahme durch Codex.
+
+## SF-022 – Modulauswahl 1.0.7.2
+
+**21.11.2026 · lokaler Workspace · Zur Prüfung.** Bestätigter Scope: Modulauswahl zuerst, vorhandene Zahlung/vollständigen Ausgleich beibehalten. [Plan, betroffene Dateien, Umsetzung, Querschnitte und native Prüfschritte](INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-plan-vor-änderung-21112026). Keine Teilzahlung/Gutschrift/Retoure implementiert und keine BC-Anmeldung/Datengenerierung/Veröffentlichung ausgeführt.
+
+| Tatsächlich ausgeführte Prüfung | Ergebnis und Grenze |
+| --- | --- |
+| XERJ `bcsf-docs`: Map, projektweite Suche, Definition, projektbezogener Memory-Recall | Suche lieferte historische/teilweise unpassende Treffer; maßgeblichen Ablauf gegen lokale Dateien geprüft. Memory ohne Treffer. Keine anderen Projektindizes, keine Laufzeitintegration oder externen Feedbacknachrichten. |
+| `python3 scripts/build_sf019.py --output /tmp/bcsf-sf022-modules-delivery --analyzers` | **Exit 0**: App **1.0.7.2**, unverändert **140 Main-AL-Objekte**; separate Test-App **1.3.0.2 mit 44 Methoden** kompiliert. AL-Compiler 18.1.43.24897, vorhandener .NET-10-Host, lokale BC-28.5-DE-/Systemsymbole, Cloud/Runtime 17. CodeCop/UICop warnaserror+: keine Fehler/Warnungen; 24 Informationsbefunde. Keine AL-Testausführung. |
+| Inventory-/Sales-/Purchase-/Template-Verträge im Build | **PASS**: vorhandene Standard-API-/Schlüssel-/Transaktions-/Berechtigungs-/Freigabe-/Quoten-/Vorlagenschutzprüfungen. Quellprüfungen, keine Standardbuchung oder Migration ausgeführt. |
+| `node scripts/check_dashboard.mjs` | **PASS**: neue explizite Planungsmodulanzeige im Firmenstatus, Änderung/Entfernung des Texts und XSS-Gegenprobe; bestehende Zwei-Sekunden-/DOM-/Fokus-/Reiter-/Filter-/DE/EN-/responsive Regression bei 1440/768/320px. Synthetische BC-Brücke im lokalen Chromium, kein nativer BC-UI-Nachweis. |
+| `node scripts/check_dashboard_stock.mjs` | **PASS**: bestehende Bestands-/Berechtigungszustände, Tastatur, Umfang-/Laufauswahl und sichere Commandpayloads. Keine nativen Standardlistentrigger ausgeführt. |
+| `python3 Translations/sync_sf_translations.py`, `python3 scripts/check_translations.py`, `python3 scripts/build_dashboard_translations.py --check` | **PASS**, **1.391 echte Compiler-IDs** in en-US und fünf deutschen Regionen; Quellen, IDs, Platzhalter, Breiten und Dashboardfallback konsistent. Neue/verschobene UI-Texte vollständig gepflegt. |
+| `python3 scripts/check_package.py /tmp/bcsf-sf022-modules-delivery/BCScenarioFactory.app` | **PASS**, Identität/Version, alle 140 aktuellen AL-Quellen, sieben XLIFF-Dateien, vier Dashboardressourcen. SHA256 `1a629fe3d2a11f83465b519039c553120903feff7369fbd07279b130c60e92b5`. |
+| Lokale Objektprüfung | Numerische Objekt-IDs unverändert eindeutig und in 90100–90999; deklarierte Objektnamen eindeutig, maximal 30 Zeichen. Keine Aussage über installierte Fremd-Apps. |
+| `git diff --check` | **PASS**. Kein Objekt/Dateiumzug, keine Branch-/Commit-/Push-/Deploymentaktion. |
+
+Sechs neue Methoden im **vorhandenen** isolierten Testhost, ausschließlich kompiliert:
+
+- `CompanyWizardRetainsAdditionalModules`: native TestPage-Navigation, gesperrte Pflichtmodule, wählbares Lager, Vor-/Zurückgehen und Zusammenfassung ohne Start.
+- `CompanyModulesKeepRequiredIndustryScope`: zwölf Modularten, vier vorgewählte Pflichtmodule, unzulässige Pflichtabwählung.
+- `CompanyModulesRoundTripAndRejectInvalidRequests`: alle acht Zusätze, Abwahl, unbekannte/doppelte/Pflichtcodes und falsche kanonische Reihenfolge.
+- `CompanyPlanningModulesRemainTargetlessAndCaptured`: tatsächliche interne Vorlage mit sechs Modulzeilen und sieben bisherigen Entitätszielen; keine Zusatzziele, Capture bleibt nach Templateänderung unverändert, keine automatische Zahlungsfreigabe. Benötigt initialisierte Sandbox.
+- `CompanyModuleStarterPreservesCustomValues`: neuer Starter ohne automatische Buchungsfreigaben, geschützte Entfernt-Vermerke, keine doppelten Vorlagen/Überschreibung eigener Namen/Revision. Benötigt initialisierte Sandbox.
+- `CompanyRequestModulesCannotChangeWithoutTriggers`: eingefrorenes Requestfeld bleibt auch bei `Modify(false)` geschützt. Benötigt bestehenden Firmenrequest.
+
+**Offen / nicht ausgeführt:** Alle 44 AL-Testmethoden im BC-Runner; echte DE/EN-Setupkarte/Checkboxen/Tastatur und unveränderliche historische Capture-Unterseite; Starterladen/-schutz; tatsächlicher Queuejob nach Browserende mit Planungszusätzen; Standarddatenergebnisse/Drilldowns; fehlende Rechte/Fehlerpfade und additives Upgrade ohne ForceSync. Der bestehende Zahlungsumfang und seine offene native Buchungs-/Ausgleichsabnahme bleiben unverändert. Kein Nachweis tatsächlicher BC-28.0-Kompatibilität allein aus BC-28.5-Symbolbuild.
+
+Querschnittsergebnis: **Workflow** und **Dashboard** ergänzt, **Stammdaten/Einrichtung** nutzen unverändert vorhandene Voraussetzungen/Generatoren, **Übersetzungen** gepflegt. Zusätzliche Module sind ausgewählte Planung ohne Ziele/Erfolgszähler. Bestehende Starter und gebuchte Mischquoten geprüft; zusätzlicher ungebuchter Modulreferenzstarter nur auf ausdrückliches Laden, eigene/entfernte/archivierte Daten und historische Läufe geschützt.
+
+Reviewpakete: `artifacts/BCScenarioFactory-1.0.7.2-SF022-Modules.app`, separate `artifacts/BCScenarioFactory-Tests-1.3.0.2-SF022-Modules.app` (SHA256 `519f0ece2a7f1323c5dd9c6b8b3069f0fbcd38ee0afd1f2da7647703d09f0b83`), zugehörige neue Buildlogs daneben. Ältere Pakete erhalten. **Status Zur Prüfung; keine menschliche Abnahme.**
+
+## SF-022 – Datumszeitraum 1.0.7.3
+
+**21.11.2026 · lokaler Workspace · Zur Prüfung.** Ausdrücklicher Nachauftrag: bei Initialisierung Startdatum validieren und fachliche Beleg-/Buchungsdaten bis gestern verteilen. [Plan, betroffene Dateien, Risiken und native Abnahme](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-plan-vor-änderung-21112026). Kein Deployment, keine BC-Anmeldung oder native Datengenerierung ausgeführt.
+
+| Tatsächlich ausgeführte Prüfung | Ergebnis und Grenze |
+| --- | --- |
+| XERJ bcsf-docs, Suche und Definition PurchaseDate | Historische/teilweise unpassende Suchtreffer, kein aktueller Definitionstreffer. Maßgebliche Methoden und Abhängigkeiten direkt im lokalen Quellcode geprüft. Keine fremden Projektindizes oder externen Feedbackmeldungen. |
+| `python3 scripts/build_sf019.py --output /tmp/bcsf-dates-final --analyzers` | **Exit 0**: App **1.0.7.3**, unverändert **140 Main-AL-Objekte**; separate Test-App **1.3.0.3, 48 Methoden** kompiliert. Installierter Compiler **18.1.43.24897**, vorhandener .NET-10-Host und BC-28.5-DE-/Systemsymbole, Runtime 17/Cloud. CodeCop/UICop warnaserror+, keine Fehler/Warnungen; Informationsbefunde bleiben sichtbar. |
+| Bestehende Inventory-/Sales-/Purchase-/Template-Verträge durch Buildskript | **PASS**: echte Schlüssel/Standard-APIs, Posting-/Commit-/Registry-/Berechtigungs-/Approvalgrenzen, Dezimalquoten und Starter-/Historien-/Archivschutz. Quellprüfungen, kein BC-Laufzeittest. |
+| `node scripts/check_dashboard.mjs` | **PASS**: Anzeige des fachlichen Zeitraums im Firmenstatus, sicherer Text/XSS-Gegenprobe; bestehende Modul-/DE/EN-/Zwei-Sekunden-/DOM-/Fokus-/Reiter-/Filter-/responsive Regression 1440/768/320px. Chromium mit synthetischer BC-Brücke, keine native Setupkarte. |
+| `node scripts/check_dashboard_stock.mjs` | **PASS**, bestehende Umfang-/Laufauswahl, Status-/Berechtigungszustände, Tastatur und sichere Commands. Keine nativen Zähler/Standardlisten geprüft. |
+| Übersetzungssynchronisierung und `check_translations.py`, `build_dashboard_translations.py --check` | **PASS**, **1.399 echte Compiler-IDs** in en-US und fünf deutschen Regionen. Geänderte Zahlungsbeschreibung, Datumsfelder, Tooltips, Validierungsfehler und Zeitraumlabels vollständig; Dashboardfallback konsistent. |
+| `python3 scripts/check_package.py /tmp/bcsf-dates-final/BCScenarioFactory.app` | **PASS**, Version/Identität, alle 140 aktuellen AL-Quellen, sieben XLIFF-Dateien und vier Dashboardressourcen. SHA256 **4f2c46eddc9b8c4b14c6c88f820f1ba53550ebac1256ea1dc8a18172d362e860**. |
+| Vergleich gegen vorhandenes 1.0.7.2-Reviewpaket | Genau die 13 im Umsetzungsvertrag benannten Main-AL-Dateien geändert; keine Änderung am PartnerRules-Quellcode, keine neuen Objekte oder Standardrechte. |
+| `git diff --check` | **PASS**. Bereits vorhandene Änderungen aus Modulauswahl-Auftrag beibehalten; keine Branch-/Commit-/Pushaktion. |
+
+Vier neue Testmethoden im **bestehenden** isolierten Host: `CompanyDateRangeRejectsEmptyTodayAndFuture`, `BusinessDatesAreReproducibleAndRespectInvoiceDate`, `RandomReceiptsPrecedeDependentSalesAcrossSizes`, `CompanyRequestDateRangeCannotChangeWithoutTriggers`. Sie decken Einzeltag/ungültige Grenzen, Streuung/Reproduzierbarkeit unabhängig von RunId, Zahlung nach Rechnung, Legacy-Zahlungsdatum/ungültige Regelversion, artikelspezifische Einkaufs-/Verkaufsreihenfolge in drei Größen und Requestschutz ohne Trigger ab. Vorhandene UI-/Snapshot-/Starterfälle um Datumseingabe, gespeicherten Zeitraum und neuen Marker erweitert. Der bisherige Beschaffungsdatums-Test bleibt als Legacy-Gegenprobe bestehen.
+
+**Alle 48 AL-Methoden nur kompiliert, nicht in BC ausgeführt.** Die neuen UI-/Snapshot-/Starter-/Requestfälle benötigen eine passend vorbereitete Sandbox; der Requestschutzfall einen bestehenden Firmenjob. Kein Nachweis tatsächlicher Mengen, Standardbuchungen, Ausgleich, Benutzerbuchungsperioden oder Upgrade allein durch diese Kompilierung.
+
+Querschnitt: **Workflow** nimmt Startdatum auf; **Dashboard** zeigt erfassten Zeitraum; **Stammdaten/Einrichtung** bleiben bei vorhandenen Voraussetzungen und tatsächlichen technischen Anlagezeitpunkten; **Übersetzungen** DE/EN gepflegt. Neu angelegte Großhandelsstarter nutzen den Jahreszeitraum bis gestern und bisherige Mischquoten. Bereits gespeicherte eigene/entfernte/archivierte Vorlagen und Läufe bleiben unverändert. Unfertige Planungsmodule erhalten weiterhin keine Ziele oder Daten.
+
+Offene native Abnahme: DE/EN-Setupkarte/Tastatur/Datumseingabe, abweichendes Arbeitsdatum, Einzeltag/Monats-/Jahres-/Schaltjahrgrenzen, Tageswechsel zwischen Review/Start und verzögerte Hintergrundausführung, reale artikelbezogene Bestandsdeckung/Datumskonsistenz auf Belegen und Posten, Zahlungsrabatte/Restbeträge, gesperrte Benutzer-/Finanz-/Lagerperioden und Nummernserien, Berechtigungen, additive Synchronisierung und Altrequest/-snapshot ohne Datumsversion. [Konkrete Fälle](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). Keine künstliche Rückdatierung von BC-SystemCreatedAt oder Standardstammdaten ohne fachliches Anlagedatumsfeld.
+
+Pakete: `artifacts/BCScenarioFactory-1.0.7.3-SF022-Dates.app`, separate `artifacts/BCScenarioFactory-Tests-1.3.0.3-SF022-Dates.app` und neue Buildlogs daneben; frühere Pakete erhalten. Status **Zur Prüfung**, keine menschliche Abnahme.

@@ -1,5 +1,9 @@
 # Zielarchitektur und implementierte Grundlagen
 
+**SF-022 / Datumszeitraum 1.0.7.3:** Initialisierung friert Start/Ende (gestern) im bestehenden Request ein. Snapshot datePolicyVersion 1 steuert neue artikelbezogene Einkaufsdaten und Zahlungen nach Rechnung; fehlender Marker bewahrt Legacy-Daten. Einzelverkauf prüft weiterhin Bestand zum konkreten Datum. [Vertrag und native Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+**SF-022 / 1.0.7.2, aktueller Nachauftrag:** Unternehmensassistent: Kontenplan → Branche → Module → Größe → Prozessstufe → Zusammenfassung/Start. Wholesale Profile bestimmt Pflichtmodule und kanonische Planungszusätze. Factory Setup hält einen unveränderlichen Request, vorhandene Scenario-Module/Snapshotzeilen übernehmen die Auswahl. Nur tatsächliche Entitätsziele erzeugen Queuearbeit; Planungszusätze erzeugen weder Ziele noch Ergebnisse. [Umsetzung und Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072). **Zur Prüfung**.
+
 ## SF-045 – aktueller verbindlicher Ablauf
 
 Kontenplan einmalig → tatsächlich unterstützte Branche → drei Größen mit versionierten Mengenverhältnissen → unterstützte Prozessstufe → ein Hintergrundstart. Gemeinsame Einrichtung und Branchenvoraussetzungen kommen vor Stammdaten, diese vor Belegen/Buchungen. Neue Generatoren nutzen vorhandene Registry, Snapshots, Queue, Checkpoints, Qualitätsabschluss und Dashboard; keine zusätzlichen Assistenten oder parallele Vorlagen-/Finanzeinrichtung. Technische Konfiguration bleibt optionaler Expertenzugang. Aktuell Großhandel mit vier Prozessstufen einschließlich Standardbeschaffung und Zahlungen/Ausgleich implementiert (1.0.7.0); native Buchungs-/Rechteabnahme offen. Dashboard liest alle zwei Sekunden ohne vollständigen DOM-Neuaufbau. [Konkreter Vertrag](INDUSTRY_INITIALIZATION.md). Frühere Normalabläufe dieses Dokuments sind historische Zwischenstände.

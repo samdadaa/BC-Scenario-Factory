@@ -151,6 +151,339 @@ codeunit 90700 "BCSF Inventory Tests"
   end;
 
   [Test]
+  [TransactionModel(TransactionModel::AutoRollback)]
+  procedure CompanyWizardRetainsAdditionalModules()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Wizard: TestPage "BCSF Factory Setup Card";
+    EmptyId: Guid;
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Setup.TestField("Company Initialized", true);
+    Wizard.OpenEdit();
+    Wizard.InitializeSetup.Invoke();
+    Wizard.NextStep.Invoke();
+    Wizard.NextStep.Invoke();
+    Wizard.CompanyModules.GoToKey(EmptyId, "BCSF Module Type"::Sales);
+    Assert(not Wizard.CompanyModules.Enabled.Editable(), 'Required modules must be locked.');
+    Wizard.CompanyModules.GoToKey(EmptyId, "BCSF Module Type"::Warehouse);
+    Assert(Wizard.CompanyModules.Enabled.Editable(), 'Additional modules must be selectable.');
+    Wizard.CompanyModules.Enabled.SetValue(true);
+    Wizard.NextStep.Invoke();
+    Wizard.PreviousStep.Invoke();
+    Wizard.CompanyModules.GoToKey(EmptyId, "BCSF Module Type"::Warehouse);
+    Wizard.CompanyModules.Enabled.AssertEquals(true);
+    Wizard.NextStep.Invoke();
+    Wizard.NextStep.Invoke();
+    asserterror Wizard.StartingDate.SetValue(Today());
+    Wizard.StartingDate.SetValue(Today() - 90);
+    Wizard.EndingDate.AssertEquals(Today() - 1);
+    Wizard.NextStep.Invoke();
+    Assert(StrPos(Wizard.Review.Value(), Format(Today() - 90)) > 0, 'Summary must show the chosen starting date.');
+    Assert(StrPos(Wizard.Review.Value(), Format("BCSF Module Type"::Warehouse)) > 0, 'Summary must retain the planning selection.');
+    Wizard.Close();
+  end;
+
+  [Test]
+  [TransactionModel(TransactionModel::AutoRollback)]
+  procedure CompanyRequestDateRangeCannotChangeWithoutTriggers()
+  var
+    Setup: Record "BCSF Factory Setup";
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Setup.TestField("Industry Job Id");
+    Setup."Industry Ending Date" += 1;
+    asserterror Setup.Modify(false);
+    Setup.Get(Setup.GetSetupKey());
+    Setup."Industry Date" += 1;
+    asserterror Setup.Modify(false);
+  end;
+
+  [Test]
+  procedure CompanyDateRangeRejectsEmptyTodayAndFuture()
+  var
+    Profile: Codeunit "BCSF Wholesale Profile";
+    LatestDate: Date;
+  begin
+    LatestDate := Today() - 1;
+    Profile.CheckDateRange(LatestDate, LatestDate, LatestDate);
+    Profile.CheckDateRange(CalcDate('<-1Y>', LatestDate), LatestDate, LatestDate);
+    asserterror Profile.CheckDateRange(0D, LatestDate, LatestDate);
+    asserterror Profile.CheckDateRange(Today(), LatestDate, LatestDate);
+    asserterror Profile.CheckDateRange(Today() + 1, LatestDate, LatestDate);
+    asserterror Profile.CheckDateRange(LatestDate, 0D, LatestDate);
+    asserterror Profile.CheckDateRange(LatestDate, Today(), LatestDate);
+  end;
+
+  [Test]
+  procedure BusinessDatesAreReproducibleAndRespectInvoiceDate()
+  var
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Payments: Codeunit "BCSF Payment Processor";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    OtherRun: JsonObject;
+    StartingDate: Date;
+    EndingDate: Date;
+    Date: Date;
+    PaidOn: Date;
+    LogicalKey: Integer;
+    EntityCode: Code[30];
+    Entity: Integer;
+    Dates: Dictionary of [Date, Boolean];
+  begin
+    StartingDate := DMY2Date(1, 1, 2026);
+    EndingDate := DMY2Date(20, 11, 2026);
+    Context := ContextFixture();
+    Context.Add('startingDate', Format(StartingDate, 0, 9));
+    Context.Add('endingDate', Format(EndingDate, 0, 9));
+    Assert(Payments.PaymentDate(Context, 'SALES.ORDER', 1, StartingDate) = StartingDate, 'Legacy payments must retain the captured invoice date.');
+    Context.Add('datePolicyVersion', 1);
+    OtherRun := Contract.Clone(Context);
+    OtherRun.Replace('runId', Format(CreateGuid(), 0, 4));
+    for Entity := 0 to 3 do begin
+      case Entity of
+        0: EntityCode := 'SALES.QUOTE';
+        1: EntityCode := 'SALES.ORDER';
+        2: EntityCode := 'SALES.INVOICE';
+        3: EntityCode := 'PURCHASE.ORDER';
+      end;
+      Clear(Dates);
+      for LogicalKey := 1 to 40 do begin
+        Date := Coordinator.DocumentDate(Context, EntityCode, LogicalKey);
+        Assert((Date >= StartingDate) and (Date <= EndingDate), 'Business date escaped the captured period.');
+        Assert(Date = Coordinator.DocumentDate(OtherRun, EntityCode, LogicalKey), 'Run identity must not change dates.');
+        Dates.Set(Date, true);
+        PaidOn := Payments.PaymentDate(Context, EntityCode, LogicalKey, Date);
+        Assert((PaidOn >= Date) and (PaidOn <= EndingDate), 'Payment must be between invoice and period end.');
+        Assert(PaidOn = Payments.PaymentDate(OtherRun, EntityCode, LogicalKey, Date), 'Payment date must be reproducible.');
+      end;
+      Assert(Dates.Count() > 1, 'A multi-day period must produce varied dates for this fixture.');
+    end;
+    Context.Replace('endingDate', Format(StartingDate, 0, 9));
+    Assert(Coordinator.DocumentDate(Context, 'SALES.ORDER', 1) = StartingDate, 'A one-day period is valid.');
+    Assert(Payments.PaymentDate(Context, 'SALES.ORDER', 1, StartingDate) = StartingDate, 'One-day payment must remain in range.');
+    Context.Replace('datePolicyVersion', 99);
+    asserterror Contract.CheckContext(Context);
+  end;
+
+  [Test]
+  procedure RandomReceiptsPrecedeDependentSalesAcrossSizes()
+  var
+    Profile: Codeunit "BCSF Wholesale Profile";
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Context: JsonObject;
+    Targets: JsonArray;
+    LatestReceipt: Dictionary of [Integer, Date];
+    Size: Integer;
+    LogicalKey: Integer;
+    Items: Integer;
+    SourceItems: Integer;
+    ItemKey: Integer;
+    Kind: Integer;
+    SalesCount: Integer;
+    EntityCode: Code[30];
+    StartingDate: Date;
+    EndingDate: Date;
+    ReceiptDate: Date;
+    Date: Date;
+    VariedReceipt: Boolean;
+  begin
+    StartingDate := DMY2Date(1, 1, 2026);
+    EndingDate := DMY2Date(20, 11, 2026);
+    for Size := 0 to 2 do begin
+      Clear(LatestReceipt);
+      VariedReceipt := false;
+      Context := ContextFixture();
+      Context.Replace('processMode', 3);
+      Context.Add('datePolicyVersion', 1);
+      Context.Add('startingDate', Format(StartingDate, 0, 9));
+      Context.Add('endingDate', Format(EndingDate, 0, 9));
+      Items := Profile.Quantity(Size, "BCSF Entity Type"::Item);
+      Clear(Targets);
+      AddMixedTarget(Targets, "BCSF Entity Type"::Item, Items, 0, 0);
+      AddMixedTarget(Targets, "BCSF Entity Type"::PurchaseOrder, Profile.Quantity(Size, "BCSF Entity Type"::PurchaseOrder), 60, 20);
+      AddMixedTarget(Targets, "BCSF Entity Type"::SalesOrder, Profile.Quantity(Size, "BCSF Entity Type"::SalesOrder), 50, 25);
+      AddMixedTarget(Targets, "BCSF Entity Type"::SalesInvoice, Profile.Quantity(Size, "BCSF Entity Type"::SalesInvoice), 67, 0);
+      Context.Replace('targets', Targets);
+      for LogicalKey := 1 to Profile.Quantity(Size, "BCSF Entity Type"::PurchaseOrder) do
+        if Coordinator.Disposition(Context, 'PURCHASE.ORDER', LogicalKey) > 0 then begin
+          ReceiptDate := Coordinator.PurchaseDate(Context, LogicalKey);
+          Assert((ReceiptDate >= StartingDate) and (ReceiptDate <= EndingDate), 'Receipt escaped the captured period.');
+          VariedReceipt := VariedReceipt or (ReceiptDate > StartingDate);
+          ItemKey := 1 + ((LogicalKey - 1) mod Items);
+          if LatestReceipt.Get(ItemKey, Date) then begin
+            if ReceiptDate > Date then
+              LatestReceipt.Set(ItemKey, ReceiptDate);
+          end else
+            LatestReceipt.Add(ItemKey, ReceiptDate);
+        end;
+      Assert(VariedReceipt, 'Posted receipts must no longer all use the first period day.');
+      SourceItems := Items;
+      if SourceItems > 100 then
+        SourceItems := 100;
+      for Kind := 0 to 1 do begin
+        if Kind = 0 then begin
+          EntityCode := 'SALES.ORDER';
+          SalesCount := Profile.Quantity(Size, "BCSF Entity Type"::SalesOrder);
+        end else begin
+          EntityCode := 'SALES.INVOICE';
+          SalesCount := Profile.Quantity(Size, "BCSF Entity Type"::SalesInvoice);
+        end;
+        for LogicalKey := 1 to SalesCount do
+          if Coordinator.Disposition(Context, EntityCode, LogicalKey) > 0 then begin
+            ItemKey := 1 + ((LogicalKey - 1) mod SourceItems);
+            Assert(LatestReceipt.Get(ItemKey, ReceiptDate), 'Posted sale has no planned receipt.');
+            Assert(ReceiptDate <= Coordinator.DocumentDate(Context, EntityCode, LogicalKey), 'A sale precedes its stock receipt.');
+          end;
+      end;
+    end;
+  end;
+
+  [Test]
+  procedure CompanyModulesKeepRequiredIndustryScope()
+  var
+    TempModules: Record "BCSF Scenario Module" temporary;
+    Profile: Codeunit "BCSF Wholesale Profile";
+  begin
+    Profile.LoadModules('', TempModules);
+    Assert(TempModules.Count() = 12, 'All existing business module types must be visible.');
+    TempModules.SetRange(Enabled, true);
+    Assert(TempModules.Count() = 4, 'Wholesale must include Sales, Purchasing, Inventory and Finance.');
+    Assert(Profile.EncodeAdditionalModules(TempModules) = '', 'Default package has no planning additions.');
+    TempModules.Module := TempModules.Module::Inventory;
+    TempModules.Get(TempModules."Scenario Id", TempModules.Module);
+    TempModules.Enabled := false;
+    TempModules.Modify();
+    asserterror Profile.EncodeAdditionalModules(TempModules);
+  end;
+
+  [Test]
+  procedure CompanyModulesRoundTripAndRejectInvalidRequests()
+  var
+    TempModules: Record "BCSF Scenario Module" temporary;
+    Profile: Codeunit "BCSF Wholesale Profile";
+    Encoded: Text;
+  begin
+    Encoded := 'WAREHOUSE|MANUFACTURING|ASSEMBLY|PROJECTS|SERVICE|FIXEDASSETS|CRM|PLANNING';
+    Profile.LoadModules(Encoded, TempModules);
+    Assert(Profile.EncodeAdditionalModules(TempModules) = Encoded, 'All planning choices must survive request transport.');
+    TempModules.SetRange(Enabled, true);
+    Assert(TempModules.Count() = 12, 'All optional modules must remain selected.');
+    Profile.LoadModules('', TempModules);
+    Assert(Profile.EncodeAdditionalModules(TempModules) = '', 'Clearing additions must restore the base package.');
+    asserterror Profile.LoadModules('UNKNOWN', TempModules);
+    asserterror Profile.LoadModules('WAREHOUSE|WAREHOUSE', TempModules);
+    asserterror Profile.LoadModules('SALES', TempModules);
+    asserterror Profile.LoadModules('CRM|WAREHOUSE', TempModules);
+  end;
+
+  [Test]
+  [TransactionModel(TransactionModel::AutoRollback)]
+  procedure CompanyPlanningModulesRemainTargetlessAndCaptured()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Selection: Record "BCSF Scenario Module";
+    TempCaptured: Record "BCSF Scenario Module" temporary;
+    Target: Record "BCSF Data Target";
+    Scenario: Record "BCSF Scenario";
+    Header: Record "BCSF Run Header";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    Profile: Codeunit "BCSF Wholesale Profile";
+    Writer: Codeunit "BCSF Snapshot Writer";
+    Manager: Codeunit "BCSF Scenario Manager";
+    ScenarioId: Guid;
+    RunId: Guid;
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Setup.TestField("Company Initialized", true);
+    ScenarioId := Profile.CreateTemplateForId(CreateGuid(), 0, "BCSF Process Mode"::UnpostedDocuments, Today() - 90, Today() - 1, 'WAREHOUSE|CRM');
+    Selection.SetRange("Scenario Id", ScenarioId);
+    Assert(Selection.Count() = 6, 'Four required and two planning modules must be saved.');
+    Target.SetRange("Scenario Id", ScenarioId);
+    Assert(Target.Count() = 7, 'Planning additions must not invent targets.');
+    Target.SetFilter(Module, '%1|%2', "BCSF Module Type"::Warehouse, "BCSF Module Type"::CRM);
+    Assert(Target.IsEmpty(), 'Planned modules must have no work or generated result promise.');
+    RunId := Writer.CreateSnapshot(ScenarioId);
+    Selection.Get(ScenarioId, "BCSF Module Type"::CRM);
+    Selection.Enabled := false;
+    Selection.Modify(true);
+    Header.Get(RunId);
+    Header.TestField("Starting Date", Today() - 90);
+    Header.TestField("Ending Date", Today() - 1);
+    Manager.ReadSnapshot(RunId, Context);
+    Assert(Contract.GetDatePolicyVersion(Context) = 1, 'New snapshot must capture the date policy.');
+    Manager.LoadFrozenModules(RunId, TempCaptured);
+    TempCaptured.Get(RunId, "BCSF Module Type"::CRM);
+    TempCaptured.TestField(Enabled, true);
+    Scenario.Get(ScenarioId);
+    Scenario.TestField("Starting Date", Today() - 90);
+    Scenario.TestField("Ending Date", Today() - 1);
+    Scenario.TestField("Payment Posting Approved", false);
+    Manager.RequireExecutableTargets(Scenario);
+  end;
+
+  [Test]
+  [TransactionModel(TransactionModel::AutoRollback)]
+  procedure CompanyModuleStarterPreservesCustomValues()
+  var
+    Scenario: Record "BCSF Scenario";
+    Selection: Record "BCSF Scenario Module";
+    Target: Record "BCSF Data Target";
+    Removed: Record "BCSF Removed Template";
+    Catalog: Codeunit "BCSF Starter Catalog";
+    Id: Guid;
+    WasPresent: Boolean;
+    CountBefore: Integer;
+    RevisionBefore: Integer;
+  begin
+    Evaluate(Id, '{B55C4500-AB51-4045-9C00-000000000004}');
+    WasPresent := Scenario.Get(Id);
+    Catalog.Seed();
+    if Removed.Get(Id) then begin
+      Assert(not Scenario.Get(Id), 'An intentionally removed starter must not be recreated.');
+      exit;
+    end;
+    Scenario.Get(Id);
+    if WasPresent then
+      exit;
+    Scenario.TestField("Sales Posting Approved", false);
+    Scenario.TestField("Purchase Posting Approved", false);
+    Scenario.TestField("Payment Posting Approved", false);
+    Scenario.TestField("Starting Date", CalcDate('<-1Y>', Today()));
+    Scenario.TestField("Ending Date", Today() - 1);
+    Selection.SetRange("Scenario Id", Id);
+    Assert(Selection.Count() = 6, 'Module starter must include the base and Warehouse/CRM planning selections.');
+    Target.SetRange("Scenario Id", Id);
+    Assert(Target.Count() = 7, 'Only the seven supported wholesale targets are executable.');
+    Scenario.Description := 'CUSTOM MODULE STARTER';
+    Scenario.Modify(true);
+    RevisionBefore := Scenario.Revision;
+    CountBefore := Scenario.Count();
+    Catalog.Seed();
+    Assert(Scenario.Count() = CountBefore, 'Reload must not duplicate templates.');
+    Scenario.Get(Id);
+    Scenario.TestField(Description, 'CUSTOM MODULE STARTER');
+    Scenario.TestField(Revision, RevisionBefore);
+  end;
+
+  [Test]
+  [TransactionModel(TransactionModel::AutoRollback)]
+  procedure CompanyRequestModulesCannotChangeWithoutTriggers()
+  var
+    Setup: Record "BCSF Factory Setup";
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Setup.TestField("Industry Job Id");
+    if Setup."Industry Additional Modules" = '' then
+      Setup."Industry Additional Modules" := 'WAREHOUSE'
+    else
+      Clear(Setup."Industry Additional Modules");
+    asserterror Setup.Modify(false);
+  end;
+
+  [Test]
   procedure WholesaleQuantitiesAreIndustryRatios()
   var
     Profile: Codeunit "BCSF Wholesale Profile";

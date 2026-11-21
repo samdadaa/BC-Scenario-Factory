@@ -1,5 +1,9 @@
 # Projektfakten und bestätigter Plan
 
+**SF-022 / Datumszeitraum 1.0.7.3:** App 1.0.7.3, Test-App 1.3.0.3; unverändert 140 Main-Objekte. Ein additives optionales Setup-Enddatumsfeld 28. Unternehmensinitialisierung erfasst Start bis gestern; neue Snapshots erhalten optionale Datumsregelversion 1, ältere behalten ihre Semantik. [Vertrag und native Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+**SF-022 / 1.0.7.2, aktueller Nachauftrag:** App 1.0.7.2, separate Test-App 1.3.0.2; unverändert 140 Main-AL-Objekte. Ein additives optionales Setup-Requestfeld 27 für Planungsmodule. Keine neue Seite/Tabelle, keine neue Dependency/ID oder Runtimeänderung. Unternehmensassistent um Modulauswahl ergänzt. [Umsetzung und Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072). **Zur Prüfung**.
+
 **Aktuell 1.0.7.1:** 140 AL-Objekte, neue ausschließlich lesende Mappingseite 90370. Identität, Runtime 17, ID-Bereich, Dependencies und persistentes Schema unverändert. Test-App 1.3.0.1 mit 38 Methoden. [Dashboardkorrektur](DASHBOARD_DATA_STOCK.md#implementierter-stand-1071). Folgende Versionsabschnitte sind historische Ticketstände.
 
 

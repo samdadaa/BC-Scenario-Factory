@@ -69,3 +69,13 @@ Wholesale Profile 90153 definiert versionierte TRADE-3-Mengen 20/5/40 und 15/5/1
 ## 1.0.7.0 – aktueller Folgeumfang
 
 TRADE Paketversion 4 mit vier Stufen, gemischten Buchungsquoten und zusätzlichen geschützten Referenzstartern. Alte Version 3, eigene/archivierte/entfernte Starter bleiben erhalten. [Gemeinsamer Vertrag](../../../INDUSTRY_INITIALIZATION.md). **Zur Prüfung**, native Abnahme offen.
+
+
+## SF-022 – Modulauswahl 1.0.7.2
+
+Wholesale Profile verwaltet vier Pflichtmodule plus acht optionale Planungszusätze über vorhandene Modularten. Template übernimmt ausgewählte Module, erzeugt ausschließlich bisherige Ziele. Neuer geschützter Referenzstarter mit Lager/CRM als Planung, ohne deren Ziele. Keine neue Generatorfähigkeit. [Vertrag und native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072), [lokale Prüfnachweise](../../../TESTS.md#sf-022--modulauswahl-1072). **Zur Prüfung**, keine BC-Laufzeitabnahme.
+
+
+## SF-022 – Datumszeitraum 1.0.7.3
+
+Wholesale Profile übernimmt validierte Start-/Endgrenzen. Vier neue Großhandelsstarter nutzen Jahreszeitraum bis gestern, bestehende Starter bleiben geschützt. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.

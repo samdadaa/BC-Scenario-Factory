@@ -7,6 +7,96 @@ codeunit 90153 "BCSF Wholesale Profile"
 {
   Access = Internal;
 
+  procedure CheckDateRange(StartingDate: Date; EndingDate: Date; LatestDate: Date)
+  begin
+    if (StartingDate = 0D) or (EndingDate = 0D) or (StartingDate > EndingDate) or (EndingDate > LatestDate) then
+      Error(DateRangeErr);
+  end;
+
+  procedure IsRequiredModule(ModuleType: Enum "BCSF Module Type"): Boolean
+  begin
+    exit(ModuleType in [ModuleType::Sales, ModuleType::Purchasing, ModuleType::Inventory, ModuleType::Finance]);
+  end;
+
+  procedure LoadModules(AdditionalModules: Text; var TempModules: Record "BCSF Scenario Module" temporary)
+  var
+    Policy: Codeunit "BCSF Scenario Policy";
+    ModuleType: Enum "BCSF Module Type";
+    Ordinal: Integer;
+  begin
+    if not TempModules.IsTemporary() then
+      Error(ModulesErr);
+    TempModules.Reset();
+    TempModules.DeleteAll();
+    foreach Ordinal in ModuleType.Ordinals() do begin
+      ModuleType := "BCSF Module Type".FromInteger(Ordinal);
+      TempModules.Init();
+      Clear(TempModules."Scenario Id");
+      TempModules.Module := ModuleType;
+      TempModules.Enabled := IsRequiredModule(ModuleType) or
+        (StrPos('|' + AdditionalModules + '|', '|' + Policy.GetModuleCode(ModuleType) + '|') > 0);
+      TempModules.Insert();
+    end;
+    // Canonical enum order rejects unknown, duplicate and required module codes as additions.
+    if AdditionalModules <> EncodeAdditionalModules(TempModules) then
+      Error(ModulesErr);
+  end;
+
+  procedure EncodeAdditionalModules(var TempModules: Record "BCSF Scenario Module" temporary): Text[250]
+  var
+    Policy: Codeunit "BCSF Scenario Policy";
+    ModuleType: Enum "BCSF Module Type";
+    EmptyId: Guid;
+    Ordinal: Integer;
+    Result: Text[250];
+  begin
+    if not TempModules.IsTemporary() then
+      Error(ModulesErr);
+    TempModules.Reset();
+    if TempModules.Count() <> ModuleType.Ordinals().Count() then
+      Error(ModulesErr);
+    foreach Ordinal in ModuleType.Ordinals() do begin
+      ModuleType := "BCSF Module Type".FromInteger(Ordinal);
+      if not TempModules.Get(EmptyId, ModuleType) then
+        Error(ModulesErr);
+      if IsRequiredModule(ModuleType) then
+        TempModules.TestField(Enabled, true)
+      else
+        if TempModules.Enabled then begin
+          if Result <> '' then
+            Result += '|';
+          Result += Policy.GetModuleCode(ModuleType);
+        end;
+    end;
+    exit(Result);
+  end;
+
+  procedure DescribeModules(AdditionalModules: Text): Text
+  var
+    TempModules: Record "BCSF Scenario Module" temporary;
+    Included: Text;
+    Planned: Text;
+  begin
+    LoadModules(AdditionalModules, TempModules);
+    TempModules.SetRange(Enabled, true);
+    if TempModules.FindSet() then
+      repeat
+        if IsRequiredModule(TempModules.Module) then begin
+          if Included <> '' then
+            Included += ', ';
+          Included += Format(TempModules.Module);
+        end else begin
+          if Planned <> '' then
+            Planned += ', ';
+          Planned += Format(TempModules.Module);
+        end;
+      until TempModules.Next() = 0;
+    Included := StrSubstNo(IncludedModulesLbl, Included);
+    if Planned <> '' then
+      Included += ' ' + StrSubstNo(PlannedModulesLbl, Planned);
+    exit(Included);
+  end;
+
   procedure Quantity(Size: Integer; Entity: Enum "BCSF Entity Type"): Integer
   var
     Factor: Integer;
@@ -55,16 +145,30 @@ codeunit 90153 "BCSF Wholesale Profile"
 
   [CommitBehavior(CommitBehavior::Error)]
   procedure CreateTemplateForId(ScenarioId: Guid; Size: Integer; Mode: Enum "BCSF Process Mode"; Date: Date): Guid
+  begin
+    exit(CreateTemplateForId(ScenarioId, Size, Mode, Date, ''));
+  end;
+
+  [CommitBehavior(CommitBehavior::Error)]
+  procedure CreateTemplateForId(ScenarioId: Guid; Size: Integer; Mode: Enum "BCSF Process Mode"; Date: Date; AdditionalModules: Text): Guid
+  begin
+    exit(CreateTemplateForId(ScenarioId, Size, Mode, Date, Date, AdditionalModules));
+  end;
+
+  [CommitBehavior(CommitBehavior::Error)]
+  procedure CreateTemplateForId(ScenarioId: Guid; Size: Integer; Mode: Enum "BCSF Process Mode"; StartingDate: Date; EndingDate: Date; AdditionalModules: Text): Guid
   var
     Setup: Record "BCSF Factory Setup";
     Scenario: Record "BCSF Scenario";
     Selection: Record "BCSF Scenario Module";
+    TempModules: Record "BCSF Scenario Module" temporary;
     Target: Record "BCSF Data Target";
     Policy: Codeunit "BCSF Scenario Policy";
     Entity: Enum "BCSF Entity Type";
-    ModuleType: Enum "BCSF Module Type";
     Ordinal: Integer;
   begin
+    CheckDateRange(StartingDate, EndingDate, EndingDate);
+    LoadModules(AdditionalModules, TempModules);
     CheckSelection(Size, Mode);
     Setup.Get(Setup.GetSetupKey());
     Setup.TestField("Company Initialized", true);
@@ -79,26 +183,23 @@ codeunit 90153 "BCSF Wholesale Profile"
     Scenario."Usage Mode" := "BCSF Usage Mode"::Functional;
     Scenario."Process Mode" := Mode;
     Scenario.Seed := Setup."Default Seed";
-    Scenario."Starting Date" := Date;
-    Scenario."Ending Date" := Date;
+    Scenario."Starting Date" := StartingDate;
+    Scenario."Ending Date" := EndingDate;
     Scenario."Batch Size" := 3;
     if Setup."Default Batch Size" < 3 then
       Scenario."Batch Size" := Setup."Default Batch Size";
     Scenario."Data Language" := Setup."Default Data Language";
     Scenario."B2C Percent" := 0;
     Scenario.Insert(true);
-    for Ordinal := 0 to 2 do begin
-      case Ordinal of
-        0: ModuleType := ModuleType::Sales;
-        1: ModuleType := ModuleType::Purchasing;
-        2: ModuleType := ModuleType::Inventory;
-      end;
-      Selection.Init();
-      Selection."Scenario Id" := Scenario."Scenario Id";
-      Selection.Module := ModuleType;
-      Selection.Enabled := true;
-      Selection.Insert(true);
-    end;
+    TempModules.SetRange(Enabled, true);
+    if TempModules.FindSet() then
+      repeat
+        Selection.Init();
+        Selection."Scenario Id" := Scenario."Scenario Id";
+        Selection.Module := TempModules.Module;
+        Selection.Enabled := true;
+        Selection.Insert(true);
+      until TempModules.Next() = 0;
     foreach Ordinal in Entity.Ordinals() do begin
       Entity := "BCSF Entity Type".FromInteger(Ordinal);
       if (Entity in [Entity::Customer, Entity::Vendor, Entity::Item]) or
@@ -139,6 +240,10 @@ codeunit 90153 "BCSF Wholesale Profile"
   end;
 
   var
+    DateRangeErr: Label 'Enter a starting date no later than yesterday and an ending date within the approved period.';
+    ModulesErr: Label 'Select valid additional modules once. Required wholesale modules must remain selected.';
+    IncludedModulesLbl: Label 'Industry modules: %1.', Comment = '%1 = included module names';
+    PlannedModulesLbl: Label 'Additional modules (planning only, no generated data): %1.', Comment = '%1 = planned module names';
     WholesaleLbl: Label 'Wholesale company';
     SizeErr: Label 'Select Small, Medium or Large for the supported wholesale package.';
     PostingErr: Label 'Select master data, unposted documents, posted documents or approved payments and application for wholesale.';

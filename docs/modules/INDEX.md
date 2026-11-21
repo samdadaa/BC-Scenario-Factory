@@ -1,5 +1,9 @@
 # Modulindex – Zielarchitektur
 
+**SF-022 / 1.0.7.3:** Weiterhin 140 Main-Objekte. Bestehende Core-/IndustryProfiles-/Monitoring-/ScenarioManagement-/ProcessEngine-/Sales-/Purchasing-/Finance-Objekte erweitern den eingefrorenen Datumszeitraum; keine neuen Generatoren/Seiten. [Umfang und Abnahme](../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+**SF-022 / 1.0.7.2:** Weiterhin 140 Main-AL-Objekte. Bestehende Core-Setupkarte/-tabelle, IndustryProfiles-Paket/Starter, ScenarioManagement-Modulunterseite und Monitoring-Request/Dashboard ergänzt. Keine neuen Generatoren. [Modulauswahl und offene native Abnahme](../INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072). **Zur Prüfung**.
+
 **Aktuell 1.0.7.1:** 140 AL-Objekte. Monitoring ergänzt die begründet benötigte lesende Mappingseite 90370; bestehende Stock/Data/JS korrigiert. Keine Generator-/Stamm-/Einrichtungsänderung. [Details](../DASHBOARD_DATA_STOCK.md#implementierter-stand-1071).
 
 

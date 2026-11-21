@@ -1,5 +1,9 @@
 # Bedienkonzept, Seiten und Dashboard
 
+**SF-022 / Datumszeitraum 1.0.7.3:** Im vorhandenen Schritt Daten und Prozesse Startdatum (Vorschlag ein Jahr zurück) wählen; Ende ist gestern. Startdatum muss gefüllt und spätestens gestern sein. Zusammenfassung und Dashboard nennen den eingefrorenen Zeitraum; Buchungen folgen nur der ausgewählten Prozessstufe und Zustimmung. [Vertrag und native Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+**SF-022 / 1.0.7.2, aktueller Nachauftrag:** Die bestehende Setupkarte zeigt nach Großhandel alle zwölf Modularten. Verkauf, Einkauf, Artikel und Finanzbasis sind erforderlich. Optionale Module sind als nur geplant markierbar; Auswahl bleibt beim Vor-/Zurückgehen erhalten und erscheint in Zusammenfassung und Dashboard. Kein eigener Assistent oder zusätzlicher Dialog. [Umsetzung und Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072). **Zur Prüfung**.
+
 ## SF-045 – aktueller verbindlicher Ablauf
 
 Kontenplan einmalig → tatsächlich unterstützte Branche → drei Größen mit versionierten Mengenverhältnissen → unterstützte Prozessstufe → ein Hintergrundstart. Gemeinsame Einrichtung und Branchenvoraussetzungen kommen vor Stammdaten, diese vor Belegen/Buchungen. Neue Generatoren nutzen vorhandene Registry, Snapshots, Queue, Checkpoints, Qualitätsabschluss und Dashboard; keine zusätzlichen Assistenten oder parallele Vorlagen-/Finanzeinrichtung. Technische Konfiguration bleibt optionaler Expertenzugang. Aktuell Großhandel mit vier Prozessstufen einschließlich Standardbeschaffung und Zahlungen/Ausgleich implementiert (1.0.7.0); native Buchungs-/Rechteabnahme offen. Dashboard liest alle zwei Sekunden ohne vollständigen DOM-Neuaufbau. [Konkreter Vertrag](INDUSTRY_INITIALIZATION.md). Frühere Normalabläufe dieses Dokuments sind historische Zwischenstände.

@@ -128,3 +128,11 @@ Gebuchte Tabellen werden durch BC-Standardcodeunits geschrieben. Environment Gua
 ## 1.0.7.1 – Dashboardlisten
 
 Keine neue Standard-TableData-Berechtigung. Mappingseite 90370 erfordert Page-X und vorhandene Tabellenleserechte, ist nicht editierbar und verbietet Insert/Modify/Delete. Herkunftszählung basiert weiter auf sichtbaren eindeutigen SystemIds; Dokument-/Zuständigkeits-/Securityfilter bleiben beim Markieren und typisierten Listentransfer erhalten. Klick prüft aktuelle Zahl/Rechte erneut, kein unbeschränkter Fallback. Native Standardseitentrigger und Rollenabnahme offen.
+
+## SF-022 – Auswahl im Unternehmensrequest 1.0.7.2
+
+Kanonische Planungsmodulcodes vor Einplanung und vor Hintergrundvorbereitung validieren; eingefrorenes Setupfeld 27 auch über den vorhandenen OnBeforeModifyEvent-Subscriber bei Modify(false) schützen. Optionale Module erzeugen keine Ziele, Daten oder Rechte. Temporäre historische Modulansicht bleibt feldweise nicht editierbar; Auswahlmodus ist intern und schreibt nur temporäre Zeilen. Keine neuen Standardtabellenrechte, externen Dienste oder Buchungsfreigaben. [Umsetzung/offene native Sicherheitsprüfung](INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072).
+
+## SF-022 – Datumsrequest 1.0.7.3
+
+Startdatum und additives Enddatumsfeld 28 nach Einplanung unveränderlich, auch bei Modify(false). Start prüft gefüllten Zeitraum mit Ende gestern, Hintergrund übernimmt die gespeicherte Grenze. Keine automatische Erweiterung von Buchungsperioden, Benutzerrechten oder Nummernserien. Historische Captures ohne Datumsmarker behalten ihre Regel; neue verwenden versionierten Vertrag, unbekannte Versionen werden abgewiesen. Technische BC-Auditzeitpunkte bleiben tatsächlich aktuell. [Vertrag/native Prüfung](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073).

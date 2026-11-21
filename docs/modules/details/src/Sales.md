@@ -71,3 +71,8 @@ Bestehende Verkaufsgeneratoren unverändert wiederverwendet; bei positivem Einka
 ## 1.0.7.0 – aktueller Folgeumfang
 
 salesSetup Version 3 bindet Standardbeschaffung desselben Laufs vor gebuchten Verkäufen; alte Version 2 bleibt für Buchung gesperrt. Optionale Zahlungen für gebuchte Auftrags-/Direktrechnungen über gemeinsamen Finance-Dienst. Keine neue Seite/Objekte. [Gemeinsamer Vertrag](../../../INDUSTRY_INITIALIZATION.md). **Zur Prüfung**, native Abnahme offen.
+
+
+## SF-022 – Datumszeitraum 1.0.7.3
+
+Gesamtbestandsprüfung neuer Datumsregel am Periodenende; einzelne Buchung weiterhin zum tatsächlichen Verkaufsdatum prüfen. Ausgabe validiert fachliche Beleg-/Buchungsdaten neuer Captures. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.

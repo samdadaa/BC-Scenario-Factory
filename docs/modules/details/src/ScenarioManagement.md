@@ -108,3 +108,13 @@ SF-021-Vorlagenkorrektur 1.0.5.1: gültige neue Minimalvorlage, Unterstützung t
 Optionales OnCapturePurchaseSetup/purchaseSetup Version 1 im bestehenden Schema 1. Die interne Paketvorlage nutzt vorhandene Ziele, Module, Snapshots und historische Sperren. Keine parallele Paketpersistenz.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## SF-022 – Modulauswahl 1.0.7.2
+
+Frozen Modules bleibt temporär; interner Auswahlmodus für Unternehmensassistent, Pflichtzeilen gesperrt. Historische LoadRun-Ansicht weiterhin nicht editierbar. Bestehendes Snapshot-Schema 1 transportiert ausgewählte Modulzeilen ohne zusätzliche Ziele. [Vertrag und native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072), [lokale Prüfnachweise](../../../TESTS.md#sf-022--modulauswahl-1072). **Zur Prüfung**, keine BC-Laufzeitabnahme.
+
+
+## SF-022 – Datumszeitraum 1.0.7.3
+
+Neue Snapshots ergänzen optional datePolicyVersion 1 im Schema 1 und verwenden bestehende Anfang-/Endfelder. Ältere Payloads ohne Marker bleiben unverändert. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.

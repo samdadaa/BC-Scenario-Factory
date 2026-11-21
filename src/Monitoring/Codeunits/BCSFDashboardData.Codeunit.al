@@ -3,6 +3,7 @@ namespace BCScenarioFactory.Monitoring;
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.Finance;
+using BCScenarioFactory.IndustryProfiles;
 using System.Threading;
 using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.Validation;
@@ -75,11 +76,15 @@ codeunit 90365 "BCSF Dashboard Data"
     Batch: Record "BCSF Batch";
     Packages: Codeunit "BCSF Finance Package Mgt";
     Policy: Codeunit "BCSF Scenario Policy";
+    Profile: Codeunit "BCSF Wholesale Profile";
     Company: JsonObject;
     JobId: Guid;
+    EndingDate: Date;
   begin
     Company.Add('name', CompanyName());
     Company.Add('industry', '');
+    Company.Add('modules', '');
+    Company.Add('period', '');
     Company.Add('chart', '');
     Company.Add('status', NotPreparedLbl);
     Company.Add('error', '');
@@ -99,6 +104,11 @@ codeunit 90365 "BCSF Dashboard Data"
     JobId := Setup."Industry Job Id";
     if not IsNullGuid(JobId) then begin
       Company.Replace('industry', WholesaleLbl);
+      Company.Replace('modules', Profile.DescribeModules(Setup."Industry Additional Modules"));
+      EndingDate := Setup."Industry Ending Date";
+      if EndingDate = 0D then
+        EndingDate := Setup."Industry Date";
+      Company.Replace('period', StrSubstNo(PeriodLbl, Setup."Industry Date", EndingDate));
       case Setup."Industry Process Mode" of
         "BCSF Process Mode"::PostedMovements: Company.Replace('processMode', PostedWithoutPaymentsLbl);
         "BCSF Process Mode"::FollowUpProcesses: Company.Replace('processMode', PostedWithPaymentsLbl);
@@ -455,6 +465,7 @@ codeunit 90365 "BCSF Dashboard Data"
   end;
 
   var
+    PeriodLbl: Label 'Business dates: %1 to %2 (inclusive).', Comment = '%1 = starting date, %2 = ending date';
     DataTabLbl: Label 'Data';
     RunsTabLbl: Label 'Runs';
     SelectedRunScopeLbl: Label 'Generated in selected run';

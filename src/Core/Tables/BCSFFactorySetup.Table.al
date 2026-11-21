@@ -88,6 +88,8 @@ table 90100 "BCSF Factory Setup"
     field(23; "Industry Size"; Integer) { Caption = 'Industry Size', Locked = true; Editable = false; }
     field(24; "Industry Process Mode"; Enum "BCSF Process Mode") { Caption = 'Industry Process Mode', Locked = true; Editable = false; }
     field(26; "Industry Posting Approved"; Boolean) { Caption = 'Industry Posting Approved', Locked = true; Editable = false; }
+    field(28; "Industry Ending Date"; Date) { Caption = 'Industry Ending Date', Locked = true; Editable = false; }
+    field(27; "Industry Additional Modules"; Text[250]) { Caption = 'Industry Additional Modules', Locked = true; Editable = false; }
     field(25; "Industry Date"; Date) { Caption = 'Industry Date', Locked = true; Editable = false; }
 
   }

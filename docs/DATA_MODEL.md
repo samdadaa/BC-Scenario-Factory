@@ -1,5 +1,7 @@
 # Datenqualität, Generierung und Buchungsregeln
 
+**SF-022 / Datumszeitraum 1.0.7.3:** Additives Setupfeld 28 Industry Ending Date ergänzt den bisherigen Start Industry Date. Beide Requestgrenzen nach Einplanung unveränderlich. Bestehende Szenario-/Lauf-/Snapshot-Datumsfelder werden genutzt; optionaler datePolicyVersion-Marker 1 bei neuen Captures, kein Schemawechsel oder Rückdatieren technischer Erstellzeitstempel. [Vertrag und native Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
 ## Unterschied zu einer Zufallsdaten-App
 
 Zuerst **Geschäftsvorfall** und Beziehungen modellieren, danach Werte synthetisch ziehen. Erst wenn Voraussetzungen und Geschäftsregeln erfüllt sind, Standardobjekte über Validierung / vorgesehene Codeunits anlegen. Realistische Daten müssen für Anwender verständliche *Geschichten* erzeugen, z. B. Kunde bestellt, Lieferant liefert, Lager wächst, Kunde erhält Ware, bezahlt Rechnung.
@@ -57,3 +59,7 @@ Keine neue Tabelle. Factory Setup erhält sechs technische Requestfelder (20–2
 ## 1.0.7.0 – additive Buchungsverträge
 
 Scenario Felder 43 Purchase Posting Approved und 44 Payment Posting Approved; Factory Setup Feld 26 Industry Posting Approved. Keine neue Tabelle. Optionales purchaseSetup v2 und paymentSetup v1 im Snapshot-Schema 1; salesSetup v3 für beschaffte Same-run-Verkäufe. Historische Snapshots werden nicht umgeschrieben. Aktuelle Requestreferenz darf erst nach abgeschlossenem bisherigen Lauf einem neuen Datensatz weichen; Runhistorie bleibt unverändert. [Details](INDUSTRY_INITIALIZATION.md).
+
+## SF-022 – optionale Modulauswahl 1.0.7.2
+
+Factory Setup erhält ausschließlich das additive Feld 27 `Industry Additional Modules` (Text[250], SystemMetadata, nicht direkt editierbar). Es enthält kanonische bestehende Modulcodes der optionalen Planungszusätze; leer bedeutet das historische Basispaket. Der bestehende Requestschutz bindet den Wert nach Einplanung unveränderlich an die Job-ID. Die vorhandenen Scenario-Module und Snapshot-`modules`-Zeilen übernehmen ausgewählte Pflicht-/Planungsmodule, ohne zusätzliche Entitätsziele und ohne Schemawechsel. Keine neue Tabelle und kein ForceSync. [Vertrag und native Upgradeprüfung](INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072).

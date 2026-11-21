@@ -84,3 +84,13 @@ Vorhandenes Enum 90113 Finance Mode mit Existing/SKR03/SKR04 im Inventar erfasst
 Sechs additive technische Requestfelder im vorhandenen Factory Setup; bestehende Setupkarte wird fünfstufiger Unternehmensassistent. Keine zusätzliche Benutzerseite.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## SF-022 – Modulauswahl 1.0.7.2
+
+Setupkarte jetzt mit sechs Schritten einschließlich Modulauswahl; optionales Requestfeld 27 `Industry Additional Modules`, keine neue Seite/Tabelle. [Vertrag und native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072), [lokale Prüfnachweise](../../../TESTS.md#sf-022--modulauswahl-1072). **Zur Prüfung**, keine BC-Laufzeitabnahme.
+
+
+## SF-022 – Datumszeitraum 1.0.7.3
+
+Bestehende Setupkarte erfasst Start bis gestern, Requestfeld 28 hält Ende. Contract JSON validiert optionale datePolicyVersion 1; fehlende Version erhält alte Datumssemantik. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.

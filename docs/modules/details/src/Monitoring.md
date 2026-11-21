@@ -90,3 +90,13 @@ Lesender Zwei-Sekunden-Poll mit serialisierten Aufrufen und inkrementellem DOM. 
 ## 1.0.7.1 – vollständige Bestandsinformationen
 
 Stock verwendet MarkedOnly statt begrenzter SystemId-OR-Filter, behält Standard-/Sicherheitsfilter und übergibt Marks an Listenrecords. Kauf-/Verkaufsbeschriftungen getrennt, purchase/-Runroute repariert, Prozessstufe sichtbar und erwartete Nullzahlungen behalten. Neue rein lesende Page 90370 auf Item Attribute Value Mapping wegen fehlender passender Standardliste. Keine Tabelle/Generator-/Einrichtungsmutation. [Vertrag](../../../DASHBOARD_DATA_STOCK.md#implementierter-stand-1071), [echte Prüfungen und native Grenzen](../../../TESTS.md#sf-045--dashboardnachbesserung-1071). **Zur Prüfung**.
+
+
+## SF-022 – Modulauswahl 1.0.7.2
+
+Company Initialization prüft/friert zusätzliche Modulauswahl vor Einplanung ein und validiert erneut im Hintergrund; unveränderliches optionales Setupfeld auch bei Modify(false). Dashboard nennt Basis/Planungszusätze im Firmenstatus, reale Ergebnis-/Drilldownquellen unverändert. [Vertrag und native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072), [lokale Prüfnachweise](../../../TESTS.md#sf-022--modulauswahl-1072). **Zur Prüfung**, keine BC-Laufzeitabnahme.
+
+
+## SF-022 – Datumszeitraum 1.0.7.3
+
+Request friert Anfang/Ende ein, schützt beide gegen Modify(false) und prüft erneut vor Hintergrundvorbereitung. Dashboard zeigt gespeicherten Zeitraum; tatsächliche Bestands-/Drilldownquellen unverändert. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.

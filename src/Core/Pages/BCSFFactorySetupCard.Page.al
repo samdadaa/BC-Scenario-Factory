@@ -45,10 +45,27 @@ page 90101 "BCSF Factory Setup Card"
           ToolTip = 'Wholesale is the first supported company package. Other industries are not yet executable.';
         }
       }
+      group(ModuleStep)
+      {
+        Caption = '3 - Modules';
+        Visible = WizardStep = 3;
+        field(ModuleExplanation; ModulesHintLbl)
+        {
+          Caption = 'Module selection';
+          Editable = false;
+          MultiLine = true;
+          ToolTip = 'Required modules remain selected to preserve the connected wholesale process. Additional modules are planning selections only.';
+        }
+        part(CompanyModules; "BCSF Frozen Modules")
+        {
+          ApplicationArea = All;
+          Caption = 'Industry modules and optional additions';
+        }
+      }
       group(SizeStep)
       {
-        Caption = '3 - Data size';
-        Visible = WizardStep = 3;
+        Caption = '4 - Data size';
+        Visible = WizardStep = 4;
         field(SizeChoice; SizeChoice)
         {
           Caption = 'Data size';
@@ -58,8 +75,26 @@ page 90101 "BCSF Factory Setup Card"
       }
       group(ProcessStep)
       {
-        Caption = '4 - Data and processes';
-        Visible = WizardStep = 4;
+        Caption = '5 - Data and processes';
+        Visible = WizardStep = 5;
+        field(StartingDate; StartingDate)
+        {
+          Caption = 'Generate data from';
+          ToolTip = 'Specifies the first business date. Dates are distributed from this date through yesterday; technical creation timestamps show the actual creation time.';
+          trigger OnValidate()
+          var
+            Profile: Codeunit "BCSF Wholesale Profile";
+          begin
+            Profile.CheckDateRange(StartingDate, EndingDate, Today() - 1);
+            PostingApproved := false;
+          end;
+        }
+        field(EndingDate; EndingDate)
+        {
+          Caption = 'Generate data through';
+          Editable = false;
+          ToolTip = 'Shows yesterday, fixed when the request is submitted. Background batches use this captured boundary even after midnight.';
+        }
         field(ProcessChoice; ProcessChoice)
         {
           Caption = 'Data and processes';
@@ -74,7 +109,7 @@ page 90101 "BCSF Factory Setup Card"
       group(PostingConsent)
       {
         Caption = 'Posting approval';
-        Visible = (WizardStep = 4) and (ProcessChoice >= 2);
+        Visible = (WizardStep = 5) and (ProcessChoice >= 2);
         field(PostingApproved; PostingApproved)
         {
           Caption = 'Approve posting and selected follow-up processes';
@@ -83,8 +118,8 @@ page 90101 "BCSF Factory Setup Card"
       }
       group(ReviewStep)
       {
-        Caption = '5 - Summary and start';
-        Visible = WizardStep = 5;
+        Caption = '6 - Summary and start';
+        Visible = WizardStep = 6;
         field(Review; ReviewText)
         {
           Caption = 'Planned company';
@@ -151,6 +186,7 @@ page 90101 "BCSF Factory Setup Card"
         ToolTip = 'Return to the previous choice without starting any work.';
         trigger OnAction()
         begin
+          CaptureModules();
           WizardStep -= 1;
         end;
       }
@@ -159,10 +195,11 @@ page 90101 "BCSF Factory Setup Card"
         ApplicationArea = All;
         Caption = 'Next';
         Image = NextRecord;
-        Visible = (WizardStep > 0) and (WizardStep < 5);
+        Visible = (WizardStep > 0) and (WizardStep < 6);
         ToolTip = 'Review the next choice. No data is generated before Start.';
         trigger OnAction()
         begin
+          CaptureModules();
           WizardStep += 1;
           UpdateReview();
         end;
@@ -172,13 +209,14 @@ page 90101 "BCSF Factory Setup Card"
         ApplicationArea = All;
         Caption = 'Set up company and generate data';
         Image = Start;
-        Visible = WizardStep = 5;
+        Visible = WizardStep = 6;
         ToolTip = 'Authorize one background process for company setup and the displayed data. The browser can be closed afterwards.';
         trigger OnAction()
         var
           Initialization: Codeunit "BCSF Company Initialization";
         begin
-          Initialization.Start(SelectedChart(), SizeChoice, SelectedProcess(), PostingApproved);
+          CaptureModules();
+          Initialization.Start(SelectedChart(), SizeChoice, SelectedProcess(), PostingApproved, AdditionalModules, StartingDate, EndingDate);
           CurrPage.Close();
         end;
       }
@@ -228,7 +266,10 @@ page 90101 "BCSF Factory Setup Card"
         "BCSF Finance Mode"::Existing: ChartChoice := ChartChoice::Existing;
       end;
     IndustryName := WholesaleLbl;
+    StartingDate := CalcDate('<-1Y>', Today());
+    EndingDate := Today() - 1;
     ProcessChoice := ProcessChoice::Documents;
+    InitializeModules();
     UpdateReview();
   end;
 
@@ -298,6 +339,23 @@ page 90101 "BCSF Factory Setup Card"
     exit("BCSF Process Mode"::SetupAndMasterData);
   end;
 
+  local procedure InitializeModules()
+  var
+    Profile: Codeunit "BCSF Wholesale Profile";
+  begin
+    Profile.LoadModules('', TempBaseModules);
+    Profile.LoadModules('', TempSelectedModules);
+    CurrPage.CompanyModules.Page.LoadSelection(TempSelectedModules, TempBaseModules);
+  end;
+
+  local procedure CaptureModules()
+  var
+    Profile: Codeunit "BCSF Wholesale Profile";
+  begin
+    CurrPage.CompanyModules.Page.GetSelection(TempSelectedModules);
+    AdditionalModules := Profile.EncodeAdditionalModules(TempSelectedModules);
+  end;
+
   local procedure UpdateReview()
   var
     Profile: Codeunit "BCSF Wholesale Profile";
@@ -305,6 +363,7 @@ page 90101 "BCSF Factory Setup Card"
     ReviewText := NewDatasetLbl + StrSubstNo(ReviewLbl, Format(SelectedChart()), IndustryName, SelectStr(SizeChoice + 1, SizesLbl), SelectStr(ProcessChoice + 1, ProcessesLbl),
       Profile.Quantity(SizeChoice, "BCSF Entity Type"::Customer), Profile.Quantity(SizeChoice, "BCSF Entity Type"::Vendor),
       Profile.Quantity(SizeChoice, "BCSF Entity Type"::Item));
+    ReviewText += ' ' + Profile.DescribeModules(AdditionalModules) + ' ' + StrSubstNo(PeriodLbl, StartingDate, EndingDate);
     if ProcessChoice >= ProcessChoice::Documents then
       ReviewText += StrSubstNo(DocumentsLbl, Profile.Quantity(SizeChoice, "BCSF Entity Type"::PurchaseOrder),
         Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesQuote), Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesOrder),
@@ -340,6 +399,13 @@ page 90101 "BCSF Factory Setup Card"
   end;
 
   var
+    TempBaseModules: Record "BCSF Scenario Module" temporary;
+    TempSelectedModules: Record "BCSF Scenario Module" temporary;
+    AdditionalModules: Text[250];
+    StartingDate: Date;
+    EndingDate: Date;
+    PeriodLbl: Label 'Business dates: %1 to %2 (inclusive). Technical creation timestamps remain the actual creation time.', Comment = '%1 = starting date, %2 = ending date';
+    ModulesHintLbl: Label 'Wholesale requires Sales, Purchasing, Inventory and the shared Finance foundation. Select additional modules for planning; they do not generate data until supported by the company package.';
     OpenAsWorkflow: Boolean;
     WizardStep: Integer;
     ChartChoice: Option SKR03,SKR04,Existing;
@@ -351,7 +417,7 @@ page 90101 "BCSF Factory Setup Card"
     NewDatasetLbl: Label 'A new run creates the displayed synthetic records in this company. ';
     CostPostingLbl: Label ' Automatic inventory cost posting is enabled only in a company without posted activity; an existing conflicting cost policy stops the run.';
     PostingMixLbl: Label ' Purchase orders: 20% unposted, 20% partial, 60% fully invoiced; sales orders: 25% unposted, 25% partial, 50% fully invoiced; sales invoices: 33% unposted, 67% posted. Rounded down per target; remaining units stay unposted.';
-    PaymentsReviewLbl: Label ' All resulting posted purchase and sales invoices are fully paid and applied through standard journal posting; unposted documents remain open.';
+    PaymentsReviewLbl: Label ' All resulting posted purchase and sales invoices are fully paid and applied between their invoice date and the period end through standard journal posting; unposted documents remain open.';
     SizesLbl: Label 'Small,Medium,Large';
     ProcessesLbl: Label 'Master data only,With unposted documents,With posted documents,With payments and application';
     WholesaleLbl: Label 'Wholesale';

@@ -451,7 +451,10 @@ codeunit 90429 "BCSF Sales Setup"
     Reserved: Decimal;
   begin
     if AsOfDate = 0D then
-      Evaluate(AsOfDate, Contract.GetText(Context, 'startingDate'), 9);
+      if Contract.GetDatePolicyVersion(Context) = 1 then
+        Evaluate(AsOfDate, Contract.GetText(Context, 'endingDate'), 9)
+      else
+        Evaluate(AsOfDate, Contract.GetText(Context, 'startingDate'), 9);
     Item.SetRange("Location Filter", Contract.GetText(ReadSettings(Context), 'location'));
     Item.SetRange("Variant Filter", '');
     Item.SetRange("Date Filter");

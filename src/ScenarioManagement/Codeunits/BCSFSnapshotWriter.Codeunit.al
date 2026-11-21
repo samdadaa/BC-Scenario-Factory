@@ -71,6 +71,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     Header."Profile Code" := Scenario."Profile Code";
     Header."Profile Version" := Scenario."Profile Version";
     Payload.Add('schemaVersion', 1);
+    Payload.Add('datePolicyVersion', 1);
     Payload.Add('runId', Format(Header."Run Id", 0, 4));
     Payload.Add('scenarioId', Format(ScenarioId, 0, 4));
     Payload.Add('revision', Scenario.Revision);

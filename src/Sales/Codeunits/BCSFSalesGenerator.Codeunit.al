@@ -174,6 +174,8 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
         Entry.TestField("Batch Id", BatchId);
         Invoice.GetBySystemId(Entry."Record SystemId");
         Invoice.TestField("Posting Date", Coordinator.DocumentDate(Context, EntityCode, LogicalKey));
+        if Contract.GetDatePolicyVersion(Context) = 1 then
+          Invoice.TestField("Document Date", Coordinator.DocumentDate(Context, EntityCode, LogicalKey));
         Invoice.TestField("Sell-to Customer No.", Customer."No.");
         if Payments.Enabled(Context) then
           Payments.ValidatePayment(RunId, EntityCode, LogicalKey, Invoice."Cust. Ledger Entry No.", true);
@@ -190,6 +192,11 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
         Entry.Get(RunId, EntityCode, LogicalKey, 'DOCUMENT');
         Entry.TestField("Batch Id", BatchId);
         Header.GetBySystemId(Entry."Record SystemId");
+        if Contract.GetDatePolicyVersion(Context) = 1 then begin
+          Header.TestField("Posting Date", Coordinator.DocumentDate(Context, EntityCode, LogicalKey));
+          Header.TestField("Document Date", Coordinator.DocumentDate(Context, EntityCode, LogicalKey));
+          Header.TestField("Order Date", Coordinator.DocumentDate(Context, EntityCode, LogicalKey));
+        end;
         Line.Get(Header."Document Type", Header."No.", 10000);
         Header.TestField("Sell-to Customer No.", Customer."No.");
         Line.TestField("No.", Item."No.");

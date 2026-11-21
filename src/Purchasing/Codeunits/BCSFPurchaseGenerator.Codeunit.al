@@ -435,6 +435,8 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
         Invoice.GetBySystemId(Entry."Record SystemId");
         Invoice.TestField("Buy-from Vendor No.", Vendor."No.");
         Invoice.TestField("Posting Date", Coordinator.PurchaseDate(Context, LogicalKey));
+        if Contract.GetDatePolicyVersion(Context) = 1 then
+          Invoice.TestField("Document Date", Coordinator.PurchaseDate(Context, LogicalKey));
         InvoiceLine.Get(Invoice."No.", 10000);
         InvoiceLine.TestField(Type, InvoiceLine.Type::Item);
         InvoiceLine.TestField("No.", Item."No.");
@@ -442,6 +444,8 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
         InvoiceLine.TestField(Quantity, PostedQuantity);
         Entry.Get(RunId, 'PURCHASE.ORDER', LogicalKey, 'RECEIPT');
         Receipt.GetBySystemId(Entry."Record SystemId");
+        if Contract.GetDatePolicyVersion(Context) = 1 then
+          Receipt.TestField("Posting Date", Coordinator.PurchaseDate(Context, LogicalKey));
         ReceiptLine.Get(Receipt."No.", 10000);
         ReceiptLine.TestField("No.", Item."No.");
         ReceiptLine.TestField(Quantity, PostedQuantity);
@@ -456,6 +460,10 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
         Header.TestField("Document Type", Header."Document Type"::Order);
         Header.TestField("Location Code", Contract.GetText(Token.AsObject(), 'location'));
         Header.TestField("Posting Date", Coordinator.PurchaseDate(Context, LogicalKey));
+        if Contract.GetDatePolicyVersion(Context) = 1 then begin
+          Header.TestField("Document Date", Coordinator.PurchaseDate(Context, LogicalKey));
+          Header.TestField("Order Date", Coordinator.PurchaseDate(Context, LogicalKey));
+        end;
         Header.TestField("Buy-from Vendor No.", Vendor."No.");
         Line.Get(Header."Document Type", Header."No.", 10000);
         Line.TestField(Type, Line.Type::Item);

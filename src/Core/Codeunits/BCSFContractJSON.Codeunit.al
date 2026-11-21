@@ -60,12 +60,24 @@ codeunit 90111 "BCSF Contract JSON"
     exit(Result);
   end;
 
+  procedure GetDatePolicyVersion(Context: JsonObject): Integer
+  var
+    Token: JsonToken;
+  begin
+    if not Context.Get('datePolicyVersion', Token) then
+      exit(0);
+    if Token.AsValue().AsInteger() <> 1 then
+      Error(ContextErr);
+    exit(1);
+  end;
+
   procedure CheckContext(Context: JsonObject)
   var
     RunId: Guid;
     LanguageId: Integer;
     Size: Integer;
   begin
+    GetDatePolicyVersion(Context);
     if GetInteger(Context, 'schemaVersion') <> 1 then
       Error(ContextErr);
     if not Evaluate(RunId, GetText(Context, 'runId')) then

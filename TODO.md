@@ -1010,6 +1010,10 @@ Keine automatische Firmenanlage, kein vollständiger DATEV-Kontenrahmen oder DAT
 
 ### SF-022 — Zahlungen, Ausgleich, Gutschriften und Folgeprozesse
 
+**Aktueller Datumsnachauftrag 1.0.7.3 (21.11.2026):** Nutzer wünscht validiertes Startdatum bei Initialisierung und zufällige fachliche Beleg-/Buchungsdaten bis einschließlich gestern. Bestehenden Ablauf/Seed/Snapshots nutzen, beide Grenzen im Request einfrieren, Einkauf-vor-Verkauf und Zahlung-nach-Rechnung wahren. Technische Erstellzeitstempel und historische Daten erhalten; kein zusätzlicher SF-022-Prozessumfang. **Zur Prüfung**. [Plan/Dateien/Risiken/Umsetzung](docs/INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-plan-vor-änderung-21112026), [tatsächlich ausgeführte Prüfungen](docs/TESTS.md#sf-022--datumszeitraum-1073).
+
+**Aktuell gewählter Nachauftrag 1.0.7.2:** Nutzer bestätigt am 21.11.2026 **Modulauswahl zuerst; vorhandenen Zahlungsumfang beibehalten**. Bestehenden Unternehmensassistenten nach der Branche um vorgewählte erforderliche Branchenmodule und optionale Planungsmarkierungen ergänzen. Kein neuer Assistent/Generator und kein Vorziehen von Teilzahlungen, Gutschriften oder Retouren. Auswahl in Zusammenfassung, unveränderlichem Hintergrundrequest, bestehenden Modul-/Snapshotzeilen und Dashboard anzeigen; eigener Referenzstarter mit Lager/CRM nur geplant. **Status: Zur Prüfung** für diesen Teilumfang. [Ziel/Dateien/Risiken und Umsetzung](docs/INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-plan-vor-änderung-21112026), [echte Prüfungen/offene native Abnahme](docs/TESTS.md#sf-022--modulauswahl-1072).
+
 **Status:** Zur Prüfung (ausgewählter Zahlungs-/Ausgleichsumfang); übriger Scope offen
 **Priorität:** P1  
 **Abhängigkeiten:** SF-020,SF-021  

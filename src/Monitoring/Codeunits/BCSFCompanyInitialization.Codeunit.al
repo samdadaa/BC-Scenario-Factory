@@ -18,6 +18,7 @@ codeunit 90361 "BCSF Company Initialization"
     Setup: Record "BCSF Factory Setup";
     Scenario: Record "BCSF Scenario";
     StoredJob: Record "Job Queue Entry";
+    TempModules: Record "BCSF Scenario Module" temporary;
     Profile: Codeunit "BCSF Wholesale Profile";
     Guard: Codeunit "BCSF Environment Guard";
   begin
@@ -51,6 +52,9 @@ codeunit 90361 "BCSF Company Initialization"
     if not IsNullGuid(Setup."Industry Run Id") then
       exit;
     Profile.CheckSelection(Setup."Industry Size", Setup."Industry Process Mode");
+    Profile.LoadModules(Setup."Industry Additional Modules", TempModules);
+    if Setup."Industry Ending Date" <> 0D then
+      Profile.CheckDateRange(Setup."Industry Date", Setup."Industry Ending Date", Today() - 1);
     // Setup, snapshot and first batch job form one atomic transaction. Failure leaves no half company.
     InitializeAndSchedule(Setup);
   end;
@@ -65,6 +69,7 @@ codeunit 90361 "BCSF Company Initialization"
     QuickRun: Codeunit "BCSF Quick Scenario Run";
     Payments: Codeunit "BCSF Payment Processor";
     ScenarioId: Guid;
+    EndingDate: Date;
   begin
     if Setup."Company Initialized" then begin
       Setup.TestField("Generation Enabled", true);
@@ -78,7 +83,10 @@ codeunit 90361 "BCSF Company Initialization"
     end;
     if Setup."Industry Process Mode" = "BCSF Process Mode"::FollowUpProcesses then
       Payments.PrepareFoundation();
-    ScenarioId := Profile.CreateTemplate(Setup."Industry Size", Setup."Industry Process Mode", Setup."Industry Date");
+    EndingDate := Setup."Industry Ending Date";
+    if EndingDate = 0D then
+      EndingDate := Setup."Industry Date"; // Preserve already scheduled legacy requests.
+    ScenarioId := Profile.CreateTemplateForId(CreateGuid(), Setup."Industry Size", Setup."Industry Process Mode", Setup."Industry Date", EndingDate, Setup."Industry Additional Modules");
     Scenario.Get(ScenarioId);
     if Setup."Industry Process Mode".AsInteger() >= 2 then begin
       Scenario."Sales Posting Approved" := Setup."Industry Posting Approved";
@@ -99,16 +107,33 @@ codeunit 90361 "BCSF Company Initialization"
 
   [CommitBehavior(CommitBehavior::Error)]
   procedure Start(Mode: Enum "BCSF Finance Mode"; Size: Integer; ProcessMode: Enum "BCSF Process Mode"; PostingApproved: Boolean)
+  begin
+    Start(Mode, Size, ProcessMode, PostingApproved, '');
+  end;
+
+  [CommitBehavior(CommitBehavior::Error)]
+  procedure Start(Mode: Enum "BCSF Finance Mode"; Size: Integer; ProcessMode: Enum "BCSF Process Mode"; PostingApproved: Boolean; AdditionalModules: Text)
+  begin
+    Start(Mode, Size, ProcessMode, PostingApproved, AdditionalModules, CalcDate('<-1Y>', Today()), Today() - 1);
+  end;
+
+  [CommitBehavior(CommitBehavior::Error)]
+  procedure Start(Mode: Enum "BCSF Finance Mode"; Size: Integer; ProcessMode: Enum "BCSF Process Mode"; PostingApproved: Boolean; AdditionalModules: Text; StartingDate: Date; EndingDate: Date)
   var
     Setup: Record "BCSF Factory Setup";
     Scenario: Record "BCSF Scenario";
     Job: Record "Job Queue Entry";
+    TempModules: Record "BCSF Scenario Module" temporary;
     SetupMgt: Codeunit "BCSF Setup Management";
     Packages: Codeunit "BCSF Finance Package Mgt";
     Profile: Codeunit "BCSF Wholesale Profile";
     Guard: Codeunit "BCSF Environment Guard";
     Enqueue: Codeunit "Job Queue - Enqueue";
   begin
+    Profile.CheckDateRange(StartingDate, EndingDate, Today() - 1);
+    if EndingDate <> Today() - 1 then
+      Error(PeriodChangedErr);
+    Profile.LoadModules(AdditionalModules, TempModules);
     // Fixed lock order shared with snapshots, configuration editors and the bootstrap job.
     Scenario.LockTable();
     SetupMgt.InitializeSetup();
@@ -137,8 +162,10 @@ codeunit 90361 "BCSF Company Initialization"
       Setup.Validate("Posting Enabled", true);
     Setup."Industry Finance Mode" := Mode;
     Setup."Industry Size" := Size;
+    Setup."Industry Additional Modules" := CopyStr(AdditionalModules, 1, MaxStrLen(Setup."Industry Additional Modules"));
     Setup."Industry Process Mode" := ProcessMode;
-    Setup."Industry Date" := WorkDate();
+    Setup."Industry Date" := StartingDate;
+    Setup."Industry Ending Date" := EndingDate;
     Job.Init();
     Job."Object Type to Run" := Job."Object Type to Run"::Codeunit;
     Job."Object ID to Run" := Codeunit::"BCSF Company Initialization";
@@ -159,6 +186,7 @@ codeunit 90361 "BCSF Company Initialization"
   local procedure ProtectRequest(var Rec: Record "BCSF Factory Setup"; var xRec: Record "BCSF Factory Setup"; RunTrigger: Boolean)
   var
     Previous: Record "BCSF Factory Setup";
+    TempModules: Record "BCSF Scenario Module" temporary;
     Job: Record "Job Queue Entry";
     Profile: Codeunit "BCSF Wholesale Profile";
   begin
@@ -169,8 +197,10 @@ codeunit 90361 "BCSF Company Initialization"
     if (Previous."Industry Job Id" = Rec."Industry Job Id") and not IsNullGuid(Previous."Industry Job Id") then begin
       Rec.TestField("Industry Finance Mode", Previous."Industry Finance Mode");
       Rec.TestField("Industry Size", Previous."Industry Size");
+      Rec.TestField("Industry Additional Modules", Previous."Industry Additional Modules");
       Rec.TestField("Industry Process Mode", Previous."Industry Process Mode");
       Rec.TestField("Industry Date", Previous."Industry Date");
+      Rec.TestField("Industry Ending Date", Previous."Industry Ending Date");
       Rec.TestField("Industry Posting Approved", Previous."Industry Posting Approved");
       if not IsNullGuid(Previous."Industry Run Id") then
         Rec.TestField("Industry Run Id", Previous."Industry Run Id")
@@ -184,8 +214,12 @@ codeunit 90361 "BCSF Company Initialization"
     end else
       if not IsNullGuid(Rec."Industry Job Id") then begin
         EnsureCanStartNewRequest(Previous);
+        Profile.LoadModules(Rec."Industry Additional Modules", TempModules);
         Rec.TestField("Industry Run Id", CreateEmptyGuid());
         Rec.TestField("Industry Date");
+        Profile.CheckDateRange(Rec."Industry Date", Rec."Industry Ending Date", Today() - 1);
+        if Rec."Industry Ending Date" <> Today() - 1 then
+          Error(PeriodChangedErr);
         Profile.CheckSelection(Rec."Industry Size", Rec."Industry Process Mode");
         if Rec."Industry Process Mode".AsInteger() >= 2 then
           Rec.TestField("Industry Posting Approved", true);
@@ -222,6 +256,7 @@ codeunit 90361 "BCSF Company Initialization"
   end;
 
   var
+    PeriodChangedErr: Label 'The period must end yesterday. Reopen company initialization to refresh the displayed period.';
     ApprovalErr: Label 'Explicitly approve standard posting and, for follow-up mode, payments and application before starting.';
     JobLbl: Label 'Scenario Factory company initialization';
     JobErr: Label 'Company initialization requires an authorized standard background job. Review job queue permissions and its current status.';

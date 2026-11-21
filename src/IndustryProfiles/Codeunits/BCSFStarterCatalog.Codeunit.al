@@ -94,22 +94,26 @@ codeunit 90155 "BCSF Starter Catalog"
         VariantNo: Integer;
         Mode: Enum "BCSF Process Mode";
     begin
-        for VariantNo := 1 to 3 do begin
+        for VariantNo := 1 to 4 do begin
             Evaluate(Id, '{B55C4500-AB51-4045-9C00-00000000000' + Format(VariantNo, 0, 9) + '}');
             // Never replace a custom, archived or intentionally removed template.
             if not Scenario.Get(Id) and not Removed.Get(Id) then begin
                 case VariantNo of
-                    1: Mode := Mode::UnpostedDocuments;
+                    1, 4: Mode := Mode::UnpostedDocuments;
                     2: Mode := Mode::PostedMovements;
                     3: Mode := Mode::FollowUpProcesses;
                 end;
-                Profile.CreateTemplateForId(Id, 0, Mode, WorkDate());
+                if VariantNo = 4 then
+                    Profile.CreateTemplateForId(Id, 0, Mode, CalcDate('<-1Y>', Today()), Today() - 1, 'WAREHOUSE|CRM')
+                else
+                    Profile.CreateTemplateForId(Id, 0, Mode, CalcDate('<-1Y>', Today()), Today() - 1, '');
                 if VariantNo > 1 then begin
                     Scenario.Get(Id);
-                    if VariantNo = 2 then
-                        Scenario.Description := PostedWholesaleLbl
-                    else
-                        Scenario.Description := PaidWholesaleLbl;
+                    case VariantNo of
+                        2: Scenario.Description := PostedWholesaleLbl;
+                        3: Scenario.Description := PaidWholesaleLbl;
+                        4: Scenario.Description := ModulesWholesaleLbl;
+                    end;
                     // Loading a test template never grants posting or payment approval.
                     Scenario.Modify(true);
                 end;
@@ -602,6 +606,11 @@ codeunit 90155 "BCSF Starter Catalog"
             Name := PaidWholesaleLbl;
             exit;
         end;
+        Evaluate(Id, '{B55C4500-AB51-4045-9C00-000000000004}');
+        if (Scenario."Scenario Id" = Id) and (Scenario.Description in ['Wholesale - Warehouse and CRM planned', 'Großhandel - Lager und CRM geplant']) then begin
+            Name := ModulesWholesaleLbl;
+            exit;
+        end;
         Evaluate(Id, '{B55C2100-AB51-4021-9C00-000000000001}');
         if (Scenario."Scenario Id" = Id) and (Scenario.Description in ['Sales – Quotes, Orders and Invoices', 'Verkauf – Angebote, Aufträge und Rechnungen']) then begin
             Name := SalesDocumentsLbl;
@@ -742,6 +751,7 @@ codeunit 90155 "BCSF Starter Catalog"
         ExistingFoundationErr: Label 'For existing company setup, select the existing item units, posting groups and compatible location under Item Assortment. No test package will be applied.';
         MixedSalesLbl: Label 'Sales – Mixed Posted Documents';
         SalesDocumentsLbl: Label 'Sales – Quotes, Orders and Invoices';
+        ModulesWholesaleLbl: Label 'Wholesale - Warehouse and CRM planned';
         WholesaleReferenceLbl: Label 'Wholesale company';
         PostedWholesaleLbl: Label 'Wholesale - mixed posted documents';
         PaidWholesaleLbl: Label 'Wholesale - payments and application';
