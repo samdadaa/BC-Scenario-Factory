@@ -233,3 +233,8 @@ flowchart LR
 ```
 
 Bei reinen Stammdaten entfallen G/H. B–D sind eine commitgeschützte Vorbereitungstransaktion, E–I verwenden vorhandene sichere Batchgrenzen. Kein Abschluss aus bloß erfolgreicher Vorbereitung. Technische Vorlagen, Snapshots, Historie und Checkpoints bleiben intern; keine Tabellen-/Objektlöschung. [Transaktionsvertrag und Einschränkungen](INDUSTRY_INITIALIZATION.md), [Objekte/Events/JSON](ARCHITECTURE_AUDIT_SF045.md).
+
+
+## 1.0.7.1 – Herkunftszählung und Listennavigation
+
+Live-Herkunftsidentitäten werden pro Kennzahl und optionalem Lauf sitzungsintern markiert. MarkedOnly schränkt den sichtbaren Standardrecord zusätzlich zu bestehenden Filtern ein; SetTable(false) überträgt Filter und Marks, Count beim Klick erneut geprüft. Keine neuen gespeicherten Zähler und keine Gleichsetzung von bestätigter Arbeit und überlebendem Live-Bestand. Mappingseite 90370 erfüllt die bisher fehlende lesende Mandanten-/Laufroute. [Vertrag und Skalierungsgrenzen](DASHBOARD_DATA_STOCK.md#implementierter-stand-1071).

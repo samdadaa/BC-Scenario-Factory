@@ -118,3 +118,8 @@ XERJ war zu Beginn nicht erreichbar und wurde auf Nutzerauftrag wieder lokal ges
 
 
 Herkunftsregistry: Bank Account Ledger Entry, Detailed Cust. Ledg. Entry und Detailed Vendor Ledg. Entry sind explizit als Standardergebnisse zugelassen. Die bestehende eindeutige physische Ergebnisidentität und Batchbesitzprüfung gelten unverändert.
+
+
+## 1.0.7.1 – Dashboardnachbesserung
+
+[Darstellung, Navigation und neue lesende Mappingliste](DASHBOARD_DATA_STOCK.md#implementierter-stand-1071). Vorlagen, Generatoren, Mandanteneinrichtung und historische Läufe bleiben unverändert. Der Nutzer bestätigt einen erfolgreichen Datenlauf und liefert Bilder mittlerer gebuchter Mengen; vollständige native Zahlung-/Rechte-/Upgradeabnahme daraus nicht ableitbar. Prozessstufe jetzt im Kopf eindeutig mit/ohne Zahlungen. **Zur Prüfung**.

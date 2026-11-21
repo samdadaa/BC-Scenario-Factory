@@ -817,3 +817,21 @@ Neue Methoden im bestehenden isolierten Testhost (nur kompiliert, **nicht ausgef
 **Nutzerbefund:** Screenshot meldet fehlendes Lese-/Schreibrecht für Einkaufsrechnungskopf vor PURCHASE.ORDER. Zu strenge direkte WritePermission-Vorprüfung auf Standardbuchungstabellen korrigiert. Noch **kein** nativer Nachweis mit dem korrigierten Paket und echten Standardrollen. Nicht daraus ableiten, dass jede Lizenz-/Rollenkombination freigegeben ist.
 
 **Offen / nicht ausgeführt:** Native SKR03-/SKR04-Läufe in vier Stufen, echte Standardbuchungs-/Ausgleichsrechte, G/L-/VAT-/Artikel-/Wert-/Bankpostenabstimmung, Bilanz/GuV/BWA, Queue nach Browserende, Unterbrechung/Checkpoint/unsicherer Retry, DE/EN in BC und additives Upgrade. Mittel/Groß einschließlich Mengen-/Leistungsprüfung und Dashboard-Herkunftsfiltergrenzen 150/1.200 offen. Kein Deployment, keine Installation/BC-Anmeldung, kein Commit/Push, keine menschliche Abnahme. [Konkrete Sandboxfälle](review/TESTANLEITUNG.md#1070--einkauf-buchung-zahlung-und-berechtigungsfehler).
+
+
+## SF-045 – Dashboardnachbesserung 1.0.7.1
+
+**21.11.2026, Zur Prüfung.** Nutzer bestätigt erfolgreichen Datenlauf; Bilder zeigen mittlere Mengen (200 Debitoren, 400 Artikel, 800 Einheiten, 1.154 Attributzuordnungen), gebuchte Einkaufs-/Verkaufsbelege, aber fehlende Laufzahlen, fehlende Mappingliste und uneindeutige Bezeichnungen. Zahlungs-/Bankzähler 0; gewählte Stufe aus Bildern nicht bestimmbar. Kein Nachweis eines erfolgreichen Zahlungslaufs daraus abgeleitet. [Plan und Umsetzung](DASHBOARD_DATA_STOCK.md#sf-045--dashboardnachbesserung-1071-plan-vor-änderung).
+
+Tatsächlich ausgeführt:
+
+- `python3 scripts/build_sf019.py --output /tmp/bcsf-dashboard-1071 --analyzers`: **Exit 0**, 140 Main-AL-Objekte und separate Test-App **1.3.0.1 mit 38 Methoden** kompiliert, App **1.0.7.1**. Installierter AL-Compiler 18.1.43.24897, .NET-10-Host und lokale BC-28.5-DE-/Systemsymbole. CodeCop/UICop warnaserror+, keine Fehler/Warnungen, Informationsbefunde sichtbar. Enthaltene Inventory-/Sales-/Purchase-/Template-Quellprüfungen PASS.
+- `node scripts/check_dashboard.mjs`: **PASS** im lokalen Chromium mit synthetischer BC-Brücke. Neue mittlere Mengen 200/400/800/1.154 und Klicks auf Stämme, Mapping sowie purchase/order und purchase/postedInvoice; erwartete Nullzahlung bleibt sichtbar; DE-Prozessstufen mit/ohne Zahlung angezeigt. Gesamte bestehende Zwei-Sekunden-, DOM-/Fokus-, Reiter-/Filter-, Fehler-/XSS- und responsive 1440/768/320px-Regression PASS.
+- `node scripts/check_dashboard_stock.mjs`: **PASS**, sichere Commandpayloads, Scope-/Laufisolation, DE-Fallback, Keyboard und Fehlerzustände.
+- `python3 Translations/sync_sf_translations.py`, `python3 scripts/check_translations.py`, `python3 scripts/build_dashboard_translations.py`: **PASS**, 1.378 Compiler-IDs in en-US und fünf deutschen Kulturen, Dashboardfallback konsistent.
+- `python3 scripts/check_package.py /tmp/bcsf-dashboard-1071/BCScenarioFactory.app`: **PASS**, 140 aktuelle AL-Quellen, sieben XLIFF-Dateien und vier Dashboardressourcen. SHA256 `bc191083a33b9e44dd6ab4cf02848860a00ba3b116dbf6ad3d4eb0258ca1809c`.
+- `git diff --check`: **PASS**.
+
+Zwei neue Methoden im bestehenden isolierten Testhost: `DashboardMarksRetainExistingFilters` (Marken-/Basisfilterübergabe) und `CompletedMediumDashboardShowsLiveCounts` (fünf Kennzahlen gegen tatsächlich sichtbare überlebende Herkunftsidentitäten). **Nur kompiliert, nicht in BC ausgeführt.** Keine neue Test-Codeunit. Die zweite benötigt den abgeschlossenen mittleren Firmenlauf und die vorgesehenen Leserechte.
+
+Native offene Prüfung: bestehenden mittleren Lauf nach Paketupdate ohne Neugenerierung öffnen; 200/400/800 und tatsächliche Kinddatenzahlen in Lauf-/Mandantensicht sowie jeweilige Ziellisten abgleichen. Mappingliste 1.154 bzw. aktuelle tatsächliche Zahl, Varianten/Referenzen/Lieferanten, Einkaufsklicks und Prozessstufe prüfen. Security-/Zuständigkeitsfilter, umbenannte/gelöschte Identitäten, keine leere Markierung als unbeschränkte Liste, DE/EN, native Seitentrigger sowie Laufzeit/Speicher bei großen Mengen und Polling prüfen. Keine BC-Anmeldung, Veröffentlichung, Installation, Commit/Push oder menschliche Vollabnahme durch Codex.

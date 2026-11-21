@@ -14,11 +14,13 @@ using BCScenarioFactory.DependencyManager;
 using BCScenarioFactory.Finance;
 using BCScenarioFactory.ProcessEngine;
 using BCScenarioFactory.ModuleRegistry;
+using BCScenarioFactory.Monitoring;
 using Microsoft.Sales.History;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Finance.VAT.Ledger;
 using Microsoft.Sales.Receivables;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
@@ -36,6 +38,98 @@ using System.Security.AccessControl;
 codeunit 90700 "BCSF Inventory Tests"
 {
   Subtype = Test;
+
+  [Test]
+  procedure DashboardMarksRetainExistingFilters()
+  var
+    TempCustomer: Record Customer temporary;
+    TempView: Record Customer temporary;
+    Rows: RecordRef;
+  begin
+    TempCustomer.Init();
+    TempCustomer."No." := 'VISIBLE';
+    TempCustomer.Name := 'Visible';
+    TempCustomer.Insert();
+    TempCustomer."No." := 'HIDDEN';
+    TempCustomer.Name := 'Hidden';
+    TempCustomer.Insert();
+    TempView.Copy(TempCustomer, true);
+    Rows.GetTable(TempCustomer);
+    Rows.FindSet();
+    repeat
+      Rows.Mark(true);
+    until Rows.Next() = 0;
+    TempCustomer.SetRange(Name, 'Visible');
+    Rows.SetView(TempCustomer.GetView());
+    Rows.MarkedOnly(true);
+    Rows.SetTable(TempView, false);
+    Assert(TempView.MarkedOnly(), 'Standard-list record must retain the marks filter.');
+    Assert(TempView.Count() = 1, 'Existing filters must intersect the marked identities.');
+    Rows.Close();
+  end;
+
+  [Test]
+  procedure CompletedMediumDashboardShowsLiveCounts()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Execution: Record "BCSF Run Execution";
+    Entry: Record "BCSF Generated Record";
+    Stock: Codeunit "BCSF Dashboard Stock";
+    Rows: RecordRef;
+    View: JsonObject;
+    Metrics: JsonToken;
+    Metric: JsonToken;
+    Value: JsonToken;
+    TableIds: array[5] of Integer;
+    Keys: array[5] of Text;
+    Index: Integer;
+    Visible: Integer;
+    Found: Boolean;
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Setup.TestField("Industry Size", 1);
+    Execution.Get(Setup."Industry Run Id");
+    Execution.TestField(Status, Execution.Status::Completed);
+    TableIds[1] := Database::Customer;
+    TableIds[2] := Database::Item;
+    TableIds[3] := Database::"Item Unit of Measure";
+    TableIds[4] := Database::"Item Reference";
+    TableIds[5] := Database::"Item Attribute Value Mapping";
+    Keys[1] := 'customer';
+    Keys[2] := 'item';
+    Keys[3] := 'itemUnit';
+    Keys[4] := 'itemReference';
+    Keys[5] := 'attributeMapping';
+    View := Stock.Build('master', false, Setup."Industry Run Id");
+    View.Get('metrics', Metrics);
+    for Index := 1 to ArrayLen(TableIds) do begin
+      Entry.Reset();
+      Entry.SecurityFiltering(SecurityFilter::Filtered);
+      Entry.SetRange("Run Id", Setup."Industry Run Id");
+      Entry.SetRange("Table Id", TableIds[Index]);
+      Rows.Open(TableIds[Index]);
+      Rows.SecurityFiltering(SecurityFilter::Filtered);
+      Visible := 0;
+      if Entry.FindSet() then
+        repeat
+          if Rows.GetBySystemId(Entry."Record SystemId") then
+            Visible += 1;
+        until Entry.Next() = 0;
+      Rows.Close();
+      Found := false;
+      foreach Metric in Metrics.AsArray() do begin
+        Metric.AsObject().Get('key', Value);
+        if Value.AsValue().AsText() = Keys[Index] then begin
+          Assert(Metric.AsObject().Get('count', Value), 'A medium run must not lose its live count.');
+          Assert(Value.AsValue().AsInteger() = Visible, 'Run count must match visible surviving provenance identities.');
+          Metric.AsObject().Get('canOpen', Value);
+          Assert(Value.AsValue().AsBoolean() = (Visible > 0), 'Each nonempty readable result must have a list route.');
+          Found := true;
+        end;
+      end;
+      Assert(Found, 'Missing dashboard metric.');
+    end;
+  end;
 
   [Test]
   procedure StandardPostingAcceptsAssignedIndirectRights()

@@ -1,6 +1,8 @@
 namespace BCScenarioFactory.Monitoring;
 
 using BCScenarioFactory.DataGeneration;
+using BCScenarioFactory.Core;
+using BCScenarioFactory.ScenarioManagement;
 using Microsoft.Assembly.Document;
 using Microsoft.Bank.BankAccount;
 using Microsoft.Bank.Ledger;
@@ -119,24 +121,37 @@ codeunit 90369 "BCSF Dashboard Stock"
 
   local procedure AddRunMetrics(GroupKey: Text; RunId: Guid; var Metrics: JsonArray)
   var
+    Header: Record "BCSF Run Header";
     Stock: JsonObject;
     Values: JsonToken;
     Value: JsonToken;
     Metric: JsonObject;
     MetricKey: Text;
+    ShowZero: Boolean;
   begin
+    Header.Get(RunId);
     Stock := Build(GroupKey, false, RunId);
     Stock.Get('metrics', Values);
     foreach Value in Values.AsArray() do begin
       Metric := Value.AsObject();
       MetricKey := TextProperty(Metric, 'key');
+      ShowZero := (Header."Process Mode" = "BCSF Process Mode"::FollowUpProcesses) and
+        (GroupKey = 'entries') and (MetricKey in ['customerPayment', 'vendorPayment', 'bankEntry']);
       if (GroupKey = 'entries') or (MetricKey in ['quote', 'order', 'invoice', 'postedShipment', 'postedReceipt', 'postedInvoice']) then
-        if Metric.Contains('count') then
-          if IntProperty(Metric, 'count') > 0 then begin
-            Metric.Replace('key', GroupKey + '/' + MetricKey);
-            Metrics.Add(Metric);
-          end;
+        if IncludeRunMetric(Metric, ShowZero) then begin
+          Metric.Replace('key', GroupKey + '/' + MetricKey);
+          Metrics.Add(Metric);
+        end;
     end;
+  end;
+
+  local procedure IncludeRunMetric(Metric: JsonObject; ShowZero: Boolean): Boolean
+  begin
+    if BoolProperty(Metric, 'noGenerator') then
+      exit(false);
+    if not Metric.Contains('count') then
+      exit(true);
+    exit(ShowZero or (IntProperty(Metric, 'count') > 0));
   end;
 
   procedure OpenMetric(GroupKey: Text; MetricKey: Text; EntireCompany: Boolean; StockRunId: Guid; LastStock: JsonObject)
@@ -158,6 +173,10 @@ codeunit 90369 "BCSF Dashboard Stock"
         GroupKey := 'sales';
         MetricKey := CopyStr(MetricKey, 7);
       end else
+        if CopyStr(MetricKey, 1, 9) = 'purchase/' then begin
+          GroupKey := 'purchase';
+          MetricKey := CopyStr(MetricKey, 10);
+        end else
         if CopyStr(MetricKey, 1, 8) = 'entries/' then begin
           GroupKey := 'entries';
           MetricKey := CopyStr(MetricKey, 9);
@@ -173,7 +192,7 @@ codeunit 90369 "BCSF Dashboard Stock"
         if not CanOpen or (Count <> ExpectedCount) then
           Error(ChangedLbl);
         if Rows.Number() = Database::"Item Attribute Value Mapping" then
-          OpenAttributeMappings(Rows, StockRunId)
+          OpenAttributeMappings(Rows)
         else
           OpenStandardPage(Rows, IntProperty(Metric, 'page'));
         CloseRows(Rows, RowsOpened);
@@ -203,10 +222,6 @@ codeunit 90369 "BCSF Dashboard Stock"
     Count := -1;
     CanOpen := false;
     PageId := IntProperty(Metric, 'page');
-    // The mapping table has no standard list. Reuse the existing provenance page
-    // only for generated data, where every displayed identity has one registry row.
-    if EntireCompany and (TextProperty(Metric, 'key') = 'attributeMapping') then
-      PageId := 0;
     Rows.Open(IntProperty(Metric, 'table'));
     RowsOpened := true;
     Rows.SecurityFiltering(SecurityFilter::Filtered);
@@ -247,10 +262,7 @@ codeunit 90369 "BCSF Dashboard Stock"
       exit;
     end;
     if not EntireCompany then
-      if not ApplyOriginFilter(Rows, Entry, StockRunId) then begin
-        Status := LimitLbl;
-        exit;
-      end;
+      ApplyOriginFilter(Rows, Entry, StockRunId);
     Count := Rows.Count();
     if PageId = 0 then
       Status := NoListLbl
@@ -258,13 +270,8 @@ codeunit 90369 "BCSF Dashboard Stock"
       CanOpen := Count > 0;
   end;
 
-  local procedure ApplyOriginFilter(var Rows: RecordRef; var Entry: Record "BCSF Generated Record"; StockRunId: Guid): Boolean
-  var
-    Id: FieldRef;
-    EmptyId: Guid;
-    Ids: Text;
-    Scanned: Integer;
-    Visible: Integer;
+  // Marks avoid a bounded OR filter. Only identities that still exist are included.
+  local procedure ApplyOriginFilter(var Rows: RecordRef; var Entry: Record "BCSF Generated Record"; StockRunId: Guid)
   begin
     if IsNullGuid(StockRunId) then
       Entry.SetCurrentKey("Table Id", "Record SystemId")
@@ -274,31 +281,14 @@ codeunit 90369 "BCSF Dashboard Stock"
     end;
     Entry.SetRange("Table Id", Rows.Number());
     Entry.SetLoadFields("Record SystemId");
-    if Entry.Find('-') then
+    if Entry.FindSet() then
       repeat
-        Scanned += 1;
-        if Scanned > 1200 then
-          exit(false);
         if not IsNullGuid(Entry."Record SystemId") then
-          if Rows.GetBySystemId(Entry."Record SystemId") then begin
-            // Provenance has a unique key on table and SystemId. Never classify a reused primary key as generated.
-            Visible += 1;
-            if Visible > 150 then
-              exit(false);
-            if Ids <> '' then
-              Ids += '|';
-            Ids += Format(Entry."Record SystemId", 0, 4);
-          end;
+          if Rows.GetBySystemId(Entry."Record SystemId") then
+            Rows.Mark(true);
       until Entry.Next() = 0;
-
-    Rows.FilterGroup(10);
-    Id := Rows.Field(Rows.SystemIdNo());
-    if Ids = '' then
-      Id.SetRange(EmptyId)
-    else
-      Id.SetFilter(Ids);
-    Rows.FilterGroup(0);
-    exit(true);
+    // Existing document, responsibility and security filters stay in force.
+    Rows.MarkedOnly(true);
   end;
 
   local procedure ApplyBaseFilters(GroupKey: Text; PageId: Integer; var Rows: RecordRef): Boolean
@@ -474,264 +464,250 @@ codeunit 90369 "BCSF Dashboard Stock"
     case Rows.Number() of
       Database::"Customer":
         begin
-          Rows.SetTable(Customer);
+          Rows.SetTable(Customer, false);
           Page.Run(PageId, Customer);
         end;
       Database::"Vendor":
         begin
-          Rows.SetTable(Vendor);
+          Rows.SetTable(Vendor, false);
           Page.Run(PageId, Vendor);
         end;
       Database::"Contact":
         begin
-          Rows.SetTable(Contact);
+          Rows.SetTable(Contact, false);
           Page.Run(PageId, Contact);
         end;
       Database::"Ship-to Address":
         begin
-          Rows.SetTable(ShiptoAddress);
+          Rows.SetTable(ShiptoAddress, false);
           Page.Run(PageId, ShiptoAddress);
         end;
       Database::"Order Address":
         begin
-          Rows.SetTable(OrderAddress);
+          Rows.SetTable(OrderAddress, false);
           Page.Run(PageId, OrderAddress);
         end;
       Database::"Customer Bank Account":
         begin
-          Rows.SetTable(CustomerBankAccount);
+          Rows.SetTable(CustomerBankAccount, false);
           Page.Run(PageId, CustomerBankAccount);
         end;
       Database::"Vendor Bank Account":
         begin
-          Rows.SetTable(VendorBankAccount);
+          Rows.SetTable(VendorBankAccount, false);
           Page.Run(PageId, VendorBankAccount);
         end;
       Database::"G/L Account":
         begin
-          Rows.SetTable(GLAccount);
+          Rows.SetTable(GLAccount, false);
           Page.Run(PageId, GLAccount);
         end;
       Database::"Bank Account":
         begin
-          Rows.SetTable(BankAccount);
+          Rows.SetTable(BankAccount, false);
           Page.Run(PageId, BankAccount);
         end;
       Database::"Item":
         begin
-          Rows.SetTable(Item);
+          Rows.SetTable(Item, false);
           Page.Run(PageId, Item);
         end;
       Database::"Item Category":
         begin
-          Rows.SetTable(ItemCategory);
+          Rows.SetTable(ItemCategory, false);
           Page.Run(PageId, ItemCategory);
         end;
       Database::"Item Unit of Measure":
         begin
-          Rows.SetTable(ItemUnit);
+          Rows.SetTable(ItemUnit, false);
           Page.Run(PageId, ItemUnit);
         end;
       Database::"Item Attribute":
         begin
-          Rows.SetTable(ItemAttribute);
+          Rows.SetTable(ItemAttribute, false);
           Page.Run(PageId, ItemAttribute);
         end;
       Database::"Item Attribute Value":
         begin
-          Rows.SetTable(ItemAttributeValue);
+          Rows.SetTable(ItemAttributeValue, false);
           Page.Run(PageId, ItemAttributeValue);
         end;
       Database::"Item Variant":
         begin
-          Rows.SetTable(ItemVariant);
+          Rows.SetTable(ItemVariant, false);
           Page.Run(PageId, ItemVariant);
         end;
       Database::"Item Reference":
         begin
-          Rows.SetTable(ItemReference);
+          Rows.SetTable(ItemReference, false);
           Page.Run(PageId, ItemReference);
         end;
       Database::"Item Vendor":
         begin
-          Rows.SetTable(ItemVendor);
+          Rows.SetTable(ItemVendor, false);
           Page.Run(PageId, ItemVendor);
         end;
       Database::"Item Substitution":
         begin
-          Rows.SetTable(ItemSubstitution);
+          Rows.SetTable(ItemSubstitution, false);
           Page.Run(PageId, ItemSubstitution);
         end;
       Database::"Stockkeeping Unit":
         begin
-          Rows.SetTable(StockkeepingUnit);
+          Rows.SetTable(StockkeepingUnit, false);
           Page.Run(PageId, StockkeepingUnit);
         end;
       Database::"Bin":
         begin
-          Rows.SetTable(Bin);
+          Rows.SetTable(Bin, false);
           Page.Run(PageId, Bin);
         end;
       Database::"Bin Content":
         begin
-          Rows.SetTable(BinContent);
+          Rows.SetTable(BinContent, false);
           Page.Run(PageId, BinContent);
         end;
       Database::"Location":
         begin
-          Rows.SetTable(Location);
+          Rows.SetTable(Location, false);
           Page.Run(PageId, Location);
         end;
       Database::"Sales Header":
         begin
-          Rows.SetTable(SalesHeader);
+          Rows.SetTable(SalesHeader, false);
           Page.Run(PageId, SalesHeader);
         end;
       Database::"Sales Shipment Header":
         begin
-          Rows.SetTable(SalesShipmentHeader);
+          Rows.SetTable(SalesShipmentHeader, false);
           Page.Run(PageId, SalesShipmentHeader);
         end;
       Database::"Sales Invoice Header":
         begin
-          Rows.SetTable(SalesInvoiceHeader);
+          Rows.SetTable(SalesInvoiceHeader, false);
           Page.Run(PageId, SalesInvoiceHeader);
         end;
       Database::"Sales Cr.Memo Header":
         begin
-          Rows.SetTable(SalesCrMemoHeader);
+          Rows.SetTable(SalesCrMemoHeader, false);
           Page.Run(PageId, SalesCrMemoHeader);
         end;
       Database::"Return Receipt Header":
         begin
-          Rows.SetTable(ReturnReceiptHeader);
+          Rows.SetTable(ReturnReceiptHeader, false);
           Page.Run(PageId, ReturnReceiptHeader);
         end;
       Database::"Purchase Header":
         begin
-          Rows.SetTable(PurchaseHeader);
+          Rows.SetTable(PurchaseHeader, false);
           Page.Run(PageId, PurchaseHeader);
         end;
       Database::"Purch. Rcpt. Header":
         begin
-          Rows.SetTable(PurchRcptHeader);
+          Rows.SetTable(PurchRcptHeader, false);
           Page.Run(PageId, PurchRcptHeader);
         end;
       Database::"Purch. Inv. Header":
         begin
-          Rows.SetTable(PurchInvHeader);
+          Rows.SetTable(PurchInvHeader, false);
           Page.Run(PageId, PurchInvHeader);
         end;
       Database::"Purch. Cr. Memo Hdr.":
         begin
-          Rows.SetTable(PurchCrMemoHdr);
+          Rows.SetTable(PurchCrMemoHdr, false);
           Page.Run(PageId, PurchCrMemoHdr);
         end;
       Database::"Return Shipment Header":
         begin
-          Rows.SetTable(ReturnShipmentHeader);
+          Rows.SetTable(ReturnShipmentHeader, false);
           Page.Run(PageId, ReturnShipmentHeader);
         end;
       Database::"G/L Entry":
         begin
-          Rows.SetTable(GLEntry);
+          Rows.SetTable(GLEntry, false);
           Page.Run(PageId, GLEntry);
         end;
       Database::"Cust. Ledger Entry":
         begin
-          Rows.SetTable(CustLedgerEntry);
+          Rows.SetTable(CustLedgerEntry, false);
           Page.Run(PageId, CustLedgerEntry);
         end;
       Database::"Vendor Ledger Entry":
         begin
-          Rows.SetTable(VendorLedgerEntry);
+          Rows.SetTable(VendorLedgerEntry, false);
           Page.Run(PageId, VendorLedgerEntry);
         end;
       Database::"Bank Account Ledger Entry":
         begin
-          Rows.SetTable(BankAccountLedgerEntry);
+          Rows.SetTable(BankAccountLedgerEntry, false);
           Page.Run(PageId, BankAccountLedgerEntry);
         end;
       Database::"VAT Entry":
         begin
-          Rows.SetTable(VATEntry);
+          Rows.SetTable(VATEntry, false);
           Page.Run(PageId, VATEntry);
         end;
       Database::"Item Ledger Entry":
         begin
-          Rows.SetTable(ItemLedgerEntry);
+          Rows.SetTable(ItemLedgerEntry, false);
           Page.Run(PageId, ItemLedgerEntry);
         end;
       Database::"Value Entry":
         begin
-          Rows.SetTable(ValueEntry);
+          Rows.SetTable(ValueEntry, false);
           Page.Run(PageId, ValueEntry);
         end;
       Database::"Payment Terms":
         begin
-          Rows.SetTable(PaymentTerms);
+          Rows.SetTable(PaymentTerms, false);
           Page.Run(PageId, PaymentTerms);
         end;
       Database::"General Posting Setup":
         begin
-          Rows.SetTable(GeneralPostingSetup);
+          Rows.SetTable(GeneralPostingSetup, false);
           Page.Run(PageId, GeneralPostingSetup);
         end;
       Database::"Warehouse Entry":
         begin
-          Rows.SetTable(WarehouseEntry);
+          Rows.SetTable(WarehouseEntry, false);
           Page.Run(PageId, WarehouseEntry);
         end;
       Database::"Production BOM Header":
         begin
-          Rows.SetTable(ProductionBOMHeader);
+          Rows.SetTable(ProductionBOMHeader, false);
           Page.Run(PageId, ProductionBOMHeader);
         end;
       Database::"Assembly Header":
         begin
-          Rows.SetTable(AssemblyHeader);
+          Rows.SetTable(AssemblyHeader, false);
           Page.Run(PageId, AssemblyHeader);
         end;
       Database::"Job":
         begin
-          Rows.SetTable(Job);
+          Rows.SetTable(Job, false);
           Page.Run(PageId, Job);
         end;
       Database::"Service Item":
         begin
-          Rows.SetTable(ServiceItem);
+          Rows.SetTable(ServiceItem, false);
           Page.Run(PageId, ServiceItem);
         end;
       Database::"Fixed Asset":
         begin
-          Rows.SetTable(FixedAsset);
+          Rows.SetTable(FixedAsset, false);
           Page.Run(PageId, FixedAsset);
         end;
       else Error(ChangedLbl);
     end;
   end;
 
-  local procedure OpenAttributeMappings(var Rows: RecordRef; StockRunId: Guid)
+  local procedure OpenAttributeMappings(var Rows: RecordRef)
   var
-    Entry: Record "BCSF Generated Record";
-    Results: Page "BCSF Generated Records";
-    Identity: FieldRef;
+    Mapping: Record "Item Attribute Value Mapping";
+    Results: Page "BCSF Attribute Assignments";
   begin
-    Entry.SecurityFiltering(SecurityFilter::Filtered);
-    Entry.SetRange("Table Id", Database::"Item Attribute Value Mapping");
-    if not IsNullGuid(StockRunId) then
-      Entry.SetRange("Run Id", StockRunId);
-    Rows.FilterGroup(10);
-    Identity := Rows.Field(Rows.SystemIdNo());
-    Entry.FilterGroup(10);
-    Entry.SetFilter("Record SystemId", Identity.GetFilter());
-    Entry.FilterGroup(0);
-    Rows.FilterGroup(0);
-    // ResultIdentity is unique. Never substitute a broader provenance list.
-    if Entry.Count() <> Rows.Count() then
-      Error(ChangedLbl);
-    Results.SetTableView(Entry);
-    Results.ShowAttributeMappings();
+    Rows.SetTable(Mapping, false);
+    Results.SetTableView(Mapping);
     Results.Run();
   end;
 
@@ -756,7 +732,7 @@ codeunit 90369 "BCSF Dashboard Stock"
           AddMetric(Catalog, 'itemUnit', Database::"Item Unit of Measure", Page::"Item Units of Measure", true, '');
           AddMetric(Catalog, 'attribute', Database::"Item Attribute", Page::"Item Attributes", true, '');
           AddMetric(Catalog, 'attributeValue', Database::"Item Attribute Value", Page::"Item Attribute Values", true, '');
-          AddMetric(Catalog, 'attributeMapping', Database::"Item Attribute Value Mapping", Page::"BCSF Generated Records", true, '');
+          AddMetric(Catalog, 'attributeMapping', Database::"Item Attribute Value Mapping", Page::"BCSF Attribute Assignments", true, '');
           AddMetric(Catalog, 'variant', Database::"Item Variant", Page::"Item Variants", true, '');
           AddMetric(Catalog, 'itemReference', Database::"Item Reference", Page::"Item Reference Entries", true, '');
           AddMetric(Catalog, 'itemVendor', Database::"Item Vendor", Page::"Item Vendor Catalog", true, '');
@@ -767,29 +743,29 @@ codeunit 90369 "BCSF Dashboard Stock"
         end;
       'sales':
         begin
-          AddMetric(Catalog, 'quote', Database::"Sales Header", Page::"Sales Quotes", true, Doc0Lbl);
-          AddMetric(Catalog, 'blanket', Database::"Sales Header", Page::"Blanket Sales Orders", false, Doc1Lbl);
-          AddMetric(Catalog, 'order', Database::"Sales Header", Page::"Sales Order List", true, Doc2Lbl);
-          AddMetric(Catalog, 'invoice', Database::"Sales Header", Page::"Sales Invoice List", true, Doc3Lbl);
-          AddMetric(Catalog, 'credit', Database::"Sales Header", Page::"Sales Credit Memos", false, Doc4Lbl);
-          AddMetric(Catalog, 'return', Database::"Sales Header", Page::"Sales Return Order List", false, Doc5Lbl);
-          AddMetric(Catalog, 'postedShipment', Database::"Sales Shipment Header", Page::"Posted Sales Shipments", true, PostedShipmentLbl);
-          AddMetric(Catalog, 'postedInvoice', Database::"Sales Invoice Header", Page::"Posted Sales Invoices", true, PostedInvoiceLbl);
-          AddMetric(Catalog, 'postedCredit', Database::"Sales Cr.Memo Header", Page::"Posted Sales Credit Memos", false, PostedCreditLbl);
-          AddMetric(Catalog, 'postedReturn', Database::"Return Receipt Header", Page::"Posted Return Receipts", false, PostedReturnLbl);
+          AddMetric(Catalog, 'quote', Database::"Sales Header", Page::"Sales Quotes", true, SalesQuoteLbl);
+          AddMetric(Catalog, 'blanket', Database::"Sales Header", Page::"Blanket Sales Orders", false, SalesBlanketLbl);
+          AddMetric(Catalog, 'order', Database::"Sales Header", Page::"Sales Order List", true, SalesOrderLbl);
+          AddMetric(Catalog, 'invoice', Database::"Sales Header", Page::"Sales Invoice List", true, SalesInvoiceLbl);
+          AddMetric(Catalog, 'credit', Database::"Sales Header", Page::"Sales Credit Memos", false, SalesCreditLbl);
+          AddMetric(Catalog, 'return', Database::"Sales Header", Page::"Sales Return Order List", false, SalesReturnLbl);
+          AddMetric(Catalog, 'postedShipment', Database::"Sales Shipment Header", Page::"Posted Sales Shipments", true, SalesShipmentLbl);
+          AddMetric(Catalog, 'postedInvoice', Database::"Sales Invoice Header", Page::"Posted Sales Invoices", true, SalesPostedInvoiceLbl);
+          AddMetric(Catalog, 'postedCredit', Database::"Sales Cr.Memo Header", Page::"Posted Sales Credit Memos", false, SalesPostedCreditLbl);
+          AddMetric(Catalog, 'postedReturn', Database::"Return Receipt Header", Page::"Posted Return Receipts", false, SalesPostedReturnLbl);
         end;
       'purchase':
         begin
-          AddMetric(Catalog, 'quote', Database::"Purchase Header", Page::"Purchase Quotes", false, Doc0Lbl);
-          AddMetric(Catalog, 'blanket', Database::"Purchase Header", Page::"Blanket Purchase Orders", false, Doc1Lbl);
-          AddMetric(Catalog, 'order', Database::"Purchase Header", Page::"Purchase Order List", true, Doc2Lbl);
-          AddMetric(Catalog, 'invoice', Database::"Purchase Header", Page::"Purchase Invoices", false, Doc3Lbl);
-          AddMetric(Catalog, 'credit', Database::"Purchase Header", Page::"Purchase Credit Memos", false, Doc4Lbl);
-          AddMetric(Catalog, 'return', Database::"Purchase Header", Page::"Purchase Return Order List", false, Doc5Lbl);
-          AddMetric(Catalog, 'postedReceipt', Database::"Purch. Rcpt. Header", Page::"Posted Purchase Receipts", true, PostedReceiptLbl);
-          AddMetric(Catalog, 'postedInvoice', Database::"Purch. Inv. Header", Page::"Posted Purchase Invoices", true, PostedInvoiceLbl);
-          AddMetric(Catalog, 'postedCredit', Database::"Purch. Cr. Memo Hdr.", Page::"Posted Purchase Credit Memos", false, PostedCreditLbl);
-          AddMetric(Catalog, 'postedReturn', Database::"Return Shipment Header", Page::"Posted Return Shipments", false, PostedReturnLbl);
+          AddMetric(Catalog, 'quote', Database::"Purchase Header", Page::"Purchase Quotes", false, PurchaseQuoteLbl);
+          AddMetric(Catalog, 'blanket', Database::"Purchase Header", Page::"Blanket Purchase Orders", false, PurchaseBlanketLbl);
+          AddMetric(Catalog, 'order', Database::"Purchase Header", Page::"Purchase Order List", true, PurchaseOrderLbl);
+          AddMetric(Catalog, 'invoice', Database::"Purchase Header", Page::"Purchase Invoices", false, PurchaseInvoiceLbl);
+          AddMetric(Catalog, 'credit', Database::"Purchase Header", Page::"Purchase Credit Memos", false, PurchaseCreditLbl);
+          AddMetric(Catalog, 'return', Database::"Purchase Header", Page::"Purchase Return Order List", false, PurchaseReturnLbl);
+          AddMetric(Catalog, 'postedReceipt', Database::"Purch. Rcpt. Header", Page::"Posted Purchase Receipts", true, PurchaseReceiptLbl);
+          AddMetric(Catalog, 'postedInvoice', Database::"Purch. Inv. Header", Page::"Posted Purchase Invoices", true, PurchasePostedInvoiceLbl);
+          AddMetric(Catalog, 'postedCredit', Database::"Purch. Cr. Memo Hdr.", Page::"Posted Purchase Credit Memos", false, PurchasePostedCreditLbl);
+          AddMetric(Catalog, 'postedReturn', Database::"Return Shipment Header", Page::"Posted Return Shipments", false, PurchasePostedReturnLbl);
         end;
       'entries':
         begin
@@ -879,6 +855,26 @@ codeunit 90369 "BCSF Dashboard Stock"
   end;
 
   var
+    SalesQuoteLbl: Label 'Sales quotes';
+    SalesBlanketLbl: Label 'Blanket sales orders';
+    SalesOrderLbl: Label 'Sales orders';
+    SalesInvoiceLbl: Label 'Unposted sales invoices';
+    SalesCreditLbl: Label 'Sales credit memos';
+    SalesReturnLbl: Label 'Sales return orders';
+    SalesShipmentLbl: Label 'Posted sales shipments';
+    SalesPostedInvoiceLbl: Label 'Posted sales invoices';
+    SalesPostedCreditLbl: Label 'Posted sales credit memos';
+    SalesPostedReturnLbl: Label 'Posted sales return receipts';
+    PurchaseQuoteLbl: Label 'Purchase quotes';
+    PurchaseBlanketLbl: Label 'Blanket purchase orders';
+    PurchaseOrderLbl: Label 'Purchase orders';
+    PurchaseInvoiceLbl: Label 'Unposted purchase invoices';
+    PurchaseCreditLbl: Label 'Purchase credit memos';
+    PurchaseReturnLbl: Label 'Purchase return orders';
+    PurchaseReceiptLbl: Label 'Posted purchase receipts';
+    PurchasePostedInvoiceLbl: Label 'Posted purchase invoices';
+    PurchasePostedCreditLbl: Label 'Posted purchase credit memos';
+    PurchasePostedReturnLbl: Label 'Posted purchase return shipments';
     MasterGroupLbl: Label 'Master data';
     SalesGroupLbl: Label 'Sales';
     CustomerPaymentsLbl: Label 'Customer payments';
@@ -892,21 +888,9 @@ codeunit 90369 "BCSF Dashboard Stock"
     ServiceGroupLbl: Label 'Service';
     AssetsGroupLbl: Label 'Fixed assets';
     ContactsGroupLbl: Label 'Relationship management';
-    Doc0Lbl: Label 'Quotes';
-    Doc1Lbl: Label 'Blanket orders';
-    Doc2Lbl: Label 'Orders';
-    Doc3Lbl: Label 'Invoices';
-    Doc4Lbl: Label 'Credit memos';
-    Doc5Lbl: Label 'Return orders';
-    PostedShipmentLbl: Label 'Posted shipments';
-    PostedReceiptLbl: Label 'Posted receipts';
-    PostedInvoiceLbl: Label 'Posted invoices';
-    PostedCreditLbl: Label 'Posted credit memos';
-    PostedReturnLbl: Label 'Posted returns';
     NoGeneratorLbl: Label 'No executable generator';
     NoAccessLbl: Label 'No access';
     NoListLbl: Label 'Standard list unavailable';
-    LimitLbl: Label 'Narrow to a single run or use provenance for larger sets.';
     UnverifiedLbl: Label 'This view cannot be matched reliably to the standard list.';
     ChangedLbl: Label 'The visible count changed or the list is unavailable. Refresh the dashboard.';
 }

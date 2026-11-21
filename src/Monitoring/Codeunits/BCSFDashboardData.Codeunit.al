@@ -84,6 +84,7 @@ codeunit 90365 "BCSF Dashboard Data"
     Company.Add('status', NotPreparedLbl);
     Company.Add('error', '');
     Company.Add('phase', FoundationLbl);
+    Company.Add('processMode', '');
     Company.Add('hasJob', false);
     if not Setup.ReadPermission() then
       exit(Company);
@@ -96,8 +97,14 @@ codeunit 90365 "BCSF Dashboard Data"
       if not IsNullGuid(Setup."Industry Job Id") then
         Company.Replace('chart', Format(Setup."Industry Finance Mode"));
     JobId := Setup."Industry Job Id";
-    if not IsNullGuid(JobId) then
+    if not IsNullGuid(JobId) then begin
       Company.Replace('industry', WholesaleLbl);
+      case Setup."Industry Process Mode" of
+        "BCSF Process Mode"::PostedMovements: Company.Replace('processMode', PostedWithoutPaymentsLbl);
+        "BCSF Process Mode"::FollowUpProcesses: Company.Replace('processMode', PostedWithPaymentsLbl);
+        else Company.Replace('processMode', Format(Setup."Industry Process Mode"));
+      end;
+    end;
     if not IsNullGuid(Setup."Industry Run Id") then begin
       Company.Add('runId', Format(Setup."Industry Run Id", 0, 4));
       Company.Add('steps', DescribeSteps(Setup."Industry Run Id"));
@@ -540,6 +547,8 @@ codeunit 90365 "BCSF Dashboard Data"
     RequirementsLbl: Label 'Missing generators or prerequisites block execution. Posting requires a separate authorization contract.';
     NotRecordedLbl: Label 'Not recorded';
     SelectedLbl: Label 'Selected';
+    PostedWithoutPaymentsLbl: Label 'Posted documents without payments';
+    PostedWithPaymentsLbl: Label 'Posted documents with payments and application';
     WorkflowLbl: Label 'Generate company data';
     CompanyQueueLbl: Label 'Current background job';
     CompanyProgressLbl: Label 'Company generation progress';

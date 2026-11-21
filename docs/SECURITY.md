@@ -123,3 +123,8 @@ Expliziter Start autorisiert die angezeigte fehlende Foundation und ungebuchte D
 ## 1.0.7.0 – indirekte Standardbuchungsrechte
 
 Gebuchte Tabellen werden durch BC-Standardcodeunits geschrieben. Environment Guard prüft effektive zugewiesene Insertrechte Yes/Indirect, bei Ausgleich zusätzlich Modify sowie Leserecht und Standard-Codeunit-Ausführungsrecht. Keine direkte WritePermission-Pflicht auf gebuchten Tabellen, keine neuen Ledgerrechte in BCSF ADMIN. Ungebuchte Belege benötigen weiterhin direkte Schreibrechte. Explizite separate Buchungsfreigaben werden beim Kopieren/Import zurückgesetzt; paymentSetup bindet nur synthetische Bank ohne externe Kennungen. Laufzeit-/Sandbox-/Claim-/Transaktionsgrenzen gelten auch im Hintergrund. [Gemeldeter Fehler und Korrektur](INDUSTRY_INITIALIZATION.md#gemeldeter-berechtigungsfehler-und-korrektur). Rechteprüfung mit realen Standardrollen noch offen.
+
+
+## 1.0.7.1 – Dashboardlisten
+
+Keine neue Standard-TableData-Berechtigung. Mappingseite 90370 erfordert Page-X und vorhandene Tabellenleserechte, ist nicht editierbar und verbietet Insert/Modify/Delete. Herkunftszählung basiert weiter auf sichtbaren eindeutigen SystemIds; Dokument-/Zuständigkeits-/Securityfilter bleiben beim Markieren und typisierten Listentransfer erhalten. Klick prüft aktuelle Zahl/Rechte erneut, kein unbeschränkter Fallback. Native Standardseitentrigger und Rollenabnahme offen.

@@ -370,7 +370,7 @@
     });
     // Live result counts are separate from confirmed work. Never relabel artifact totals as addresses.
     results.filter(metric => !matched.has(metric.key) &&
-      (metric.count > 0 || (!Number.isSafeInteger(metric.count) && !metric.noGenerator)))
+      (metric.count >= 0 || (!Number.isSafeInteger(metric.count) && !metric.noGenerator)))
       .forEach(metric => grid.appendChild(metricTile(metric, "runOpen")));
     section.appendChild(grid);
     return section;
@@ -440,7 +440,7 @@
     if (model.company) {
       const company = node("section", "sf-company");
       append(company, node("strong", "", [model.company.name, localized(model.company.industry)].filter(Boolean).join(" · ")),
-        node("span", "sf-help", model.company.chart + " · " + localized(model.company.status)));
+        node("span", "sf-help", [model.company.chart, localized(model.company.processMode || ""), localized(model.company.status)].filter(Boolean).join(" · ")));
       if (model.company.error) {
         const error = node("div", "sf-error", localized(model.company.phase) + ": " + model.company.error);
         error.setAttribute("role", "alert");

@@ -143,3 +143,17 @@ Diese fünf nativen BC-Prüfungen sind **noch nicht ausgeführt**. Fehlende Stan
 In einer frischen Firma sind jetzt 58 Starter vorgesehen: 32 Partnerfälle, zwei technische Artikelsortimente und 24 Planungsfälle. **Einrichtung → Mandant initialisieren**, bei älterer SKR-Testfirma ggf. **Stammdatenbasis ergänzen**, dann **Vorlagen → Technischer Großhandel – Artikelsortiment → Vorlage ausführen**. Standard 1 Debitor / 2 Kreditoren / 8 Artikel bei Paketgröße 3. Anschließend die Variante **mit Lagerplätzen** prüfen.
 
 [Erwartete Mengen, Standardseiten, ungebuchte Einkaufs-/Verkaufszeilen, negative Fälle und ausführliche Anleitung](../INVENTORY_GENERATION.md#manueller-sandbox-smoke-test). Der gemeldete Fehler mit vertauschter Kreditoren-/Artikelnummer ist im Code korrigiert; alten nach Claim fehlgeschlagenen Lauf nicht blind neu starten. Nach Paketupdate bewusst neuen Lauf verwenden und bestätigte alte Partner erhalten. Keine fachliche Korrekturabnahme aus dem Build ableiten.
+
+
+## 1.0.7.1 – vorhandenen mittleren Lauf im Dashboard prüfen
+
+Korrigiertes lokales Paket: `artifacts/BCScenarioFactory-1.0.7.1-Dashboard.app`. Nach manueller Bereitstellung Dashboard neu öffnen; **keinen neuen Datenlauf zur Anzeigeprüfung starten**.
+
+1. Bestehenden mittleren Lauf wählen: Debitoren 200, Artikel 400, Einheiten 800 und die tatsächlich vorhandenen Kinddaten zählen. Keine Meldung zur Laufeingrenzung allein wegen mehr als 150 Datensätzen.
+2. Jede Kachel öffnen: angezeigte Anzahl und sichtbare Listenmenge/SystemIds müssen stimmen. Eigene manuelle Daten nur in der gesamten Mandantenansicht. In separater Testkopie Löschung/Umbenennung und Security-/Zuständigkeitsfilter prüfen.
+3. Attributzuordnungen öffnen: Liste zeigt die vorhandenen Zuordnungen, Artikel-/Kategorienummer, Attribut und Wert; keine Änderungs-/Löschfunktion. gesamten Mandanten mit laufgefilterter Menge vergleichen.
+4. Einkauf im gemeinsamen Ergebnisraster öffnen: korrekte Bestellung/Rechnung/Eingangslisten, eindeutig von Verkauf bezeichnet. Gebuchte Auftragsziele nicht als noch offene Beleganzahl missverstehen.
+5. Kopf zeigt ausdrücklich die Prozessstufe mit oder ohne Zahlungen. Bei Folgestufe bleiben auch Zahlungszahlen 0 sichtbar. Ein Dashboardupdate erzeugt keine Zahlung.
+6. Zwei-Sekunden-Aktualisierung, Fokus/Scroll/Filter/Reiter und UI-DE/EN prüfen. Reale Laufzeiten für mittleren/großen Herkunftsbestand protokollieren. Neue vorhandene Testhostmethoden separat nativ ausführen; lokale Browserprüfung ersetzt diese nicht.
+
+[Lokale Prüfnachweise](../TESTS.md#sf-045--dashboardnachbesserung-1071).

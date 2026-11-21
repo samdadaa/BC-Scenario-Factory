@@ -1854,6 +1854,8 @@ Akzeptanzkriterien
 
 ### SF-045 — Branchengesteuerte Unternehmensinitialisierung und Architekturvereinfachung
 
+**Aktueller Nachauftrag 1.0.7.1:** Vom Nutzer ausdrücklich gewählte Dashboardkorrektur nach erfolgreichem Datenlauf: fehlende Laufzahlen oberhalb 150, sinnvolle Mappingliste, eindeutige Einkauf-/Verkaufsnamen, reparierter Einkaufs-Drilldown und sichtbare Zahlungsprozessstufe. Bestehende Stämme/Einrichtungen/Vorlagen geprüft und unverändert, Übersetzungen und Testhost nachgeführt. [Plan/Dateien/Risiken](docs/DASHBOARD_DATA_STOCK.md#sf-045--dashboardnachbesserung-1071-plan-vor-änderung), [tatsächlich ausgeführte Prüfungen](docs/TESTS.md#sf-045--dashboardnachbesserung-1071). Status **Zur Prüfung**, native Listen-/Rechte-/Mengenprüfung offen.
+
 **Status:** Zur Prüfung
 **Priorität:** P0
 **Abhängigkeiten:** Bestehende Foundation, SF-019/SF-021, Queue/Checkpoint/Qualitätsabschluss

@@ -389,3 +389,8 @@ Orchestrierung bleibt in Monitoring, die bestehende Setupkarte delegiert dorthin
 ## 1.0.7.0 – tatsächlich ergänzte Objekte
 
 Codeunit 90401 BCSF Payment Processor (bereits für SF-022 geplant) und Codeunit 90454 BCSF Purchase Evidence (vor Erstellung unbesetzte Purchasingreserve) innerhalb des freigegebenen app.json-Bereichs. Keine Kollision/Umnummerierung. Beide intern; BCSF ADMIN ergänzt nur Codeunit-Ausführung. Keine neue Standardtabellenberechtigung oder App-Abhängigkeit. Purchasing nutzt den gemeinsamen Finance-Dienst, dieser verifiziert Claims über DataGeneration ohne direkte BackgroundProcessing-Abhängigkeit.
+
+
+## 1.0.7.1 – belegter Mappinglistenbedarf
+
+Page **90370 BCSF Attribute Assignments**, `src/Monitoring/Pages/BCSFAttributeAssignments.Page.al`, vor Erstellung gegen Quellen und Objektplan unbesetzte Monitoringreserve im Bereich 90100–90999 geprüft. Rein lesende Liste auf Standardtabelle Item Attribute Value Mapping, keine neue Tabelle. Vorhandene Herkunftsseite kann manuelle Mandantenzuordnungen nicht vollständig abbilden; passende Standardliste fehlt. Dashboardkatalog prüft Page-X, BCSF ADMIN ergänzt ausschließlich diese Ausführung. Bestehende IDs/Pfade bleiben erhalten.

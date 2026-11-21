@@ -1,5 +1,8 @@
 # Modulindex – Zielarchitektur
 
+**Aktuell 1.0.7.1:** 140 AL-Objekte. Monitoring ergänzt die begründet benötigte lesende Mappingseite 90370; bestehende Stock/Data/JS korrigiert. Keine Generator-/Stamm-/Einrichtungsänderung. [Details](../DASHBOARD_DATA_STOCK.md#implementierter-stand-1071).
+
+
 **Aktuell 1.0.7.0:** 139 AL-Objekte. Purchasing jetzt fünf Objekte einschließlich Purchase Evidence 90454, Finance neun einschließlich Payment Processor 90401. Großhandel mit vier Prozessstufen und Zwei-Sekunden-Dashboard; native Abnahme offen. [Aktueller Vertrag](../INDUSTRY_INITIALIZATION.md#aktueller-folgeumfang-1070--einkauf-buchung-und-ausgleich). Die nachfolgenden Objektzahlen sind historische Ticketstände.
 
 

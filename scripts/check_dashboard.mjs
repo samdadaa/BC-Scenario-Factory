@@ -246,17 +246,28 @@ try {
     await click(`[data-stock-focus="result:${metricKey}"]`);
     assert.equal(await evaluate('window.calls.at(-1).args[1]'), metricKey);
   }
+  // Medium dataset regression: counts above the old 150-ID limit stay usable.
+  await redraw('window.fixture.steps=[{entityCode:"CUSTOMER",entity:"Customers",target:200,confirmed:200,remaining:0,complete:true,external:false},{entityCode:"ITEM",entity:"Items",target:400,confirmed:400,remaining:0,complete:true,external:false}];window.fixture.runStock={metrics:[{key:"customer",caption:"Customers",count:200,canOpen:true},{key:"item",caption:"Items",count:400,canOpen:true},{key:"itemUnit",caption:"Item units",count:800,canOpen:true},{key:"attributeMapping",caption:"Assignments",count:1154,canOpen:true},{key:"purchase/order",caption:"Purchase orders",count:60,canOpen:true},{key:"purchase/postedInvoice",caption:"Posted purchase invoices",count:120,canOpen:true},{key:"entries/vendorPayment",caption:"Vendor payments",count:0,canOpen:false}]}');
+  assert.equal(await evaluate('document.querySelectorAll(".sf-step").length'), 2);
+  for (const key of ['customer','item','itemUnit','attributeMapping','purchase/order','purchase/postedInvoice']) {
+    await click(`[data-stock-focus="result:${key}"]`);
+    assert.deepEqual(await evaluate('window.calls.at(-1).args'), ['runOpen',key]);
+  }
+  assert.equal(await evaluate(`document.querySelector('[data-render-key="runOpen:entries/vendorPayment"] .sf-stock-number').textContent`), '0', 'Expected zero payments must remain visible.');
   await redraw('window.fixture.hasSelection=false;window.fixture.runs=[]');
   assert.equal(await evaluate('document.querySelectorAll(".sf-action-groups").length'), 0);
   assert.equal(await evaluate('document.querySelector(".sf-empty").textContent'), germanTexts.empty);
   // SF-045: the company path has one summary, hides technical templates and uses real confirmed steps.
   await click('#sf-tab-data');
-  await redraw(`window.fixture.hasSelection=true;window.fixture.selected.id=${JSON.stringify(secondId)};window.fixture.company={name:"Wholesale Sandbox",industry:"Wholesale",chart:"SKR04",status:"Company initialized",phase:"Company foundation",error:"",runId:${JSON.stringify(secondId)}}`);
+  await redraw(`window.fixture.hasSelection=true;window.fixture.selected.id=${JSON.stringify(secondId)};window.fixture.company={name:"Wholesale Sandbox",industry:"Wholesale",chart:"SKR04",status:"Company initialized",processMode:"Posted documents without payments",phase:"Company foundation",error:"",runId:${JSON.stringify(secondId)}}`);
   assert.equal(await evaluate('document.querySelector(".sf-experts").open'), false);
   assert.equal(await evaluate('document.querySelector(".sf-toolbar [data-action=scenarios]")'), null);
   assert.equal(await evaluate('document.querySelectorAll(".sf-company").length'), 1);
   assert.equal(await evaluate('document.querySelector(".sf-company").textContent.includes("Großhandel")'), true);
   assert.ok(await evaluate('document.querySelectorAll(".sf-step").length') > 0);
+  assert.ok(await evaluate('document.querySelector(".sf-company").textContent.includes("Gebuchte Belege ohne Zahlungen")'));
+  await redraw('window.fixture.company.processMode="Posted documents with payments and application"');
+  assert.ok(await evaluate('document.querySelector(".sf-company").textContent.includes("Gebuchte Belege mit Zahlungen und Ausgleich")'));
   await redraw('window.fixture.company.hasJob=true;window.fixture.company.steps=[{entityCode:"PURCHASE.ORDER",entity:"Purchase Orders",target:15,confirmed:15,remaining:0,complete:true,external:false}];window.fixture.selected.id="different-historical-run"');
   assert.equal(await evaluate('document.querySelector(".sf-step-value").textContent'), '15 / 15', 'Company progress is independent of historical run selection.');
   await evaluate('document.querySelector(".sf-experts").open=true');

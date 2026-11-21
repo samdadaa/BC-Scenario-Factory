@@ -85,3 +85,8 @@ Company Initialization 90361 orchestriert genau einen gespeicherten Request in d
 ## 1.0.7.0 – aktueller Folgeumfang
 
 Lesender Zwei-Sekunden-Poll mit serialisierten Aufrufen und inkrementellem DOM. Workflowstart auch nach abgeschlossenem Lauf, zusätzliche Herkunftskennzahlen für Eingang/Rechnung/Zahlung; Filter/Drilldown erneut geprüft. [Gemeinsamer Vertrag](../../../INDUSTRY_INITIALIZATION.md). **Zur Prüfung**, native Abnahme offen.
+
+
+## 1.0.7.1 – vollständige Bestandsinformationen
+
+Stock verwendet MarkedOnly statt begrenzter SystemId-OR-Filter, behält Standard-/Sicherheitsfilter und übergibt Marks an Listenrecords. Kauf-/Verkaufsbeschriftungen getrennt, purchase/-Runroute repariert, Prozessstufe sichtbar und erwartete Nullzahlungen behalten. Neue rein lesende Page 90370 auf Item Attribute Value Mapping wegen fehlender passender Standardliste. Keine Tabelle/Generator-/Einrichtungsmutation. [Vertrag](../../../DASHBOARD_DATA_STOCK.md#implementierter-stand-1071), [echte Prüfungen und native Grenzen](../../../TESTS.md#sf-045--dashboardnachbesserung-1071). **Zur Prüfung**.

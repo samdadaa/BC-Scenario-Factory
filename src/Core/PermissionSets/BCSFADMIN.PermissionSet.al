@@ -30,6 +30,7 @@ permissionset 90105 "BCSF ADMIN"
 
     tabledata "BCSF Factory Setup" = RIM,
     table "BCSF Factory Setup" = X,
+    page "BCSF Attribute Assignments" = X,
     page "BCSF Factory Setup Card" = X,
     page "User Settings" = X,
     codeunit "BCSF Setup Management" = X,

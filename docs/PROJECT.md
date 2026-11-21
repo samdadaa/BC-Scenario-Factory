@@ -1,5 +1,8 @@
 # Projektfakten und bestätigter Plan
 
+**Aktuell 1.0.7.1:** 140 AL-Objekte, neue ausschließlich lesende Mappingseite 90370. Identität, Runtime 17, ID-Bereich, Dependencies und persistentes Schema unverändert. Test-App 1.3.0.1 mit 38 Methoden. [Dashboardkorrektur](DASHBOARD_DATA_STOCK.md#implementierter-stand-1071). Folgende Versionsabschnitte sind historische Ticketstände.
+
+
 ## Aktueller Quellstand SF-045 – 21.11.2026
 
 Manifest: App-ID `618c08c6-601b-430a-90d2-55f96866bfa4`, Name `BC Scenario Factory`, Publisher `Default Publisher`, Version `1.0.7.0`, Application `28.0.0.0`, Runtime `17.0`, IDs `90100–90999`, Dependencies `[]`. Identität/Range/Runtime unverändert; additive Featureversion. 139 AL-Objekte, keine neue Tabelle/Seite. Gegenüber 1.0.6.0 zwei neue Codeunits 90401 Payment Processor und 90454 Purchase Evidence. Sieben optionale Requestfelder im bestehenden Setup, zwei zusätzliche Scenario-Freigabefelder; optionale purchaseSetup/paymentSetup-Verträge im Snapshot-Schema 1. Separate Test-App `1.3.0.0` mit 36 Testmethoden referenziert App `1.0.7.0`; Main-App hängt nicht von Tests ab.
