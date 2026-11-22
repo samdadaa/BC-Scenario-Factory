@@ -155,6 +155,7 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     Mode: Integer;
     EntityCode: Code[30];
     Quantity: Decimal;
+    LineIndex: Integer;
   begin
     Clear(Findings);
     Contract.CheckBatch(Context, Target, Batch);
@@ -166,7 +167,6 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
       Error(ResultErr);
     for LogicalKey := Contract.GetInteger(Batch, 'firstKey') to Contract.GetInteger(Batch, 'lastKey') do begin
       Setup.CustomerFor(Context, LogicalKey, Customer);
-      Setup.ItemFor(Context, LogicalKey, Item);
       Mode := Coordinator.Disposition(Context, EntityCode, LogicalKey);
       Quantity := Coordinator.Quantity(Context, EntityCode, LogicalKey);
       if Mode > 0 then begin
@@ -179,14 +179,23 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
         Invoice.TestField("Sell-to Customer No.", Customer."No.");
         if Payments.Enabled(Context) then
           Payments.ValidatePayment(RunId, EntityCode, LogicalKey, Invoice."Cust. Ledger Entry No.", true);
-        InvoiceLine.Get(Invoice."No.", 10000);
-        InvoiceLine.TestField(Type, InvoiceLine.Type::Item);
-        InvoiceLine.TestField("No.", Item."No.");
-        InvoiceLine.TestField("Unit of Measure Code", Item."Base Unit of Measure");
-        if Mode = 1 then
-          InvoiceLine.TestField(Quantity, Quantity)
-        else
-          InvoiceLine.TestField(Quantity, Quantity / 2);
+        for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, LogicalKey) do begin
+          if Coordinator.IsWholesaleQualityProfile(Context) then begin
+            Setup.ItemFor(Context, Coordinator.WholesaleSalesItemKey(Context, EntityCode, LogicalKey, LineIndex), Item);
+            Quantity := Coordinator.WholesaleSalesLineQuantity(Context, EntityCode, LogicalKey, LineIndex);
+          end else begin
+            Setup.ItemFor(Context, LogicalKey, Item);
+            Quantity := Coordinator.Quantity(Context, EntityCode, LogicalKey);
+          end;
+          InvoiceLine.Get(Invoice."No.", LineIndex * 10000);
+          InvoiceLine.TestField(Type, InvoiceLine.Type::Item);
+          InvoiceLine.TestField("No.", Item."No.");
+          InvoiceLine.TestField("Unit of Measure Code", Item."Base Unit of Measure");
+          if Mode = 1 then
+            InvoiceLine.TestField(Quantity, Quantity)
+          else
+            InvoiceLine.TestField(Quantity, Quantity / 2);
+        end;
       end;
       if Mode <> 1 then begin
         Entry.Get(RunId, EntityCode, LogicalKey, 'DOCUMENT');
@@ -197,18 +206,27 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
           Header.TestField("Document Date", Coordinator.DocumentDate(Context, EntityCode, LogicalKey));
           Header.TestField("Order Date", Coordinator.DocumentDate(Context, EntityCode, LogicalKey));
         end;
-        Line.Get(Header."Document Type", Header."No.", 10000);
         Header.TestField("Sell-to Customer No.", Customer."No.");
-        Line.TestField("No.", Item."No.");
-        Line.TestField("Unit of Measure Code", Item."Base Unit of Measure");
-        Line.TestField(Quantity, Quantity);
-        if Mode = 0 then begin
-          Line.TestField("Quantity Shipped", 0);
-          Line.TestField("Quantity Invoiced", 0);
-        end else begin
-          Line.TestField("Quantity Shipped", Quantity / 2);
-          Line.TestField("Quantity Invoiced", Quantity / 2);
-          Line.TestField("Outstanding Quantity", Quantity / 2);
+        for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, LogicalKey) do begin
+          if Coordinator.IsWholesaleQualityProfile(Context) then begin
+            Setup.ItemFor(Context, Coordinator.WholesaleSalesItemKey(Context, EntityCode, LogicalKey, LineIndex), Item);
+            Quantity := Coordinator.WholesaleSalesLineQuantity(Context, EntityCode, LogicalKey, LineIndex);
+          end else begin
+            Setup.ItemFor(Context, LogicalKey, Item);
+            Quantity := Coordinator.Quantity(Context, EntityCode, LogicalKey);
+          end;
+          Line.Get(Header."Document Type", Header."No.", LineIndex * 10000);
+          Line.TestField("No.", Item."No.");
+          Line.TestField("Unit of Measure Code", Item."Base Unit of Measure");
+          Line.TestField(Quantity, Quantity);
+          if Mode = 0 then begin
+            Line.TestField("Quantity Shipped", 0);
+            Line.TestField("Quantity Invoiced", 0);
+          end else begin
+            Line.TestField("Quantity Shipped", Quantity / 2);
+            Line.TestField("Quantity Invoiced", Quantity / 2);
+            Line.TestField("Outstanding Quantity", Quantity / 2);
+          end;
         end;
       end;
     end;

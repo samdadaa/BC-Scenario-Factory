@@ -649,7 +649,7 @@ codeunit 90700 "BCSF Inventory Tests"
     RunId := Setup."Industry Run Id";
     Header.Get(RunId);
     Header.TestField("Profile Code", 'TRADE');
-    Assert(Header."Profile Version" in ['3', '4'], 'Wholesale reference must use its supported immutable version.');
+    Assert(Header."Profile Version" in ['3', '4', '5'], 'Wholesale reference must use its supported immutable version.');
     Execution.Get(RunId);
     Execution.TestField(Status, Execution.Status::Completed);
     AssertWholesaleCount(RunId, 'CUSTOMER', 'CUSTOMER', 20);
@@ -926,6 +926,131 @@ codeunit 90700 "BCSF Inventory Tests"
     Again := Catalog.BuildValues(Context, 3);
     Again.WriteTo(Second);
     Assert(First = Second, 'Catalog depends on execution order or run identity.');
+  end;
+
+  [Test]
+  procedure WholesaleV5HasFourHundredUniqueProductIdentities()
+  var
+    Catalog: Codeunit "BCSF Item Catalog";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    Values: JsonObject;
+    Seen: Dictionary of [Text, Boolean];
+    Description: Text;
+    Key: Integer;
+  begin
+    Context := ContextFixture();
+    Context.Replace('profileCode', 'TRADE');
+    Context.Replace('profileVersion', '5');
+    for Key := 1 to 400 do begin
+      Values := Catalog.BuildValues(Context, Key);
+      Description := Contract.GetText(Values, 'description');
+      Assert(not Seen.ContainsKey(Description), 'Duplicate wholesale product identity at item key ' + Format(Key));
+      Seen.Add(Description, true);
+      Assert(Contract.GetInteger(Values, 'reorderPoint') > 0, 'Invalid replenishment threshold.');
+      Assert(Contract.GetText(Values, 'rating') <> '', 'Missing nominal pressure rating.');
+    end;
+    Assert(Seen.Count() = 400, 'Wholesale medium assortment does not contain 400 unique products.');
+  end;
+
+  [Test]
+  procedure WholesaleV5RejectsExceedingPhysicalAssortmentCapacity()
+  var
+    Catalog: Codeunit "BCSF Item Catalog";
+    Context: JsonObject;
+  begin
+    Context := ContextFixture();
+    Context.Replace('profileCode', 'TRADE');
+    Context.Replace('profileVersion', '5');
+    asserterror Catalog.BuildValues(Context, 6913);
+  end;
+
+  [Test]
+  procedure WholesaleV4RetainsLegacyCatalogShape()
+  var
+    Catalog: Codeunit "BCSF Item Catalog";
+    Context: JsonObject;
+    Values: JsonObject;
+  begin
+    Context := ContextFixture();
+    Context.Replace('profileCode', 'TRADE');
+    Context.Replace('profileVersion', '4');
+    Values := Catalog.BuildValues(Context, 1);
+    Assert(not Values.Contains('dimension'), 'Immutable wholesale v4 catalog must not be rewritten.');
+  end;
+
+  [Test]
+  procedure WholesaleV5MultiLinePurchaseCoversPostedSales()
+  var
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Context: JsonObject;
+    Targets: JsonArray;
+    Received: Dictionary of [Integer, Decimal];
+    ItemCount: Integer;
+    PurchaseKey: Integer;
+    SalesKey: Integer;
+    LineIndex: Integer;
+    ItemKey: Integer;
+    Mode: Integer;
+    Qty: Decimal;
+    Available: Decimal;
+    Required: Decimal;
+    DocumentItems: Dictionary of [Integer, Boolean];
+    EntityCode: Code[30];
+    EntityIndex: Integer;
+    MaxSales: Integer;
+  begin
+    Context := ContextFixture();
+    Context.Replace('profileCode', 'TRADE');
+    Context.Replace('profileVersion', '5');
+    Context.Add('startingDate', Format(WorkDate(), 0, 9));
+    Context.Add('endingDate', Format(WorkDate() + 30, 0, 9));
+    Clear(Targets);
+    AddMixedTarget(Targets, "BCSF Entity Type"::Vendor, 5, 0, 0);
+    AddMixedTarget(Targets, "BCSF Entity Type"::Item, 40, 0, 0);
+    AddMixedTarget(Targets, "BCSF Entity Type"::PurchaseOrder, 15, 60, 20);
+    AddMixedTarget(Targets, "BCSF Entity Type"::SalesOrder, 12, 50, 25);
+    AddMixedTarget(Targets, "BCSF Entity Type"::SalesInvoice, 3, 67, 0);
+    Context.Replace('targets', Targets);
+    ItemCount := 40;
+    for PurchaseKey := 1 to 15 do begin
+      Assert(Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', PurchaseKey) >= 2, 'Wholesale purchase must contain multiple items.');
+      Mode := Coordinator.Disposition(Context, 'PURCHASE.ORDER', PurchaseKey);
+      if Mode > 0 then
+        for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', PurchaseKey) do begin
+          ItemKey := Coordinator.WholesalePurchaseItemKey(Context, PurchaseKey, LineIndex);
+          Assert(((ItemKey - 1) mod 5) = ((PurchaseKey - 1) mod 5), 'Purchase lines must share the primary supplier.');
+          Qty := Coordinator.WholesalePurchaseLineQuantity(Context, PurchaseKey, LineIndex);
+          if Mode = 2 then
+            Qty /= 2;
+          if not Received.Get(ItemKey, Available) then
+            Available := 0;
+          Received.Set(ItemKey, Available + Qty);
+        end;
+    end;
+    for ItemKey := 1 to ItemCount do begin
+      Required := Coordinator.WholesaleDemandForItem(Context, ItemKey, 1);
+      if not Received.Get(ItemKey, Available) then
+        Available := 0;
+      Assert(Available >= Required, 'Wholesale purchase receipts do not cover planned posted sales.');
+    end;
+    for EntityIndex := 1 to 2 do begin
+      if EntityIndex = 1 then begin
+        EntityCode := 'SALES.ORDER';
+        MaxSales := 12;
+      end else begin
+        EntityCode := 'SALES.INVOICE';
+        MaxSales := 3;
+      end;
+      for SalesKey := 1 to MaxSales do begin
+        Clear(DocumentItems);
+        for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, SalesKey) do begin
+          ItemKey := Coordinator.WholesaleSalesItemKey(Context, EntityCode, SalesKey, LineIndex);
+          Assert(not DocumentItems.ContainsKey(ItemKey), 'A wholesale document repeats a product without a reason.');
+          DocumentItems.Add(ItemKey, true);
+        end;
+      end;
+    end;
   end;
 
   [Test]

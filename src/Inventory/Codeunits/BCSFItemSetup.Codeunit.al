@@ -320,6 +320,23 @@ codeunit 90478 "BCSF Item Setup"
     Rows.Close();
   end;
 
+  procedure PrimaryVendor(Context: JsonObject; LogicalKey: Integer): Code[20]
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+    VendorCount: Integer;
+  begin
+    if (Contract.GetText(Context, 'profileCode') <> 'TRADE') or
+      (Contract.GetText(Context, 'profileVersion') <> '5') then
+      exit(ResolveVendor(Context, 1));
+    if not Contract.GetBoolean(ReadSettings(Context), 'generatedVendors') then
+      exit(ResolveVendor(Context, 1));
+    VendorCount := Quantity(Context, "BCSF Entity Type"::Vendor);
+    if VendorCount < 2 then
+      Error(VendorErr);
+    // Stable modulo assignment; all suppliers participate in medium scenarios.
+    exit(ResolveVendor(Context, 1 + ((LogicalKey - 1) mod VendorCount)));
+  end;
+
   procedure ResolveVendor(Context: JsonObject; Index: Integer): Code[20]
   var
     Entry: Record "BCSF Generated Record";

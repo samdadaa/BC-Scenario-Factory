@@ -14,19 +14,28 @@ codeunit 90480 "BCSF Item Masters"
     Catalog: Codeunit "BCSF Item Catalog";
     Contract: Codeunit "BCSF Contract JSON";
     German: Boolean;
+    IsWholesaleV5: Boolean;
     RootId: Guid;
     CategoryId: Guid;
   begin
     German := Contract.GetInteger(Context, 'dataLanguage') = 1;
+    // Wholesale v5 allows materials to vary within each category.
+    // Do not inherit a fixed material from the item category.
+    IsWholesaleV5 := (Contract.GetText(Context, 'profileCode') = 'TRADE') and
+      (Contract.GetText(Context, 'profileVersion') = '5');
     RootId := NewCategory(RunId, BatchId, 'TECH', '', Catalog.Choose(German, 'Installationstechnik', 'Installation supplies'), RootId);
     CategoryId := NewCategory(RunId, BatchId, 'FITTINGS', 'TECH', Catalog.Choose(German, 'Verbindungstechnik', 'Fittings'), RootId);
-    AssignMaterial(Context, RunId, BatchId, 'FITTINGS', Catalog.Choose(German, 'Messing', 'Brass'), CategoryId);
+    if not IsWholesaleV5 then
+      AssignMaterial(Context, RunId, BatchId, 'FITTINGS', Catalog.Choose(German, 'Messing', 'Brass'), CategoryId);
     CategoryId := NewCategory(RunId, BatchId, 'VALVES', 'TECH', Catalog.Choose(German, 'Armaturen', 'Valves'), RootId);
-    AssignMaterial(Context, RunId, BatchId, 'VALVES', Catalog.Choose(German, 'Messing', 'Brass'), CategoryId);
+    if not IsWholesaleV5 then
+      AssignMaterial(Context, RunId, BatchId, 'VALVES', Catalog.Choose(German, 'Messing', 'Brass'), CategoryId);
     CategoryId := NewCategory(RunId, BatchId, 'FILTERS', 'TECH', Catalog.Choose(German, 'Filtertechnik', 'Filters'), RootId);
-    AssignMaterial(Context, RunId, BatchId, 'FILTERS', Catalog.Choose(German, 'Edelstahl', 'Stainless steel'), CategoryId);
+    if not IsWholesaleV5 then
+      AssignMaterial(Context, RunId, BatchId, 'FILTERS', Catalog.Choose(German, 'Edelstahl', 'Stainless steel'), CategoryId);
     CategoryId := NewCategory(RunId, BatchId, 'SEALS', 'TECH', Catalog.Choose(German, 'Dichtungstechnik', 'Seals'), RootId);
-    AssignMaterial(Context, RunId, BatchId, 'SEALS', 'EPDM', CategoryId);
+    if not IsWholesaleV5 then
+      AssignMaterial(Context, RunId, BatchId, 'SEALS', 'EPDM', CategoryId);
   end;
 
   local procedure NewCategory(RunId: Guid; BatchId: Guid; Suffix: Code[10]; ParentSuffix: Code[10]; Description: Text; ParentId: Guid): Guid

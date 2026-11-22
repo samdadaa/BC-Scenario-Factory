@@ -256,10 +256,14 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Entry: Record "BCSF Generated Record";
     Registry: Codeunit "BCSF Record Registry";
     ItemSetup: Codeunit "BCSF Item Setup";
+    Coordinator: Codeunit "BCSF Process Coordinator";
     ItemKey: Integer;
   begin
     // Follow each generated item's actual primary supplier, never an unrelated random vendor.
-    ItemKey := 1 + ((LogicalKey - 1) mod ItemSetup.Quantity(Context, "BCSF Entity Type"::Item));
+    if Coordinator.IsWholesaleQualityProfile(Context) then
+      ItemKey := Coordinator.WholesalePurchaseItemKey(Context, LogicalKey, 1)
+    else
+      ItemKey := 1 + ((LogicalKey - 1) mod ItemSetup.Quantity(Context, "BCSF Entity Type"::Item));
     Entry.SecurityFiltering(SecurityFilter::Disallowed);
     Entry.Get(RunId, 'ITEM', ItemKey, 'ITEM');
     Entry.TestField("Table Id", Database::Item);
@@ -279,6 +283,22 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Entry.TestField("Table Id", Database::Vendor);
     if not Registry.ExistsByIdentity(Entry) then
       Error(ResultErr);
+  end;
+
+  local procedure WholesaleLineItem(Context: JsonObject; RunId: Guid; PurchaseKey: Integer; LineIndex: Integer; VendorNo: Code[20]; var Item: Record Item)
+  var
+    Entry: Record "BCSF Generated Record";
+    Registry: Codeunit "BCSF Record Registry";
+    Coordinator: Codeunit "BCSF Process Coordinator";
+  begin
+    Entry.SecurityFiltering(SecurityFilter::Disallowed);
+    Entry.Get(RunId, 'ITEM', Coordinator.WholesalePurchaseItemKey(Context, PurchaseKey, LineIndex), 'ITEM');
+    Entry.TestField("Table Id", Database::Item);
+    if not Registry.ExistsByIdentity(Entry) then
+      Error(ResultErr);
+    Item.SecurityFiltering(SecurityFilter::Disallowed);
+    Item.GetBySystemId(Entry."Record SystemId");
+    Item.TestField("Vendor No.", VendorNo);
   end;
 
   [CommitBehavior(CommitBehavior::Error)]
@@ -308,6 +328,8 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Quantity: Decimal;
     PostingQuantity: Decimal;
     Date: Date;
+    LineIndex: Integer;
+    LineCount: Integer;
     Tables: array[10] of Integer;
     Nos: array[10] of Code[20];
   begin
@@ -327,9 +349,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     VAT.TestField("VAT Calculation Type", VAT."VAT Calculation Type"::"Normal VAT");
     Mode := Coordinator.Disposition(Context, 'PURCHASE.ORDER', LogicalKey);
     Quantity := Coordinator.PurchaseQuantity(Context, LogicalKey);
-    PostingQuantity := Quantity;
-    if Mode = 2 then
-      PostingQuantity := Quantity / 2;
+    LineCount := Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', LogicalKey);
     Date := Coordinator.PurchaseDate(Context, LogicalKey);
     Header.Init();
     Header.SetHideValidationDialog(true);
@@ -346,35 +366,56 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Header.Validate("Vendor Invoice No.", Header."No.");
     Header.Modify(true);
     HeaderId := Header.SystemId;
-    Line.Init();
-    Line.Validate("Document Type", Header."Document Type");
-    Line.Validate("Document No.", Header."No.");
-    Line.Validate("Line No.", 10000);
-    Line.Insert(true);
-    Line.Validate(Type, Line.Type::Item);
-    Line.Validate("No.", Item."No.");
-    Line.Validate("Location Code", Header."Location Code");
-    Line.Validate("Unit of Measure Code", Item."Base Unit of Measure");
-    Line.Validate(Quantity, Quantity);
-    Line.Validate("Direct Unit Cost", Item."Unit Cost");
-    if Line."Line Amount" <= 0 then
-      Error(ResultErr);
-    Tables[1] := Database::Vendor;
-    Nos[1] := Vendor."No.";
-    Tables[2] := Database::Item;
-    Nos[2] := Item."No.";
-    if not Dimensions.CheckDimIDComb(Header."Dimension Set ID") or
-      not Dimensions.CheckDimIDComb(Line."Dimension Set ID") or
-      not Dimensions.CheckDimValuePosting(Tables, Nos, Line."Dimension Set ID") then
-      Error(ResultErr);
-    Line.Modify(true);
+    for LineIndex := 1 to LineCount do begin
+      if Coordinator.IsWholesaleQualityProfile(Context) then begin
+        WholesaleLineItem(Context, RunId, LogicalKey, LineIndex, Vendor."No.", Item);
+        Quantity := Coordinator.WholesalePurchaseLineQuantity(Context, LogicalKey, LineIndex);
+      end else
+        Quantity := Coordinator.PurchaseQuantity(Context, LogicalKey);
+      Item.TestField(Blocked, false);
+      Item.TestField("Purchasing Blocked", false);
+      Item.TestField("Item Tracking Code", '');
+      ItemVendor.Get(Vendor."No.", Item."No.", '');
+      General.Get(Vendor."Gen. Bus. Posting Group", Item."Gen. Prod. Posting Group");
+      General.TestField(Blocked, false);
+      VAT.Get(Vendor."VAT Bus. Posting Group", Item."VAT Prod. Posting Group");
+      VAT.TestField(Blocked, false);
+      Line.Init();
+      Line.Validate("Document Type", Header."Document Type");
+      Line.Validate("Document No.", Header."No.");
+      Line.Validate("Line No.", LineIndex * 10000);
+      Line.Insert(true);
+      Line.Validate(Type, Line.Type::Item);
+      Line.Validate("No.", Item."No.");
+      Line.Validate("Location Code", Header."Location Code");
+      Line.Validate("Unit of Measure Code", Item."Base Unit of Measure");
+      Line.Validate(Quantity, Quantity);
+      Line.Validate("Direct Unit Cost", Item."Unit Cost");
+      if Line."Line Amount" <= 0 then
+        Error(ResultErr);
+      Tables[1] := Database::Vendor;
+      Nos[1] := Vendor."No.";
+      Tables[2] := Database::Item;
+      Nos[2] := Item."No.";
+      if not Dimensions.CheckDimIDComb(Header."Dimension Set ID") or
+        not Dimensions.CheckDimIDComb(Line."Dimension Set ID") or
+        not Dimensions.CheckDimValuePosting(Tables, Nos, Line."Dimension Set ID") then
+        Error(ResultErr);
+      Line.Modify(true);
+    end;
     if Mode = 0 then begin
       Registry.RegisterResult(RunId, 'PURCHASE.ORDER', LogicalKey, 'DOCUMENT', BatchId, Header.RecordId(), NoParent);
       exit;
     end;
-    Line.Validate("Qty. to Receive", PostingQuantity);
-    Line.Validate("Qty. to Invoice", PostingQuantity);
-    Line.Modify(true);
+    for LineIndex := 1 to LineCount do begin
+      Line.Get(Header."Document Type", Header."No.", LineIndex * 10000);
+      PostingQuantity := Line.Quantity;
+      if Mode = 2 then
+        PostingQuantity := Line.Quantity / 2;
+      Line.Validate("Qty. to Receive", PostingQuantity);
+      Line.Validate("Qty. to Invoice", PostingQuantity);
+      Line.Modify(true);
+    end;
     Header.Receive := true;
     Header.Invoice := true;
     PurchasePost.SetSuppressCommit(true);
@@ -413,6 +454,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     LogicalKey: Integer;
     Mode: Integer;
     Count: Integer;
+    LineIndex: Integer;
     Quantity: Decimal;
     PostedQuantity: Decimal;
     Token: JsonToken;
@@ -437,18 +479,38 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
         Invoice.TestField("Posting Date", Coordinator.PurchaseDate(Context, LogicalKey));
         if Contract.GetDatePolicyVersion(Context) = 1 then
           Invoice.TestField("Document Date", Coordinator.PurchaseDate(Context, LogicalKey));
-        InvoiceLine.Get(Invoice."No.", 10000);
-        InvoiceLine.TestField(Type, InvoiceLine.Type::Item);
-        InvoiceLine.TestField("No.", Item."No.");
-        InvoiceLine.TestField("Unit of Measure Code", Item."Base Unit of Measure");
-        InvoiceLine.TestField(Quantity, PostedQuantity);
+        for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', LogicalKey) do begin
+          if Coordinator.IsWholesaleQualityProfile(Context) then begin
+            WholesaleLineItem(Context, RunId, LogicalKey, LineIndex, Vendor."No.", Item);
+            Quantity := Coordinator.WholesalePurchaseLineQuantity(Context, LogicalKey, LineIndex);
+          end else
+            Quantity := Coordinator.PurchaseQuantity(Context, LogicalKey);
+          PostedQuantity := Quantity;
+          if Mode = 2 then
+            PostedQuantity := Quantity / 2;
+          InvoiceLine.Get(Invoice."No.", LineIndex * 10000);
+          InvoiceLine.TestField(Type, InvoiceLine.Type::Item);
+          InvoiceLine.TestField("No.", Item."No.");
+          InvoiceLine.TestField("Unit of Measure Code", Item."Base Unit of Measure");
+          InvoiceLine.TestField(Quantity, PostedQuantity);
+        end;
         Entry.Get(RunId, 'PURCHASE.ORDER', LogicalKey, 'RECEIPT');
         Receipt.GetBySystemId(Entry."Record SystemId");
         if Contract.GetDatePolicyVersion(Context) = 1 then
           Receipt.TestField("Posting Date", Coordinator.PurchaseDate(Context, LogicalKey));
-        ReceiptLine.Get(Receipt."No.", 10000);
-        ReceiptLine.TestField("No.", Item."No.");
-        ReceiptLine.TestField(Quantity, PostedQuantity);
+        for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', LogicalKey) do begin
+          if Coordinator.IsWholesaleQualityProfile(Context) then begin
+            WholesaleLineItem(Context, RunId, LogicalKey, LineIndex, Vendor."No.", Item);
+            Quantity := Coordinator.WholesalePurchaseLineQuantity(Context, LogicalKey, LineIndex);
+          end else
+            Quantity := Coordinator.PurchaseQuantity(Context, LogicalKey);
+          PostedQuantity := Quantity;
+          if Mode = 2 then
+            PostedQuantity := Quantity / 2;
+          ReceiptLine.Get(Receipt."No.", LineIndex * 10000);
+          ReceiptLine.TestField("No.", Item."No.");
+          ReceiptLine.TestField(Quantity, PostedQuantity);
+        end;
         if Payments.Enabled(Context) then
           Payments.ValidatePayment(RunId, 'PURCHASE.ORDER', LogicalKey, Invoice."Vendor Ledger Entry No.", false);
       end;
@@ -465,18 +527,28 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
           Header.TestField("Order Date", Coordinator.PurchaseDate(Context, LogicalKey));
         end;
         Header.TestField("Buy-from Vendor No.", Vendor."No.");
-        Line.Get(Header."Document Type", Header."No.", 10000);
-        Line.TestField(Type, Line.Type::Item);
-        Line.TestField("No.", Item."No.");
-        Line.TestField("Unit of Measure Code", Item."Base Unit of Measure");
-        Line.TestField(Quantity, Quantity);
-        if Mode = 0 then begin
-          Line.TestField("Quantity Received", 0);
-          Line.TestField("Quantity Invoiced", 0);
-        end else begin
-          Line.TestField("Quantity Received", PostedQuantity);
-          Line.TestField("Quantity Invoiced", PostedQuantity);
-          Line.TestField("Outstanding Quantity", Quantity - PostedQuantity);
+        for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', LogicalKey) do begin
+          if Coordinator.IsWholesaleQualityProfile(Context) then begin
+            WholesaleLineItem(Context, RunId, LogicalKey, LineIndex, Vendor."No.", Item);
+            Quantity := Coordinator.WholesalePurchaseLineQuantity(Context, LogicalKey, LineIndex);
+          end else
+            Quantity := Coordinator.PurchaseQuantity(Context, LogicalKey);
+          PostedQuantity := Quantity;
+          if Mode = 2 then
+            PostedQuantity := Quantity / 2;
+          Line.Get(Header."Document Type", Header."No.", LineIndex * 10000);
+          Line.TestField(Type, Line.Type::Item);
+          Line.TestField("No.", Item."No.");
+          Line.TestField("Unit of Measure Code", Item."Base Unit of Measure");
+          Line.TestField(Quantity, Quantity);
+          if Mode = 0 then begin
+            Line.TestField("Quantity Received", 0);
+            Line.TestField("Quantity Invoiced", 0);
+          end else begin
+            Line.TestField("Quantity Received", PostedQuantity);
+            Line.TestField("Quantity Invoiced", PostedQuantity);
+            Line.TestField("Outstanding Quantity", Quantity - PostedQuantity);
+          end;
         end;
       end;
       Count += 1;

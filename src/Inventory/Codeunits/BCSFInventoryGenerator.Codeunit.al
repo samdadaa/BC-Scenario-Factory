@@ -176,18 +176,37 @@ codeunit 90475 "BCSF Inventory Generator" implements "BCSF Generator"
     Item.Validate("Unit Cost", Rules.GetDecimal(Values, 'cost'));
     Item.Validate("Unit Price", Rules.GetDecimal(Values, 'price'));
     Item.Validate("Reordering Policy", Item."Reordering Policy"::"Fixed Reorder Qty.");
-    Item.Validate("Reorder Point", 12);
+    if Values.Contains('reorderPoint') then
+      Item.Validate("Reorder Point", Contract.GetInteger(Values, 'reorderPoint'))
+    else
+      Item.Validate("Reorder Point", 12);
     Item.Validate("Reorder Quantity", Contract.GetInteger(Values, 'packQuantity'));
-    Item.Validate("Vendor No.", Setup.ResolveVendor(Context, 1));
+    Item.Validate("Vendor No.", Setup.PrimaryVendor(Context, LogicalKey));
     Item.Validate("Item Category Code", Catalog.CategoryCode(RunId, CopyStr(Contract.GetCode(Values, 'category'), 1, 10)));
     Item.Modify(true);
     Masters.RegisterInherited(RunId, BatchId, LogicalKey, Item, ParentId);
     German := Contract.GetInteger(Context, 'dataLanguage') = 1;
+    // In TRADE v5 the material is an article-specific attribute instead of a
+    // category default, because multiple materials share the same category.
+    if (Contract.GetText(Context, 'profileCode') = 'TRADE') and
+      (Contract.GetText(Context, 'profileVersion') = '5') then
+      Masters.Assign(Context, RunId, BatchId, LogicalKey, Database::Item, Item."No.",
+        'Material', Contract.GetText(Values, 'material'), 'MATERIAL', ParentId);
     Masters.Assign(Context, RunId, BatchId, LogicalKey, Database::Item, Item."No.",
       Catalog.Choose(German, 'Durchmesser', 'Diameter'), Contract.GetText(Values, 'diameter'), 'DIAMETER', ParentId);
     if Contract.GetInteger(Values, 'family') <> 5 then
       Masters.Assign(Context, RunId, BatchId, LogicalKey, Database::Item, Item."No.",
         Catalog.Choose(German, 'Gewinde', 'Thread'), Contract.GetText(Values, 'thread'), 'THREAD', ParentId);
+    if Values.Contains('dimension') then begin
+      if Contract.GetInteger(Values, 'family') = 5 then
+        Masters.Assign(Context, RunId, BatchId, LogicalKey, Database::Item, Item."No.",
+          Catalog.Choose(German, 'Dicke', 'Thickness'), Contract.GetText(Values, 'dimension'), 'DIMENSION', ParentId)
+      else
+        Masters.Assign(Context, RunId, BatchId, LogicalKey, Database::Item, Item."No.",
+          Catalog.Choose(German, 'Baulänge', 'Length'), Contract.GetText(Values, 'dimension'), 'DIMENSION', ParentId);
+      Masters.Assign(Context, RunId, BatchId, LogicalKey, Database::Item, Item."No.",
+        Catalog.Choose(German, 'Druckstufe', 'Pressure rating'), Contract.GetText(Values, 'rating'), 'RATING', ParentId);
+    end;
   end;
 
   procedure ValidateOutput(Context: JsonObject; Target: JsonObject; Batch: JsonObject; Result: JsonObject; var Findings: JsonArray)
@@ -238,7 +257,7 @@ codeunit 90475 "BCSF Inventory Generator" implements "BCSF Generator"
       Item.TestField("Costing Method", Item."Costing Method"::FIFO);
       Item.TestField("Unit Cost", Rules.GetDecimal(Values, 'cost'));
       Item.TestField("Unit Price", Rules.GetDecimal(Values, 'price'));
-      Item.TestField("Vendor No.", Setup.ResolveVendor(Context, 1));
+      Item.TestField("Vendor No.", Setup.PrimaryVendor(Context, LogicalKey));
       Measure.Get(Item."No.", Item."Base Unit of Measure");
       Measure.TestField("Qty. per Unit of Measure", 1);
       Measure.Get(Item."No.", Item."Purch. Unit of Measure");
@@ -247,6 +266,14 @@ codeunit 90475 "BCSF Inventory Generator" implements "BCSF Generator"
       Masters.CheckAttribute(Item, Catalog.Choose(German, 'Durchmesser', 'Diameter'), Contract.GetText(Values, 'diameter'));
       if Contract.GetInteger(Values, 'family') <> 5 then
         Masters.CheckAttribute(Item, Catalog.Choose(German, 'Gewinde', 'Thread'), Contract.GetText(Values, 'thread'));
+      if Values.Contains('dimension') then begin
+        if Contract.GetInteger(Values, 'family') = 5 then
+          Masters.CheckAttribute(Item, Catalog.Choose(German, 'Dicke', 'Thickness'), Contract.GetText(Values, 'dimension'))
+        else
+          Masters.CheckAttribute(Item, Catalog.Choose(German, 'Baulänge', 'Length'), Contract.GetText(Values, 'dimension'));
+        Masters.CheckAttribute(Item, Catalog.Choose(German, 'Druckstufe', 'Pressure rating'), Contract.GetText(Values, 'rating'));
+        Item.TestField("Reorder Point", Contract.GetInteger(Values, 'reorderPoint'));
+      end;
       Relations.Validate(Context, RunId, LogicalKey, Item);
     end;
     // Every registered artifact must still exist, including shared masters and inherited mappings.

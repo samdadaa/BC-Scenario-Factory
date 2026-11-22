@@ -102,6 +102,7 @@ codeunit 90429 "BCSF Sales Setup"
   var
     Entry: Record "BCSF Generated Record";
     Delivery: Record "BCSF Generated Record";
+    Contract: Codeunit "BCSF Contract JSON";
     Policy: Codeunit "BCSF Scenario Policy";
     Registry: Codeunit "BCSF Record Registry";
     NodeCode: Code[30];
@@ -112,8 +113,13 @@ codeunit 90429 "BCSF Sales Setup"
     Delivery.SecurityFiltering(SecurityFilter::Disallowed);
     NodeCode := Policy.GetEntityCode(Entity);
     CandidateCount := TargetQuantity(Context, Entity);
-    if CandidateCount > 100 then
-      CandidateCount := 100;
+    if (Entity = Entity::Item) and (Contract.GetText(Context, 'profileCode') = 'TRADE') and
+      (Contract.GetText(Context, 'profileVersion') = '5') then begin
+      if CandidateCount > TargetQuantity(Context, Entity::Vendor) * 4 then
+        CandidateCount := TargetQuantity(Context, Entity::Vendor) * 4;
+    end else
+      if CandidateCount > 100 then
+        CandidateCount := 100;
     for LogicalKey := 1 to CandidateCount do begin
       Entry.Get(RunId, NodeCode, LogicalKey, NodeCode);
       Entry.TestField("Table Id", TableId);
@@ -415,6 +421,10 @@ codeunit 90429 "BCSF Sales Setup"
     Demand: Decimal;
     Quantity: Decimal;
   begin
+    // Wholesale multi-position sales verify availability immediately before posting
+    // each line. The old modulo-based forecast is invalid for this assortment.
+    if Coordinator.IsWholesaleQualityProfile(Context) then
+      exit;
     Evaluate(RunId, Contract.GetText(Context, 'runId'));
     Context.Get('targets', Targets);
     foreach Token in Targets.AsArray() do begin
@@ -441,6 +451,8 @@ codeunit 90429 "BCSF Sales Setup"
         end;
       end;
     end;
+    if Coordinator.IsWholesaleQualityProfile(Context) then
+      Demand := Coordinator.WholesaleDemandForItem(Context, ItemIndex, 1);
     CheckStock(Context, Item, Demand, 0D);
   end;
 

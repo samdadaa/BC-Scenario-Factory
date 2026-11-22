@@ -79,7 +79,11 @@ codeunit 90257 "BCSF Partner Catalog"
     Country := Contract.GetText(Settings, 'countryCode');
     if not (Country in ['DE', 'GB']) then
       Error(CountryErr, Country);
-    Region := Seed.SampleInteger(Context, Entity, Format(LogicalKey, 0, 9), Role + '.CITY', 1, 8);
+    if (Contract.GetText(Context, 'profileCode') = 'TRADE') and
+      (Contract.GetText(Context, 'profileVersion') = '5') then
+      Region := Seed.SampleInteger(Context, Entity, Format(LogicalKey, 0, 9), Role + '.CITY', 1, 20)
+    else
+      Region := Seed.SampleInteger(Context, Entity, Format(LogicalKey, 0, 9), Role + '.CITY', 1, 8);
     if Country = 'DE' then begin
       Result.Add('city', SelectStr(Region, GermanCitiesTok));
       Result.Add('postCode', SelectStr(Region, GermanPostCodesTok));
@@ -189,10 +193,10 @@ codeunit 90257 "BCSF Partner Catalog"
     EnglishActivitiesTok: Label 'Trading,Engineering,Logistics,Supplies,Office Products,Industrial Supply,Building Services,Electrical Supply,Construction Supply,Distribution,Interiors,Packaging,Precision Tools,Tool Supply,Textiles,Metal Products,Timber,Commerce,Procurement,Equipment,Property Services,Sales,Materials,Merchants,Systems,Professional Supply,Components,Workplace Products,Assembly Systems,Wholesale,Industrial Services,Resources', Locked = true;
     GermanLegalFormsTok: Label 'GmbH,AG,KG,GmbH & Co. KG', Locked = true;
     EnglishLegalFormsTok: Label 'Ltd,Limited,PLC,LLP', Locked = true;
-    GermanCitiesTok: Label 'Berlin,Hamburg,München,Köln,Frankfurt am Main,Stuttgart,Leipzig,Dresden', Locked = true;
-    GermanPostCodesTok: Label '10115,20095,80331,50667,60311,70173,04109,01067', Locked = true;
-    EnglishCitiesTok: Label 'London,Manchester,Birmingham,Leeds,Bristol,Liverpool,Sheffield,Nottingham', Locked = true;
-    EnglishPostCodesTok: Label 'SW1A 1AA,M1 1AE,B1 1BB,LS1 1UR,BS1 1AD,L1 8JQ,S1 2HH,NG1 1AA', Locked = true;
+    GermanCitiesTok: Label 'Berlin,Hamburg,München,Köln,Frankfurt am Main,Stuttgart,Leipzig,Dresden,Bonn,Düsseldorf,Dortmund,Essen,Bremen,Hannover,Nürnberg,Mannheim,Karlsruhe,Münster,Aachen,Wuppertal', Locked = true;
+    GermanPostCodesTok: Label '10115,20095,80331,50667,60311,70173,04109,01067,53111,40213,44135,45127,28195,30159,90402,68159,76133,48143,52062,42103', Locked = true;
+    EnglishCitiesTok: Label 'London,Manchester,Birmingham,Leeds,Bristol,Liverpool,Sheffield,Nottingham,Leicester,Coventry,Bradford,Cardiff,Newcastle,Southampton,Portsmouth,Derby,Reading,Oxford,Cambridge,York', Locked = true;
+    EnglishPostCodesTok: Label 'SW1A 1AA,M1 1AE,B1 1BB,LS1 1UR,BS1 1AD,L1 8JQ,S1 2HH,NG1 1AA,LE1 1AA,CV1 1AA,BD1 1AA,CF10 1AA,NE1 1AA,SO14 1AA,PO1 1AA,DE1 1AA,RG1 1AA,OX1 1AA,CB1 1AA,YO1 1AA', Locked = true;
     GermanStreetsTok: Label 'Kastanienweg,Lindenallee,Birkenstraße,Ahornweg,Eichenstraße,Erlenweg,Rosenstraße,Gartenweg,Bachstraße,Parkallee,Heideweg,Buchenstraße,Weidenweg,Feldstraße,Ulmenweg,Seestraße', Locked = true;
     EnglishStreetsTok: Label 'Oak Lane,Willow Road,Maple Avenue,Cedar Close,Birch Street,Elm Road,Rose Lane,Garden Way,Brook Street,Park Avenue,Heather Road,Beech Street,Alder Lane,Meadow Road,Pine Close,Lake Road', Locked = true;
 }

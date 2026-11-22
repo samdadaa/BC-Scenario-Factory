@@ -30,7 +30,7 @@ codeunit 90479 "BCSF Item Relations"
     ParentId := Entry."Entry Id";
     Settings := Setup.ReadSettings(Context);
     German := Contract.GetInteger(Context, 'dataLanguage') = 1;
-    AddReference(Item, '', CopyStr(Contract.GetCode(Settings, 'packUnit'), 1, 10), Setup.ResolveVendor(Context, 1), LogicalKey, 'SUPPLIER1', RunId, BatchId, ParentId, '<3D>');
+    AddReference(Item, '', CopyStr(Contract.GetCode(Settings, 'packUnit'), 1, 10), Setup.PrimaryVendor(Context, LogicalKey), LogicalKey, 'SUPPLIER1', RunId, BatchId, ParentId, '<3D>');
     if LogicalKey = 1 then begin
       AddReference(Item, '', CopyStr(Contract.GetCode(Settings, 'packUnit'), 1, 10), Setup.ResolveVendor(Context, 2), LogicalKey, 'SUPPLIER2', RunId, BatchId, ParentId, '<7D>');
       AddSKU(Item, CopyStr(Contract.GetCode(Settings, 'location'), 1, 10), RunId, BatchId, LogicalKey, ParentId);
@@ -42,7 +42,7 @@ codeunit 90479 "BCSF Item Relations"
       AddVariant(Item, 'BLAU', Catalog.Choose(German, 'Hebel blau', 'Blue lever'), RunId, BatchId, LogicalKey, ParentId);
       AddBarcode(Item, 'ROT', 1, RunId, BatchId, LogicalKey, ParentId);
       AddBarcode(Item, 'BLAU', 2, RunId, BatchId, LogicalKey, ParentId);
-      AddReference(Item, 'ROT', Item."Base Unit of Measure", Setup.ResolveVendor(Context, 1), LogicalKey, 'VARIANT-REF', RunId, BatchId, ParentId, '<3D>');
+      AddReference(Item, 'ROT', Item."Base Unit of Measure", Setup.PrimaryVendor(Context, LogicalKey), LogicalKey, 'VARIANT-REF', RunId, BatchId, ParentId, '<3D>');
     end;
     if LogicalKey = 2 then
       AddSubstitution(Item, RunId, BatchId, ParentId);
@@ -230,7 +230,7 @@ codeunit 90479 "BCSF Item Relations"
     Reference.GetBySystemId(Entry."Record SystemId");
     Reference.TestField("Item No.", Item."No.");
     Reference.TestField("Unit of Measure", CopyStr(Contract.GetCode(Settings, 'packUnit'), 1, 10));
-    Reference.TestField("Reference Type No.", Setup.ResolveVendor(Context, 1));
+    Reference.TestField("Reference Type No.", Setup.PrimaryVendor(Context, LogicalKey));
     GetItemVendor(Supplier, Reference."Reference Type No.", Item."No.", '');
     Supplier.TestField("Vendor Item No.", Reference."Reference No.");
     if LogicalKey = 1 then begin

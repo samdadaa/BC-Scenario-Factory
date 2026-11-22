@@ -2633,6 +2633,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Inventory Generator - NamedType ReplayErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 4193062846 - NamedType 1325198230" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The wholesale assortment supports up to 6912 unique products. Requested item key %1 is out of range.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = logical item key</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Catalog - NamedType CatalogCapacityErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4193062846 - NamedType 1146909282" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select a supported item assortment or sales template profile with a positive item key.</source>
           <note from="Developer" annotates="general" priority="2"></note>

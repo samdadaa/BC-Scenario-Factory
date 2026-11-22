@@ -2,6 +2,7 @@ namespace BCScenarioFactory.ProcessEngine;
 
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
+using BCScenarioFactory.Inventory;
 using BCScenarioFactory.ScenarioManagement;
 
 codeunit 90275 "BCSF Process Coordinator"
@@ -53,6 +54,10 @@ codeunit 90275 "BCSF Process Coordinator"
     Seed: Codeunit "BCSF Seed Engine";
     StartingDate: Date;
   begin
+    if IsWholesaleQualityProfile(Context) and (Disposition(Context, 'PURCHASE.ORDER', LogicalKey) > 0) then begin
+      Evaluate(StartingDate, Contract.GetText(Context, 'startingDate'), 9);
+      exit(StartingDate);
+    end;
     if Disposition(Context, 'PURCHASE.ORDER', LogicalKey) > 0 then begin
       Evaluate(StartingDate, Contract.GetText(Context, 'startingDate'), 9);
       if Contract.GetDatePolicyVersion(Context) = 1 then
@@ -175,6 +180,154 @@ codeunit 90275 "BCSF Process Coordinator"
     Evaluate(StartingDate, Contract.GetText(Context, 'startingDate'), 9);
     Evaluate(EndingDate, Contract.GetText(Context, 'endingDate'), 9);
     exit(StartingDate + Seed.SampleInteger(Context, EntityCode, Format(LogicalKey, 0, 9), 'SALES-DATE', 0, EndingDate - StartingDate));
+  end;
+
+  procedure IsWholesaleQualityProfile(Context: JsonObject): Boolean
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+  begin
+    exit((Contract.GetText(Context, 'profileCode') = 'TRADE') and
+      (Contract.GetText(Context, 'profileVersion') = '5'));
+  end;
+
+  procedure WholesaleLineCount(Context: JsonObject; EntityCode: Code[30]; LogicalKey: Integer): Integer
+  begin
+    if not IsWholesaleQualityProfile(Context) then
+      exit(1);
+    if EntityCode = 'PURCHASE.ORDER' then
+      exit(2 + ((LogicalKey - 1) mod 3));
+    exit(2 + ((LogicalKey - 1) mod 4));
+  end;
+
+  local procedure WholesaleTargetQuantity(Context: JsonObject; Entity: Enum "BCSF Entity Type"): Integer
+  var
+    Setup: Codeunit "BCSF Item Setup";
+  begin
+    exit(Setup.Quantity(Context, Entity));
+  end;
+
+  local procedure WholesalePostedPurchaseCount(Context: JsonObject): Integer
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+    Targets: JsonToken;
+    Token: JsonToken;
+    Target: JsonObject;
+    Count: Integer;
+  begin
+    Context.Get('targets', Targets);
+    foreach Token in Targets.AsArray() do begin
+      Target := Token.AsObject();
+      if Contract.GetInteger(Target, 'entity') = "BCSF Entity Type"::PurchaseOrder.AsInteger() then begin
+        Count := Contract.GetInteger(Target, 'quantity');
+        exit(Round(Count * Contract.GetDecimal(Target, 'postedPercent') / 100, 1, '<') +
+          Round(Count * Contract.GetDecimal(Target, 'partialPercent') / 100, 1, '<'));
+      end;
+    end;
+    exit(0);
+  end;
+
+  procedure WholesalePurchaseItemKey(Context: JsonObject; PurchaseKey: Integer; LineIndex: Integer): Integer
+  var
+    ItemCount: Integer;
+    VendorCount: Integer;
+  begin
+    ItemCount := WholesaleTargetQuantity(Context, "BCSF Entity Type"::Item);
+    VendorCount := WholesaleTargetQuantity(Context, "BCSF Entity Type"::Vendor);
+    if (ItemCount < 1) or (VendorCount < 1) or (PurchaseKey < 1) or (LineIndex < 1) then
+      Error(ContractErr);
+    // All positions on a purchase order share the primary supplier.
+    exit(1 + (((PurchaseKey - 1) mod VendorCount) + (LineIndex - 1) * VendorCount) mod ItemCount);
+  end;
+
+  procedure WholesaleSalesItemKey(Context: JsonObject; EntityCode: Code[30]; SalesKey: Integer; LineIndex: Integer): Integer
+  var
+    PurchaseKey: Integer;
+    PurchaseLineIndex: Integer;
+    PostedPurchases: Integer;
+    ItemCount: Integer;
+  begin
+    ItemCount := WholesaleTargetQuantity(Context, "BCSF Entity Type"::Item);
+    if ItemCount < 1 then
+      Error(ContractErr);
+    PostedPurchases := WholesalePostedPurchaseCount(Context);
+    if PostedPurchases > WholesaleTargetQuantity(Context, "BCSF Entity Type"::Vendor) then
+      PostedPurchases := WholesaleTargetQuantity(Context, "BCSF Entity Type"::Vendor);
+    if PostedPurchases = 0 then begin
+      if ItemCount > WholesaleTargetQuantity(Context, "BCSF Entity Type"::Vendor) * 4 then
+        ItemCount := WholesaleTargetQuantity(Context, "BCSF Entity Type"::Vendor) * 4;
+      exit(1 + ((SalesKey * 7 + LineIndex - 2) mod ItemCount));
+    end;
+    // Different suppliers/assortments are selected without consulting run order.
+    PurchaseKey := 1 + ((SalesKey * 7 + LineIndex - 2) mod PostedPurchases);
+    PurchaseLineIndex := 1 + ((SalesKey + LineIndex - 2) mod WholesaleLineCount(Context, 'PURCHASE.ORDER', PurchaseKey));
+    exit(WholesalePurchaseItemKey(Context, PurchaseKey, PurchaseLineIndex));
+  end;
+
+  procedure WholesaleSalesLineQuantity(Context: JsonObject; EntityCode: Code[30]; LogicalKey: Integer; LineIndex: Integer): Decimal
+  var
+    Seed: Codeunit "BCSF Seed Engine";
+  begin
+    exit(2 * Seed.SampleInteger(Context, EntityCode, Format(LogicalKey, 0, 9),
+      'WHOLESALE.LINE.' + Format(LineIndex, 0, 9), 1, 6));
+  end;
+
+  procedure WholesalePurchaseLineQuantity(Context: JsonObject; PurchaseKey: Integer; LineIndex: Integer): Decimal
+  var
+    ItemKey: Integer;
+    Demand: Decimal;
+  begin
+    ItemKey := WholesalePurchaseItemKey(Context, PurchaseKey, LineIndex);
+    Demand := WholesaleDemandForItem(Context, ItemKey, 1);
+    // A partial purchase receipts half the ordered quantity. Both modes still
+    // supply all planned sales plus a small safety stock.
+    if Disposition(Context, 'PURCHASE.ORDER', PurchaseKey) = 2 then
+      exit(2 * (Demand + 12));
+    exit(Demand + 12);
+  end;
+
+  // FirstSalesKey is used by preflight to avoid counting already-posted demand.
+  procedure WholesaleDemandForItem(Context: JsonObject; ItemKey: Integer; FirstSalesKey: Integer): Decimal
+  var
+    OrderCount: Integer;
+    InvoiceCount: Integer;
+    SalesKey: Integer;
+    LineIndex: Integer;
+    Mode: Integer;
+    EntityCode: Code[30];
+    TargetCount: Integer;
+    Demand: Decimal;
+  begin
+    OrderCount := WholesaleTargetQuantity(Context, "BCSF Entity Type"::SalesOrder);
+    InvoiceCount := WholesaleTargetQuantity(Context, "BCSF Entity Type"::SalesInvoice);
+    for LineIndex := 1 to 2 do begin
+      if LineIndex = 1 then begin
+        EntityCode := 'SALES.ORDER';
+        TargetCount := OrderCount;
+      end else begin
+        EntityCode := 'SALES.INVOICE';
+        TargetCount := InvoiceCount;
+      end;
+      for SalesKey := FirstSalesKey to TargetCount do begin
+        Mode := Disposition(Context, EntityCode, SalesKey);
+        if Mode > 0 then
+          Demand += WholesaleDemandFromDocument(Context, EntityCode, SalesKey, ItemKey, Mode);
+      end;
+    end;
+    exit(Demand);
+  end;
+
+  local procedure WholesaleDemandFromDocument(Context: JsonObject; EntityCode: Code[30]; SalesKey: Integer; ItemKey: Integer; Mode: Integer): Decimal
+  var
+    LineIndex: Integer;
+    Demand: Decimal;
+  begin
+    for LineIndex := 1 to WholesaleLineCount(Context, EntityCode, SalesKey) do
+      if WholesaleSalesItemKey(Context, EntityCode, SalesKey, LineIndex) = ItemKey then
+        if Mode = 2 then
+          Demand += WholesaleSalesLineQuantity(Context, EntityCode, SalesKey, LineIndex) / 2
+        else
+          Demand += WholesaleSalesLineQuantity(Context, EntityCode, SalesKey, LineIndex);
+    exit(Demand);
   end;
 
   var

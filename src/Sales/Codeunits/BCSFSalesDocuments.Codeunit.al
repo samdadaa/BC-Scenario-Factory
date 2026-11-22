@@ -44,6 +44,8 @@ codeunit 90430 "BCSF Sales Documents"
     Date: Date;
     Quantity: Decimal;
     PostingQuantity: Decimal;
+    LineIndex: Integer;
+    LineCount: Integer;
   begin
     Mode := Coordinator.Disposition(Context, EntityCode, LogicalKey);
     Quantity := Coordinator.Quantity(Context, EntityCode, LogicalKey);
@@ -52,14 +54,10 @@ codeunit 90430 "BCSF Sales Documents"
       PostingQuantity := Quantity / 2;
     Date := Coordinator.DocumentDate(Context, EntityCode, LogicalKey);
     Setup.CustomerFor(Context, LogicalKey, Customer);
-    Setup.ItemFor(Context, LogicalKey, Item);
     Setup.CheckCustomer(Customer);
-    Setup.CheckItem(Item);
-    if Mode > 0 then begin
-      // Serialize this app's stock-consuming batches, then repeat the actual availability check.
+    if Mode > 0 then
+      // Serialize this app's stock-consuming batches, then check each generated position.
       Entry.LockTable();
-      Setup.CheckStock(Context, Item, PostingQuantity, Date);
-    end;
     Header.Init();
     Header.SetHideValidationDialog(true);
     case EntityCode of
@@ -79,22 +77,37 @@ codeunit 90430 "BCSF Sales Documents"
     Header.Validate("Shipment Date", Date);
     Header.Modify(true);
     HeaderId := Header.SystemId;
-    Line.Init();
-    Line.SetHideValidationDialog(true);
-    Line.Validate("Document Type", Header."Document Type");
-    Line.Validate("Document No.", Header."No.");
-    Line.Validate("Line No.", 10000);
-    Line.Insert(true);
-    Line.Validate(Type, Line.Type::Item);
-    Line.Validate("No.", Item."No.");
-    Line.Validate("Location Code", Header."Location Code");
-    Line.Validate("Unit of Measure Code", Item."Base Unit of Measure");
-    Line.Validate(Quantity, Quantity);
-    // Use the standard price calculation, including date/customer agreements and discounts.
-    if (Line."Unit Price" <= 0) or (Line."Line Amount" <= 0) then
-      Error(PriceErr);
-    CheckDimensions(Header, Line, Customer, Item);
-    Line.Modify(true);
+    LineCount := Coordinator.WholesaleLineCount(Context, EntityCode, LogicalKey);
+    for LineIndex := 1 to LineCount do begin
+      if Coordinator.IsWholesaleQualityProfile(Context) then begin
+        Setup.ItemFor(Context, Coordinator.WholesaleSalesItemKey(Context, EntityCode, LogicalKey, LineIndex), Item);
+        Quantity := Coordinator.WholesaleSalesLineQuantity(Context, EntityCode, LogicalKey, LineIndex);
+      end else begin
+        Setup.ItemFor(Context, LogicalKey, Item);
+        Quantity := Coordinator.Quantity(Context, EntityCode, LogicalKey);
+      end;
+      PostingQuantity := Quantity;
+      if Mode = 2 then
+        PostingQuantity := Quantity / 2;
+      Setup.CheckItem(Item);
+      if Mode > 0 then
+        Setup.CheckStock(Context, Item, PostingQuantity, Date);
+      Line.Init();
+      Line.SetHideValidationDialog(true);
+      Line.Validate("Document Type", Header."Document Type");
+      Line.Validate("Document No.", Header."No.");
+      Line.Validate("Line No.", LineIndex * 10000);
+      Line.Insert(true);
+      Line.Validate(Type, Line.Type::Item);
+      Line.Validate("No.", Item."No.");
+      Line.Validate("Location Code", Header."Location Code");
+      Line.Validate("Unit of Measure Code", Item."Base Unit of Measure");
+      Line.Validate(Quantity, Quantity);
+      if (Line."Unit Price" <= 0) or (Line."Line Amount" <= 0) then
+        Error(PriceErr);
+      CheckDimensions(Header, Line, Customer, Item);
+      Line.Modify(true);
+    end;
     if EntityCode = 'SALES.ORDER' then begin
       // Fresh quotes have no linked opportunity; the standard converter preserves
       // the quote number and transfers prices, dimensions and source line data.
@@ -107,17 +120,29 @@ codeunit 90430 "BCSF Sales Documents"
       Header.Validate("Order Date", Date);
       Header.Modify(true);
       HeaderId := Header.SystemId;
-      Line.Get(Header."Document Type", Header."No.", 10000);
-      CheckDimensions(Header, Line, Customer, Item);
+      for LineIndex := 1 to LineCount do begin
+        Line.Get(Header."Document Type", Header."No.", LineIndex * 10000);
+        if Coordinator.IsWholesaleQualityProfile(Context) then
+          Setup.ItemFor(Context, Coordinator.WholesaleSalesItemKey(Context, EntityCode, LogicalKey, LineIndex), Item)
+        else
+          Setup.ItemFor(Context, LogicalKey, Item);
+        CheckDimensions(Header, Line, Customer, Item);
+      end;
     end;
     if Mode = 0 then begin
       ParentId := Registry.RegisterResult(RunId, EntityCode, LogicalKey, 'DOCUMENT', BatchId, Header.RecordId(), NoParent);
       exit;
     end;
-    if Header."Document Type" = Header."Document Type"::Order then
-      Line.Validate("Qty. to Ship", PostingQuantity);
-    Line.Validate("Qty. to Invoice", PostingQuantity);
-    Line.Modify(true);
+    for LineIndex := 1 to LineCount do begin
+      Line.Get(Header."Document Type", Header."No.", LineIndex * 10000);
+      PostingQuantity := Line.Quantity;
+      if Mode = 2 then
+        PostingQuantity := Line.Quantity / 2;
+      if Header."Document Type" = Header."Document Type"::Order then
+        Line.Validate("Qty. to Ship", PostingQuantity);
+      Line.Validate("Qty. to Invoice", PostingQuantity);
+      Line.Modify(true);
+    end;
     Header.Ship := Header."Document Type" = Header."Document Type"::Order;
     Header.Invoice := true;
     SalesPost.SetSuppressCommit(true);
@@ -132,10 +157,12 @@ codeunit 90430 "BCSF Sales Documents"
     if Mode = 2 then begin
       Header.GetBySystemId(HeaderId);
       Registry.RegisterResult(RunId, EntityCode, LogicalKey, 'DOCUMENT', BatchId, Header.RecordId(), ParentId);
-      Line.Get(Header."Document Type", Header."No.", 10000);
-      Line.TestField("Outstanding Quantity", Quantity - PostingQuantity);
-      Line.TestField("Quantity Shipped", PostingQuantity);
-      Line.TestField("Quantity Invoiced", PostingQuantity);
+      for LineIndex := 1 to LineCount do begin
+        Line.Get(Header."Document Type", Header."No.", LineIndex * 10000);
+        Line.TestField("Outstanding Quantity", Line.Quantity / 2);
+        Line.TestField("Quantity Shipped", Line.Quantity / 2);
+        Line.TestField("Quantity Invoiced", Line.Quantity / 2);
+      end;
     end;
     Evidence.RegisterPosting(Context, RunId, EntityCode, LogicalKey, BatchId, Invoice, Shipment, ParentId);
     if Payments.Enabled(Context) then

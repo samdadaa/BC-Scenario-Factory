@@ -1,0 +1,28 @@
+{
+  "al_files_checked": 144,
+  "unique_catalog_4000": 4000,
+  "profiles": [
+    {
+      "vendors": 5,
+      "items": 40,
+      "distinct_catalog": 40,
+      "purchase_orders": 15,
+      "duplicates_in_sales": 0
+    },
+    {
+      "vendors": 50,
+      "items": 400,
+      "distinct_catalog": 400,
+      "purchase_orders": 150,
+      "duplicates_in_sales": 0
+    },
+    {
+      "vendors": 500,
+      "items": 4000,
+      "distinct_catalog": 4000,
+      "purchase_orders": 1500,
+      "duplicates_in_sales": 0
+    }
+  ],
+  "errors": []
+}

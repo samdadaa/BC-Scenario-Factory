@@ -179,7 +179,7 @@ codeunit 90153 "BCSF Wholesale Profile"
     Scenario.Description := WholesaleLbl;
     // Reuse the versioned trade assortment, partner catalog and immutable snapshot contract.
     Scenario."Profile Code" := 'TRADE';
-    Scenario."Profile Version" := '4';
+    Scenario."Profile Version" := '5';
     Scenario."Usage Mode" := "BCSF Usage Mode"::Functional;
     Scenario."Process Mode" := Mode;
     Scenario.Seed := Setup."Default Seed";
