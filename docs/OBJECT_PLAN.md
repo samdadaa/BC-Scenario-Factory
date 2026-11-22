@@ -405,3 +405,15 @@ Page **90370 BCSF Attribute Assignments**, `src/Monitoring/Pages/BCSFAttributeAs
 | Monitoring | 90373 | Upgrade-Codeunit | BCSF Config Export Upgrade | Ab 1.0.8.1 leerer Trigger; bestehende Pakete unangetastet |
 
 IDs zuvor weder belegt noch geplant, innerhalb Monitoring 90350–90374; keine eigene neue Tabelle/Seite. Monitoring greift auf System.IO und System.Environment des Standards zu. Core bündelt nur deklarativ Execute des Paketdienstes. Standard-RapidStart- und Geschäftsdatenrechte bleiben separat erforderlich. [Umfang, Tabellen-IDs und Grenzen](CONFIG_EXPORT.md), Status **Zur Prüfung**.
+
+
+## Ergänzung SF-048 – umgesetzt, zur Prüfung
+
+Die IDs wurden gegen Bestand und Reservierungen geprüft; keine Kollision im freigegebenen Modulbereich.
+
+| Modul | ID | Typ | Objekt | Datei |
+| --- | --- | --- | --- | --- |
+| Core | 90114 | Enum | BCSF Generation Kind | `src/Core/Enums/BCSFGenerationKind.Enum.al` |
+| DataGeneration | 90259 | Codeunit | BCSF Master Data Source | `src/DataGeneration/Codeunits/BCSFMasterDataSource.Codeunit.al` |
+
+Keine neuen Tabellen/Seiten; [additiver Datenvertrag](MODULAR_GENERATION.md).

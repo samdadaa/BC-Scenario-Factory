@@ -2,7 +2,7 @@
   "id": "e8f7f5f2-7a86-4a19-9270-6c3cf9019019",
   "name": "BC Scenario Factory SF019 Tests",
   "publisher": "Default Publisher",
-  "version": "1.4.0.1",
+  "version": "1.5.0.0",
   "application": "28.0.0.0",
   "runtime": "17.0",
   "platform": "1.0.0.0",
@@ -11,7 +11,7 @@
       "id": "618c08c6-601b-430a-90d2-55f96866bfa4",
       "name": "BC Scenario Factory",
       "publisher": "Default Publisher",
-      "version": "1.0.8.1"
+      "version": "1.0.9.0"
     }
   ],
   "idRanges": [

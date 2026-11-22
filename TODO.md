@@ -20,7 +20,7 @@ Normalweg: **Einrichtung → Kontenplan einmalig → Großhandel → Module → 
 
 ## Bedeutung der Häkchen und gemeinsame Regeln
 
-**Aktiver Implementierungsauftrag 22.11.2026:** SF-046 ausdrücklich durch den Nutzer ausgewählt; vollständige Inhalte der betroffenen Tabellen bestätigt.
+**Aktiver Implementierungsauftrag 22.11.2026:** SF-047-Zahlungsfehler zuerst korrigieren, danach ausdrücklich ausgewähltes SF-048 aus Nutzeranhang umsetzen. Bestätigte Stammdaten aus fehlgeschlagenen Läufen sind nach erneuter Prüfung ausdrücklich zugelassen. Frühere Ticketstände bleiben Historie.
 
 - `[x]` bedeutet **im aktuellen Code vorhanden oder lokal belegt**. Es bedeutet keine bestandene native Prüfung oder menschliche Abnahme.
 - `[ ]` benennt einen tatsächlichen Rest: fehlende Funktion, ausstehende native Prüfung oder Freigabe. `Zur Prüfung` kann einen benannten offenen Teilumfang enthalten; es gibt keine pauschale Fertigmeldung.
@@ -92,6 +92,8 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-044](#sf-044) | P1 | Zur Prüfung | Umgesetzt; strenger Build inzwischen erfolgreich |
 | [SF-045](#sf-045) | P0 | Zur Prüfung | Umgesetzt im Großhandelsumfang |
 | [SF-046](#sf-046) | P1 | Zur Prüfung | Konfigurationspaket mit 128 Tabellen; native Exportabnahme offen |
+| [SF-048](#sf-048) | P1 | Zur Prüfung | Drei Laufarten, bestätigte Stammdatenquelle und unabhängige Einkaufs-/Verkaufsläufe; native A–G offen |
+| [SF-047](#sf-047) | P1 | Zur Prüfung | Großhandel v6: Artikelpool, zeitliche Beschaffung, geografische Streuung; native Abnahme offen |
 
 ## Ticketdetails
 
@@ -774,6 +776,75 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 - [ ] Menschliche Abnahme; erst danach Erledigt.
 
 **Testprotokoll:** [Tatsächliche lokale Ergebnisse und offene native Fälle](docs/TESTS.md#sf-046--konfigurationspaket-für-vollständige-generator-daten), [Bedienung/Tabellen-IDs](docs/CONFIG_EXPORT.md). App 1.0.8.1, Test-App 1.4.0.1; lokale Korrekturprüfung dokumentiert, keine Veröffentlichung oder BC-Testausführung durch den Agenten.
+
+
+<a name="Payment Tolerance Management"(CodeUnit 426).DelVendPmtTolAcc line 15 - Base Application by Microsoft version 29.1.57326.58215
+"Payment Tolerance Management"(CodeUnit 426).PurchPmtTolGenJnl line 18 - Base Application by Microsoft version 29.1.57326.58215
+"Payment Tolerance Management"(CodeUnit 426).PmtTolGenJnl line 26 - Base Application by Microsoft version 29.1.57326.58215
+"Gen. Journal Line"(Table 81)."Applies-to Doc. No. - OnValidate"(Trigger) line 97 - Base Application by Microsoft version 29.1.57326.58215
+"BCSF Payment Processor"(CodeUnit 90401).Pay line 99 - BC Scenario Factory by Default Publisher version 1.0.8.4
+"BCSF Purchase Generator"(CodeUnit 90451).CreateOrder line 129 - BC Scenario Factory by Default Publisher version 1.0.8.4
+"BCSF Purchase Generator"(CodeUnit 90451).ExecuteBatch line 20 - BC Scenario Factory by Default Publisher version 1.0.8.4
+"BCSF Batch Runner"(CodeUnit 90307).Execute line 51 - BC Scenario Factory by Default Publisher version 1.0.8.4
+"BCSF Batch Worker"(CodeUnit 90303).OnRun(Trigger) line 76 - BC Scenario Factory by Default Publisher version 1.0.8.4
+"Job Queue Start Codeunit"(CodeUnit 449).OnRun(Trigger) line 18 - Base Application by Microsoft version 29.1.57326.58215
+"Job Queue Dispatcher"(CodeUnit 448).HandleRequest line 26 - Base Application by Microsoft version 29.1.57326.58215
+"Job Queue Dispatcher"(CodeUnit 448).OnRun(Trigger) line 35 - Base Application by Microsoft version 29.1.57326.58215
+
+
+"></a>
+
+### SF-047 — Großhandel v6: Artikelverwendung, unterjährige Beschaffung und Standortvielfalt (P1–P3)
+
+**Status:** Zur Prüfung · **Priorität:** P1
+**Ausdrücklich beauftragt:** 22.11.2026 · **Abhängigkeiten:** SF-023, SF-024, SF-042, SF-045, Qualitätskorrekturen TRADE/5
+**Module:** ProcessEngine, Purchasing, Sales, DataGeneration, Inventory, IndustryProfiles, vorhandene Test-App
+
+**Ausgangslage:** Mittelpaket aus TRADE/5: 400 unterschiedliche Artikel und funktionierende Mehrpositionsbelege, aber nur die ersten 200 Artikel in untersuchten Belegen, gebuchte Einkaufsbelege auf einem Startdatum, 164/200 Debitoren und 41/50 Kreditoren in Berlin/Dortmund. Die gemessene Verteilung bezieht sich auf den Export und ist keine allgemeine Aussage über jeden Seed.
+
+**Ziel:** Künftige, über den gemeinsamen Unternehmensassistenten erzeugte Großhandelsläufe nutzen den ganzen Artikelkatalog als Auswahlraum, verteilen geplante Wareneingänge im Szenariozeitraum und streuen Kunden-/Lieferantenorte nachvollziehbar. Keine zusätzlichen Branchen, BC-Module, Dashboards oder Setupdialoge.
+
+**Umfang und technische Entscheidung:**
+- TRADE/6 für *neue* Läufe; TRADE/5-Snapshots bleiben semantisch unverändert. Vorhandenen Katalog, Seed Engine, Item Registry, Einkauf, Verkauf und BC-Standardbuchung weiterverwenden.
+- **P1:** `BCSF Sales Setup` lädt TRADE/6-Artikel ohne alte `vendorCount * 4`-Begrenzung. `BCSF Process Coordinator` wählt Artikel auch aus späteren Einkaufsbestellungen; dieselbe Lieferantengruppe pro Einkaufsbeleg bleibt erhalten. Ungebuchte Verkäufe dürfen den gesamten Artikelstamm verwenden; gebuchte Verkäufe bleiben an bestätigte Wareneingänge gebunden. Eine nicht verwendete Artikelnummer ist nicht automatisch ein Fehler.
+- **P2:** Deterministische Eingangsdatumsverteilung über Start-/Enddatum. Bei gebuchten Verkaufsbelegen liegt das Belegdatum nicht vor dem geplanten Wareneingang der zugehörigen Artikel. Mengen-/Teileingangslogik bleibt unverändert. Kein Direktinsert in Standard-Postentabellen.
+- **P3:** Deterministische 20er-Ortspermutation mit zusammengehörigen Stadt-/PLZ-Paaren für DE/GB; gleichmäßige Zyklen statt pro Datensatz wiederholter Zufallsauswahl. Bestehende synthetische `.invalid`-Kontakte und Namensregeln bleiben.
+- **Querschnitt:** Keine neuen UI-Texte, Seiten, Dashboardkennzahlen oder Workflowstufen. Die bestehende Fortschrittsanzeige, Registry und Hintergrundverarbeitung werden weiterverwendet; kein zusätzliches Finanzsetup. Vorhandene DE-/EN-Kataloge bleiben bestehen.
+
+**Bearbeitungs- und Teststand:**
+- [x] AL-Änderungen in den bestehenden Objekten umgesetzt (TRADE/6 versioniert, TRADE/5 geschützt).
+- [x] Vorhandene Test-Codeunit um drei SF-047-Tests für Sortiment/Bestandsdeckung, zeitliche Reihenfolge und Ortsvielfalt ergänzt; keine neue Test-Codeunit.
+- [x] Statische Quelltextkontrolle und unabhängige numerische Simulationsprüfung für kleine/mittlere/große Mengenkonfiguration durchgeführt; Details: [SF047_PRUEFBERICHT.md](docs/review/SF047_PRUEFBERICHT.md).
+- [x] Main/Test-App lokal gegen BC-28.5-Symbole kompiliert; strenger Analyzer mit acht vorhandenen AA0018 nicht bestanden. Zahlungskorrekturen 1.0.8.5/1.0.8.6 im Prüfbericht. Native BC-29.1-Ausführung offen.
+- [ ] Native Sandboxläufe klein/mittel/groß: SKR03/SKR04, ungebucht/gebucht/teilgebucht, Zeitraum > 1 Tag und 1 Tag, Bestände nach Datum, Mehrpositionsbelege, Queue-Wiederaufnahme/Retry, Idempotenz, Rechte, DE/EN, Dashboard/Export validieren.
+- [ ] Menschliche fachliche Abnahme; erst danach **Erledigt**.
+
+**Risiken:** Datumsverschiebung gebuchter Verkäufe kann die Verteilung stärker ans Periodenende verschieben; zusätzliche Artikel-IDs erhöhen JSON-/Vorprüfaufwand. Bei großen Datenmengen Performance in BC messen. Individuelle Artikel ohne Bewegung sind legitim. Bestandsdeckung und Lieferantenzuordnung nativ prüfen.
+
+**Dateien:** `src/ProcessEngine/Codeunits/BCSFProcessCoordinator.Codeunit.al`, `src/Sales/Codeunits/BCSFSalesSetup.Codeunit.al`, `src/DataGeneration/Codeunits/BCSFPartnerCatalog.Codeunit.al`, `src/IndustryProfiles/Codeunits/BCSFWholesaleProfile.Codeunit.al`, bestehende v6-fähig gemachte Inventory-Codeunits, `tests/SF019/BCSFInventoryTests.Codeunit.al`, `app.json`.
+
+**Abnahme:** [ ] Menschliche Abnahme offen; Status **Zur Prüfung**.
+
+<a name="sf-048"></a>
+
+### SF-048 — Modulare Szenariogenerierung und unabhängige Geschäftsläufe
+
+**Status:** Zur Prüfung · **Priorität:** P1
+**Auftrag:** Nutzeranhang vom 22.11.2026 vollständig gelesen; zuerst SF-047-Zahlungsfehler beheben, danach SF-048 umsetzen. Keine neue Batchengine, kein fremder Datenbestand und keine unsichere Wiederholung.
+
+**Ziel/Scope:** Im bestehenden Unternehmensworkflow Komplett/Stammdaten/Bewegungsdaten wählen. Bewegungsläufe referenzieren eine bestätigte Basis derselben Firma, wählen Einkauf/Verkauf und Belegmengen, erzeugen neue Run-IDs/Belege ohne zusätzliche Stammdaten. Eigenständige Lagerbewegungen bleiben mangels Generator gesperrt. Neue optionale Snapshotbindung mit festen SystemIds statt doppelter Registryeinträge.
+
+**Architektur-/Dateiplan:** Bestehende Setupkarte/Company Initialization und Wholesale Profile erweitern. Additive Generation-Kind-/Source-/Requestfelder, bestehende Szenario-/Snapshot-/Planner-/Generator-/Recoveryverträge nutzen. Gemeinsamer lesender Stammdatenquellendienst, BackgroundProcessing bestätigt abgeschlossene Stammdatenpakete. Sales nutzt vorhandene Identitäts-/Bestandsprüfung; Purchase erhält dieselbe Quellenbindung. Dashboard zeigt gewählten Umfang/Quelle; Texte DE/EN und bestehende Test-App ergänzen.
+
+**Risiken/Prüfweg:** Bestand muss bei Start und Buchung aktuell geprüft werden; nur explizit gewählter Einkauf liefert neue Deckung. Historische Snapshots/Registry und eigene Vorlagen erhalten, keine Source-Parent-Verknüpfung über Rungrenzen. Transaktions-/Claim-/Checkpointschutz erhalten. Lokale Symbole 28.5, gemeldete Sandbox 29.1; Compiler, Quellenregression, Übersetzungen, Pakete lokal prüfen, native Fälle A–G und echte Laufzeiten bleiben zu prüfen.
+
+- [x] Drei Laufarten und bestehende UI erweitern.
+- [x] Sichere Quellenbindung, getrennte Module/Mengen und aktuelle Bestandsprüfung implementieren.
+- [x] Kompatibilität, Vorlagen, Dashboard, DE/EN und echte lokale Prüfungen dokumentieren.
+- [ ] Native Fälle A–G einschließlich unabhängiger zweiter Läufe und negativer Quellen-/Recoveryfälle prüfen.
+- [ ] Menschliche Abnahme; höchstens Zur Prüfung bis dahin.
+
+**Nachweise/Dateien:** [SF-048-Prüfbericht](docs/review/SF048_PRUEFBERICHT.md), [Vertrag](docs/MODULAR_GENERATION.md). Zwei neue Objekte 90114/90259; additive Felder in Setup/Szenario, vorhandene Planner-, Generator-, Snapshot-, UI- und Queueobjekte erweitert. 64 AL-Testmethoden kompiliert, davon fünf neue für SF-048; keine neue Test-Codeunit.
 
 ## Ticketvorlage
 

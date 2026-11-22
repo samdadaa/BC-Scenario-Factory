@@ -40,7 +40,9 @@ codeunit 90130 "BCSF Scenario Manager"
         begin
           if (Step."Generator Code" <> 'SALES.DOCUMENT') or not Context.Get('salesSetup', Token) then
             exit(false);
-          exit((Contract.GetInteger(Token.AsObject(), 'version') in [1, 3]) and Contract.GetBoolean(Token.AsObject(), 'postingApproved'));
+          exit(((Contract.GetInteger(Token.AsObject(), 'version') in [1, 3]) or
+            ((Contract.GetInteger(Token.AsObject(), 'version') = 4) and Context.Contains('masterDataSource'))) and
+            Contract.GetBoolean(Token.AsObject(), 'postingApproved'));
         end;
       'PURCHASE.ORDER':
         begin

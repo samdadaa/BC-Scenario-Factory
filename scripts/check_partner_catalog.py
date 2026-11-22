@@ -33,10 +33,17 @@ def main():
             names = [' '.join(row) for row in product(companies, sector_activities, forms)]
             assert len(names) == len(set(names))
             assert max(map(len, names)) <= 100
-        assert len(pools[language + 'CitiesTok']) == len(pools[language + 'PostCodesTok']) == 8
+        assert len(pools[language + 'CitiesTok']) == len(pools[language + 'PostCodesTok']) == 20
         assert len(pools[language + 'StreetsTok']) == 16
     assert all(re.fullmatch(r'\d{5}', code) for code in pools['GermanPostCodesTok'])
     assert all(re.fullmatch(r'[A-Z]{1,2}\d[A-Z\d]? \d[A-Z]{2}', code) for code in pools['EnglishPostCodesTok'])
+    assert "Role + '.CITY', 1, 8)" in source, 'Preserve the eight-place legacy profile range'
+    assert "Role + '.CITY', 1, 20)" in source, 'Preserve the wholesale v5 profile range'
+    assert "(Contract.GetText(Context, 'profileVersion') = '6')" in source
+    assert gcd(7, 20) == 1
+    for offset in range(20):
+        places = [((key - 1) * 7 + offset) % 20 for key in range(1, 201)]
+        assert len(set(places[:20])) == 20 and all(places.count(place) == 10 for place in range(20))
     # Coverage and arithmetic at both cycle boundaries and the largest AL Integer.
     for size in (1024, 2048, 4096):
         assert gcd(73, size) == 1

@@ -189,7 +189,7 @@ codeunit 90475 "BCSF Inventory Generator" implements "BCSF Generator"
     // In TRADE v5 the material is an article-specific attribute instead of a
     // category default, because multiple materials share the same category.
     if (Contract.GetText(Context, 'profileCode') = 'TRADE') and
-      (Contract.GetText(Context, 'profileVersion') = '5') then
+      (Contract.GetText(Context, 'profileVersion') in ['5', '6']) then
       Masters.Assign(Context, RunId, BatchId, LogicalKey, Database::Item, Item."No.",
         'Material', Contract.GetText(Values, 'material'), 'MATERIAL', ParentId);
     Masters.Assign(Context, RunId, BatchId, LogicalKey, Database::Item, Item."No.",

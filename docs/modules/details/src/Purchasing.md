@@ -68,3 +68,8 @@ Fünf AL-Objekte. Purchase Generator 90451 unterstützt PURCHASE.ORDER bis Poste
 ## SF-022 – Datumszeitraum 1.0.7.3
 
 Gebuchte Eingangs-/Rechnungsdaten über Process Coordinator verteilt, spätestens zum artikelbezogenen ersten Verkauf. Ausgabe validiert tatsächliche Datumsfelder, Standardposting/Claim/Commitgrenzen erhalten. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+Generator liest Artikel-/Lieferanten-IDs aus ursprünglichem Quellrun, registriert ausschließlich neue Belege im eigenen Run. Standardbuchungen und Zahlungen nur nach bestehendem Freigabevertrag; Quellenprüfung vor jeder Generatorausführung. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

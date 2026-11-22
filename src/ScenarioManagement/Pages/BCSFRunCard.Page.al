@@ -22,6 +22,17 @@ page 90139 "BCSF Run Card"
         field(Description; Rec.Description) { }
         field("Profile Code"; Rec."Profile Code") { }
         field("Profile Version"; Rec."Profile Version") { }
+        field(GenerationKind; GenerationKind)
+        {
+          Caption = 'Generation kind';
+          ToolTip = 'Shows the generation kind frozen in this run. Historical captures keep their original interpretation.';
+        }
+        field(MasterSourceId; MasterSourceId)
+        {
+          Caption = 'Master data source';
+          Visible = GenerationKind = GenerationKind::Transactions;
+          ToolTip = 'Shows the frozen source run for reused master records. Only new documents and entries belong to this run.';
+        }
         field("Usage Mode"; Rec."Usage Mode") { }
         field("Process Mode"; Rec."Process Mode") { }
         field(Seed; Rec.Seed) { }
@@ -80,14 +91,26 @@ page 90139 "BCSF Run Card"
   trigger OnAfterGetCurrRecord()
   var
     Manager: Codeunit "BCSF Scenario Manager";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    Token: JsonToken;
   begin
+    Clear(MasterSourceId);
+    GenerationKind := GenerationKind::Complete;
     if not IsNullGuid(Rec."Run Id") then begin
+      Manager.ReadSnapshot(Rec."Run Id", Context);
+      if Context.Get('generationKind', Token) then
+        GenerationKind := "BCSF Generation Kind".FromInteger(Token.AsValue().AsInteger());
+      if Context.Get('masterDataSource', Token) then
+        Evaluate(MasterSourceId, Contract.GetText(Token.AsObject(), 'sourceRunId'));
       Manager.GetRunLanguagePreview(Rec."Run Id", CustomerPreview, VendorPreview, ItemPreview);
       CurrPage.Modules.Page.LoadRun(Rec."Run Id");
       CurrPage.Targets.Page.LoadRun(Rec."Run Id");
     end;
   end;
   var
+    GenerationKind: Enum "BCSF Generation Kind";
+    MasterSourceId: Guid;
     CustomerPreview: Text[100];
     VendorPreview: Text[100];
     ItemPreview: Text[100];

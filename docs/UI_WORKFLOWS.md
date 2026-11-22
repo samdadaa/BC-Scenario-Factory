@@ -1,5 +1,7 @@
 # Bedienkonzept, Seiten und Dashboard
 
+**SF-048:** Unternehmensassistent jetzt sieben Schritte mit Generierungsart nach Branche; Bewegungsart wählt Quelle über bestehenden Laufmonitor, Prozessmodule und vier Belegmengen. Laufkarte liest Quelle/Laufart aus Snapshot; Dashboard zählt neue Resultate. [Bedienung](MODULAR_GENERATION.md). Neue Texte vollständig DE/EN, native UI-Abnahme offen.
+
 **SF-022 / Datumszeitraum 1.0.7.3:** Im vorhandenen Schritt Daten und Prozesse Startdatum (Vorschlag ein Jahr zurück) wählen; Ende ist gestern. Startdatum muss gefüllt und spätestens gestern sein. Zusammenfassung und Dashboard nennen den eingefrorenen Zeitraum; Buchungen folgen nur der ausgewählten Prozessstufe und Zustimmung. [Vertrag und native Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
 
 **SF-022 / 1.0.7.2, aktueller Nachauftrag:** Die bestehende Setupkarte zeigt nach Großhandel alle zwölf Modularten. Verkauf, Einkauf, Artikel und Finanzbasis sind erforderlich. Optionale Module sind als nur geplant markierbar; Auswahl bleibt beim Vor-/Zurückgehen erhalten und erscheint in Zusammenfassung und Dashboard. Kein eigener Assistent oder zusätzlicher Dialog. [Umsetzung und Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072). **Zur Prüfung**.

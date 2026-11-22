@@ -1,6 +1,7 @@
 namespace BCScenarioFactory.IndustryProfiles;
 
 using BCScenarioFactory.Core;
+using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.ScenarioManagement;
 
 codeunit 90153 "BCSF Wholesale Profile"
@@ -179,7 +180,7 @@ codeunit 90153 "BCSF Wholesale Profile"
     Scenario.Description := WholesaleLbl;
     // Reuse the versioned trade assortment, partner catalog and immutable snapshot contract.
     Scenario."Profile Code" := 'TRADE';
-    Scenario."Profile Version" := '5';
+    Scenario."Profile Version" := '6';
     Scenario."Usage Mode" := "BCSF Usage Mode"::Functional;
     Scenario."Process Mode" := Mode;
     Scenario.Seed := Setup."Default Seed";
@@ -239,7 +240,86 @@ codeunit 90153 "BCSF Wholesale Profile"
     exit(Scenario."Scenario Id");
   end;
 
+  procedure ConfigureGeneration(ScenarioId: Guid; Kind: Enum "BCSF Generation Kind"; SourceId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer)
   var
+    Scenario: Record "BCSF Scenario";
+    SourceHeader: Record "BCSF Run Header";
+    Source: Codeunit "BCSF Master Data Source";
+  begin
+    Scenario.Get(ScenarioId);
+    Scenario."Generation Kind" := Kind;
+    if Kind = Kind::MasterData then
+      Scenario.TestField("Process Mode", "BCSF Process Mode"::SetupAndMasterData);
+    if Kind <> Kind::Transactions then begin
+      if not IsNullGuid(SourceId) then
+        Error(GenerationErr);
+      Scenario.Modify(true);
+      exit;
+    end;
+    if (Scenario."Process Mode" = "BCSF Process Mode"::SetupAndMasterData) or
+      (not PurchaseSelected and not SalesSelected) then
+      Error(GenerationErr);
+    SourceHeader.Get(SourceId);
+    Source.Capture(SourceId, 'TRADE', SourceHeader."Profile Version");
+    Scenario."Profile Version" := SourceHeader."Profile Version";
+    Scenario."Master Source Run Id" := SourceId;
+    Scenario.Modify(true);
+    ConfigureTransactionTargets(ScenarioId, PurchaseSelected, SalesSelected, Purchases, Orders, Quotes, Invoices);
+  end;
+
+  // Drafts require an explicit current-company source before snapshot capture or execution.
+  procedure ConfigureTransactionDraft(ScenarioId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer)
+  var
+    Scenario: Record "BCSF Scenario";
+  begin
+    Scenario.Get(ScenarioId);
+    Scenario."Generation Kind" := "BCSF Generation Kind"::Transactions;
+    Clear(Scenario."Master Source Run Id");
+    Scenario.Modify(true);
+    ConfigureTransactionTargets(ScenarioId, PurchaseSelected, SalesSelected, Purchases, Orders, Quotes, Invoices);
+  end;
+
+  local procedure ConfigureTransactionTargets(ScenarioId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer)
+  var
+    Target: Record "BCSF Data Target";
+    Selection: Record "BCSF Scenario Module";
+    DocumentQuantity: Integer;
+  begin
+    Target.SetRange("Scenario Id", ScenarioId);
+    if Target.FindSet(true) then
+      repeat
+        DocumentQuantity := 0;
+        case Target.Entity of
+          Target.Entity::PurchaseOrder:
+            if PurchaseSelected then DocumentQuantity := Purchases;
+          Target.Entity::SalesOrder:
+            if SalesSelected then DocumentQuantity := Orders;
+          Target.Entity::SalesQuote:
+            if SalesSelected then DocumentQuantity := Quotes;
+          Target.Entity::SalesInvoice:
+            if SalesSelected then DocumentQuantity := Invoices;
+        end;
+        if DocumentQuantity < 0 then
+          Error(GenerationErr);
+        if DocumentQuantity = 0 then
+          Target.Delete(true)
+        else begin
+          Target.Validate(Quantity, DocumentQuantity);
+          Target.Modify(true);
+        end;
+      until Target.Next() = 0;
+    if Target.IsEmpty() then
+      Error(GenerationErr);
+    Selection.Get(ScenarioId, "BCSF Module Type"::Purchasing);
+    Selection.Enabled := PurchaseSelected;
+    Selection.Modify(true);
+    Selection.Get(ScenarioId, "BCSF Module Type"::Sales);
+    Selection.Enabled := SalesSelected;
+    Selection.Modify(true);
+  end;
+
+  var
+    GenerationErr: Label 'Select a confirmed master-data source, at least one executable process module and positive document quantities. Transactions require an unposted, posted or payment process mode.';
     DateRangeErr: Label 'Enter a starting date no later than yesterday and an ending date within the approved period.';
     ModulesErr: Label 'Select valid additional modules once. Required wholesale modules must remain selected.';
     IncludedModulesLbl: Label 'Industry modules: %1.', Comment = '%1 = included module names';

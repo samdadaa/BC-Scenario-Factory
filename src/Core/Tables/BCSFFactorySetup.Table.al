@@ -91,6 +91,15 @@ table 90100 "BCSF Factory Setup"
     field(28; "Industry Ending Date"; Date) { Caption = 'Industry Ending Date', Locked = true; Editable = false; }
     field(27; "Industry Additional Modules"; Text[250]) { Caption = 'Industry Additional Modules', Locked = true; Editable = false; }
     field(25; "Industry Date"; Date) { Caption = 'Industry Date', Locked = true; Editable = false; }
+    field(29; "Industry Generation Kind"; Enum "BCSF Generation Kind") { Caption = 'Industry Generation Kind', Locked = true; Editable = false; }
+    field(30; "Industry Master Source Id"; Guid) { Caption = 'Industry Master Source Id', Locked = true; Editable = false; }
+    field(31; "Industry Purchase Selected"; Boolean) { Caption = 'Industry Purchase Selected', Locked = true; Editable = false; }
+    field(32; "Industry Sales Selected"; Boolean) { Caption = 'Industry Sales Selected', Locked = true; Editable = false; }
+    field(33; "Industry Purchase Quantity"; Integer) { Caption = 'Industry Purchase Quantity', Locked = true; Editable = false; }
+    field(34; "Industry Sales Order Quantity"; Integer) { Caption = 'Industry Sales Order Quantity', Locked = true; Editable = false; }
+    field(35; "Industry Sales Quote Quantity"; Integer) { Caption = 'Industry Sales Quote Quantity', Locked = true; Editable = false; }
+    field(36; "Industry Sales Inv Quantity"; Integer) { Caption = 'Industry Sales Inv Quantity', Locked = true; Editable = false; }
+
 
   }
 

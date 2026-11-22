@@ -70,3 +70,8 @@ Für reine Customer-/Vendor-Ziele kein künstlich ungelöster FINANCE.SETUP-Knot
 Unterstützte ungebuchte PURCHASE.ORDER-Ziele werden wie reale Partner-/Artikel-/Verkaufsziele durch konkrete Prüfungen statt einen fehlenden externen FINANCE.SETUP-Generator abgesichert. Einkaufsbestellungen folgen VENDOR/ITEM; Verkauf folgt zusätzlich vorhandenen Einkaufszielen.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+Nur bei expliziter Snapshotquellenbindung entfallen neue Stammdatenabhängigkeiten im Bewegungslauf. Echte Voraussetzung wird im vorhandenen Generator-Prerequisitepfad erneut geprüft; kein Ersatzgenerator. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

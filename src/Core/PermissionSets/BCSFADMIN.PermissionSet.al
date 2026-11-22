@@ -22,6 +22,7 @@ permissionset 90105 "BCSF ADMIN"
   Assignable = true;
   Caption = 'Scenario Factory Setup Admin';
   Permissions =
+    codeunit "BCSF Master Data Source" = X,
     codeunit "BCSF Config Export" = X,
     codeunit "BCSF Payment Processor" = X,
     codeunit "BCSF Purchase Evidence" = X,

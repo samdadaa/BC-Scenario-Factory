@@ -1,3 +1,8 @@
+**SF-048 / 1.0.9.0:** [Tatsächlicher Prüfbericht](review/SF048_PRUEFBERICHT.md): Main und separate Test-App 1.5.0.0 (64 Methoden, fünf neu) gegen BC 28.5 kompiliert; Quellen-/Gegenproben, 1.448 DE/EN-Texte, Dashboard-Clientregression und Paketvergleich lokal bestanden. Strenger Analyzer scheitert ausschließlich an acht vorhandenen AA0018. Native BC 29.1, Zahlungen/Ausgleich und Fälle A–G offen. **Zur Prüfung**.
+
+
+**SF-047 (22.11.2026):** Drei neue Regressionstests in der bestehenden `BCSF Inventory Tests` Codeunit für TRADE/6 (voller Artikel-Auswahlraum/Bedarfsdeckung, zeitliche Einkaufs-/Verkaufsfolge, Ortsverteilung). **Mit Korrektur 1.0.8.5 im vorhandenen Host kompiliert (59 Methoden insgesamt), nicht nativ ausgeführt.** Quellen-/Negativtests zur Zahlung bestanden; acht vorhandene Analyzerbefunde offen. [Prüfbericht](review/SF047_PRUEFBERICHT.md).
+
 # Teststrategie und Evidenz — BC Scenario Factory
 
 ## Regel für Coding-Agenten
@@ -988,3 +993,12 @@ Tatsächlich ausgeführt:
 | DE/EN, schmale Anzeige, Standarddownload und Rollen | Lokalisierte Aktion mit erkennbarem Vorbereitungsschritt; native Seiten/Rechte und vollständige exportierte Mengen prüfen. |
 
 Querschnitt: **Dashboard/Workflow** ändern nur den ausdrücklichen Export-Einstieg nach Installation; **Stammdaten/Einrichtungen** erhalten keine schreibende Änderung, Paketmetadaten nur im gewählten Mandanten; **Übersetzungen** Caption und Tooltip DE/EN inklusive regionaler Ableitungen aktualisiert. Bestehende Startermatrix und Mischquoten erneut über den vorhandenen Templatevertrag geprüft; keine neue Generatoroption und kein Anlass für andere Vorlagenwerte. Alte/eigene/entfernte/archivierte Starter und historische Läufe geschützt. Native Export-/Rechte-/Volumenfälle des ursprünglichen Standes bleiben zusätzlich offen. Keine Veröffentlichung, Remoteinstallation, Sitzungskündigung oder Sandboxneustart durch den Agenten.
+
+
+## SF-047 – Zahlungsvalidierung 1.0.8.5
+
+Gemeldeter BC-29.1-Fehler unter 1.0.8.4: verbotener Commit aus Payment Tolerance Management während Applies-to-Validierung. `TempLine.SetSuppressCommit(true)` vor allen Feldvalidierungen ergänzt; kein Lockern des Batchguards oder Replay unsicherer Zahlungen. [Vollständige Ursache, lokale Prüfungen, Artefakte und native Sollfälle](review/SF047_PRUEFBERICHT.md#zahlungskorrektur-1085--commit-bei-ausgleichsvalidierung).
+
+Main 1.0.8.5 und separate Test-App 1.4.0.5 gegen vorhandene BC-28.5-Symbole **kompiliert**, 143 Main-Objekte und **59 AL-Testmethoden**. Keine native Ausführung. Standardvertrag einschließlich vier negativer SuppressCommit-Gegenproben, vorhandene Quell-/Vorlagenverträge, Partnerkatalog und 1.407 Übersetzungen sowie Paketvergleich **PASS lokal**. Strenger CodeCop/UICop: **nicht bestanden**, acht AA0018 in bereits in HEAD vorhandenen ItemCatalog-Inlineblöcken; keine neue Zahlungsdiagnose. Reservewort `Key` im vorhandenen Testhost für dessen Kompilierbarkeit umbenannt. Keine neue Test-Codeunit.
+
+Querschnitt: gemeinsamer Workflow/Startvorlagen/Freigaben erhalten; Dashboardmengen nach echtem Zahlungserfolg nativ abgleichen; Stamm-/Einrichtungswerte nicht geändert; vorhandenen Sortimentsfehler DE/EN vollständig ergänzt. Native Kunden-/Lieferantenzahlung, Ausgleich, Transaktionsabbruch, Recovery, Rollen, BC 29.1 und menschliche Abnahme bleiben offen. **Zur Prüfung**, keine Veröffentlichung oder BC-Testausführung.

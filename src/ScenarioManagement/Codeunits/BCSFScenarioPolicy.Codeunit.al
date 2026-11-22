@@ -113,6 +113,11 @@ codeunit 90143 "BCSF Scenario Policy"
       Error(IdentityErr);
     Scenario.TestField(Description);
     CheckProcessMode(Scenario."Process Mode");
+    if not (Scenario."Generation Kind" in ["BCSF Generation Kind"::Complete, "BCSF Generation Kind"::MasterData, "BCSF Generation Kind"::Transactions]) then
+      Error(ModeErr);
+    if (Scenario."Generation Kind" = "BCSF Generation Kind"::MasterData) and
+      (Scenario."Process Mode" <> "BCSF Process Mode"::SetupAndMasterData) then
+      Error(ModeErr);
     if not (Scenario."Usage Mode" in ["BCSF Usage Mode"::Demo, "BCSF Usage Mode"::Training,
       "BCSF Usage Mode"::Functional, "BCSF Usage Mode"::Performance])
     then
@@ -206,6 +211,8 @@ codeunit 90143 "BCSF Scenario Policy"
         Error(ScopeErr);
     end;
     if not IsDocument(Target.Entity) then begin
+      if (Target.Quantity > 0) and (Scenario."Generation Kind" = "BCSF Generation Kind"::Transactions) then
+        Error(MasterDataErr);
       if (Target."Process Mode" <> "BCSF Process Mode"::SetupAndMasterData) or
         (Target."Posted Percent" <> 0) or (Target."Partial Percent" <> 0)
       then

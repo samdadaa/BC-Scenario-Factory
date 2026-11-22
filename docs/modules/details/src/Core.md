@@ -94,3 +94,8 @@ Setupkarte jetzt mit sechs Schritten einschließlich Modulauswahl; optionales Re
 ## SF-022 – Datumszeitraum 1.0.7.3
 
 Bestehende Setupkarte erfasst Start bis gestern, Requestfeld 28 hält Ende. Contract JSON validiert optionale datePolicyVersion 1; fehlende Version erhält alte Datumssemantik. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+Neues Enum 90114 und additive Setup-Requestfelder 29–36; bestehende Setupkarte zeigt drei Laufarten, Quelle, Module/Mengen. ADMIN enthält Execute 90259, keine neuen Standard-Schreibrechte. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

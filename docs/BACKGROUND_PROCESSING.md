@@ -1,5 +1,7 @@
 # Hintergrundverarbeitung und Wiederaufnahme
 
+**SF-048:** ExecutionRules bestätigt Quellläufe nur bei terminalem zulässigem Zustand ohne Running-Batch und vollständigen abgeschlossenen Stammdatenpaketen mit bestätigten Ergebnissen/Checkpoints. Neue unabhängige Läufe erhalten eigene IDs; Recovery und NeedsReview alter Läufe bleiben unverändert. Aktive/pausierte Vorgänger sperren den neuen Unternehmensstart. [Vertrag und native Grenzen](MODULAR_GENERATION.md).
+
 **Status:** Zielbild. Die ZIP enthält noch keine Queue-Codeunits, Tabellen oder Session-Logik.
 
 ## Warum Batching?

@@ -141,10 +141,13 @@ codeunit 90478 "BCSF Item Setup"
 
   procedure Quantity(Context: JsonObject; Entity: Enum "BCSF Entity Type"): Integer
   var
+    Source: Codeunit "BCSF Master Data Source";
     Contract: Codeunit "BCSF Contract JSON";
     Token: JsonToken;
     Value: JsonToken;
   begin
+    if Context.Contains('masterDataSource') then
+      exit(Source.Quantity(Context, Entity));
     Context.Get('targets', Token);
     foreach Value in Token.AsArray() do
       if Contract.GetInteger(Value.AsObject(), 'entity') = Entity.AsInteger() then
@@ -326,7 +329,7 @@ codeunit 90478 "BCSF Item Setup"
     VendorCount: Integer;
   begin
     if (Contract.GetText(Context, 'profileCode') <> 'TRADE') or
-      (Contract.GetText(Context, 'profileVersion') <> '5') then
+      not (Contract.GetText(Context, 'profileVersion') in ['5', '6']) then
       exit(ResolveVendor(Context, 1));
     if not Contract.GetBoolean(ReadSettings(Context), 'generatedVendors') then
       exit(ResolveVendor(Context, 1));

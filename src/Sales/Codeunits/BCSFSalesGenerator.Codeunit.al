@@ -66,11 +66,13 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     Token: JsonToken;
   begin
     Clear(Dependencies);
-    if not Setup.UsesRunMasters(Context) then
+    if not Setup.UsesRunMasters(Context) and not Context.Contains('masterDataSource') then
       exit;
-    AddPredecessor(Dependencies, 'CUSTOMER', 'SALES');
-    AddPredecessor(Dependencies, 'VENDOR', 'PURCHASING');
-    AddPredecessor(Dependencies, 'ITEM', 'INVENTORY');
+    if Setup.UsesRunMasters(Context) then begin
+      AddPredecessor(Dependencies, 'CUSTOMER', 'SALES');
+      AddPredecessor(Dependencies, 'VENDOR', 'PURCHASING');
+      AddPredecessor(Dependencies, 'ITEM', 'INVENTORY');
+    end;
     Context.Get('targets', Targets);
     foreach Token in Targets.AsArray() do
       if (Contract.GetInteger(Token.AsObject(), 'entity') = "BCSF Entity Type"::PurchaseOrder.AsInteger()) and

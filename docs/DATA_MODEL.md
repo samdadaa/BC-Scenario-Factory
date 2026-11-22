@@ -1,5 +1,7 @@
 # Datenqualität, Generierung und Buchungsregeln
 
+**SF-048 / 1.0.9.0:** Additiv Setupfelder 29–36 (Laufart, Quellrun, Einkaufs-/Verkaufsauswahl und vier Mengen), Szenariofelder 45/46 (Laufart/Quelle), Enum 90114. Optionale Rootfelder generationKind/masterDataSource in Snapshot-Schema 1, Bindung Version 1 mit SystemId-Arrays; Sales-Setup Version 4. Keine neue Tabelle, keine Änderung historischer Snapshots; Standardwert 0 behält Komplettsemantik. [Detailvertrag](MODULAR_GENERATION.md).
+
 **SF-022 / Datumszeitraum 1.0.7.3:** Additives Setupfeld 28 Industry Ending Date ergänzt den bisherigen Start Industry Date. Beide Requestgrenzen nach Einplanung unveränderlich. Bestehende Szenario-/Lauf-/Snapshot-Datumsfelder werden genutzt; optionaler datePolicyVersion-Marker 1 bei neuen Captures, kein Schemawechsel oder Rückdatieren technischer Erstellzeitstempel. [Vertrag und native Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
 
 ## Unterschied zu einer Zufallsdaten-App

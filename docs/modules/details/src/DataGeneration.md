@@ -68,3 +68,8 @@ Neu 90257 Partner Catalog und 90258 Partner Children: versionierte natürliche W
 Bestehende Seed-/Partnerkatalog-/Herkunftsdienste bleiben gemeinsam. Einkaufsbelege registrieren DOCUMENT-Köpfe mit Run/Batch/logischem Schlüssel und tatsächlicher Standard-SystemId.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+Neuer ausschließlich lesender Dienst 90259 prüft Firma/Profil, alle Master-Checkpoints über Background-Event, Registry-SystemIds und lebende Basisdaten/Beziehungen. Snapshotbindung statt doppelter Registryanlage; keine Quellenketten. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

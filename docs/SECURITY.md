@@ -1,5 +1,7 @@
 # Sicherheit und Berechtigungen — BC Scenario Factory
 
+**SF-048:** Quelllaufzugriff bleibt im aktuellen Mandanten; nur bestätigte, erneut geprüfte Masterpakete zulässig. Lesende Source-Codeunit ohne Standard-Schreibrechte, unveränderliche Setupanforderung und Snapshotbindung. Fehlgeschlagene Quelle bedeutet keine Recoveryfreigabe für unsichere Belege. Bestehende Sandbox-/Berechtigungs-/Commit-/Checkpointgrenzen bleiben; Bestand aktuell mit Reservierungen/Artikellock prüfen. [Vertrag](MODULAR_GENERATION.md), [native Negativfälle](review/SF048_PRUEFBERICHT.md).
+
 ## Grundsätze
 
 - Eine AL-Extension operiert in Business Central im Kontext von Benutzern, Rollen, Permission Sets, Tenant- und Umgebungskonfiguration. Effektive Berechtigungen sind zu prüfen; Rechte nicht allein aus erwarteter Rolle ableiten.
@@ -143,3 +145,8 @@ Startdatum und additives Enddatumsfeld 28 nach Einplanung unveränderlich, auch 
 Der Nutzer hat vollständige Tabellen einschließlich bestehender Daten ausdrücklich gewählt. Der Paketdienst schreibt ausschließlich Standard-RapidStart-Metadaten, ohne erhöhte Permissions und ohne eigenen Commit; ab 1.0.8.1 überhaupt kein Paketdienstaufruf während Installation/Upgrade. Tatsächliche SaaS-Sandboxprüfung beim ausdrücklichen Aufruf, ausschließlich aktuelle Firma. Kein Zugriff auf andere Firmen und keine Paketmutation beim Öffnen/Refresh des Dashboards. Keine Freigabe für Generierung oder Posting. Standardrechte zur Paketverwaltung und direkte Tabellenleserechte bleiben erforderlich; Securityfilter/fehlende Rechte können den Standarddownload einschränken oder blockieren.
 
 Kopfkennung BCSF-EXPORT/1 schützt vor versehentlicher Übernahme eines gleichnamigen Fremdpakets; keine Zugriffsgrenze. Wiederholung ergänzt ausschließlich fehlende Tabellen, keine Entfernung fremder Pakete/Filter/Feldauswahlen. Das Paket ist zur Auswertung; gebuchte Posten nicht reimportieren. Standarddownload ist kein atomarer datenbankweiter Snapshot. Keine externen Dienste oder Datenübertragung durch die App. [Vertrag und native Rechte-/Exportfälle](CONFIG_EXPORT.md). **Zur Prüfung**.
+
+
+## SF-047 – Zahlungstoleranz und Transaktion (1.0.8.5)
+
+`Gen. Journal Line.SetSuppressCommit(true)` vor jeder Feldvalidierung konfiguriert deren Standard-Toleranzinstanz für Kunden und Lieferanten. Der strenge `CommitBehavior::Error` bleibt bestehen; keine allgemeine Commit-Ignorierung, keine Standard-Ledger-Schreibrechte, keine Änderung von Toleranzeinrichtung oder Nutzer-/Postingfreigaben. Temporäre Journalzeilen können über Standardvalidierungen echte Posten beeinflussen; darum genügt eine Umstellung von Amount/Applies-to nicht. Standardbuchung, Herkunft/Checkpoint und Claim bleiben im vorhandenen Vertrag; keine neue Retryfreigabe und keine Zustandsschreiboperation auf den fehlgeschlagenen Lauf. [Quellen und native Grenzfälle](review/SF047_PRUEFBERICHT.md#zahlungskorrektur-1085--commit-bei-ausgleichsvalidierung). Lokale Symbole 28.5, gemeldete Zielversion 29.1: native Prüfung offen.

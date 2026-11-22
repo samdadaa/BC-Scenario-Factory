@@ -2,6 +2,7 @@ namespace BCScenarioFactory.Monitoring;
 
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
+using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Finance;
 using BCScenarioFactory.IndustryProfiles;
 using BCScenarioFactory.Lifecycle;
@@ -53,6 +54,9 @@ codeunit 90361 "BCSF Company Initialization"
       exit;
     Profile.CheckSelection(Setup."Industry Size", Setup."Industry Process Mode");
     Profile.LoadModules(Setup."Industry Additional Modules", TempModules);
+    CheckGenerationRequest(Setup."Industry Generation Kind", Setup."Industry Master Source Id", Setup."Industry Process Mode",
+      Setup."Industry Purchase Selected", Setup."Industry Sales Selected", Setup."Industry Purchase Quantity",
+      Setup."Industry Sales Order Quantity", Setup."Industry Sales Quote Quantity", Setup."Industry Sales Inv Quantity", Setup);
     if Setup."Industry Ending Date" <> 0D then
       Profile.CheckDateRange(Setup."Industry Date", Setup."Industry Ending Date", Today() - 1);
     // Setup, snapshot and first batch job form one atomic transaction. Failure leaves no half company.
@@ -87,6 +91,9 @@ codeunit 90361 "BCSF Company Initialization"
     if EndingDate = 0D then
       EndingDate := Setup."Industry Date"; // Preserve already scheduled legacy requests.
     ScenarioId := Profile.CreateTemplateForId(CreateGuid(), Setup."Industry Size", Setup."Industry Process Mode", Setup."Industry Date", EndingDate, Setup."Industry Additional Modules");
+    Profile.ConfigureGeneration(ScenarioId, Setup."Industry Generation Kind", Setup."Industry Master Source Id",
+      Setup."Industry Purchase Selected", Setup."Industry Sales Selected", Setup."Industry Purchase Quantity",
+      Setup."Industry Sales Order Quantity", Setup."Industry Sales Quote Quantity", Setup."Industry Sales Inv Quantity");
     Scenario.Get(ScenarioId);
     if Setup."Industry Process Mode".AsInteger() >= 2 then begin
       Scenario."Sales Posting Approved" := Setup."Industry Posting Approved";
@@ -120,6 +127,18 @@ codeunit 90361 "BCSF Company Initialization"
   [CommitBehavior(CommitBehavior::Error)]
   procedure Start(Mode: Enum "BCSF Finance Mode"; Size: Integer; ProcessMode: Enum "BCSF Process Mode"; PostingApproved: Boolean; AdditionalModules: Text; StartingDate: Date; EndingDate: Date)
   var
+    Profile: Codeunit "BCSF Wholesale Profile";
+    SourceId: Guid;
+  begin
+    StartConfigured(Mode, Size, ProcessMode, PostingApproved, AdditionalModules, StartingDate, EndingDate,
+      "BCSF Generation Kind"::Complete, SourceId, true, true,
+      Profile.Quantity(Size, "BCSF Entity Type"::PurchaseOrder), Profile.Quantity(Size, "BCSF Entity Type"::SalesOrder),
+      Profile.Quantity(Size, "BCSF Entity Type"::SalesQuote), Profile.Quantity(Size, "BCSF Entity Type"::SalesInvoice));
+  end;
+
+  [CommitBehavior(CommitBehavior::Error)]
+  procedure StartConfigured(Mode: Enum "BCSF Finance Mode"; Size: Integer; ProcessMode: Enum "BCSF Process Mode"; PostingApproved: Boolean; AdditionalModules: Text; StartingDate: Date; EndingDate: Date; Kind: Enum "BCSF Generation Kind"; SourceId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer)
+  var
     Setup: Record "BCSF Factory Setup";
     Scenario: Record "BCSF Scenario";
     Job: Record "Job Queue Entry";
@@ -149,6 +168,7 @@ codeunit 90361 "BCSF Company Initialization"
       if Mode <> Packages.GetAppliedMode() then
         Error(ChartErr);
     end;
+    CheckGenerationRequest(Kind, SourceId, ProcessMode, PurchaseSelected, SalesSelected, Purchases, Orders, Quotes, Invoices, Setup);
     // Read-only finance preflight before accepting the background request.
     Packages.CheckInitialization(Mode);
     if Setup."Company Initialized" and (ProcessMode.AsInteger() >= 2) then
@@ -163,6 +183,14 @@ codeunit 90361 "BCSF Company Initialization"
     Setup."Industry Finance Mode" := Mode;
     Setup."Industry Size" := Size;
     Setup."Industry Additional Modules" := CopyStr(AdditionalModules, 1, MaxStrLen(Setup."Industry Additional Modules"));
+    Setup."Industry Generation Kind" := Kind;
+    Setup."Industry Master Source Id" := SourceId;
+    Setup."Industry Purchase Selected" := PurchaseSelected;
+    Setup."Industry Sales Selected" := SalesSelected;
+    Setup."Industry Purchase Quantity" := Purchases;
+    Setup."Industry Sales Order Quantity" := Orders;
+    Setup."Industry Sales Quote Quantity" := Quotes;
+    Setup."Industry Sales Inv Quantity" := Invoices;
     Setup."Industry Process Mode" := ProcessMode;
     Setup."Industry Date" := StartingDate;
     Setup."Industry Ending Date" := EndingDate;
@@ -202,6 +230,15 @@ codeunit 90361 "BCSF Company Initialization"
       Rec.TestField("Industry Date", Previous."Industry Date");
       Rec.TestField("Industry Ending Date", Previous."Industry Ending Date");
       Rec.TestField("Industry Posting Approved", Previous."Industry Posting Approved");
+      Rec.TestField("Industry Generation Kind", Previous."Industry Generation Kind");
+      Rec.TestField("Industry Master Source Id", Previous."Industry Master Source Id");
+      Rec.TestField("Industry Purchase Selected", Previous."Industry Purchase Selected");
+      Rec.TestField("Industry Sales Selected", Previous."Industry Sales Selected");
+      Rec.TestField("Industry Purchase Quantity", Previous."Industry Purchase Quantity");
+      Rec.TestField("Industry Sales Order Quantity", Previous."Industry Sales Order Quantity");
+      Rec.TestField("Industry Sales Quote Quantity", Previous."Industry Sales Quote Quantity");
+      Rec.TestField("Industry Sales Inv Quantity", Previous."Industry Sales Inv Quantity");
+
       if not IsNullGuid(Previous."Industry Run Id") then
         Rec.TestField("Industry Run Id", Previous."Industry Run Id")
       else
@@ -221,6 +258,9 @@ codeunit 90361 "BCSF Company Initialization"
         if Rec."Industry Ending Date" <> Today() - 1 then
           Error(PeriodChangedErr);
         Profile.CheckSelection(Rec."Industry Size", Rec."Industry Process Mode");
+        CheckGenerationRequest(Rec."Industry Generation Kind", Rec."Industry Master Source Id", Rec."Industry Process Mode",
+          Rec."Industry Purchase Selected", Rec."Industry Sales Selected", Rec."Industry Purchase Quantity",
+          Rec."Industry Sales Order Quantity", Rec."Industry Sales Quote Quantity", Rec."Industry Sales Inv Quantity", Rec);
         if Rec."Industry Process Mode".AsInteger() >= 2 then
           Rec.TestField("Industry Posting Approved", true);
         Job.Get(Rec."Industry Job Id");
@@ -238,14 +278,80 @@ codeunit 90361 "BCSF Company Initialization"
   local procedure EnsureCanStartNewRequest(Setup: Record "BCSF Factory Setup")
   var
     Execution: Record "BCSF Run Execution";
+    Batch: Record "BCSF Batch";
   begin
     if IsNullGuid(Setup."Industry Job Id") and IsNullGuid(Setup."Industry Run Id") then
       exit;
     if IsNullGuid(Setup."Industry Run Id") then
       Error(ExistingErr);
     Execution.Get(Setup."Industry Run Id");
-    if not (Execution.Status in [Execution.Status::Completed, Execution.Status::CompletedWithWarnings]) then
+    if not (Execution.Status in [Execution.Status::Completed, Execution.Status::CompletedWithWarnings,
+      Execution.Status::Failed, Execution.Status::ValidationFailed, Execution.Status::Cancelled]) then
       Error(ExistingErr);
+    Batch.SetRange("Run Id", Setup."Industry Run Id");
+    Batch.SetRange(Status, Batch.Status::Running);
+    if not Batch.IsEmpty() then
+      Error(ExistingErr);
+  end;
+
+  local procedure CheckGenerationRequest(Kind: Enum "BCSF Generation Kind"; SourceId: Guid; ProcessMode: Enum "BCSF Process Mode"; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer; Setup: Record "BCSF Factory Setup")
+  var
+    Header: Record "BCSF Run Header";
+    Source: Codeunit "BCSF Master Data Source";
+  begin
+    if not (Kind in [Kind::Complete, Kind::MasterData, Kind::Transactions]) then
+      Error(RequestErr);
+    if Kind = Kind::MasterData then
+      if ProcessMode <> ProcessMode::SetupAndMasterData then
+        Error(RequestErr);
+    if Kind <> Kind::Transactions then begin
+      if not IsNullGuid(SourceId) then
+        Error(RequestErr);
+      exit;
+    end;
+    Setup.TestField("Company Initialized", true);
+    if (ProcessMode = ProcessMode::SetupAndMasterData) or (not PurchaseSelected and not SalesSelected) or
+      (Purchases < 0) or (Orders < 0) or (Quotes < 0) or (Invoices < 0) or
+      (Purchases > Setup."Maximum Records per Entity") or (Orders > Setup."Maximum Records per Entity") or
+      (Quotes > Setup."Maximum Records per Entity") or (Invoices > Setup."Maximum Records per Entity") or
+      (PurchaseSelected and (Purchases = 0)) or (SalesSelected and (Orders + Quotes + Invoices = 0)) then
+      Error(RequestErr);
+    Header.Get(SourceId);
+    Source.Capture(SourceId, 'TRADE', Header."Profile Version");
+  end;
+
+  [TryFunction]
+  local procedure CanUseSource(SourceId: Guid)
+  var
+    Header: Record "BCSF Run Header";
+    Source: Codeunit "BCSF Master Data Source";
+  begin
+    Header.Get(SourceId);
+    Source.Capture(SourceId, 'TRADE', Header."Profile Version");
+  end;
+
+  procedure SelectMasterSource(var SourceId: Guid): Boolean
+  var
+    Header: Record "BCSF Run Header";
+    Lookup: Page "BCSF Factory Dashboard";
+  begin
+    Header.SetRange("Profile Code", 'TRADE');
+    Header.SetFilter("Profile Version", '5|6');
+    if Header.FindSet() then
+      repeat
+        if CanUseSource(Header."Run Id") then
+          Header.Mark(true)
+        else
+          ClearLastError();
+      until Header.Next() = 0;
+    Header.MarkedOnly(true);
+    Lookup.SetTableView(Header);
+    Lookup.LookupMode(true);
+    if Lookup.RunModal() <> Action::LookupOK then
+      exit(false);
+    Lookup.GetRecord(Header);
+    SourceId := Header."Run Id";
+    exit(true);
   end;
 
   local procedure CreateEmptyGuid(): Guid
@@ -256,6 +362,7 @@ codeunit 90361 "BCSF Company Initialization"
   end;
 
   var
+    RequestErr: Label 'Select a valid generation kind and confirmed master-data source. Choose executable modules and document quantities within the company limits.';
     PeriodChangedErr: Label 'The period must end yesterday. Reopen company initialization to refresh the displayed period.';
     ApprovalErr: Label 'Explicitly approve standard posting and, for follow-up mode, payments and application before starting.';
     JobLbl: Label 'Scenario Factory company initialization';

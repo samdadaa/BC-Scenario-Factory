@@ -22,7 +22,7 @@ codeunit 90480 "BCSF Item Masters"
     // Wholesale v5 allows materials to vary within each category.
     // Do not inherit a fixed material from the item category.
     IsWholesaleV5 := (Contract.GetText(Context, 'profileCode') = 'TRADE') and
-      (Contract.GetText(Context, 'profileVersion') = '5');
+      (Contract.GetText(Context, 'profileVersion') in ['5', '6']);
     RootId := NewCategory(RunId, BatchId, 'TECH', '', Catalog.Choose(German, 'Installationstechnik', 'Installation supplies'), RootId);
     CategoryId := NewCategory(RunId, BatchId, 'FITTINGS', 'TECH', Catalog.Choose(German, 'Verbindungstechnik', 'Fittings'), RootId);
     if not IsWholesaleV5 then

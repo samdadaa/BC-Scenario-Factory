@@ -127,6 +127,7 @@ codeunit 90147 "BCSF Scenario Transfer"
     Item.Add('profileVersion', Scenario."Profile Version");
     Item.Add('usageMode', Scenario."Usage Mode".AsInteger());
     Item.Add('processMode', Scenario."Process Mode".AsInteger());
+    Item.Add('generationKind', Scenario."Generation Kind".AsInteger());
     Item.Add('seed', Scenario.Seed);
     Item.Add('startingDate', Format(Scenario."Starting Date", 0, 9));
     Item.Add('endingDate', Format(Scenario."Ending Date", 0, 9));
@@ -205,6 +206,10 @@ codeunit 90147 "BCSF Scenario Transfer"
     Scenario."Profile Version" := CopyStr(ReadText(Item, 'profileVersion', MaxStrLen(Scenario."Profile Version")), 1, MaxStrLen(Scenario."Profile Version"));
     Scenario."Usage Mode" := "BCSF Usage Mode".FromInteger(Contract.GetInteger(Item, 'usageMode'));
     Scenario."Process Mode" := "BCSF Process Mode".FromInteger(Contract.GetInteger(Item, 'processMode'));
+    if Item.Contains('generationKind') then
+      Scenario."Generation Kind" := "BCSF Generation Kind".FromInteger(Contract.GetInteger(Item, 'generationKind'));
+    // A foreign company's source identity is never portable. Select a local confirmed source after import.
+    Clear(Scenario."Master Source Run Id");
     Scenario.Seed := Contract.GetInteger(Item, 'seed');
     Scenario."Starting Date" := ReadDate(Item, 'startingDate');
     Scenario."Ending Date" := ReadDate(Item, 'endingDate');

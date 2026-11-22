@@ -1,5 +1,7 @@
 # Modulindex – Zielarchitektur
 
+**SF-048 / 1.0.9.0:** 145 Main-AL-Objekte. Core ergänzt Enum 90114, DataGeneration den lesenden Master Data Source 90259; vorhandene ScenarioManagement-, IndustryProfiles-, DependencyManager-, BackgroundProcessing-, ProcessEngine-, Monitoring-, Sales-, Purchasing- und Inventoryobjekte verwenden explizit bestätigte Fremdlaufstammdaten. Keine neue Tabelle/Seite/Engine. [Vertrag](../MODULAR_GENERATION.md), [Prüfbericht](../review/SF048_PRUEFBERICHT.md). **Zur Prüfung**. Nachfolgende Zählstände sind historisch.
+
 **SF-022 / 1.0.7.3:** Weiterhin 140 Main-Objekte. Bestehende Core-/IndustryProfiles-/Monitoring-/ScenarioManagement-/ProcessEngine-/Sales-/Purchasing-/Finance-Objekte erweitern den eingefrorenen Datumszeitraum; keine neuen Generatoren/Seiten. [Umfang und Abnahme](../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
 
 **SF-022 / 1.0.7.2:** Weiterhin 140 Main-AL-Objekte. Bestehende Core-Setupkarte/-tabelle, IndustryProfiles-Paket/Starter, ScenarioManagement-Modulunterseite und Monitoring-Request/Dashboard ergänzt. Keine neuen Generatoren. [Modulauswahl und offene native Abnahme](../INDUSTRY_INITIALIZATION.md#sf-022--modulauswahl-1072). **Zur Prüfung**.
@@ -96,3 +98,8 @@ SF-021-Vorlagenkorrektur 1.0.5.1: Objektbestand unverändert (133/16 Module); vo
 ## SF-046 – vollständiges Konfigurationspaket
 
 143 Main-AL-Objekte in weiterhin 16 Modulen. Monitoring: Paketdienst 90371, Install 90372 und Upgrade 90373. Ab 1.0.8.1 sind die Install-/Upgrade-Trigger leer; Paketaufbau nur nach ausdrücklicher Aktion in der aktuellen Firma. Core-Permission-Set ergänzt nur Execute. Keine neue Tabelle/Seite, keine Generatoränderung. [128 Tabellen-IDs und Bedienung](../CONFIG_EXPORT.md), [Prüfungen](../TESTS.md#sf-046--konfigurationspaket-für-vollständige-generator-daten), **Zur Prüfung**.
+
+
+## SF-047 – Zahlungskorrektur 1.0.8.5
+
+Objektbestand unverändert 143 Main-Objekte. Finance Payment Processor 90401 setzt die Standard-Commitunterdrückung vor allen Journalvalidierungen; keine neue Modulabhängigkeit, kein neues Objekt/Schema. Der vorhandene TRADE/6-Diff bleibt erhalten. Main/Test-App lokal gegen 28.5 kompiliert; native Zielversion 29.1 und acht bestehende Analyzer-Formatbefunde offen. [Ursache, Querschnitt und Nachweise](../review/SF047_PRUEFBERICHT.md#zahlungskorrektur-1085--commit-bei-ausgleichsvalidierung). **Zur Prüfung**.

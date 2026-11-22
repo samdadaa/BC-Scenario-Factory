@@ -53,3 +53,8 @@ Weiterhin kein AL-Code; der Modulmarker bleibt erhalten. Typordner entstehen ers
 [Sortiment, Quellen, Grenzen, Bedienung und Sandbox-Smoke](../../../INVENTORY_GENERATION.md), [tatsächlich ausgeführte Prüfungen und gemeldeter Item-Vendor-Schlüsselfehler](../../../TESTS.md#sf-019--artikelsortiment-und-lagerbasics-20112026). Historische Abschnitte „geplant/ohne Code“ oben gelten nur für den damaligen Stand.
 
 SF-019-Bedienkorrektur: elf Standardlistenrouten für die ergänzten Entitäten; Attributzuordnungen im erzeugten Umfang lesbar in der bestehenden Herkunftsseite. Einrichtung meldet erfolgreichen Abschluss; Fehler propagieren unverändert. Keine neuen Objekte/Tabellenfelder. Native Prüfung offen; Details im oben verlinkten Vertrag.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+Keine neuen Artikel in Bewegungsläufen. Item Setup liest gebundene Mengen; vorhandene Quellartikel/Basiseinheiten/Lieferantenbeziehungen und Livebestand sind Grundlage. Kein eigenständiger Bewegungs-/Ledgergenerator. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

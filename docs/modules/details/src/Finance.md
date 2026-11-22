@@ -81,3 +81,8 @@ Herkunftsregistry: Bank Account Ledger Entry, Detailed Cust. Ledg. Entry und Det
 ## SF-022 – Datumszeitraum 1.0.7.3
 
 Payment Processor verteilt neue Zahlungsbuchungen zwischen Rechnung und erfasstem Ende, setzt Zahlungs-Belegdatum und prüft tatsächliche Datumswerte. Historische Captures ohne Marker bleiben beim Rechnungsdatum; vollständiger Ausgleich und synthetische Bank erhalten. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+
+## SF-047 – Zahlungsvalidierung 1.0.8.5
+
+Payment Processor 90401 setzt `TempLine.SetSuppressCommit(true)` unmittelbar nach Init und vor sämtlichen Validierungen, unbedingt für Kunden-/Lieferantenzahlungen. Die Standard-Toleranzinstanz erhält dadurch die Unterdrückung ihrer eigenen Commits; fehlender Schutz führte nativ unter BC 29.1 zum Abbruch in DelVendPmtTolAcc. Strenger Batchguard, Berechtigungen, Standardbuchung/Ausgleich, Herkunft, Restbetrag-/Datumskontrolle und unsichere-Retry-Sperren bleiben erhalten. Kein Schemawechsel, keine neue UI/Setupvorgabe. Standard-API-Quellregression mit vier Negativkontrollen bestanden; Main/Test gegen lokale 28.5-Symbole kompiliert. [Native BC-29.1-Fälle und lokale Prüfgrenzen](../../../review/SF047_PRUEFBERICHT.md#zahlungskorrektur-1085--commit-bei-ausgleichsvalidierung). **Zur Prüfung**.

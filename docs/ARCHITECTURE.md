@@ -1,3 +1,10 @@
+**SF-048 / 1.0.9.0:** [Verbindlicher modularer Quellenvertrag](MODULAR_GENERATION.md): neue optionale Snapshotbindung Version 1 und Sales-v4, Source-Codeunit 90259, bestehende Queue/Registry/Recovery weiterverwendet. Stammdatenreferenzen ersetzen nur im ausdrücklich gewählten Bewegungslauf die Neuanlage; bestätigte terminal fehlgeschlagene Quellen sind zulässig. Bestände werden aktuell geprüft. Keine Run-übergreifenden Registry-Parents und keine zweite Batchengine. [Echte Prüfungen](review/SF048_PRUEFBERICHT.md).
+
+
+**SF-047 / 1.0.8.5 – Zahlungskorrektur:** Die temporäre General-Buchblattzeile unterdrückt Standardcommits bereits vor allen Feldvalidierungen; Table 81 reicht das Flag an Payment Tolerance Management weiter. Batch-Commitguard, Standardzahlung, Herkunft und Checkpoint bleiben atomar vorgesehen. Kein Setzen einer separaten globalen Toleranzinstanz und keine Recoveryfreigabe. [Nachweis und native BC-29.1-Prüfung](review/SF047_PRUEFBERICHT.md#zahlungskorrektur-1085--commit-bei-ausgleichsvalidierung). **Zur Prüfung**.
+
+**SF-047 (22.11.2026) – TRADE/6 Großhandel:** Versioniertes, deterministisches Artikel-/Beschaffungs-/Ortsprofil auf bestehenden Generatoren; gebuchte Verkäufe bleiben auf geplante Wareneingänge datiert. TRADE/5-Snapshots behalten ihre Regeln. [Umsetzung und Prüfgrenzen](review/SF047_PRUEFBERICHT.md). **Zur Prüfung; native Sandboxabnahme ausstehend.**
+
 # Zielarchitektur und implementierte Grundlagen
 
 **SF-022 / Datumszeitraum 1.0.7.3:** Initialisierung friert Start/Ende (gestern) im bestehenden Request ein. Snapshot datePolicyVersion 1 steuert neue artikelbezogene Einkaufsdaten und Zahlungen nach Rechnung; fehlender Marker bewahrt Legacy-Daten. Einzelverkauf prüft weiterhin Bestand zum konkreten Datum. [Vertrag und native Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.

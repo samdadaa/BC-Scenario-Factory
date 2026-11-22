@@ -1,5 +1,7 @@
 # Architekturentscheidungen und offene Fragen
 
+**SF-048, 22.11.2026:** Explizite SystemId-Bindung an einen ursprünglichen bestätigten Stammdatenlauf derselben Firma statt Kopieren/Neuregistrieren. Nutzer bestätigt Quellen aus terminal fehlgeschlagenen Läufen bei vollständig bestätigten Masterpaketen und erneuter Prüfung. Keine Quellenketten, Bestandsnachweise stets aktuell, keine zusätzliche Engine. Additiver Vertrag; [Begründung/Umfang](MODULAR_GENERATION.md).
+
 > Status: **Bestätigt** = durch den Nutzer im Gespräch festgelegt; **Vorschlag** = Designidee ohne Implementierungsfreigabe; **Zu prüfen** = erfordert technische/fachliche Entscheidung. Keine Entscheidung hier autorisiert automatisch Codeänderungen.
 
 | ID | Status | Thema | Vereinbarung / offene Frage |

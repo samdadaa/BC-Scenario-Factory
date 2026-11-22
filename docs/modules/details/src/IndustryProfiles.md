@@ -79,3 +79,8 @@ Wholesale Profile verwaltet vier Pflichtmodule plus acht optionale Planungszusä
 ## SF-022 – Datumszeitraum 1.0.7.3
 
 Wholesale Profile übernimmt validierte Start-/Endgrenzen. Vier neue Großhandelsstarter nutzen Jahreszeitraum bis gestern, bestehende Starter bleiben geschützt. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+Wholesale konfiguriert drei Laufarten und gewählte Belegmengen. Drei zusätzliche geschützte Teststarter, keine Änderung bestehender Vorlagen oder gespeicherter Läufe. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

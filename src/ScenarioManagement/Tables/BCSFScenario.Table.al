@@ -285,6 +285,16 @@ table 90125 "BCSF Scenario"
       ToolTip = 'Explicitly approves standard customer and vendor payments and application for a newly captured follow-up run. No bank transmission is performed.';
     }
 
+    field(45; "Generation Kind"; Enum "BCSF Generation Kind")
+    {
+      Caption = 'Generation kind';
+      ToolTip = 'Specifies whether this run creates a complete dataset, master data only, or transactions using an explicitly selected source.';
+    }
+    field(46; "Master Source Run Id"; Guid)
+    {
+      Caption = 'Master data source';
+      ToolTip = 'Specifies the confirmed source run in the current company. Source records are referenced, never registered again as new results.';
+    }
   }
 
   keys

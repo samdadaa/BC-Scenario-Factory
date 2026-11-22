@@ -76,3 +76,8 @@ salesSetup Version 3 bindet Standardbeschaffung desselben Laufs vor gebuchten Ve
 ## SF-022 – Datumszeitraum 1.0.7.3
 
 Gesamtbestandsprüfung neuer Datumsregel am Periodenende; einzelne Buchung weiterhin zum tatsächlichen Verkaufsdatum prüfen. Ausgabe validiert fachliche Beleg-/Buchungsdaten neuer Captures. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+Setup-v4 friert explizite Quellidentitäten/Fingerprint ein. Keine neuen Partner/Artikel; Einkauf nur bei explizitem positivem Ziel. Aktueller/stichtagsbezogener Bestand nach Reservierungen und verbleibender Eigenbedarf werden geprüft. Legacy-v1/2/3 geschützt. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

@@ -24,7 +24,7 @@ codeunit 90477 "BCSF Item Catalog"
   begin
     if Version = '1' then
       exit(Profile in ['TECH-TRADE', 'TECH-BINS']);
-    if (Version in ['4', '5']) and (Profile = 'TRADE') then
+    if (Version in ['4', '5', '6']) and (Profile = 'TRADE') then
       exit(true);
     exit((Version = '3') and (Profile in ['TECH-SALES', 'GENERAL', 'TRADE', 'ECOMMERCE', 'DISTRIBUTION', 'MANUFACTURING', 'CONSULTING', 'CONSTRUCTION', 'SERVICE']));
   end;
@@ -52,7 +52,7 @@ codeunit 90477 "BCSF Item Catalog"
     if not SupportsProfile(Contract.GetText(Context, 'profileCode'), Contract.GetText(Context, 'profileVersion')) or (LogicalKey <= 0) then
       Error(ProfileErr);
     if (Contract.GetText(Context, 'profileCode') = 'TRADE') and
-      (Contract.GetText(Context, 'profileVersion') = '5') then
+      (Contract.GetText(Context, 'profileVersion') in ['5', '6']) then
       exit(BuildWholesaleValues(Context, LogicalKey));
     German := Contract.GetInteger(Context, 'dataLanguage') = 1;
     Family := ((LogicalKey - 1) mod 8) + 1;

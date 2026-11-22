@@ -105,6 +105,11 @@ codeunit 90365 "BCSF Dashboard Data"
     if not IsNullGuid(JobId) then begin
       Company.Replace('industry', WholesaleLbl);
       Company.Replace('modules', Profile.DescribeModules(Setup."Industry Additional Modules"));
+      if Setup."Industry Generation Kind" = "BCSF Generation Kind"::Transactions then
+        Company.Replace('modules', StrSubstNo(GenerationScopeLbl, Format(Setup."Industry Generation Kind"),
+          Setup."Industry Purchase Selected", Setup."Industry Sales Selected", Setup."Industry Master Source Id"))
+      else
+        Company.Replace('modules', Format(Setup."Industry Generation Kind") + ' · ' + Profile.DescribeModules(Setup."Industry Additional Modules"));
       EndingDate := Setup."Industry Ending Date";
       if EndingDate = 0D then
         EndingDate := Setup."Industry Date";
@@ -466,6 +471,7 @@ codeunit 90365 "BCSF Dashboard Data"
   end;
 
   var
+    GenerationScopeLbl: Label 'Generation: %1. Purchasing: %2; sales: %3. Master data source: %4.', Comment = '%1 = generation kind, %2 = purchasing selected, %3 = sales selected, %4 = source run';
     ExportPackageLbl: Label 'Prepare data export package';
     PeriodLbl: Label 'Business dates: %1 to %2 (inclusive).', Comment = '%1 = starting date, %2 = ending date';
     DataTabLbl: Label 'Data';

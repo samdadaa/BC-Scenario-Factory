@@ -1,5 +1,7 @@
 # Startvorlagen, Schnellstart und Sammeltransfer
 
+**SF-048:** Drei zusätzliche geschützte Großhandelsstarter mit Endziffern 005/006/007: nur Stammdaten, 15 Einkaufsbestellungen, 20 Verkaufsaufträge. Bei den beiden ungebuchten Belegvorlagen vor Start eine echte bestätigte Stammdatenquelle auf der bestehenden Szenariokarte auswählen; ohne Quelle ist kein Lauf möglich. Vorhandene/archivierte/entfernte Starter werden nicht ersetzt. Normalweg bleibt gemeinsamer Unternehmensassistent. [Bedienung und native Abnahme](MODULAR_GENERATION.md).
+
 ## Benutzung
 
 1. Den aktuellen Workspace verwenden, einschließlich lokaler Fixes. Vollständig gegen die Symbole der Ziel-Sandbox bauen; keine ältere Archivversion zurückkopieren.
@@ -79,3 +81,10 @@ Neue Abnahmefälle verwenden die bestehenden Referenzen und denselben Menüpunkt
 | Eine manuelle synthetische Zeile plus zwei Läufe | Alle Zeilen im Paketexport enthalten, unabhängig vom gewählten Dashboardlauf/-filter. Keine Duplikate durch wiederholtes Öffnen. |
 
 Diese Fälle sind **vorbereitet, nicht nativ ausgeführt**. Vollständige Tabellen-IDs, Rechte und Standardgrenzen: [CONFIG_EXPORT.md](CONFIG_EXPORT.md).
+
+
+## SF-047 – Zahlungs-Korrekturtest 1.0.8.5
+
+Vorhandene Start-/Testvorlagen gegen den realen Generatorstand geprüft: `SeedWholesaleReference` verwendet `BCSF Wholesale Profile.CreateTemplateForId`; neu angelegte Großhandelsreferenzen erhalten damit TRADE/6. Eigene Werte/Namen, vorhandene Versionen, entfernte/archivierte Starter und historische Läufe werden nicht überschrieben. PO 60/20/Rest, SO 50/25/Rest und Rechnungen 67/0/Rest bleiben erhalten; Angebote ungebucht, Teilquoten nur Aufträge. Der Zahlungsfix ist keine neue konfigurierbare Generatorfunktion.
+
+Für die native Korrekturabnahme einen **neuen** kleinen Großhandelslauf im gemeinsamen Workflow mit **Gebuchte Belege mit Zahlung und Ausgleich** und ausdrücklichen Freigaben verwenden. Kunden- und Lieferantenseite bis zu geschlossenen Rechnungs-/Zahlungsposten prüfen; Dashboard/Export gegen Standardposten abgleichen. Der vorhandene Evidence-Test prüft im kleinen Follow-up-Fall 23 Zahlungen/Bankposten; der Anti-Replay-Test sperrt abgeschlossene Zahlungen außerhalb eines Claims. Diese Tests sind nur kompiliert. Fehlgeschlagenen/übernommenen Altbatch nicht blind wiederholen. [Prüfbericht und genaue offene native Fälle](review/SF047_PRUEFBERICHT.md#zahlungskorrektur-1085--commit-bei-ausgleichsvalidierung).

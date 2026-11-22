@@ -29,6 +29,7 @@ codeunit 90144 "BCSF Snapshot Writer"
     PurchaseSettings: JsonObject;
     PaymentSettings: JsonObject;
     PartnerSettings: JsonObject;
+    MasterBinding: JsonObject;
     Targets: JsonArray;
     Modules: JsonArray;
     Item: JsonObject;
@@ -101,6 +102,10 @@ codeunit 90144 "BCSF Snapshot Writer"
     Payload.Add('financeVersion', FinanceVersion);
     PartnerSettings := CapturePartners(Scenario, FinanceMode);
     Payload.Add('partnerSetup', PartnerSettings);
+    Payload.Add('generationKind', Scenario."Generation Kind".AsInteger());
+    OnCaptureMasterSource(Scenario, MasterBinding, InventorySettings);
+    if MasterBinding.Keys().Count() > 0 then
+      Payload.Add('masterDataSource', MasterBinding);
     OnCaptureInventorySetup(Scenario, PartnerSettings, InventorySettings);
     if InventorySettings.Keys().Count() > 0 then
       Payload.Add('itemSetup', InventorySettings);
@@ -201,6 +206,11 @@ codeunit 90144 "BCSF Snapshot Writer"
 
   [IntegrationEvent(false, false)]
   local procedure OnCaptureFinancePackage(var Mode: Enum "BCSF Finance Mode"; var Year: Integer; var PackageVersion: Code[20])
+  begin
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnCaptureMasterSource(Scenario: Record "BCSF Scenario"; var Binding: JsonObject; var InventorySettings: JsonObject)
   begin
   end;
 

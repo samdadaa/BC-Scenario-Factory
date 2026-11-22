@@ -1,3 +1,8 @@
+**Aktuell SF-048 (22.11.2026):** App `1.0.9.0`, separate Test-App `1.5.0.0`, 145 Main-Objekte und 64 kompilierte AL-Testmethoden. Neu Enum 90114 und lesende Source-Codeunit 90259; additive Setup-/Szenariofelder, keine neue Tabelle/Seite/Runtimeabhängigkeit. Drei Laufarten im vorhandenen Workflow, wiederverwendbare bestätigte Stammdaten auch aus terminal fehlgeschlagenen Läufen. Lokaler Build gegen BC 28.5 erfolgreich, native BC-29.1-Prüfung offen; acht bestehende Analyzerfehler. [Vertrag](MODULAR_GENERATION.md), [Prüfbericht](review/SF048_PRUEFBERICHT.md). **Zur Prüfung**. Nachfolgende Versionsstände sind historisch.
+
+
+**SF-047 (22.11.2026):** Manifestversion `1.0.8.5`, keine neuen Objekt-IDs, Tabellen oder Dependencies; TRADE/6 und vorhandener SF-047-Diff erhalten. Zahlungsvalidierung unterdrückt Standard-Toleranzcommits ausdrücklich. Main/Test-App 1.4.0.5 gegen lokale BC-28.5-Symbole kompiliert; native Zielumgebung laut Nutzertrace BC 29.1.57326.58215, dafür keine lokalen Symbole/keine Laufzeitabnahme. Strenger Analyzer: acht vorhandene AA0018-Befunde. [Prüfbericht](review/SF047_PRUEFBERICHT.md). **Zur Prüfung**.
+
 # Projektfakten und bestätigter Plan
 
 **SF-022 / Datumszeitraum 1.0.7.3:** App 1.0.7.3, Test-App 1.3.0.3; unverändert 140 Main-Objekte. Ein additives optionales Setup-Enddatumsfeld 28. Unternehmensinitialisierung erfasst Start bis gestern; neue Snapshots erhalten optionale Datumsregelversion 1, ältere behalten ihre Semantik. [Vertrag und native Prüfgrenzen](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.

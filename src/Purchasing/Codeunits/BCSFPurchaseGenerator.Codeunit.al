@@ -101,12 +101,14 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Numbers: Codeunit "No. Series";
     Payments: Codeunit "BCSF Payment Processor";
     Guard: Codeunit "BCSF Environment Guard";
+    Source: Codeunit "BCSF Master Data Source";
     Token: JsonToken;
     Settings: JsonObject;
     DateFrom: Date;
     DateTo: Date;
   begin
     Contract.CheckTarget(Context, Target);
+    Source.Validate(Context);
     if (Contract.GetCode(Target, 'entityCode') <> 'PURCHASE.ORDER') or
       (Contract.GetCode(Target, 'moduleCode') <> 'PURCHASING') or
       not (Contract.GetInteger(Target, 'processMode') in [1, 2]) then
@@ -194,6 +196,8 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Requirement: JsonObject;
   begin
     Clear(Dependencies);
+    if Context.Contains('masterDataSource') then
+      exit;
     Requirement.Add('entityCode', 'VENDOR');
     Requirement.Add('moduleCode', 'PURCHASING');
     Requirement.Add('kind', "BCSF Dependency Kind"::Required.AsInteger());
@@ -256,9 +260,11 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Entry: Record "BCSF Generated Record";
     Registry: Codeunit "BCSF Record Registry";
     ItemSetup: Codeunit "BCSF Item Setup";
+    Source: Codeunit "BCSF Master Data Source";
     Coordinator: Codeunit "BCSF Process Coordinator";
     ItemKey: Integer;
   begin
+    RunId := Source.RunId(Context);
     // Follow each generated item's actual primary supplier, never an unrelated random vendor.
     if Coordinator.IsWholesaleQualityProfile(Context) then
       ItemKey := Coordinator.WholesalePurchaseItemKey(Context, LogicalKey, 1)
@@ -290,7 +296,9 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Entry: Record "BCSF Generated Record";
     Registry: Codeunit "BCSF Record Registry";
     Coordinator: Codeunit "BCSF Process Coordinator";
+    Source: Codeunit "BCSF Master Data Source";
   begin
+    RunId := Source.RunId(Context);
     Entry.SecurityFiltering(SecurityFilter::Disallowed);
     Entry.Get(RunId, 'ITEM', Coordinator.WholesalePurchaseItemKey(Context, PurchaseKey, LineIndex), 'ITEM');
     Entry.TestField("Table Id", Database::Item);

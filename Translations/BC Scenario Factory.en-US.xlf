@@ -1125,6 +1125,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType FoundationCompletedLbl</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 3903359621" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing items and current stock are reused. Independent inventory movements are not available.</source>
+          <target state="translated">Existing items and current stock are reused. Independent inventory movements are not available.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType InventoryMovementLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 3098967772" size-unit="char" translate="yes" xml:space="preserve">
           <source>Wholesale requires Sales, Purchasing, Inventory and the shared Finance foundation. Select additional modules for planning; they do not generate data until supported by the company package.</source>
           <target state="translated">Wholesale requires Sales, Purchasing, Inventory and the shared Finance foundation. Select additional modules for planning; they do not generate data until supported by the company package.</target>
@@ -1173,6 +1179,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType SizesLbl</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 4179896455" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transactions only. Master data source: %1. Purchasing: %2; sales: %3. New orders: purchase %4, sales %5; quotes %6; invoices %7. No new master records.</source>
+          <target state="translated">Transactions only. Master data source: %1. Purchasing: %2; sales: %3. New orders: purchase %4, sales %5; quotes %6; invoices %7. No new master records.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source run, %2 = purchasing selected, %3 = sales selected, %4 = purchase count, %5 = sales order count, %6 = quote count, %7 = invoice count</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType SourceReviewLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 3690483212" size-unit="char" translate="yes" xml:space="preserve">
           <source>Wholesale</source>
           <target state="translated">Wholesale</target>
@@ -1209,6 +1221,36 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Defaults - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 344413344 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>3 - Generation kind</source>
+          <target state="translated">3 - Generation kind</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control GenerationStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 407179282 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose a complete scenario, master data only, or independent transactions using a confirmed source in this company.</source>
+          <target state="translated">Choose a complete scenario, master data only, or independent transactions using a confirmed source in this company.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control GenerationKind - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 407179282 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generation kind</source>
+          <target state="translated">Generation kind</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control GenerationKind - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3582545419 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a confirmed source in this company. Its customer, vendor and item SystemIds are frozen in the new run and checked again before execution.</source>
+          <target state="translated">Select a confirmed source in this company. Its customer, vendor and item SystemIds are frozen in the new run and checked again before execution.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control MasterSource - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3582545419 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Master data source</source>
+          <target state="translated">Master data source</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control MasterSource - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - Control 1142048652 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>2 - Industry</source>
           <target state="translated">2 - Industry</target>
@@ -1234,8 +1276,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control Limits - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 522027044 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>3 - Modules</source>
-          <target state="translated">3 - Modules</target>
+          <source>4 - Modules</source>
+          <target state="translated">4 - Modules</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ModuleStep - Property Caption</note>
         </trans-unit>
@@ -1276,8 +1318,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PostingApproved - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 558393067 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>5 - Data and processes</source>
-          <target state="translated">5 - Data and processes</target>
+          <source>6 - Data and processes</source>
+          <target state="translated">6 - Data and processes</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ProcessStep - Property Caption</note>
         </trans-unit>
@@ -1324,8 +1366,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control StartingDate - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 1163864020 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>6 - Summary and start</source>
-          <target state="translated">6 - Summary and start</target>
+          <source>7 - Summary and start</source>
+          <target state="translated">7 - Summary and start</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ReviewStep - Property Caption</note>
         </trans-unit>
@@ -1354,8 +1396,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control InstalledChart - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 3503818721 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>4 - Data size</source>
-          <target state="translated">4 - Data size</target>
+          <source>5 - Data size</source>
+          <target state="translated">5 - Data size</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SizeStep - Property Caption</note>
         </trans-unit>
@@ -1376,6 +1418,102 @@
           <target state="translated">Small,Medium,Large</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SizeChoice - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 2829629415 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>4 - Process modules</source>
+          <target state="translated">4 - Process modules</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control TransactionModules - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 4232808385 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inventory supplies existing items and live stock checks. An independent inventory movement generator is not implemented.</source>
+          <target state="translated">Inventory supplies existing items and live stock checks. An independent inventory movement generator is not implemented.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control InventoryMovementInfo - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 4232808385 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inventory</source>
+          <target state="translated">Inventory</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control InventoryMovementInfo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 594265222 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates new purchase orders from the selected master data. Posting and payments follow the selected process mode.</source>
+          <target state="translated">Creates new purchase orders from the selected master data. Posting and payments follow the selected process mode.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PurchaseSelected - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 594265222 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchasing</source>
+          <target state="translated">Purchasing</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PurchaseSelected - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3891003211 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates only the selected sales documents. Purchasing is added only when explicitly selected; posted sales require current stock.</source>
+          <target state="translated">Creates only the selected sales documents. Purchasing is added only when explicitly selected; posted sales require current stock.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SalesSelected - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3891003211 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales</source>
+          <target state="translated">Sales</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SalesSelected - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 413255555 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document quantities</source>
+          <target state="translated">Document quantities</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control TransactionQuantities - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 1584597212 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.</source>
+          <target state="translated">Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PurchaseQuantity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 1584597212 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase orders</source>
+          <target state="translated">Purchase orders</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PurchaseQuantity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3497391846 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.</source>
+          <target state="translated">Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SalesInvoiceQuantity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3497391846 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales invoices</source>
+          <target state="translated">Sales invoices</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SalesInvoiceQuantity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3486830087 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.</source>
+          <target state="translated">Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SalesOrderQuantity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3486830087 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales orders</source>
+          <target state="translated">Sales orders</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SalesOrderQuantity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 1861618139 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.</source>
+          <target state="translated">Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SalesQuoteQuantity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 1861618139 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales quotes</source>
+          <target state="translated">Sales quotes</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SalesQuoteQuantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Action 3649698641 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Use the existing company foundation and choose the data size and process scope. A new run requires the previous company run to have completed.</source>
@@ -1490,6 +1628,24 @@
           <target state="translated">SKR04 test chart</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Finance Mode - EnumValue SKR04 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 505433998 - EnumValue 2588201939 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Complete scenario</source>
+          <target state="translated">Complete scenario</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Generation Kind - EnumValue Complete - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 505433998 - EnumValue 1572708512 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Master data only</source>
+          <target state="translated">Master data only</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Generation Kind - EnumValue MasterData - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 505433998 - EnumValue 2099597673 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transactions only</source>
+          <target state="translated">Transactions only</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Generation Kind - EnumValue Transactions - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1182436626 - EnumValue 675937908 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cycle or Cyclic Prerequisite</source>
@@ -1844,6 +2000,12 @@
           <target state="translated">Table Id</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Generated Record - Field Table Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1342277927 - NamedType 4281848628" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a confirmed wholesale master-data source in this company with matching profile version and intact customer, vendor and item identities.</source>
+          <target state="translated">Select a confirmed wholesale master-data source in this company with matching profile version and intact customer, vendor and item identities.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Master Data Source - NamedType SourceErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2908806019 - NamedType 1813582007" size-unit="char" translate="yes" xml:space="preserve">
           <source>Partner catalog version 2 supports address countries DE and GB. Configure a supported country instead of generating inconsistent addresses for %1.</source>
@@ -3003,6 +3165,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType ManufacturingLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 3977663720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale: master data only</source>
+          <target state="translated">Wholesale: master data only</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType MasterWholesaleLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 3940410257" size-unit="char" translate="yes" xml:space="preserve">
           <source>Sales – Mixed Posted Documents</source>
           <target state="translated">Sales – Mixed Posted Documents</target>
@@ -3039,6 +3207,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PostedWholesaleLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 2575592026" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale: 15 purchase orders (select master-data source)</source>
+          <target state="translated">Wholesale: 15 purchase orders (select master-data source)</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType PurchaseSourceWholesaleLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 1955077898" size-unit="char" translate="yes" xml:space="preserve">
           <source>Restore all removed or archived built-in starter templates? Custom names are retained.</source>
           <target state="translated">Restore all removed or archived built-in starter templates? Custom names are retained.</target>
@@ -3050,6 +3224,12 @@
           <target state="translated">Sales – Quotes, Orders and Invoices</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType SalesDocumentsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3043848220 - NamedType 339123007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale: 20 sales orders (select master-data source)</source>
+          <target state="translated">Wholesale: 20 sales orders (select master-data source)</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType SalesSourceWholesaleLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 381116628" size-unit="char" translate="yes" xml:space="preserve">
           <source>Load starter scenarios only in an approved sandbox.</source>
@@ -3105,6 +3285,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType DateRangeErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3298024591 - NamedType 1968610181" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a confirmed master-data source, at least one executable process module and positive document quantities. Transactions require an unposted, posted or payment process mode.</source>
+          <target state="translated">Select a confirmed master-data source, at least one executable process module and positive document quantities. Transactions require an unposted, posted or payment process mode.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType GenerationErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3298024591 - NamedType 1904129885" size-unit="char" translate="yes" xml:space="preserve">
           <source>Industry modules: %1.</source>
           <target state="translated">Industry modules: %1.</target>
@@ -3158,6 +3344,12 @@
           <target state="translated">Item results or relationships are missing, changed or already registered. Review the existing batch and checkpoint; do not repeat uncertain work.</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Inventory Generator - NamedType ReplayErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4193062846 - NamedType 1325198230" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The wholesale assortment supports up to 6912 unique products. Requested item key %1 is out of range.</source>
+          <target state="translated">The wholesale assortment supports up to 6912 unique products. Requested item key %1 is out of range.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = logical item key</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Item Catalog - NamedType CatalogCapacityErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 4193062846 - NamedType 1146909282" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select a supported item assortment or sales template profile with a positive item key.</source>
@@ -3951,6 +4143,12 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType PeriodChangedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2531880237 - NamedType 1803812000" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a valid generation kind and confirmed master-data source. Choose executable modules and document quantities within the company limits.</source>
+          <target state="translated">Select a valid generation kind and confirmed master-data source. Choose executable modules and document quantities within the company limits.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType RequestErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 603844782 - NamedType 4214633774" size-unit="char" translate="yes" xml:space="preserve">
           <source>Full company table for inspection/export, including existing data. Posted entries cannot be reimported through RapidStart.</source>
           <target state="translated">Full company table for inspection/export, including existing data. Posted entries cannot be reimported through RapidStart.</target>
@@ -4214,6 +4412,12 @@
           <target state="translated">Company foundation</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType FoundationLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 2698933906" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generation: %1. Purchasing: %2; sales: %3. Master data source: %4.</source>
+          <target state="translated">Generation: %1. Purchasing: %2; sales: %3. Master data source: %4.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = generation kind, %2 = purchasing selected, %3 = sales selected, %4 = source run</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType GenerationScopeLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 2629106428" size-unit="char" translate="yes" xml:space="preserve">
           <source>Status history</source>
@@ -6687,6 +6891,18 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Gen. Bus. Posting Group - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 353695162 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this run creates a complete dataset, master data only, or transactions using an explicitly selected source.</source>
+          <target state="translated">Specifies whether this run creates a complete dataset, master data only, or transactions using an explicitly selected source.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Generation Kind - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 353695162 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generation kind</source>
+          <target state="translated">Generation kind</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Generation Kind - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 3536643086 - Field 842370546 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the existing base unit for generated items. Blank uses STK.</source>
           <target state="translated">Specifies the existing base unit for generated items. Blank uses STK.</target>
@@ -6806,6 +7022,18 @@
           <target state="translated">Large Partner Payment Terms</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Large Terms Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2747980535 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the confirmed source run in the current company. Source records are referenced, never registered again as new results.</source>
+          <target state="translated">Specifies the confirmed source run in the current company. Source records are referenced, never registered again as new results.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Master Source Run Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 3536643086 - Field 2747980535 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Master data source</source>
+          <target state="translated">Master data source</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Master Source Run Id - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 3536643086 - Field 4050498399 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the credit limit in local currency for medium business customers. Zero means no credit limit.</source>
@@ -7550,6 +7778,30 @@
           <target state="translated">Captured Configuration</target>
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control Configuration - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 407179282 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the generation kind frozen in this run. Historical captures keep their original interpretation.</source>
+          <target state="translated">Shows the generation kind frozen in this run. Historical captures keep their original interpretation.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control GenerationKind - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 407179282 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generation kind</source>
+          <target state="translated">Generation kind</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control GenerationKind - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 2749626064 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows the frozen source run for reused master records. Only new documents and entries belong to this run.</source>
+          <target state="translated">Shows the frozen source run for reused master records. Only new documents and entries belong to this run.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control MasterSourceId - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1160320011 - Control 2749626064 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Master data source</source>
+          <target state="translated">Master data source</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Run Card - Control MasterSourceId - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1160320011 - Control 2607913180 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Data Language Preview</source>

@@ -937,15 +937,15 @@ codeunit 90700 "BCSF Inventory Tests"
     Values: JsonObject;
     Seen: Dictionary of [Text, Boolean];
     Description: Text;
-    Key: Integer;
+    ItemKey: Integer;
   begin
     Context := ContextFixture();
     Context.Replace('profileCode', 'TRADE');
     Context.Replace('profileVersion', '5');
-    for Key := 1 to 400 do begin
-      Values := Catalog.BuildValues(Context, Key);
+    for ItemKey := 1 to 400 do begin
+      Values := Catalog.BuildValues(Context, ItemKey);
       Description := Contract.GetText(Values, 'description');
-      Assert(not Seen.ContainsKey(Description), 'Duplicate wholesale product identity at item key ' + Format(Key));
+      Assert(not Seen.ContainsKey(Description), 'Duplicate wholesale product identity at item key ' + Format(ItemKey));
       Seen.Add(Description, true);
       Assert(Contract.GetInteger(Values, 'reorderPoint') > 0, 'Invalid replenishment threshold.');
       Assert(Contract.GetText(Values, 'rating') <> '', 'Missing nominal pressure rating.');
@@ -1051,6 +1051,160 @@ codeunit 90700 "BCSF Inventory Tests"
         end;
       end;
     end;
+  end;
+
+  [Test]
+  procedure WholesaleV6UsesExtendedAssortmentAndCoversPostedSales()
+  var
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Context: JsonObject;
+    Targets: JsonArray;
+    Received: Dictionary of [Integer, Decimal];
+    PurchaseKey: Integer;
+    SalesKey: Integer;
+    LineIndex: Integer;
+    ItemKey: Integer;
+    Mode: Integer;
+    UsedBeyondOldLimit: Boolean;
+    Required: Decimal;
+    Available: Decimal;
+    EntityCode: Code[30];
+    Kind: Integer;
+    Count: Integer;
+  begin
+    Context := ContextFixture();
+    Context.Replace('profileCode', 'TRADE');
+    Context.Replace('profileVersion', '6');
+    Context.Add('startingDate', '2025-11-22');
+    Context.Add('endingDate', '2026-11-21');
+    Clear(Targets);
+    AddMixedTarget(Targets, "BCSF Entity Type"::Vendor, 50, 0, 0);
+    AddMixedTarget(Targets, "BCSF Entity Type"::Item, 400, 0, 0);
+    AddMixedTarget(Targets, "BCSF Entity Type"::PurchaseOrder, 150, 60, 20);
+    AddMixedTarget(Targets, "BCSF Entity Type"::SalesOrder, 120, 50, 25);
+    AddMixedTarget(Targets, "BCSF Entity Type"::SalesInvoice, 30, 67, 0);
+    Context.Replace('targets', Targets);
+    for PurchaseKey := 1 to 150 do begin
+      Mode := Coordinator.Disposition(Context, 'PURCHASE.ORDER', PurchaseKey);
+      for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', PurchaseKey) do begin
+        ItemKey := Coordinator.WholesalePurchaseItemKey(Context, PurchaseKey, LineIndex);
+        Assert((ItemKey >= 1) and (ItemKey <= 400), 'Item key escaped the 400-item catalog.');
+        Assert(((ItemKey - 1) mod 50) = ((PurchaseKey - 1) mod 50), 'Purchase supplier assignment drifted.');
+        if ItemKey > 200 then
+          UsedBeyondOldLimit := true;
+        if Mode > 0 then begin
+          if not Received.Get(ItemKey, Available) then
+            Available := 0;
+          Required := Coordinator.WholesalePurchaseLineQuantity(Context, PurchaseKey, LineIndex);
+          if Mode = 2 then
+            Required /= 2;
+          Received.Set(ItemKey, Available + Required);
+        end;
+      end;
+    end;
+    Assert(UsedBeyondOldLimit, 'V6 purchase planning must reach products beyond item 200.');
+    for Kind := 1 to 2 do begin
+      if Kind = 1 then begin
+        EntityCode := 'SALES.ORDER';
+        Count := 120;
+      end else begin
+        EntityCode := 'SALES.INVOICE';
+        Count := 30;
+      end;
+      for SalesKey := 1 to Count do
+        if Coordinator.Disposition(Context, EntityCode, SalesKey) > 0 then
+          for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, SalesKey) do begin
+            ItemKey := Coordinator.WholesaleSalesItemKey(Context, EntityCode, SalesKey, LineIndex);
+            Assert(Received.ContainsKey(ItemKey), 'Posted sales item has no confirmed purchase receipt.');
+          end;
+    end;
+    for ItemKey := 1 to 400 do begin
+      Required := Coordinator.WholesaleDemandForItem(Context, ItemKey, 1);
+      if not Received.Get(ItemKey, Available) then
+        Available := 0;
+      Assert(Available >= Required, 'Planned receipt quantity is less than posted demand.');
+    end;
+  end;
+
+  [Test]
+  procedure WholesaleV6PurchaseDatesAreDistributedBeforeRelatedSales()
+  var
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Context: JsonObject;
+    Targets: JsonArray;
+    PurchaseKey: Integer;
+    SalesKey: Integer;
+    LineIndex: Integer;
+    PurchaseLineIndex: Integer;
+    SalesItemKey: Integer;
+    EntityCode: Code[30];
+    Kind: Integer;
+    Count: Integer;
+    FirstDate: Date;
+    LatestDate: Date;
+    HasPriorReceipt: Boolean;
+  begin
+    Context := ContextFixture();
+    Context.Replace('profileCode', 'TRADE');
+    Context.Replace('profileVersion', '6');
+    Context.Add('startingDate', '2025-11-22');
+    Context.Add('endingDate', '2026-11-21');
+    Clear(Targets);
+    AddMixedTarget(Targets, "BCSF Entity Type"::Vendor, 50, 0, 0);
+    AddMixedTarget(Targets, "BCSF Entity Type"::Item, 400, 0, 0);
+    AddMixedTarget(Targets, "BCSF Entity Type"::PurchaseOrder, 150, 60, 20);
+    AddMixedTarget(Targets, "BCSF Entity Type"::SalesOrder, 120, 50, 25);
+    AddMixedTarget(Targets, "BCSF Entity Type"::SalesInvoice, 30, 67, 0);
+    Context.Replace('targets', Targets);
+    FirstDate := Coordinator.PurchaseDate(Context, 1);
+    LatestDate := Coordinator.PurchaseDate(Context, 120);
+    Assert((FirstDate = 20251122D) and (LatestDate > FirstDate) and
+      (LatestDate <= 20261121D), 'V6 purchase dates must spread across the permitted period.');
+    for Kind := 1 to 2 do begin
+      if Kind = 1 then begin
+        EntityCode := 'SALES.ORDER';
+        Count := 120;
+      end else begin
+        EntityCode := 'SALES.INVOICE';
+        Count := 30;
+      end;
+      for SalesKey := 1 to Count do
+        if Coordinator.Disposition(Context, EntityCode, SalesKey) > 0 then
+          for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, SalesKey) do begin
+            SalesItemKey := Coordinator.WholesaleSalesItemKey(Context, EntityCode, SalesKey, LineIndex);
+            HasPriorReceipt := false;
+            for PurchaseKey := 1 to 120 do
+              if Coordinator.Disposition(Context, 'PURCHASE.ORDER', PurchaseKey) > 0 then
+                if Coordinator.PurchaseDate(Context, PurchaseKey) <= Coordinator.DocumentDate(Context, EntityCode, SalesKey) then
+                  for PurchaseLineIndex := 1 to Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', PurchaseKey) do
+                    if Coordinator.WholesalePurchaseItemKey(Context, PurchaseKey, PurchaseLineIndex) = SalesItemKey then
+                      HasPriorReceipt := true;
+            Assert(HasPriorReceipt, 'A posted wholesale sale must not precede every available receipt.');
+          end;
+    end;
+  end;
+
+  [Test]
+  procedure WholesaleV6CitiesCycleThroughAllTwentyLocations()
+  var
+    Catalog: Codeunit "BCSF Partner Catalog";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    Settings: JsonObject;
+    Address: JsonObject;
+    Cities: Dictionary of [Text, Boolean];
+    Index: Integer;
+  begin
+    Context := ContextFixture();
+    Context.Replace('profileCode', 'TRADE');
+    Context.Replace('profileVersion', '6');
+    Settings.Add('countryCode', 'DE');
+    Context.Add('partnerSetup', Settings);
+    for Index := 1 to 200 do begin
+      Address := Catalog.AddressValues(Context, 'CUSTOMER', Index, 'MAIN');
+      Cities.Set(Contract.GetText(Address, 'city'), true);
+    end;
+    Assert(Cities.Count() = 20, '200 customers must visit all 20 synthetic city/postcode pairs.');
   end;
 
   [Test]
@@ -1768,6 +1922,121 @@ codeunit 90700 "BCSF Inventory Tests"
     Target.Add('quantity', 8);
     Target.Add('processMode', 0);
     exit(Target);
+  end;
+
+  [Test]
+  procedure MovementSourceCountsRemainReferences()
+  var
+    Source: Codeunit "BCSF Master Data Source";
+    Context: JsonObject;
+    Binding: JsonObject;
+    Targets: JsonArray;
+    Ids: JsonArray;
+  begin
+    Context := ContextFixture();
+    AddMixedTarget(Targets, "BCSF Entity Type"::PurchaseOrder, 10, 60, 20);
+    Context.Replace('targets', Targets);
+    Ids.Add(Format(CreateGuid(), 0, 4));
+    Binding.Add('customers', Ids.Clone());
+    Ids.Add(Format(CreateGuid(), 0, 4));
+    Binding.Add('vendors', Ids.Clone());
+    Ids.Add(Format(CreateGuid(), 0, 4));
+    Binding.Add('items', Ids);
+    Context.Add('masterDataSource', Binding);
+    Assert(Source.Quantity(Context, "BCSF Entity Type"::Customer) = 1, 'Customer quantity must describe the bound source.');
+    Assert(Source.Quantity(Context, "BCSF Entity Type"::Vendor) = 2, 'Vendor quantity must describe the bound source.');
+    Assert(Source.Quantity(Context, "BCSF Entity Type"::Item) = 3, 'Item quantity must describe the bound source.');
+    Assert(Source.Quantity(Context, "BCSF Entity Type"::PurchaseOrder) = 10, 'Document targets must stay in the new run.');
+    Assert(Targets.Count() = 1, 'Source counts must not add new master targets.');
+  end;
+
+  [Test]
+  procedure SourceBindingRejectsUnknownContracts()
+  var
+    Source: Codeunit "BCSF Master Data Source";
+    Context: JsonObject;
+    Binding: JsonObject;
+    EmptyId: Guid;
+  begin
+    Context := ContextFixture();
+    Context.Add('generationKind', "BCSF Generation Kind"::Transactions.AsInteger());
+    Binding.Add('version', 99);
+    Context.Add('masterDataSource', Binding);
+    asserterror Source.Validate(Context);
+    asserterror Source.Capture(EmptyId, 'TRADE', '6');
+    asserterror Source.Capture(CreateGuid(), 'TRADE', '6');
+  end;
+
+  [Test]
+  procedure IndependentSalesOnlyAddsExplicitPurchases()
+  var
+    Generator: Codeunit "BCSF Sales Generator";
+    Context: JsonObject;
+    Binding: JsonObject;
+    Settings: JsonObject;
+    Targets: JsonArray;
+    Dependencies: JsonArray;
+  begin
+    Context := ContextFixture();
+    Binding.Add('version', 1);
+    Settings.Add('version', 4);
+    Context.Add('masterDataSource', Binding);
+    Context.Add('salesSetup', Settings);
+    AddMixedTarget(Targets, "BCSF Entity Type"::SalesOrder, 20, 50, 25);
+    Context.Replace('targets', Targets);
+    Generator.GetDependencies(Context, Settings, Dependencies);
+    Assert(Dependencies.Count() = 0, 'Sales-only must not invent a purchasing or master-data generation step.');
+    AddMixedTarget(Targets, "BCSF Entity Type"::PurchaseOrder, 15, 60, 20);
+    Context.Replace('targets', Targets);
+    Generator.GetDependencies(Context, Settings, Dependencies);
+    Assert(Dependencies.Count() = 1, 'Explicit purchasing must precede dependent sales.');
+  end;
+
+  [Test]
+  procedure IndependentSalesDateDoesNotInventReceipt()
+  var
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Context: JsonObject;
+    Targets: JsonArray;
+    Date: Date;
+  begin
+    Context := ContextFixture();
+    Context.Replace('profileCode', 'TRADE');
+    Context.Replace('profileVersion', '6');
+    Context.Add('startingDate', '2025-11-22');
+    Context.Add('endingDate', '2026-11-21');
+    AddMixedTarget(Targets, "BCSF Entity Type"::SalesOrder, 20, 100, 0);
+    Context.Replace('targets', Targets);
+    Date := Coordinator.DocumentDate(Context, 'SALES.ORDER', 1);
+    Assert((Date >= 20251122D) and (Date <= 20261121D), 'Without selected purchasing, sales retain the period and require actual stock.');
+  end;
+
+  [Test]
+  procedure ConfirmedSourceCaptureDoesNotDuplicateRegistry()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Header: Record "BCSF Run Header";
+    Entry: Record "BCSF Generated Record";
+    Source: Codeunit "BCSF Master Data Source";
+    Binding: JsonObject;
+    Again: JsonObject;
+    SourceId: Guid;
+    BeforeCount: Integer;
+    First: Text;
+    Second: Text;
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    SourceId := Setup."Industry Master Source Id";
+    if IsNullGuid(SourceId) then
+      SourceId := Setup."Industry Run Id";
+    Header.Get(SourceId);
+    BeforeCount := Entry.Count();
+    Binding := Source.Capture(SourceId, Header."Profile Code", Header."Profile Version");
+    Again := Source.Capture(SourceId, Header."Profile Code", Header."Profile Version");
+    Binding.WriteTo(First);
+    Again.WriteTo(Second);
+    Assert(First = Second, 'Confirmed source identities must remain stable.');
+    Assert(Entry.Count() = BeforeCount, 'Reading an existing source must never register the same records again.');
   end;
 
   local procedure Assert(Condition: Boolean; MessageText: Text)

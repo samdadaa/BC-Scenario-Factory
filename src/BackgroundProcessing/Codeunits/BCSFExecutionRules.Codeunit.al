@@ -103,6 +103,60 @@ codeunit 90306 "BCSF Execution Rules"
     StoredBatch.TestField("Worker Session Guid", Active."Session Unique ID");
   end;
 
+  [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Master Data Source", 'OnCheckSource', '', false, false)]
+  local procedure CheckMasterSource(SourceId: Guid; var Confirmed: Boolean)
+  var
+    Execution: Record "BCSF Run Execution";
+    Step: Record "BCSF Run Step";
+    Batch: Record "BCSF Batch";
+    Checkpoint: Record "BCSF Batch Checkpoint";
+    Contract: Codeunit "BCSF Contract JSON";
+    Envelope: JsonObject;
+    Node: Text;
+    Nodes: List of [Text];
+    Units: Integer;
+  begin
+    Execution.SecurityFiltering(SecurityFilter::Disallowed);
+    Execution.Get(SourceId);
+    if not (Execution.Status in [Execution.Status::Completed, Execution.Status::CompletedWithWarnings,
+      Execution.Status::Failed, Execution.Status::ValidationFailed]) then
+      Error(StateErr);
+    Batch.SetRange("Run Id", SourceId);
+    Batch.SetRange(Status, Batch.Status::Running);
+    if not Batch.IsEmpty() then
+      Error(StateErr);
+    Nodes.Add('CUSTOMER');
+    Nodes.Add('VENDOR');
+    Nodes.Add('ITEM');
+    foreach Node in Nodes do begin
+      Step.Get(SourceId, CopyStr(Node, 1, 30));
+      Step.TestField("Work Units");
+      Batch.Reset();
+      Batch.SecurityFiltering(SecurityFilter::Disallowed);
+      Batch.SetRange("Run Id", SourceId);
+      Batch.SetRange("Node Code", Node);
+      if not Batch.FindSet() then
+        Error(CoverageErr);
+      Units := 0;
+      repeat
+        Batch.TestField(Status, Batch.Status::Completed);
+        Checkpoint.Get(Batch."Batch Id");
+        Checkpoint.TestField("Run Id", SourceId);
+        Checkpoint.TestField("Schema Version", 1);
+        Checkpoint.TestField("Confirmed At");
+        Envelope := Checkpoint.ReadStoredResult();
+        if (Contract.GetInteger(Envelope, 'processedUnits') <> Batch."Processed Units") or
+          not Contract.GetBoolean(Envelope, 'completed') then
+          Error(CoverageErr);
+        Batch.TestField("Processed Units", Batch."Last Key" - Batch."First Key" + 1);
+        Units += Batch."Processed Units";
+      until Batch.Next() = 0;
+      if Units <> Step."Work Units" then
+        Error(CoverageErr);
+    end;
+    Confirmed := true;
+  end;
+
   [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Record Registry", 'OnCheckBatch', '', false, false)]
   local procedure CheckRegistryBatch(Entry: Record "BCSF Generated Record")
   var

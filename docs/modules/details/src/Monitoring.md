@@ -105,3 +105,8 @@ Request friert Anfang/Ende ein, schützt beide gegen Modify(false) und prüft er
 ## SF-046 – Standard-Konfigurationspaket
 
 Neue Codeunits 90371 Config Export, 90372 Config Export Install und 90373 Config Export Upgrade. Seit 1.0.8.1 wird Paket BCSF-ALL-DATA erst durch die ausdrückliche Aktion im bestehenden Dashboard/Role-Center angelegt bzw. ergänzt, ausschließlich in der aktuellen SaaS-Sandboxfirma. Install-/Upgrade-Trigger 90372/90373 bleiben leer; vorhandene Pakete und Objektidentitäten erhalten. 128 typsichere Tabellenreferenzen einschließlich indirekter Standardbuchungsdaten; keine Herkunftsfilter. Standard-System.IO-APIs, keine erhöhten TableData-Rechte, keine Generator-/Queue-/Checkpointänderung. Bestehende Paketfilter/Feldauswahl geschützt, Fremdcodekollision blockiert. [Vertrag/Tabellen-IDs](../../../CONFIG_EXPORT.md), [lokale Prüfungen/native Abnahme](../../../TESTS.md#sf-046--konfigurationspaket-für-vollständige-generator-daten). **Zur Prüfung**.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+Company Initialization schützt alle acht neuen Requestfelder und neue Starts gegen aktive Vorgänger. Bestehender Monitor als Quellenlookup; Dashboard zeigt Laufart, Module und Quelle. Zähler/Drilldowns bleiben echte neue Resultate. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

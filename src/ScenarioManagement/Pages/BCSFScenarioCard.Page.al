@@ -30,6 +30,21 @@ page 90131 "BCSF Scenario Card"
         field(Revision; Rec.Revision) { }
         field("Profile Code"; Rec."Profile Code") { }
         field("Profile Version"; Rec."Profile Version") { }
+        field("Generation Kind"; Rec."Generation Kind") { }
+        field("Master Source Run Id"; Rec."Master Source Run Id")
+        {
+          Visible = Rec."Generation Kind" = "BCSF Generation Kind"::Transactions;
+          trigger OnLookup(var Text: Text): Boolean
+          var
+            Initialization: Codeunit "BCSF Company Initialization";
+            SourceId: Guid;
+          begin
+            if not Initialization.SelectMasterSource(SourceId) then
+              exit(false);
+            Rec.Validate("Master Source Run Id", SourceId);
+            exit(true);
+          end;
+        }
       }
       group(Scope)
       {

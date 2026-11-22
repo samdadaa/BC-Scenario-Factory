@@ -72,7 +72,7 @@ codeunit 90201 "BCSF Dependency Planner"
             end;
           "BCSF Entity Type"::PurchaseOrder, "BCSF Entity Type"::PurchaseInvoice,
           "BCSF Entity Type"::PurchaseCreditMemo:
-            begin
+            if not Context.Contains('masterDataSource') then begin
               AddEntityRequirement(Nodes, Edges, TempModules, EntityCode, 'VENDOR', 'PURCHASING');
               AddEntityRequirement(Nodes, Edges, TempModules, EntityCode, 'ITEM', 'INVENTORY');
             end;

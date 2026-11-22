@@ -37,6 +37,10 @@ codeunit 90429 "BCSF Sales Setup"
     Target: Record "BCSF Data Target";
     Sales: Record "Sales & Receivables Setup";
     Contract: Codeunit "BCSF Contract JSON";
+    Source: Codeunit "BCSF Master Data Source";
+    Binding: JsonObject;
+    SourceContext: JsonObject;
+    Token: JsonToken;
     LocationCode: Code[10];
   begin
     Target.SetRange("Scenario Id", Scenario."Scenario Id");
@@ -49,10 +53,13 @@ codeunit 90429 "BCSF Sales Setup"
     if (Scenario."Item Second Vendor No." <> '') or not Contract.GetBoolean(InventorySettings, 'generatedVendors') then
       Error(SameRunErr);
     LocationCode := CopyStr(Contract.GetText(InventorySettings, 'location'), 1, MaxStrLen(LocationCode));
-    if Scenario."Purchase Posting Approved" then
-      Settings.Add('version', 3)
+    if not IsNullGuid(Scenario."Master Source Run Id") then
+      Settings.Add('version', 4)
     else
-      Settings.Add('version', 2);
+      if Scenario."Purchase Posting Approved" then
+        Settings.Add('version', 3)
+      else
+        Settings.Add('version', 2);
     Settings.Add('location', LocationCode);
     Settings.Add('postingApproved', Scenario."Sales Posting Approved");
     Sales.Get();
@@ -61,6 +68,18 @@ codeunit 90429 "BCSF Sales Setup"
     Settings.Add('invoiceSeries', Sales."Invoice Nos.");
     Settings.Add('postedInvoiceSeries', Sales."Posted Invoice Nos.");
     Settings.Add('shipmentSeries', Sales."Posted Shipment Nos.");
+    if not IsNullGuid(Scenario."Master Source Run Id") then begin
+      Binding := Source.Capture(Scenario."Master Source Run Id", Scenario."Profile Code", Scenario."Profile Version");
+      Settings.Add('sourceRunId', Format(Scenario."Master Source Run Id", 0, 4));
+      Binding.Get('customers', Token);
+      Settings.Add('customers', Token.AsArray());
+      Binding.Get('items', Token);
+      Settings.Add('items', Token.AsArray());
+      Binding.Get('shipToIds', Token);
+      Settings.Add('shipToIds', Token.AsArray());
+      SourceContext.Add('salesSetup', Contract.Clone(Settings));
+      Settings.Add('masterFingerprint', MasterFingerprint(SourceContext));
+    end;
   end;
 
   procedure UsesRunMasters(Context: JsonObject): Boolean
@@ -114,8 +133,11 @@ codeunit 90429 "BCSF Sales Setup"
     NodeCode := Policy.GetEntityCode(Entity);
     CandidateCount := TargetQuantity(Context, Entity);
     if (Entity = Entity::Item) and (Contract.GetText(Context, 'profileCode') = 'TRADE') and
-      (Contract.GetText(Context, 'profileVersion') = '5') then begin
-      if CandidateCount > TargetQuantity(Context, Entity::Vendor) * 4 then
+      (Contract.GetText(Context, 'profileVersion') in ['5', '6']) then begin
+      // V6 includes every generated item; V5 snapshots retain their historical
+      // candidate cap, which is part of the immutable selection contract.
+      if (Contract.GetText(Context, 'profileVersion') = '5') and
+        (CandidateCount > TargetQuantity(Context, Entity::Vendor) * 4) then
         CandidateCount := TargetQuantity(Context, Entity::Vendor) * 4;
     end else
       if CandidateCount > 100 then
@@ -157,7 +179,7 @@ codeunit 90429 "BCSF Sales Setup"
   begin
     if not Context.Get('salesSetup', Token) then
       Error(SourceErr);
-    if not (Contract.GetInteger(Token.AsObject(), 'version') in [1, 2, 3]) then
+    if not (Contract.GetInteger(Token.AsObject(), 'version') in [1, 2, 3, 4]) then
       Error(SourceErr);
     exit(Token.AsObject());
   end;
@@ -212,6 +234,7 @@ codeunit 90429 "BCSF Sales Setup"
     Contract: Codeunit "BCSF Contract JSON";
     Payments: Codeunit "BCSF Payment Processor";
     Guard: Codeunit "BCSF Environment Guard";
+    Source: Codeunit "BCSF Master Data Source";
     Values: JsonObject;
     PurchaseToken: JsonToken;
     Ids: JsonToken;
@@ -222,6 +245,7 @@ codeunit 90429 "BCSF Sales Setup"
     Code: Code[30];
   begin
     Contract.CheckTarget(Context, Target);
+    Source.Validate(Context);
     Values := ReadSettings(Context);
     if UsesRunMasters(Context) then begin
       if (TargetQuantity(Context, "BCSF Entity Type"::Customer) < 1) or
@@ -276,7 +300,7 @@ codeunit 90429 "BCSF Sales Setup"
     CheckPermission(Database::"Sales Line", true);
     if Posting then begin
       Guard.EnsureCodeunitAccess(Codeunit::"Sales-Post");
-      if Contract.GetInteger(Values, 'version') = 3 then begin
+      if Contract.GetInteger(Values, 'version') in [3, 4] then begin
         Inventory.Get();
         Inventory.TestField("Automatic Cost Posting", true);
       end;
@@ -423,7 +447,8 @@ codeunit 90429 "BCSF Sales Setup"
   begin
     // Wholesale multi-position sales verify availability immediately before posting
     // each line. The old modulo-based forecast is invalid for this assortment.
-    if Coordinator.IsWholesaleQualityProfile(Context) then
+    if Coordinator.IsWholesaleQualityProfile(Context) and
+      (not Context.Contains('masterDataSource') or (TargetQuantity(Context, "BCSF Entity Type"::PurchaseOrder) > 0)) then
       exit;
     Evaluate(RunId, Contract.GetText(Context, 'runId'));
     Context.Get('targets', Targets);
@@ -452,7 +477,7 @@ codeunit 90429 "BCSF Sales Setup"
       end;
     end;
     if Coordinator.IsWholesaleQualityProfile(Context) then
-      Demand := Coordinator.WholesaleDemandForItem(Context, ItemIndex, 1);
+      Demand := Coordinator.WholesaleRemainingDemand(Context, ItemIndex);
     CheckStock(Context, Item, Demand, 0D);
   end;
 
@@ -462,6 +487,9 @@ codeunit 90429 "BCSF Sales Setup"
     Available: Decimal;
     Reserved: Decimal;
   begin
+    // Match the standard item posting lock before checking consumable stock.
+    Item.LockTable();
+    Item.Get(Item."No.");
     if AsOfDate = 0D then
       if Contract.GetDatePolicyVersion(Context) = 1 then
         Evaluate(AsOfDate, Contract.GetText(Context, 'endingDate'), 9)

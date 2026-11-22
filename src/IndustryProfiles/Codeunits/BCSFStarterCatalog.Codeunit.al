@@ -93,13 +93,15 @@ codeunit 90155 "BCSF Starter Catalog"
         Id: Guid;
         VariantNo: Integer;
         Mode: Enum "BCSF Process Mode";
+        EmptySource: Guid;
     begin
-        for VariantNo := 1 to 4 do begin
+        for VariantNo := 1 to 7 do begin
             Evaluate(Id, '{B55C4500-AB51-4045-9C00-00000000000' + Format(VariantNo, 0, 9) + '}');
             // Never replace a custom, archived or intentionally removed template.
             if not Scenario.Get(Id) and not Removed.Get(Id) then begin
                 case VariantNo of
-                    1, 4: Mode := Mode::UnpostedDocuments;
+                    1, 4, 6, 7: Mode := Mode::UnpostedDocuments;
+                    5: Mode := Mode::SetupAndMasterData;
                     2: Mode := Mode::PostedMovements;
                     3: Mode := Mode::FollowUpProcesses;
                 end;
@@ -107,12 +109,20 @@ codeunit 90155 "BCSF Starter Catalog"
                     Profile.CreateTemplateForId(Id, 0, Mode, CalcDate('<-1Y>', Today()), Today() - 1, 'WAREHOUSE|CRM')
                 else
                     Profile.CreateTemplateForId(Id, 0, Mode, CalcDate('<-1Y>', Today()), Today() - 1, '');
+                case VariantNo of
+                    5: Profile.ConfigureGeneration(Id, "BCSF Generation Kind"::MasterData, EmptySource, false, false, 0, 0, 0, 0);
+                    6: Profile.ConfigureTransactionDraft(Id, true, false, 15, 0, 0, 0);
+                    7: Profile.ConfigureTransactionDraft(Id, false, true, 0, 20, 0, 0);
+                end;
                 if VariantNo > 1 then begin
                     Scenario.Get(Id);
                     case VariantNo of
                         2: Scenario.Description := PostedWholesaleLbl;
                         3: Scenario.Description := PaidWholesaleLbl;
                         4: Scenario.Description := ModulesWholesaleLbl;
+                        5: Scenario.Description := MasterWholesaleLbl;
+                        6: Scenario.Description := PurchaseSourceWholesaleLbl;
+                        7: Scenario.Description := SalesSourceWholesaleLbl;
                     end;
                     // Loading a test template never grants posting or payment approval.
                     Scenario.Modify(true);
@@ -752,6 +762,9 @@ codeunit 90155 "BCSF Starter Catalog"
         MixedSalesLbl: Label 'Sales – Mixed Posted Documents';
         SalesDocumentsLbl: Label 'Sales – Quotes, Orders and Invoices';
         ModulesWholesaleLbl: Label 'Wholesale - Warehouse and CRM planned';
+        MasterWholesaleLbl: Label 'Wholesale: master data only';
+        PurchaseSourceWholesaleLbl: Label 'Wholesale: 15 purchase orders (select master-data source)';
+        SalesSourceWholesaleLbl: Label 'Wholesale: 20 sales orders (select master-data source)';
         WholesaleReferenceLbl: Label 'Wholesale company';
         PostedWholesaleLbl: Label 'Wholesale - mixed posted documents';
         PaidWholesaleLbl: Label 'Wholesale - payments and application';

@@ -45,10 +45,66 @@ page 90101 "BCSF Factory Setup Card"
           ToolTip = 'Wholesale is the first supported company package. Other industries are not yet executable.';
         }
       }
+      group(GenerationStep)
+      {
+        Caption = '3 - Generation kind';
+        Visible = WizardStep = 3;
+        field(GenerationKind; GenerationKind)
+        {
+          Caption = 'Generation kind';
+          ToolTip = 'Choose a complete scenario, master data only, or independent transactions using a confirmed source in this company.';
+          trigger OnValidate()
+          begin
+            PostingApproved := false;
+            if GenerationKind <> GenerationKind::Transactions then
+              Clear(MasterSourceId);
+            if GenerationKind = GenerationKind::MasterData then
+              ProcessChoice := ProcessChoice::Master
+            else
+              if ProcessChoice = ProcessChoice::Master then
+                ProcessChoice := ProcessChoice::Documents;
+            UpdateReview();
+          end;
+        }
+        field(MasterSource; MasterSourceId)
+        {
+          Caption = 'Master data source';
+          Visible = GenerationKind = GenerationKind::Transactions;
+          ToolTip = 'Select a confirmed source in this company. Its customer, vendor and item SystemIds are frozen in the new run and checked again before execution.';
+          trigger OnLookup(var Text: Text): Boolean
+          var
+            Initialization: Codeunit "BCSF Company Initialization";
+          begin
+            exit(Initialization.SelectMasterSource(MasterSourceId));
+          end;
+        }
+      }
+      group(TransactionModules)
+      {
+        Caption = '4 - Process modules';
+        Visible = (WizardStep = 4) and (GenerationKind = GenerationKind::Transactions);
+        field(PurchaseSelected; PurchaseSelected)
+        {
+          Caption = 'Purchasing';
+          ToolTip = 'Creates new purchase orders from the selected master data. Posting and payments follow the selected process mode.';
+        }
+        field(SalesSelected; SalesSelected)
+        {
+          Caption = 'Sales';
+          ToolTip = 'Creates only the selected sales documents. Purchasing is added only when explicitly selected; posted sales require current stock.';
+        }
+        field(InventoryMovementInfo; InventoryMovementLbl)
+        {
+          Caption = 'Inventory';
+          Editable = false;
+          MultiLine = true;
+          ToolTip = 'Inventory supplies existing items and live stock checks. An independent inventory movement generator is not implemented.';
+        }
+      }
       group(ModuleStep)
       {
-        Caption = '3 - Modules';
-        Visible = WizardStep = 3;
+        Caption = '4 - Modules';
+        Visible = (WizardStep = 4) and (GenerationKind <> GenerationKind::Transactions);
         field(ModuleExplanation; ModulesHintLbl)
         {
           Caption = 'Module selection';
@@ -64,19 +120,56 @@ page 90101 "BCSF Factory Setup Card"
       }
       group(SizeStep)
       {
-        Caption = '4 - Data size';
-        Visible = WizardStep = 4;
+        Caption = '5 - Data size';
+        Visible = WizardStep = 5;
         field(SizeChoice; SizeChoice)
         {
           Caption = 'Data size';
           OptionCaption = 'Small,Medium,Large';
           ToolTip = 'Select the versioned wholesale quantities. Exact planned quantities appear before starting.';
+          trigger OnValidate()
+          begin
+            SetDocumentQuantities();
+          end;
+        }
+      }
+      group(TransactionQuantities)
+      {
+        Caption = 'Document quantities';
+        Visible = (WizardStep = 5) and (GenerationKind = GenerationKind::Transactions);
+        field(PurchaseQuantity; PurchaseQuantity)
+        {
+          Caption = 'Purchase orders';
+          Visible = PurchaseSelected;
+          MinValue = 0;
+          ToolTip = 'Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.';
+        }
+        field(SalesOrderQuantity; SalesOrderQuantity)
+        {
+          Caption = 'Sales orders';
+          Visible = SalesSelected;
+          MinValue = 0;
+          ToolTip = 'Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.';
+        }
+        field(SalesQuoteQuantity; SalesQuoteQuantity)
+        {
+          Caption = 'Sales quotes';
+          Visible = SalesSelected;
+          MinValue = 0;
+          ToolTip = 'Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.';
+        }
+        field(SalesInvoiceQuantity; SalesInvoiceQuantity)
+        {
+          Caption = 'Sales invoices';
+          Visible = SalesSelected;
+          MinValue = 0;
+          ToolTip = 'Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.';
         }
       }
       group(ProcessStep)
       {
-        Caption = '5 - Data and processes';
-        Visible = WizardStep = 5;
+        Caption = '6 - Data and processes';
+        Visible = WizardStep = 6;
         field(StartingDate; StartingDate)
         {
           Caption = 'Generate data from';
@@ -98,6 +191,7 @@ page 90101 "BCSF Factory Setup Card"
         field(ProcessChoice; ProcessChoice)
         {
           Caption = 'Data and processes';
+          Editable = GenerationKind <> GenerationKind::MasterData;
           OptionCaption = 'Master data only,With unposted documents,With posted documents,With payments and application';
           ToolTip = 'Select unposted documents, standard purchase and sales posting, or additional payments and application. Posting requires explicit approval.';
           trigger OnValidate()
@@ -109,7 +203,7 @@ page 90101 "BCSF Factory Setup Card"
       group(PostingConsent)
       {
         Caption = 'Posting approval';
-        Visible = (WizardStep = 5) and (ProcessChoice >= 2);
+        Visible = (WizardStep = 6) and (ProcessChoice >= 2);
         field(PostingApproved; PostingApproved)
         {
           Caption = 'Approve posting and selected follow-up processes';
@@ -118,8 +212,8 @@ page 90101 "BCSF Factory Setup Card"
       }
       group(ReviewStep)
       {
-        Caption = '6 - Summary and start';
-        Visible = WizardStep = 6;
+        Caption = '7 - Summary and start';
+        Visible = WizardStep = 7;
         field(Review; ReviewText)
         {
           Caption = 'Planned company';
@@ -195,7 +289,7 @@ page 90101 "BCSF Factory Setup Card"
         ApplicationArea = All;
         Caption = 'Next';
         Image = NextRecord;
-        Visible = (WizardStep > 0) and (WizardStep < 6);
+        Visible = (WizardStep > 0) and (WizardStep < 7);
         ToolTip = 'Review the next choice. No data is generated before Start.';
         trigger OnAction()
         begin
@@ -209,14 +303,15 @@ page 90101 "BCSF Factory Setup Card"
         ApplicationArea = All;
         Caption = 'Set up company and generate data';
         Image = Start;
-        Visible = WizardStep = 6;
+        Visible = WizardStep = 7;
         ToolTip = 'Authorize one background process for company setup and the displayed data. The browser can be closed afterwards.';
         trigger OnAction()
         var
           Initialization: Codeunit "BCSF Company Initialization";
         begin
           CaptureModules();
-          Initialization.Start(SelectedChart(), SizeChoice, SelectedProcess(), PostingApproved, AdditionalModules, StartingDate, EndingDate);
+          Initialization.StartConfigured(SelectedChart(), SizeChoice, SelectedProcess(), PostingApproved, AdditionalModules, StartingDate, EndingDate,
+            GenerationKind, MasterSourceId, PurchaseSelected, SalesSelected, PurchaseQuantity, SalesOrderQuantity, SalesQuoteQuantity, SalesInvoiceQuantity);
           CurrPage.Close();
         end;
       }
@@ -270,6 +365,9 @@ page 90101 "BCSF Factory Setup Card"
     EndingDate := Today() - 1;
     ProcessChoice := ProcessChoice::Documents;
     InitializeModules();
+    PurchaseSelected := true;
+    SalesSelected := true;
+    SetDocumentQuantities();
     UpdateReview();
   end;
 
@@ -352,8 +450,22 @@ page 90101 "BCSF Factory Setup Card"
   var
     Profile: Codeunit "BCSF Wholesale Profile";
   begin
+    if GenerationKind = GenerationKind::Transactions then begin
+      AdditionalModules := '';
+      exit;
+    end;
     CurrPage.CompanyModules.Page.GetSelection(TempSelectedModules);
     AdditionalModules := Profile.EncodeAdditionalModules(TempSelectedModules);
+  end;
+
+  local procedure SetDocumentQuantities()
+  var
+    Profile: Codeunit "BCSF Wholesale Profile";
+  begin
+    PurchaseQuantity := Profile.Quantity(SizeChoice, "BCSF Entity Type"::PurchaseOrder);
+    SalesOrderQuantity := Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesOrder);
+    SalesQuoteQuantity := Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesQuote);
+    SalesInvoiceQuantity := Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesInvoice);
   end;
 
   local procedure UpdateReview()
@@ -372,6 +484,24 @@ page 90101 "BCSF Factory Setup Card"
       ReviewText += PostingMixLbl + CostPostingLbl;
     if ProcessChoice = ProcessChoice::Payments then
       ReviewText += PaymentsReviewLbl;
+    ReviewText := Format(GenerationKind) + ' · ' + ReviewText;
+    if GenerationKind = GenerationKind::Transactions then begin
+      ReviewText := StrSubstNo(SourceReviewLbl, MasterSourceId, PurchaseSelected, SalesSelected,
+        SelectedQuantity(PurchaseSelected, PurchaseQuantity), SelectedQuantity(SalesSelected, SalesOrderQuantity),
+        SelectedQuantity(SalesSelected, SalesQuoteQuantity), SelectedQuantity(SalesSelected, SalesInvoiceQuantity)) + ' ' +
+        StrSubstNo(PeriodLbl, StartingDate, EndingDate) + ' ' + SelectStr(ProcessChoice + 1, ProcessesLbl);
+      if ProcessChoice >= ProcessChoice::Posted then
+        ReviewText += PostingMixLbl + CostPostingLbl;
+      if ProcessChoice = ProcessChoice::Payments then
+        ReviewText += PaymentsReviewLbl;
+    end;
+  end;
+
+  local procedure SelectedQuantity(Selected: Boolean; Quantity: Integer): Integer
+  begin
+    if Selected then
+      exit(Quantity);
+    exit(0);
   end;
 
   local procedure RefreshSetup()
@@ -401,6 +531,16 @@ page 90101 "BCSF Factory Setup Card"
   var
     TempBaseModules: Record "BCSF Scenario Module" temporary;
     TempSelectedModules: Record "BCSF Scenario Module" temporary;
+    GenerationKind: Enum "BCSF Generation Kind";
+    MasterSourceId: Guid;
+    PurchaseSelected: Boolean;
+    SalesSelected: Boolean;
+    PurchaseQuantity: Integer;
+    SalesOrderQuantity: Integer;
+    SalesQuoteQuantity: Integer;
+    SalesInvoiceQuantity: Integer;
+    SourceReviewLbl: Label 'Transactions only. Master data source: %1. Purchasing: %2; sales: %3. New orders: purchase %4, sales %5; quotes %6; invoices %7. No new master records.', Comment = '%1 = source run, %2 = purchasing selected, %3 = sales selected, %4 = purchase count, %5 = sales order count, %6 = quote count, %7 = invoice count';
+    InventoryMovementLbl: Label 'Existing items and current stock are reused. Independent inventory movements are not available.';
     AdditionalModules: Text[250];
     StartingDate: Date;
     EndingDate: Date;

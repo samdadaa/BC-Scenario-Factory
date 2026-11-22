@@ -198,6 +198,7 @@ codeunit 90401 "BCSF Payment Processor"
     CustomerEntry: Record "Cust. Ledger Entry";
     VendorEntry: Record "Vendor Ledger Entry";
     GL: Record "G/L Entry";
+    GLRegister: Record "G/L Register";
     Parent: Record "BCSF Generated Record";
     PurchaseInvoice: Record "Purch. Inv. Header";
     SalesInvoice: Record "Sales Invoice Header";
@@ -218,7 +219,7 @@ codeunit 90401 "BCSF Payment Processor"
     DocumentNo: Code[20];
     PostingDate: Date;
     Remaining: Decimal;
-    GLEntryNo: Integer;
+    PaymentTransactionNo: Integer;
   begin
     // Reconstruct and verify the immutable contract and actual claimed worker before any payment.
     Step.Get(RunId, NodeCode);
@@ -271,6 +272,9 @@ codeunit 90401 "BCSF Payment Processor"
     if Remaining = 0 then
       Error(ResultErr);
     TempLine.Init();
+    // Field validation invokes payment-tolerance management before posting.
+    // Forward suppression to that instance while keeping the batch commit guard.
+    TempLine.SetSuppressCommit(true);
     TempLine."Journal Template Name" := CopyStr(Contract.GetText(Settings, 'template'), 1, 10);
     TempLine."Journal Batch Name" := CopyStr(Contract.GetText(Settings, 'batch'), 1, 10);
     TempLine."Line No." := LogicalKey;
@@ -286,15 +290,32 @@ codeunit 90401 "BCSF Payment Processor"
     TempLine.Validate("Account No.", AccountNo);
     TempLine.Validate("Bal. Account Type", TempLine."Bal. Account Type"::"Bank Account");
     TempLine.Validate("Bal. Account No.", CopyStr(Contract.GetText(Settings, 'bankNo'), 1, 20));
+    // Assign the payment amount before application; both validations use the
+    // standard commit suppression configured above.
+    TempLine.Validate(Amount, -Remaining);
     TempLine.Validate("Applies-to Doc. Type", TempLine."Applies-to Doc. Type"::Invoice);
     TempLine.Validate("Applies-to Doc. No.", DocumentNo);
-    TempLine.Validate(Amount, -Remaining);
     TempLine."Source Code" := CopyStr(Contract.GetText(Settings, 'sourceCode'), 1, 10);
     TempLine.Insert(true);
-    // Public procedure returns an entry number, not Boolean Codeunit.Run; this posting codeunit has no Commit.
-    GLEntryNo := PostLine.RunWithCheck(TempLine);
-    GL.Get(GLEntryNo);
-    RegisterPayment(RunId, NodeCode, LogicalKey, BatchId, InvoiceEntryNo, CustomerPayment, GL."Transaction No.", ParentId);
+    // The return value can be zero for customer/vendor payments despite real G/L entries.
+    // Resolve the actual transaction from this posting instance's standard register.
+    PostLine.RunWithCheck(TempLine);
+    PostLine.GetGLReg(GLRegister);
+    if (GLRegister."No." = 0) or (GLRegister."From Entry No." <= 0) or
+      (GLRegister."To Entry No." < GLRegister."From Entry No.") then
+      Error(ResultErr);
+    GL.SetRange("Entry No.", GLRegister."From Entry No.", GLRegister."To Entry No.");
+    if not GL.FindFirst() then
+      Error(ResultErr);
+    GL.TestField("Document No.", DocumentNo);
+    GL.TestField("Posting Date", PostingDate);
+    PaymentTransactionNo := GL."Transaction No.";
+    if PaymentTransactionNo = 0 then
+      Error(ResultErr);
+    GL.SetFilter("Transaction No.", '<>%1', PaymentTransactionNo);
+    if not GL.IsEmpty() then
+      Error(ResultErr);
+    RegisterPayment(RunId, NodeCode, LogicalKey, BatchId, InvoiceEntryNo, CustomerPayment, PaymentTransactionNo, ParentId);
     ValidatePayment(RunId, NodeCode, LogicalKey, InvoiceEntryNo, CustomerPayment);
   end;
 

@@ -62,3 +62,8 @@ Beschaffungsdatum am Zeitraumstart, ausreichend beschaffte Menge vor geplanten V
 ## SF-022 – Datumszeitraum 1.0.7.3
 
 Neue Datumsregel verteilt gebuchte Beschaffung bis zum frühesten abhängigen Verkaufsdatum je Artikel; alte Captures behalten Beschaffung am Zeitraumstart. Bestehende Seed-/Mengen-/Quotenlogik bleibt Grundlage. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+Gebundene Artikel-/Lieferantenmengen kommen aus dem Source-Vertrag. Sales-only erfindet kein Einkaufsdatum; verbleibender Verkaufsbedarf berücksichtigt bereits registrierte Belege. Standardpipeline bleibt. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

@@ -118,3 +118,8 @@ Frozen Modules bleibt temporär; interner Auswahlmodus für Unternehmensassisten
 ## SF-022 – Datumszeitraum 1.0.7.3
 
 Neue Snapshots ergänzen optional datePolicyVersion 1 im Schema 1 und verwenden bestehende Anfang-/Endfelder. Ältere Payloads ohne Marker bleiben unverändert. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+Additive Felder 45/46, optionale Snapshotbindung v1 und Laufart. Bewegungstargets enthalten keine positiven Stammziele. Laufkarte zeigt eingefrorene Herkunft. Transfer nimmt Laufart mit, löscht lokale Quellbindung beim Import; explizite Neuauswahl nötig. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

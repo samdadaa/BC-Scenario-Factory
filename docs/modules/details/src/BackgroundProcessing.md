@@ -73,3 +73,8 @@ Vorhandene gespeicherte Vorzustands-/Ready-/Identitätsfixes erhalten. Standardj
 Vorhandene Batch-/Checkpoint-/Quality-/Recoverylogik bleibt erhalten; nur vorgeschaltete Vorbereitung im festen Standardjob 90361. Keine neue Wiederholungsfreigabe.
 
 [Vertrag und offene BC-Referenzprüfung](../../../INDUSTRY_INITIALIZATION.md), [vollständiges Objekt-/Eventinventar](../../../ARCHITECTURE_AUDIT_SF045.md). Lokale Kompilierung ist kein fachlicher Sandboxnachweis. Status **Zur Prüfung**.
+
+
+## SF-048 – Modulare Geschäftsläufe
+
+ExecutionRules bestätigt nur vollständige Customer/Vendor/Item-Batches mit bestätigten Ergebnissen/Checkpoints. Terminal fehlgeschlagene Quellen gemäß Nutzerfreigabe zulässig. Claims/Recovery/NeedsReview unverändert. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.

@@ -80,10 +80,17 @@ codeunit 90257 "BCSF Partner Catalog"
     if not (Country in ['DE', 'GB']) then
       Error(CountryErr, Country);
     if (Contract.GetText(Context, 'profileCode') = 'TRADE') and
-      (Contract.GetText(Context, 'profileVersion') = '5') then
-      Region := Seed.SampleInteger(Context, Entity, Format(LogicalKey, 0, 9), Role + '.CITY', 1, 20)
+      (Contract.GetText(Context, 'profileVersion') = '6') then
+      // Cycle through all 20 matching city/postcode pairs before repeating.
+      // The seed changes the start position, not the uniform distribution.
+      Region := 1 + (((LogicalKey - 1) * 7 +
+        Seed.SampleInteger(Context, Entity, Role, 'CITY.OFFSET', 0, 19)) mod 20)
     else
-      Region := Seed.SampleInteger(Context, Entity, Format(LogicalKey, 0, 9), Role + '.CITY', 1, 8);
+      if (Contract.GetText(Context, 'profileCode') = 'TRADE') and
+        (Contract.GetText(Context, 'profileVersion') = '5') then
+        Region := Seed.SampleInteger(Context, Entity, Format(LogicalKey, 0, 9), Role + '.CITY', 1, 20)
+      else
+        Region := Seed.SampleInteger(Context, Entity, Format(LogicalKey, 0, 9), Role + '.CITY', 1, 8);
     if Country = 'DE' then begin
       Result.Add('city', SelectStr(Region, GermanCitiesTok));
       Result.Add('postCode', SelectStr(Region, GermanPostCodesTok));
