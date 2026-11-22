@@ -844,6 +844,14 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 - [ ] Native Fälle A–G einschließlich unabhängiger zweiter Läufe und negativer Quellen-/Recoveryfälle prüfen.
 - [ ] Menschliche Abnahme; höchstens Zur Prüfung bis dahin.
 
+**Ergänzung 22.11.2026 – Wiederverwendung ohne Quelllauf (ausdrücklicher neuer Nutzerauftrag):**
+- [x] Null-GUID in Einrichtung und Szenariokonfiguration als Auswahl „geeignete vorhandene Mandantenstammdaten“ behandeln, nicht als fehlenden Pflichtquelllauf.
+- [x] Lesenden, deterministisch eingefrorenen Pool mit SystemIds aus geeigneten Debitoren, Kreditoren und Lagerartikeln bilden. Mindestens zwei geeignete Hauptlieferanten mit je vier Artikeln sind für die bisherige Großhandels-Beleglogik notwendig.
+- [x] Einkaufs- und Verkaufsauflösung für den Pool ohne neue Stammdatenregistrierung erweitern; frühere explizite Factory-Quellen unverändert lassen.
+- [x] Setup-, Dashboard- und Tooltip-Texte sowie SF-048-Übersetzungsmapping anpassen.
+- [ ] **Offen:** Allgemeine Fortsetzung nach *einzelnen Buchungsfehlern* benötigt einen ausdrücklich konzipierten isolierten Buchungsversuch mit nachgewiesenem Rollback und Recovery; keine Fehler verschlucken und keine bestehende Commit-Sperre entfernen.
+- [ ] **Offen:** AL-Compiler, Standard-Sandbox, alle Buchungs-/Bestandsszenarien und deutsche XLF-Regenerierung nach Build nativ prüfen. Der Patch ist nicht als vollständige Abnahme freigegeben.
+
 **Nachweise/Dateien:** [SF-048-Prüfbericht](docs/review/SF048_PRUEFBERICHT.md), [Vertrag](docs/MODULAR_GENERATION.md). Zwei neue Objekte 90114/90259; additive Felder in Setup/Szenario, vorhandene Planner-, Generator-, Snapshot-, UI- und Queueobjekte erweitert. 64 AL-Testmethoden kompiliert, davon fünf neue für SF-048; keine neue Test-Codeunit.
 
 ## Ticketvorlage
@@ -863,3 +871,33 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 - [ ] Menschliche Abnahme; erst danach Erledigt.
 
 **Testprotokoll:** Zielversion/Umgebung/Rolle, Inputs/Seed/Zeitraum, Soll/Ist, echte Ergebnisse und offene Grenzen.
+
+
+### SF-048 – Nachbesserung Verkaufsbestand und Dashboard (22.11.2026)
+
+**Status: Zur Prüfung.** Ausdrücklich beauftragter Fix für reine Bewegungsläufe
+mit vorhandenen Stammdaten und für nicht anklickbare Ergebnis-Kacheln.
+
+- [x] Keine pauschale Bestandsblockade mehr während der Verkaufsvorprüfung
+  bei einem vorhandenen Stammdatenpool.
+- [x] Pro Verkaufsbeleg vor der Buchung Bestand am gewählten Lagerort und
+  Belegdatum prüfen, einschließlich kumulierter Mengen mehrfacher Artikel.
+- [x] Nicht buchbare Belege als ungebuchte Dokumente erhalten; nicht als
+  erfolgreich gebuchte Rechnung ausgeben. Vorhandene Rechnungen/Posten
+  bleiben unverändert; BC-Standardbuchung und Commit-Sperre bleiben aktiv.
+- [x] Validierung berücksichtigt bei der geprüften Stammdaten-Wiederverwendung
+  sowohl gebuchte als auch mangels Bestand ungebuchte Ergebnisse.
+- [x] Dashboard-Drilldown nicht mehr an numerische Gleichheit mit dem
+  bestätigten Lauf-Fortschritt koppeln; echte Listenanzahl separat anzeigen.
+- [ ] AL-Kompilierung und Sandbox-Test für kein/teilweise/vollständig
+  vorhandenen Bestand sowie teil-/vollständig gebuchte Verkaufsbelege.
+- [ ] Test: ohne Bestand werden keine gebuchten Verkaufsrechnungen und
+  Artikelposten fälschlich als erfolgreich angezeigt.
+- [ ] Echte alternative Artikel und übersprungene Belege mit separater
+  Fehlerstatistik sind noch nicht implementiert; hierfür ist ein eigener
+  sicherer Persistenz-/Validierungsvertrag nötig.
+
+**Statische Prüfung:** JavaScript-Syntaxprüfung und einfache AL-Strukturprüfung
+(Balancierung) durchgeführt. Keine lokale AL-Compiler- oder BC-Sandbox-Abnahme.
+**Querschnitt:** Dashboard und Verkauf betroffen; keine neuen UI-Texte,
+Stammdatentabellen oder Einrichtungen eingeführt.

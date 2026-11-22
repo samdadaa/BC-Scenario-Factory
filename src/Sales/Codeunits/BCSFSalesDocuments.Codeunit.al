@@ -46,6 +46,10 @@ codeunit 90430 "BCSF Sales Documents"
     PostingQuantity: Decimal;
     LineIndex: Integer;
     LineCount: Integer;
+    CheckIndex: Integer;
+    RequiredStock: Decimal;
+    StockItems: array[10] of Code[20];
+    StockQuantities: array[10] of Decimal;
   begin
     Mode := Coordinator.Disposition(Context, EntityCode, LogicalKey);
     Quantity := Coordinator.Quantity(Context, EntityCode, LogicalKey);
@@ -55,6 +59,30 @@ codeunit 90430 "BCSF Sales Documents"
     Date := Coordinator.DocumentDate(Context, EntityCode, LogicalKey);
     Setup.CustomerFor(Context, LogicalKey, Customer);
     Setup.CheckCustomer(Customer);
+    // Reused customer data can contain articles with no stock. Do not
+    // abort the whole sales run during setup; leave that document unposted.
+    if (Mode > 0) and Context.Contains('masterDataSource') then
+      for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, LogicalKey) do begin
+        if Coordinator.IsWholesaleQualityProfile(Context) then begin
+          Setup.ItemFor(Context, Coordinator.WholesaleSalesItemKey(Context, EntityCode, LogicalKey, LineIndex), Item);
+          Quantity := Coordinator.WholesaleSalesLineQuantity(Context, EntityCode, LogicalKey, LineIndex);
+        end else begin
+          Setup.ItemFor(Context, LogicalKey, Item);
+          Quantity := Coordinator.Quantity(Context, EntityCode, LogicalKey);
+        end;
+        if Mode = 2 then
+          Quantity := Quantity / 2;
+        RequiredStock := Quantity;
+        // Sum demand of repeated items within this same document; inventory
+        // has not yet been reduced by its earlier unposted lines.
+        for CheckIndex := 1 to LineIndex - 1 do
+          if StockItems[CheckIndex] = Item."No." then
+            RequiredStock += StockQuantities[CheckIndex];
+        StockItems[LineIndex] := Item."No.";
+        StockQuantities[LineIndex] := Quantity;
+        if not Setup.HasStock(Context, Item, RequiredStock, Date) then
+          Mode := 0;
+      end;
     if Mode > 0 then
       // Serialize this app's stock-consuming batches, then check each generated position.
       Entry.LockTable();

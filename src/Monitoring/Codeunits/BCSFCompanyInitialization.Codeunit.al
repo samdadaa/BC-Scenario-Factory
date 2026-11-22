@@ -149,6 +149,9 @@ codeunit 90361 "BCSF Company Initialization"
     Guard: Codeunit "BCSF Environment Guard";
     Enqueue: Codeunit "Job Queue - Enqueue";
   begin
+    // Zero document quantities intentionally disable that process without invalidating the request.
+    PurchaseSelected := PurchaseSelected and (Purchases > 0);
+    SalesSelected := SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0));
     Profile.CheckDateRange(StartingDate, EndingDate, Today() - 1);
     if EndingDate <> Today() - 1 then
       Error(PeriodChangedErr);
@@ -279,12 +282,23 @@ codeunit 90361 "BCSF Company Initialization"
   var
     Execution: Record "BCSF Run Execution";
     Batch: Record "BCSF Batch";
+    Job: Record "Job Queue Entry";
   begin
     if IsNullGuid(Setup."Industry Job Id") and IsNullGuid(Setup."Industry Run Id") then
       exit;
+
+    // An initialization that failed before creating its run must not lock the company forever.
+    // A queued, paused or running job still owns the request and must not be duplicated.
+    if not IsNullGuid(Setup."Industry Job Id") then
+      if Job.Get(Setup."Industry Job Id") then
+        if not (Job.Status in [Job.Status::Error, Job.Status::Finished]) then
+          Error(ExistingErr);
+
     if IsNullGuid(Setup."Industry Run Id") then
+      exit;
+
+    if not Execution.Get(Setup."Industry Run Id") then
       Error(ExistingErr);
-    Execution.Get(Setup."Industry Run Id");
     if not (Execution.Status in [Execution.Status::Completed, Execution.Status::CompletedWithWarnings,
       Execution.Status::Failed, Execution.Status::ValidationFailed, Execution.Status::Cancelled]) then
       Error(ExistingErr);
@@ -310,14 +324,22 @@ codeunit 90361 "BCSF Company Initialization"
       exit;
     end;
     Setup.TestField("Company Initialized", true);
-    if (ProcessMode = ProcessMode::SetupAndMasterData) or (not PurchaseSelected and not SalesSelected) or
-      (Purchases < 0) or (Orders < 0) or (Quotes < 0) or (Invoices < 0) or
-      (Purchases > Setup."Maximum Records per Entity") or (Orders > Setup."Maximum Records per Entity") or
-      (Quotes > Setup."Maximum Records per Entity") or (Invoices > Setup."Maximum Records per Entity") or
-      (PurchaseSelected and (Purchases = 0)) or (SalesSelected and (Orders + Quotes + Invoices = 0)) then
+    // Quantities are independent: invoice-only sales and purchase-only runs are valid.
+    // Hidden quantities of unselected modules must not invalidate a request.
+    if (ProcessMode = ProcessMode::SetupAndMasterData) or
+      (PurchaseSelected and ((Purchases < 0) or (Purchases > Setup."Maximum Records per Entity"))) or
+      (SalesSelected and ((Orders < 0) or (Quotes < 0) or (Invoices < 0) or
+        (Orders > Setup."Maximum Records per Entity") or (Quotes > Setup."Maximum Records per Entity") or
+        (Invoices > Setup."Maximum Records per Entity"))) or
+      (not (PurchaseSelected and (Purchases > 0)) and
+        not (SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0)))) then
       Error(RequestErr);
-    Header.Get(SourceId);
-    Source.Capture(SourceId, 'TRADE', Header."Profile Version");
+    if IsNullGuid(SourceId) then
+      Source.CaptureExisting()
+    else begin
+      Header.Get(SourceId);
+      Source.Capture(SourceId, 'TRADE', Header."Profile Version");
+    end;
   end;
 
   [TryFunction]
@@ -362,7 +384,7 @@ codeunit 90361 "BCSF Company Initialization"
   end;
 
   var
-    RequestErr: Label 'Select a valid generation kind and confirmed master-data source. Choose executable modules and document quantities within the company limits.';
+    RequestErr: Label 'Select a valid generation kind, executable modules and document quantities within the company limits. Existing company master data may be used without a source run.';
     PeriodChangedErr: Label 'The period must end yesterday. Reopen company initialization to refresh the displayed period.';
     ApprovalErr: Label 'Explicitly approve standard posting and, for follow-up mode, payments and application before starting.';
     JobLbl: Label 'Scenario Factory company initialization';

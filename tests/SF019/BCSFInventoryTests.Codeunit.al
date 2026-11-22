@@ -1951,6 +1951,29 @@ codeunit 90700 "BCSF Inventory Tests"
   end;
 
   [Test]
+  procedure ExistingMasterPoolHasNoHistoricalRunDependency()
+  var
+    Source: Codeunit "BCSF Master Data Source";
+    Context: JsonObject;
+    Binding: JsonObject;
+    Ids: JsonArray;
+    CurrentRun: Guid;
+  begin
+    Context := ContextFixture();
+    CurrentRun := CreateGuid();
+    Context.Add('runId', Format(CurrentRun, 0, 4));
+    Binding.Add('version', 2);
+    Ids.Add(Format(CreateGuid(), 0, 4));
+    Binding.Add('customers', Ids.Clone());
+    Binding.Add('vendors', Ids.Clone());
+    Binding.Add('items', Ids.Clone());
+    Context.Add('masterDataSource', Binding);
+    Assert(Source.IsExistingPool(Context), 'Existing company master-data binding must not require a source run.');
+    Assert(Source.RunId(Context) = CurrentRun, 'New documents must belong to the new movement run.');
+    Assert(Source.Quantity(Context, "BCSF Entity Type"::Item) = 1, 'Bound existing articles must be available to the planner.');
+  end;
+
+  [Test]
   procedure SourceBindingRejectsUnknownContracts()
   var
     Source: Codeunit "BCSF Master Data Source";

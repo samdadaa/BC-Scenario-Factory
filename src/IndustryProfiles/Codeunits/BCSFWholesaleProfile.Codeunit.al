@@ -259,15 +259,19 @@ codeunit 90153 "BCSF Wholesale Profile"
     if (Scenario."Process Mode" = "BCSF Process Mode"::SetupAndMasterData) or
       (not PurchaseSelected and not SalesSelected) then
       Error(GenerationErr);
-    SourceHeader.Get(SourceId);
-    Source.Capture(SourceId, 'TRADE', SourceHeader."Profile Version");
-    Scenario."Profile Version" := SourceHeader."Profile Version";
+    if IsNullGuid(SourceId) then
+      Source.CaptureExisting()
+    else begin
+      SourceHeader.Get(SourceId);
+      Source.Capture(SourceId, 'TRADE', SourceHeader."Profile Version");
+      Scenario."Profile Version" := SourceHeader."Profile Version";
+    end;
     Scenario."Master Source Run Id" := SourceId;
     Scenario.Modify(true);
     ConfigureTransactionTargets(ScenarioId, PurchaseSelected, SalesSelected, Purchases, Orders, Quotes, Invoices);
   end;
 
-  // Drafts require an explicit current-company source before snapshot capture or execution.
+  // A blank source selects eligible existing company master data during snapshot capture.
   procedure ConfigureTransactionDraft(ScenarioId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer)
   var
     Scenario: Record "BCSF Scenario";
@@ -319,7 +323,7 @@ codeunit 90153 "BCSF Wholesale Profile"
   end;
 
   var
-    GenerationErr: Label 'Select a confirmed master-data source, at least one executable process module and positive document quantities. Transactions require an unposted, posted or payment process mode.';
+    GenerationErr: Label 'Select at least one executable process module and positive document quantities. Transactions require an unposted, posted or payment process mode.';
     DateRangeErr: Label 'Enter a starting date no later than yesterday and an ending date within the approved period.';
     ModulesErr: Label 'Select valid additional modules once. Required wholesale modules must remain selected.';
     IncludedModulesLbl: Label 'Industry modules: %1.', Comment = '%1 = included module names';

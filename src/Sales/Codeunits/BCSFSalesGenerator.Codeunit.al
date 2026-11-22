@@ -170,6 +170,11 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     for LogicalKey := Contract.GetInteger(Batch, 'firstKey') to Contract.GetInteger(Batch, 'lastKey') do begin
       Setup.CustomerFor(Context, LogicalKey, Customer);
       Mode := Coordinator.Disposition(Context, EntityCode, LogicalKey);
+      // In movement-only runs an invoice without stock is retained as an
+      // unposted document. Validate the persisted result, not planned posting.
+      if (Mode > 0) and Context.Contains('masterDataSource') then
+        if not Entry.Get(RunId, EntityCode, LogicalKey, 'INVOICE') then
+          Mode := 0;
       Quantity := Coordinator.Quantity(Context, EntityCode, LogicalKey);
       if Mode > 0 then begin
         Entry.Get(RunId, EntityCode, LogicalKey, 'INVOICE');

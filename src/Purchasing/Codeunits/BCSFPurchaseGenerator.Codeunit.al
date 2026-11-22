@@ -271,14 +271,20 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     else
       ItemKey := 1 + ((LogicalKey - 1) mod ItemSetup.Quantity(Context, "BCSF Entity Type"::Item));
     Entry.SecurityFiltering(SecurityFilter::Disallowed);
-    Entry.Get(RunId, 'ITEM', ItemKey, 'ITEM');
-    Entry.TestField("Table Id", Database::Item);
-    if not Registry.ExistsByIdentity(Entry) then
-      Error(ResultErr);
     Item.SecurityFiltering(SecurityFilter::Disallowed);
-    Item.GetBySystemId(Entry."Record SystemId");
+    if Source.IsExistingPool(Context) then
+      Source.ItemFromPool(Context, ItemKey, Item)
+    else begin
+      Entry.Get(RunId, 'ITEM', ItemKey, 'ITEM');
+      Entry.TestField("Table Id", Database::Item);
+      if not Registry.ExistsByIdentity(Entry) then
+        Error(ResultErr);
+      Item.GetBySystemId(Entry."Record SystemId");
+    end;
     Vendor.SecurityFiltering(SecurityFilter::Disallowed);
     Vendor.Get(Item."Vendor No.");
+    if Source.IsExistingPool(Context) then
+      exit;
     Entry.Reset();
     Entry.SetRange("Run Id", RunId);
     Entry.SetRange("Node Code", 'VENDOR');
@@ -300,12 +306,16 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
   begin
     RunId := Source.RunId(Context);
     Entry.SecurityFiltering(SecurityFilter::Disallowed);
-    Entry.Get(RunId, 'ITEM', Coordinator.WholesalePurchaseItemKey(Context, PurchaseKey, LineIndex), 'ITEM');
-    Entry.TestField("Table Id", Database::Item);
-    if not Registry.ExistsByIdentity(Entry) then
-      Error(ResultErr);
     Item.SecurityFiltering(SecurityFilter::Disallowed);
-    Item.GetBySystemId(Entry."Record SystemId");
+    if Source.IsExistingPool(Context) then
+      Source.ItemFromPool(Context, Coordinator.WholesalePurchaseItemKey(Context, PurchaseKey, LineIndex), Item)
+    else begin
+      Entry.Get(RunId, 'ITEM', Coordinator.WholesalePurchaseItemKey(Context, PurchaseKey, LineIndex), 'ITEM');
+      Entry.TestField("Table Id", Database::Item);
+      if not Registry.ExistsByIdentity(Entry) then
+        Error(ResultErr);
+      Item.GetBySystemId(Entry."Record SystemId");
+    end;
     Item.TestField("Vendor No.", VendorNo);
   end;
 

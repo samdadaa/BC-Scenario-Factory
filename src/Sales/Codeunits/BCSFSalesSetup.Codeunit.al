@@ -53,7 +53,7 @@ codeunit 90429 "BCSF Sales Setup"
     if (Scenario."Item Second Vendor No." <> '') or not Contract.GetBoolean(InventorySettings, 'generatedVendors') then
       Error(SameRunErr);
     LocationCode := CopyStr(Contract.GetText(InventorySettings, 'location'), 1, MaxStrLen(LocationCode));
-    if not IsNullGuid(Scenario."Master Source Run Id") then
+    if Scenario."Generation Kind" = Scenario."Generation Kind"::Transactions then
       Settings.Add('version', 4)
     else
       if Scenario."Purchase Posting Approved" then
@@ -68,8 +68,11 @@ codeunit 90429 "BCSF Sales Setup"
     Settings.Add('invoiceSeries', Sales."Invoice Nos.");
     Settings.Add('postedInvoiceSeries', Sales."Posted Invoice Nos.");
     Settings.Add('shipmentSeries', Sales."Posted Shipment Nos.");
-    if not IsNullGuid(Scenario."Master Source Run Id") then begin
-      Binding := Source.Capture(Scenario."Master Source Run Id", Scenario."Profile Code", Scenario."Profile Version");
+    if Scenario."Generation Kind" = Scenario."Generation Kind"::Transactions then begin
+      if IsNullGuid(Scenario."Master Source Run Id") then
+        Binding := Source.CaptureExisting()
+      else
+        Binding := Source.Capture(Scenario."Master Source Run Id", Scenario."Profile Code", Scenario."Profile Version");
       Settings.Add('sourceRunId', Format(Scenario."Master Source Run Id", 0, 4));
       Binding.Get('customers', Token);
       Settings.Add('customers', Token.AsArray());
@@ -78,6 +81,7 @@ codeunit 90429 "BCSF Sales Setup"
       Binding.Get('shipToIds', Token);
       Settings.Add('shipToIds', Token.AsArray());
       SourceContext.Add('salesSetup', Contract.Clone(Settings));
+      SourceContext.Add('masterDataSource', Binding);
       Settings.Add('masterFingerprint', MasterFingerprint(SourceContext));
     end;
   end;
@@ -213,8 +217,11 @@ codeunit 90429 "BCSF Sales Setup"
   var
     Entry: Record "BCSF Generated Record";
     Contract: Codeunit "BCSF Contract JSON";
+    Source: Codeunit "BCSF Master Data Source";
     SourceRunId: Guid;
   begin
+    if Source.IsExistingPool(Context) then
+      exit;
     Evaluate(SourceRunId, Contract.GetText(ReadSettings(Context), 'sourceRunId'));
     Entry.SetCurrentKey("Table Id", "Record SystemId");
     Entry.SetRange("Table Id", TableId);
@@ -447,8 +454,12 @@ codeunit 90429 "BCSF Sales Setup"
   begin
     // Wholesale multi-position sales verify availability immediately before posting
     // each line. The old modulo-based forecast is invalid for this assortment.
+    // Existing company data is not required to have stock for every item.
+    // The actual generated document decides whether posting is possible.
+    if Context.Contains('masterDataSource') then
+      exit;
     if Coordinator.IsWholesaleQualityProfile(Context) and
-      (not Context.Contains('masterDataSource') or (TargetQuantity(Context, "BCSF Entity Type"::PurchaseOrder) > 0)) then
+      (TargetQuantity(Context, "BCSF Entity Type"::PurchaseOrder) > 0) then
       exit;
     Evaluate(RunId, Contract.GetText(Context, 'runId'));
     Context.Get('targets', Targets);
@@ -479,6 +490,27 @@ codeunit 90429 "BCSF Sales Setup"
     if Coordinator.IsWholesaleQualityProfile(Context) then
       Demand := Coordinator.WholesaleRemainingDemand(Context, ItemIndex);
     CheckStock(Context, Item, Demand, 0D);
+  end;
+
+  procedure HasStock(Context: JsonObject; var Item: Record Item; Required: Decimal; AsOfDate: Date): Boolean
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+    Reserved: Decimal;
+    Available: Decimal;
+  begin
+    Item.LockTable();
+    Item.Get(Item."No.");
+    Item.SetRange("Location Filter", Contract.GetText(ReadSettings(Context), 'location'));
+    Item.SetRange("Variant Filter", '');
+    Item.SetRange("Date Filter");
+    Item.CalcFields(Inventory, "Reserved Qty. on Inventory");
+    Reserved := Item."Reserved Qty. on Inventory";
+    Available := Item.Inventory - Reserved;
+    Item.SetFilter("Date Filter", '..%1', AsOfDate);
+    Item.CalcFields(Inventory);
+    if Item.Inventory - Reserved < Available then
+      Available := Item.Inventory - Reserved;
+    exit(Available >= Required);
   end;
 
   procedure CheckStock(Context: JsonObject; var Item: Record Item; Required: Decimal; AsOfDate: Date)

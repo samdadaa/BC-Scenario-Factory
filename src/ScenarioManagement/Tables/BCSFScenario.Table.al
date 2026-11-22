@@ -288,12 +288,12 @@ table 90125 "BCSF Scenario"
     field(45; "Generation Kind"; Enum "BCSF Generation Kind")
     {
       Caption = 'Generation kind';
-      ToolTip = 'Specifies whether this run creates a complete dataset, master data only, or transactions using an explicitly selected source.';
+      ToolTip = 'Specifies whether this run creates a complete dataset, master data only, or transactions with eligible existing master data or a selected Factory source.';
     }
     field(46; "Master Source Run Id"; Guid)
     {
       Caption = 'Master data source';
-      ToolTip = 'Specifies the confirmed source run in the current company. Source records are referenced, never registered again as new results.';
+      ToolTip = 'Optional confirmed Factory source; when empty, eligible existing master records in this company are selected without requiring a source run.';
     }
   }
 

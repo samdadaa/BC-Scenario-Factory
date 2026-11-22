@@ -1024,7 +1024,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control GenerationStep - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 407179282 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Choose a complete scenario, master data only, or independent transactions using a confirmed source in this company.</source>
+          <source>Choose a complete scenario, master data only, or transactions using eligible existing master records in this company.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control GenerationKind - Property ToolTip</note>
         </trans-unit>
@@ -1034,7 +1034,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control GenerationKind - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 3582545419 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Select a confirmed source in this company. Its customer, vendor and item SystemIds are frozen in the new run and checked again before execution.</source>
+          <source>Optional: select a specific confirmed Factory run. Leave empty to use eligible customers, vendors and items from this company; selected SystemIds are captured for the run.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control MasterSource - Property ToolTip</note>
         </trans-unit>
@@ -1667,6 +1667,21 @@
           <source>Table Id</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Generated Record - Field Table Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1342277927 - NamedType 2743586180" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The eligible master-data pool has changed since this run was planned. Start a new transactions run.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Master Data Source - NamedType DriftErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1342277927 - NamedType 2578763968" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Wholesale requires eligible customers and at least two suitable vendors with four valid inventory items each. Check posting setup and supplier relations.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Master Data Source - NamedType EmptyPoolErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1342277927 - NamedType 2994410988" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No suitable non-bin location found for wholesale transactions.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Master Data Source - NamedType LocationErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1342277927 - NamedType 4281848628" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select a confirmed wholesale master-data source in this company with matching profile version and intact customer, vendor and item identities.</source>
@@ -2739,7 +2754,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType DateRangeErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3298024591 - NamedType 1968610181" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Select a confirmed master-data source, at least one executable process module and positive document quantities. Transactions require an unposted, posted or payment process mode.</source>
+          <source>Select at least one executable process module and positive document quantities. Transactions require an unposted, posted or payment process mode.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Wholesale Profile - NamedType GenerationErr</note>
         </trans-unit>
@@ -3454,7 +3469,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType PeriodChangedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2531880237 - NamedType 1803812000" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Select a valid generation kind and confirmed master-data source. Choose executable modules and document quantities within the company limits.</source>
+          <source>Select a valid generation kind, executable modules and document quantities within the company limits. Existing company master data may be used without a source run.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType RequestErr</note>
         </trans-unit>
@@ -3642,6 +3657,11 @@
           <source>Execute &amp; control</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ExecuteGroupLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 2324972954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Eligible existing company data</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ExistingMastersLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 2105890513" size-unit="char" translate="yes" xml:space="preserve">
           <source>Diagnostics and expert templates</source>
@@ -5744,7 +5764,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Gen. Bus. Posting Group - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 3536643086 - Field 353695162 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies whether this run creates a complete dataset, master data only, or transactions using an explicitly selected source.</source>
+          <source>Specifies whether this run creates a complete dataset, master data only, or transactions with eligible existing master data or a selected Factory source.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Generation Kind - Property ToolTip</note>
         </trans-unit>
@@ -5854,7 +5874,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Large Terms Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 3536643086 - Field 2747980535 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the confirmed source run in the current company. Source records are referenced, never registered again as new results.</source>
+          <source>Optional confirmed Factory source; when empty, eligible existing master records in this company are selected without requiring a source run.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Scenario - Field Master Source Run Id - Property ToolTip</note>
         </trans-unit>

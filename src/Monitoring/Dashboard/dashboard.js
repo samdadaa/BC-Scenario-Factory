@@ -351,14 +351,19 @@
     view.steps.filter(step => !step.external).forEach(step => {
       const key = step.entityCode === "CUSTOMER" ? "customer" : step.entityCode === "VENDOR" ? "vendor" : step.entityCode === "ITEM" ? "item" : step.entityCode === "SALES.QUOTE" ? "sales/quote" : step.entityCode === "SALES.ORDER" ? "sales/order" : step.entityCode === "SALES.INVOICE" ? "sales/invoice" : step.entityCode === "PURCHASE.ORDER" ? "purchase/order" : "";
       const metric = results.find(item => item.key === key);
-      const safe = metric?.canOpen && metric.count > 0 && metric.count === step.confirmed;
-      if (metric && metric.count === step.confirmed) matched.add(key);
+      // Posted document chains legitimately reduce the number of open
+      // documents. Opening the surviving records must not require a count
+      // equal to the number of confirmed generation units.
+      const safe = metric?.canOpen && metric.count > 0;
+      if (metric && metric.count > 0) matched.add(key);
       const card = node(safe ? "button" : "div", "sf-tile sf-step");
       card.dataset.renderKey = "step:" + step.entityCode;
       append(card, node("span", "sf-stock-label", localized(step.entity)),
         node("strong", "sf-step-value", number(step.confirmed) + " / " + number(step.target)),
         node("span", "sf-help", text("created") + " / " + text("target") + " · " + text("remaining") + " " + number(step.remaining)),
         node("span", "sf-step-state", step.complete ? text("completed") : localized(step.state)));
+      if (safe && metric.count !== step.confirmed)
+        card.appendChild(node("span", "sf-help", text("stockOpen") + " · " + number(metric.count)));
       if (safe) {
         card.type = "button";
         card.dataset.stockFocus = "result:" + key;

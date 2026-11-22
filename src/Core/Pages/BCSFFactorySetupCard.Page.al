@@ -52,7 +52,7 @@ page 90101 "BCSF Factory Setup Card"
         field(GenerationKind; GenerationKind)
         {
           Caption = 'Generation kind';
-          ToolTip = 'Choose a complete scenario, master data only, or independent transactions using a confirmed source in this company.';
+          ToolTip = 'Choose a complete scenario, master data only, or transactions using eligible existing master records in this company.';
           trigger OnValidate()
           begin
             PostingApproved := false;
@@ -70,7 +70,7 @@ page 90101 "BCSF Factory Setup Card"
         {
           Caption = 'Master data source';
           Visible = GenerationKind = GenerationKind::Transactions;
-          ToolTip = 'Select a confirmed source in this company. Its customer, vendor and item SystemIds are frozen in the new run and checked again before execution.';
+          ToolTip = 'Optional: select a specific confirmed Factory run. Leave empty to use eligible customers, vendors and items from this company; selected SystemIds are captured for the run.';
           trigger OnLookup(var Text: Text): Boolean
           var
             Initialization: Codeunit "BCSF Company Initialization";

@@ -4,6 +4,12 @@ using BCScenarioFactory.Core;
 using BCScenarioFactory.ScenarioManagement;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Location;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Sales.Setup;
+using Microsoft.Purchases.Setup;
+using Microsoft.Finance.VAT.Setup;
+using Microsoft.Inventory.Setup;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Customer;
 
@@ -24,11 +30,274 @@ codeunit 90259 "BCSF Master Data Source"
         Error(SourceErr);
       exit;
     end;
+    if IsNullGuid(Scenario."Master Source Run Id") then begin
+      Binding := CaptureExisting();
+      InventorySettings.Add('generatedVendors', true);
+      InventorySettings.Add('location', ResolveExistingLocation());
+      exit;
+    end;
     Binding := Capture(Scenario."Master Source Run Id", Scenario."Profile Code", Scenario."Profile Version");
     Manager.ReadSnapshot(Scenario."Master Source Run Id", Context);
     Context.Get('itemSetup', Token);
     InventorySettings := Contract.Clone(Token.AsObject());
     InventorySettings.Add('sourceRunId', Format(Scenario."Master Source Run Id", 0, 4));
+  end;
+
+  // SF-048: Capture a stable, read-only pool from the current company. No historical run is required.
+  procedure CaptureExisting(): JsonObject
+  var
+    Customer: Record Customer;
+    Vendor: Record Vendor;
+    Item: Record Item;
+    Customers: JsonArray;
+    Vendors: JsonArray;
+    Items: JsonArray;
+    Addresses: JsonArray;
+    Binding: JsonObject;
+    LocationCode: Code[10];
+    MinItemsPerSupplier: Integer;
+    Count: Integer;
+    RoundIndex: Integer;
+    ItemIndex: Integer;
+    PostingPairs: List of [Text];
+  begin
+    LocationCode := ResolveExistingLocation();
+    Vendor.SecurityFiltering(SecurityFilter::Disallowed);
+    MinItemsPerSupplier := 501;
+    if Vendor.FindSet() then
+      repeat
+        if EligibleVendor(Vendor) then begin
+          Count := CountEligibleItems(Vendor."No.", LocationCode);
+          // Multi-line wholesale purchasing needs four distinct articles per supplier.
+          if Count >= 4 then begin
+            Vendors.Add(Format(Vendor.SystemId, 0, 4));
+            if Count < MinItemsPerSupplier then
+              MinItemsPerSupplier := Count;
+          end;
+        end;
+      until Vendor.Next() = 0;
+    // Match the existing deterministic wholesale planner: positions are grouped
+    // by vendor in round-robin order and every vendor has the same number of items.
+    if Vendors.Count() >= 2 then
+      for RoundIndex := 1 to MinItemsPerSupplier do begin
+        Vendor.Reset();
+        if Vendor.FindSet() then
+          repeat
+            if IsSelectedVendor(Vendors, Vendor.SystemId) then begin
+              Item.Reset();
+              Item.SetRange("Vendor No.", Vendor."No.");
+              ItemIndex := 0;
+              if Item.FindSet() then
+                repeat
+                  if EligibleItem(Item, LocationCode) then begin
+                    ItemIndex += 1;
+                    if ItemIndex = RoundIndex then
+                      Items.Add(Format(Item.SystemId, 0, 4));
+                  end;
+                until (Item.Next() = 0) or (ItemIndex = RoundIndex);
+            end;
+          until Vendor.Next() = 0;
+      end;
+    CollectPostingPairs(Items, PostingPairs);
+    Customer.SecurityFiltering(SecurityFilter::Disallowed);
+    if Customer.FindSet() then
+      repeat
+        if EligibleCustomer(Customer) and CustomerSupportsItems(Customer, PostingPairs) then
+          Customers.Add(Format(Customer.SystemId, 0, 4));
+      until Customer.Next() = 0;
+    if (Customers.Count() = 0) or (Vendors.Count() < 2) or (Items.Count() = 0) then
+      Error(EmptyPoolErr);
+    Binding.Add('version', 2);
+    Binding.Add('profileCode', 'TRADE');
+    Binding.Add('customers', Customers);
+    Binding.Add('vendors', Vendors);
+    Binding.Add('items', Items);
+    Binding.Add('shipToIds', Addresses);
+    exit(Binding);
+  end;
+
+  local procedure CountEligibleItems(VendorNo: Code[20]; LocationCode: Code[10]): Integer
+  var
+    Item: Record Item;
+    Count: Integer;
+  begin
+    Item.SecurityFiltering(SecurityFilter::Disallowed);
+    Item.SetRange("Vendor No.", VendorNo);
+    if Item.FindSet() then
+      repeat
+        if EligibleItem(Item, LocationCode) then
+          Count += 1;
+      until (Item.Next() = 0) or (Count >= 500);
+    exit(Count);
+  end;
+
+  local procedure IsSelectedVendor(Vendors: JsonArray; Id: Guid): Boolean
+  var
+    Token: JsonToken;
+  begin
+    foreach Token in Vendors do
+      if Token.AsValue().AsText() = Format(Id, 0, 4) then
+        exit(true);
+    exit(false);
+  end;
+
+  local procedure CollectPostingPairs(Items: JsonArray; var PostingPairs: List of [Text])
+  var
+    Item: Record Item;
+    Token: JsonToken;
+    Id: Guid;
+    Pair: Text;
+  begin
+    foreach Token in Items do begin
+      Evaluate(Id, Token.AsValue().AsText());
+      Item.GetBySystemId(Id);
+      Pair := Item."Gen. Prod. Posting Group" + '|' + Item."VAT Prod. Posting Group";
+      if not PostingPairs.Contains(Pair) then
+        PostingPairs.Add(Pair);
+    end;
+  end;
+
+  local procedure CustomerSupportsItems(Customer: Record Customer; PostingPairs: List of [Text]): Boolean
+  var
+    General: Record "General Posting Setup";
+    VAT: Record "VAT Posting Setup";
+    Posting: Record "Customer Posting Group";
+    Pair: Text;
+    Divider: Integer;
+    ProductGroup: Code[20];
+    VATGroup: Code[20];
+  begin
+    if not Posting.Get(Customer."Customer Posting Group") then
+      exit(false);
+    if Posting."Receivables Account" = '' then
+      exit(false);
+    foreach Pair in PostingPairs do begin
+      Divider := StrPos(Pair, '|');
+      if Divider < 2 then
+        exit(false);
+      ProductGroup := CopyStr(Pair, 1, Divider - 1);
+      VATGroup := CopyStr(Pair, Divider + 1, MaxStrLen(VATGroup));
+      if not General.Get(Customer."Gen. Bus. Posting Group", ProductGroup) then
+        exit(false);
+      if General.Blocked or (General."Sales Account" = '') or
+        (General."COGS Account" = '') or (General."Inventory Adjmt. Account" = '') then
+        exit(false);
+      if not VAT.Get(Customer."VAT Bus. Posting Group", VATGroup) then
+        exit(false);
+      if VAT.Blocked or (VAT."VAT Calculation Type" <> VAT."VAT Calculation Type"::"Normal VAT") then
+        exit(false);
+      if (VAT."VAT %" <> 0) and (VAT."Sales VAT Account" = '') then
+        exit(false);
+    end;
+    exit(true);
+  end;
+
+  local procedure ResolveExistingLocation(): Code[10]
+  var
+    Location: Record Location;
+  begin
+    Location.SecurityFiltering(SecurityFilter::Disallowed);
+    if Location.Get('MAIN') then
+      if not Location."Bin Mandatory" and not Location."Use As In-Transit" and
+        not Location."Require Receive" and not Location."Require Shipment" then
+        exit(Location.Code);
+    Location.Reset();
+    Location.SetRange("Bin Mandatory", false);
+    Location.SetRange("Use As In-Transit", false);
+    Location.SetRange("Require Receive", false);
+    Location.SetRange("Require Shipment", false);
+    Location.SetRange("Require Pick", false);
+    Location.SetRange("Require Put-away", false);
+    if Location.FindFirst() then
+      exit(Location.Code);
+    Error(LocationErr);
+  end;
+
+  local procedure EligibleCustomer(Customer: Record Customer): Boolean
+  var
+    Posting: Record "Customer Posting Group";
+  begin
+    if (Customer.Blocked <> Customer.Blocked::" ") or
+      (Customer."Gen. Bus. Posting Group" = '') or (Customer."VAT Bus. Posting Group" = '') or
+      (Customer."Customer Posting Group" = '') or (Customer."Currency Code" <> '') or
+      (Customer."IC Partner Code" <> '') then
+      exit(false);
+    exit(Posting.Get(Customer."Customer Posting Group"));
+  end;
+
+  local procedure EligibleVendor(Vendor: Record Vendor): Boolean
+  var
+    Posting: Record "Vendor Posting Group";
+  begin
+    if (Vendor.Blocked <> Vendor.Blocked::" ") or
+      (Vendor."Gen. Bus. Posting Group" = '') or (Vendor."VAT Bus. Posting Group" = '') or
+      (Vendor."Vendor Posting Group" = '') or (Vendor."Currency Code" <> '') or
+      (Vendor."IC Partner Code" <> '') or (Vendor."Pay-to Vendor No." <> '') then
+      exit(false);
+    exit(Posting.Get(Vendor."Vendor Posting Group"));
+  end;
+
+  local procedure EligibleItem(Item: Record Item; LocationCode: Code[10]): Boolean
+  var
+    Unit: Record "Item Unit of Measure";
+    Relation: Record "Item Vendor";
+    Vendor: Record Vendor;
+    General: Record "General Posting Setup";
+    VAT: Record "VAT Posting Setup";
+    Inventory: Record "Inventory Posting Setup";
+  begin
+    if Item.Blocked or Item."Purchasing Blocked" or Item."Sales Blocked" or
+      (Item.Type <> Item.Type::Inventory) or (Item."Item Tracking Code" <> '') or
+      (Item."Base Unit of Measure" = '') or (Item."Vendor No." = '') or
+      (Item."Unit Price" <= 0) or (Item."Gen. Prod. Posting Group" = '') or
+      (Item."VAT Prod. Posting Group" = '') or (Item."Inventory Posting Group" = '') then
+      exit(false);
+    if not Unit.Get(Item."No.", Item."Base Unit of Measure") then
+      exit(false);
+    if Unit."Qty. per Unit of Measure" <> 1 then
+      exit(false);
+    if not Vendor.Get(Item."Vendor No.") then
+      exit(false);
+    if not EligibleVendor(Vendor) or not Relation.Get(Vendor."No.", Item."No.", '') then
+      exit(false);
+    if not General.Get(Vendor."Gen. Bus. Posting Group", Item."Gen. Prod. Posting Group") then
+      exit(false);
+    if General.Blocked or (General."Purch. Account" = '') then
+      exit(false);
+    if not VAT.Get(Vendor."VAT Bus. Posting Group", Item."VAT Prod. Posting Group") then
+      exit(false);
+    if VAT.Blocked or (VAT."VAT Calculation Type" <> VAT."VAT Calculation Type"::"Normal VAT") then
+      exit(false);
+    if not Inventory.Get(LocationCode, Item."Inventory Posting Group") then
+      exit(false);
+    exit(Inventory."Inventory Account" <> '');
+  end;
+
+  procedure IsExistingPool(Context: JsonObject): Boolean
+  var
+    Token: JsonToken;
+    Contract: Codeunit "BCSF Contract JSON";
+  begin
+    if not Context.Get('masterDataSource', Token) then
+      exit(false);
+    exit(Contract.GetInteger(Token.AsObject(), 'version') = 2);
+  end;
+
+  procedure ItemFromPool(Context: JsonObject; Index: Integer; var Item: Record Item)
+  var
+    Token: JsonToken;
+    ArrayToken: JsonToken;
+    Id: Guid;
+  begin
+    if not IsExistingPool(Context) then
+      Error(SourceErr);
+    Context.Get('masterDataSource', Token);
+    Token.AsObject().Get('items', ArrayToken);
+    ArrayToken.AsArray().Get((Index - 1) mod ArrayToken.AsArray().Count(), Token);
+    Evaluate(Id, Token.AsValue().AsText());
+    Item.GetBySystemId(Id);
+    if not EligibleItem(Item, ResolveExistingLocation()) then
+      Error(DriftErr);
   end;
 
   procedure Capture(SourceId: Guid; ProfileCode: Code[30]; ProfileVersion: Code[20]): JsonObject
@@ -156,6 +425,14 @@ codeunit 90259 "BCSF Master Data Source"
     if Contract.GetInteger(Context, 'generationKind') <> "BCSF Generation Kind"::Transactions.AsInteger() then
       Error(SourceErr);
     Binding := Token.AsObject();
+    if Contract.GetInteger(Binding, 'version') = 2 then begin
+      Current := CaptureExisting();
+      Binding.WriteTo(StoredText);
+      Current.WriteTo(CurrentText);
+      if StoredText <> CurrentText then
+        Error(DriftErr);
+      exit;
+    end;
     if Contract.GetInteger(Binding, 'version') <> 1 then
       Error(SourceErr);
     Evaluate(SourceId, Contract.GetText(Binding, 'sourceRunId'));
@@ -172,7 +449,7 @@ codeunit 90259 "BCSF Master Data Source"
     Token: JsonToken;
     Id: Guid;
   begin
-    if Context.Get('masterDataSource', Token) then
+    if Context.Get('masterDataSource', Token) and not IsExistingPool(Context) then
       Evaluate(Id, Contract.GetText(Token.AsObject(), 'sourceRunId'))
     else
       Evaluate(Id, Contract.GetText(Context, 'runId'));
@@ -218,5 +495,8 @@ codeunit 90259 "BCSF Master Data Source"
   end;
 
   var
+    EmptyPoolErr: Label 'Wholesale requires eligible customers and at least two suitable vendors with four valid inventory items each. Check posting setup and supplier relations.';
+    LocationErr: Label 'No suitable non-bin location found for wholesale transactions.';
+    DriftErr: Label 'The eligible master-data pool has changed since this run was planned. Start a new transactions run.';
     SourceErr: Label 'Select a confirmed wholesale master-data source in this company with matching profile version and intact customer, vendor and item identities.';
 }

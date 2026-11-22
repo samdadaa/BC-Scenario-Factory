@@ -26,10 +26,20 @@ codeunit 90275 "BCSF Process Coordinator"
       Target := Token.AsObject();
       if Policy.GetEntityCode("BCSF Entity Type".FromInteger(Contract.GetInteger(Target, 'entity'))) = EntityCode then begin
         TargetQuantity := Contract.GetInteger(Target, 'quantity');
+        // A movement-only run may omit an optional document target, or ask
+        // planning code about a key outside that target. In either case no
+        // document is planned: never reuse the master-data pool quantity as
+        // the number of movement documents.
         if (LogicalKey < 1) or (LogicalKey > TargetQuantity) then
-          Error(ContractErr);
+          exit(0);
         Posted := Round(TargetQuantity * Contract.GetDecimal(Target, 'postedPercent') / 100, 1, '<');
         Partial := Round(TargetQuantity * Contract.GetDecimal(Target, 'partialPercent') / 100, 1, '<');
+        // Keep the distribution within the actual current-run target,
+        // including very small quantities and rounded percentages.
+        if Posted > TargetQuantity then
+          Posted := TargetQuantity;
+        if Partial > TargetQuantity - Posted then
+          Partial := TargetQuantity - Posted;
         if LogicalKey <= Posted then
           exit(1);
         if LogicalKey <= Posted + Partial then
@@ -37,7 +47,9 @@ codeunit 90275 "BCSF Process Coordinator"
         exit(0);
       end;
     end;
-    Error(ContractErr);
+    // The selected module can be absent in a movement-only run. That is a
+    // zero-document target rather than a corrupt historical run.
+    exit(0);
   end;
 
   procedure Quantity(Context: JsonObject; EntityCode: Code[30]; LogicalKey: Integer): Decimal
@@ -86,6 +98,7 @@ codeunit 90275 "BCSF Process Coordinator"
   local procedure EarliestSaleDate(Context: JsonObject; PurchaseKey: Integer): Date
   var
     Contract: Codeunit "BCSF Contract JSON";
+    ItemSetup: Codeunit "BCSF Item Setup";
     Policy: Codeunit "BCSF Scenario Policy";
     Targets: JsonToken;
     Token: JsonToken;
@@ -99,12 +112,12 @@ codeunit 90275 "BCSF Process Coordinator"
     SalesDate: Date;
   begin
     Evaluate(LatestDate, Contract.GetText(Context, 'endingDate'), 9);
-    Context.Get('targets', Targets);
-    foreach Token in Targets.AsArray() do
-      if Contract.GetInteger(Token.AsObject(), 'entity') = "BCSF Entity Type"::Item.AsInteger() then
-        ItemCount := Contract.GetInteger(Token.AsObject(), 'quantity');
+    // Transaction-only runs have no Item target; the captured master pool
+    // is the authoritative item count for these planning calculations.
+    ItemCount := ItemSetup.Quantity(Context, "BCSF Entity Type"::Item);
     if ItemCount < 1 then
       Error(ContractErr);
+    Context.Get('targets', Targets);
     SourceCount := ItemCount;
     if SourceCount > 100 then
       SourceCount := 100;
@@ -132,6 +145,7 @@ codeunit 90275 "BCSF Process Coordinator"
   procedure PurchaseQuantity(Context: JsonObject; LogicalKey: Integer): Decimal
   var
     Contract: Codeunit "BCSF Contract JSON";
+    ItemSetup: Codeunit "BCSF Item Setup";
     Targets: JsonToken;
     Token: JsonToken;
     Target: JsonObject;
@@ -150,12 +164,12 @@ codeunit 90275 "BCSF Process Coordinator"
     Mode := Disposition(Context, 'PURCHASE.ORDER', LogicalKey);
     if Mode = 0 then
       exit(BaseQuantity);
-    Context.Get('targets', Targets);
-    foreach Token in Targets.AsArray() do
-      if Contract.GetInteger(Token.AsObject(), 'entity') = "BCSF Entity Type"::Item.AsInteger() then
-        ItemCount := Contract.GetInteger(Token.AsObject(), 'quantity');
+    // Transaction-only runs have no Item target; the captured master pool
+    // is the authoritative item count for these planning calculations.
+    ItemCount := ItemSetup.Quantity(Context, "BCSF Entity Type"::Item);
     if ItemCount < 1 then
       Error(ContractErr);
+    Context.Get('targets', Targets);
     SourceCount := ItemCount;
     if SourceCount > 100 then
       SourceCount := 100;
