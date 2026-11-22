@@ -151,3 +151,8 @@ Vorlagen laden → **Verkauf – Angebote, Aufträge und Rechnungen** öffnen �
 ### Vorlagenkorrektur 1.0.5.1
 
 Nach dem Paketupdate einmal **Startvorlagen laden** wählen: erkennbare unveränderte Branchen-Belegstarter werden auf Verkauf aktualisiert, eine gemischte Verkaufsvorlage kommt hinzu. Neue Szenarien haben ein kleines ausführbares Stammdatenziel; Start liefert konkrete fehlende Voraussetzungen, Löschen ist direkt sichtbar und bewahrt benutzte Historie durch Archivierung. Der maximale Umfang begrenzt die tatsächlichen Ziele; gebuchte Vorlagen enthalten unterschiedliche ungebuchte/teilgebuchte/gebuchte Quoten. Eigene Konfigurationen und gespeicherte Läufe bleiben geschützt. [Umfang und native Abnahme](docs/SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051). **Zur Prüfung**.
+
+
+## Vollständiger Geschäftsdatenexport (SF-046, 1.0.8.1)
+
+Installation/Upgrade baut seit 1.0.8.1 keine Konfigurationspakete mehr in allen Firmen auf. In der gewünschten Sandboxfirma im Dashboard **Datenexportpaket vorbereiten** wählen: Die Aktion erstellt/ergänzt **BCSF-ALL-DATA** ausschließlich dort. Anschließend auf der Standardkarte **Nach Excel exportieren** wählen. 128 Tabellen umfassen Stämme, Einrichtung, Belegköpfe/-zeilen, Buchungsposten und Standardbeziehungen. Vollständiger Tabelleninhalt einschließlich vorhandener Fremddaten, unabhängig vom Dashboardfilter. Gebuchte Posten dienen der Auswertung und sind kein RapidStart-Wiederimport. [Tabellen-IDs, Bedienung und Grenzen](docs/CONFIG_EXPORT.md). **Zur Prüfung**, native Installation/Exportabnahme offen.

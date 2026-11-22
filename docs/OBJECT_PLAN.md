@@ -394,3 +394,14 @@ Codeunit 90401 BCSF Payment Processor (bereits für SF-022 geplant) und Codeunit
 ## 1.0.7.1 – belegter Mappinglistenbedarf
 
 Page **90370 BCSF Attribute Assignments**, `src/Monitoring/Pages/BCSFAttributeAssignments.Page.al`, vor Erstellung gegen Quellen und Objektplan unbesetzte Monitoringreserve im Bereich 90100–90999 geprüft. Rein lesende Liste auf Standardtabelle Item Attribute Value Mapping, keine neue Tabelle. Vorhandene Herkunftsseite kann manuelle Mandantenzuordnungen nicht vollständig abbilden; passende Standardliste fehlt. Dashboardkatalog prüft Page-X, BCSF ADMIN ergänzt ausschließlich diese Ausführung. Bestehende IDs/Pfade bleiben erhalten.
+
+
+## SF-046 – Konfigurationspaket-Export (22.11.2026)
+
+| Modul | ID | Typ | Name | Verantwortung |
+| --- | --- | --- | --- | --- |
+| Monitoring | 90371 | Codeunit | BCSF Config Export | Sandboxgebundener Standard-Paketdienst und 128 typisierte Tabellenreferenzen |
+| Monitoring | 90372 | Install-Codeunit | BCSF Config Export Install | Ab 1.0.8.1 leerer Trigger; Identität erhalten, kein Paketaufbau |
+| Monitoring | 90373 | Upgrade-Codeunit | BCSF Config Export Upgrade | Ab 1.0.8.1 leerer Trigger; bestehende Pakete unangetastet |
+
+IDs zuvor weder belegt noch geplant, innerhalb Monitoring 90350–90374; keine eigene neue Tabelle/Seite. Monitoring greift auf System.IO und System.Environment des Standards zu. Core bündelt nur deklarativ Execute des Paketdienstes. Standard-RapidStart- und Geschäftsdatenrechte bleiben separat erforderlich. [Umfang, Tabellen-IDs und Grenzen](CONFIG_EXPORT.md), Status **Zur Prüfung**.

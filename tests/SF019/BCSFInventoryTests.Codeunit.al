@@ -17,6 +17,7 @@ using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.Monitoring;
 using Microsoft.Sales.History;
 using Microsoft.Finance.GeneralLedger.Ledger;
+using Microsoft.Finance.Dimension;
 using Microsoft.Finance.VAT.Ledger;
 using Microsoft.Sales.Receivables;
 using Microsoft.Inventory.Item;
@@ -33,11 +34,99 @@ using Microsoft.Sales.Customer;
 using Microsoft.Sales.Document;
 using Microsoft.Warehouse.Ledger;
 using Microsoft.Warehouse.Structure;
+using System.IO;
 using System.Security.AccessControl;
 
 codeunit 90700 "BCSF Inventory Tests"
 {
   Subtype = Test;
+
+  [Test]
+  procedure ExportCatalogIncludesPostingSideEffects()
+  var
+    ExportPackage: Codeunit "BCSF Config Export";
+    TableIds: List of [Integer];
+    UniqueIds: List of [Integer];
+    TableId: Integer;
+  begin
+    ExportPackage.GetTableIds(TableIds);
+    foreach TableId in TableIds do begin
+      Assert(not UniqueIds.Contains(TableId), 'Export table IDs must be unique.');
+      UniqueIds.Add(TableId);
+    end;
+    Assert(TableIds.Contains(Database::Customer), 'Customer must be exported.');
+    Assert(TableIds.Contains(Database::Vendor), 'Vendor must be exported.');
+    Assert(TableIds.Contains(Database::Item), 'Item must be exported.');
+    Assert(TableIds.Contains(Database::"Sales Line"), 'Open sales lines must be exported.');
+    Assert(TableIds.Contains(Database::"Purchase Line"), 'Open purchase lines must be exported.');
+    Assert(TableIds.Contains(Database::"Sales Shipment Line"), 'Posted sales lines must be exported.');
+    Assert(TableIds.Contains(Database::"Purch. Rcpt. Line"), 'Posted purchase lines must be exported.');
+    Assert(TableIds.Contains(Database::"G/L - Item Ledger Relation"), 'Posting relations must be exported.');
+    Assert(TableIds.Contains(Database::"Detailed Cust. Ledg. Entry"), 'Payment/application details must be exported.');
+    Assert(TableIds.Contains(Database::"Detailed Vendor Ledg. Entry"), 'Vendor application details must be exported.');
+    Assert(TableIds.Contains(Database::"Bank Account Ledger Entry"), 'Bank entries must be exported.');
+  end;
+
+  [Test]
+  procedure ExportPackageIsIdempotent()
+  var
+    PackageTable: Record "Config. Package Table";
+    PackageField: Record "Config. Package Field";
+    SalesLine: Record "Sales Line";
+    DimensionValue: Record "Dimension Value";
+    ExportPackage: Codeunit "BCSF Config Export";
+    TableIds: List of [Integer];
+    TableId: Integer;
+    OriginalCount: Integer;
+  begin
+    ExportPackage.EnsurePackage();
+    PackageTable.SetRange("Package Code", ExportPackage.GetPackageCode());
+    OriginalCount := PackageTable.Count();
+    ExportPackage.EnsurePackage();
+    Assert(PackageTable.Count() = OriginalCount, 'Repeated provision must not duplicate tables.');
+    ExportPackage.GetTableIds(TableIds);
+    foreach TableId in TableIds do
+      Assert(PackageTable.Get(ExportPackage.GetPackageCode(), TableId), 'Every catalog table must exist in the package.');
+    PackageField.Get(ExportPackage.GetPackageCode(), Database::"Sales Line", SalesLine.FieldNo("Dimension Set ID"));
+    Assert(PackageField."Include Field", 'Dimension-set references must remain available for inspection.');
+    PackageField.Get(ExportPackage.GetPackageCode(), Database::"Dimension Value", DimensionValue.FieldNo("Dimension Value ID"));
+    Assert(PackageField."Include Field", 'The standard omission of Dimension Value ID must be supplemented for inspection.');
+  end;
+
+  [Test]
+  procedure ExportPackagePreservesCustomizations()
+  var
+    PackageField: Record "Config. Package Field";
+    PackageFilter: Record "Config. Package Filter";
+    Item: Record Item;
+    ExportPackage: Codeunit "BCSF Config Export";
+    PackageManagement: Codeunit "Config. Package Management";
+  begin
+    ExportPackage.EnsurePackage();
+    PackageField.Get(ExportPackage.GetPackageCode(), Database::Item, Item.FieldNo(Description));
+    PackageField."Include Field" := false;
+    PackageField.Modify(true);
+    PackageManagement.InsertPackageFilter(PackageFilter, ExportPackage.GetPackageCode(), Database::Item, 0, Item.FieldNo("No."), 'SF046*');
+    ExportPackage.EnsurePackage();
+    PackageField.Get(ExportPackage.GetPackageCode(), Database::Item, Item.FieldNo(Description));
+    Assert(not PackageField."Include Field", 'Provision must preserve an existing field choice.');
+    PackageFilter.Get(ExportPackage.GetPackageCode(), Database::Item, 0, Item.FieldNo("No."));
+    Assert(PackageFilter."Field Filter" = 'SF046*', 'Provision must preserve an existing filter.');
+  end;
+
+  [Test]
+  procedure ExportPackageRejectsForeignMarker()
+  var
+    Package: Record "Config. Package";
+    ExportPackage: Codeunit "BCSF Config Export";
+  begin
+    ExportPackage.EnsurePackage();
+    Package.Get(ExportPackage.GetPackageCode());
+    Package."Product Version" := 'SF046-FOREIGN';
+    Package.Modify(true);
+    asserterror ExportPackage.EnsurePackage();
+    Assert(StrPos(GetLastErrorText(), ExportPackage.GetPackageCode()) > 0, 'The collision error must identify the conflicting package code.');
+  end;
 
   [Test]
   procedure DashboardMarksRetainExistingFilters()

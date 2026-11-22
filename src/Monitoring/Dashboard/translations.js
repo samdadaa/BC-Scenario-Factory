@@ -118,6 +118,7 @@ window.BCSFDashboardTranslations = {
     "Preflight": "Vorpr\u00fcfung",
     "Preflight Failed": "Vorpr\u00fcfung fehlgeschlagen",
     "Prepare batches": "Pakete vorbereiten",
+    "Prepare data export package": "Datenexportpaket vorbereiten",
     "Projects": "Projekte",
     "Provenance records": "Herkunftseintr\u00e4ge",
     "Purchase Credit Memos": "Einkaufsgutschriften",

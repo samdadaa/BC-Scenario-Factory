@@ -62,3 +62,20 @@ Seit 1.0.5.2 enthalten die unterstützten Verkaufsvorlagen Stammdaten und Verkau
 ## 1.0.7.0 – drei Großhandelsreferenzen
 
 Explizites Laden ergänzt geschützte feste Referenzen für ungebucht, gebucht und Zahlung/Ausgleich. Der vorhandene ungebuchte Starter wird nicht überschrieben. Gebuchte Referenzen verwenden TRADE v4 mit PO 60/20/Rest, SO 50/25/Rest und direkten Rechnungen 67/0/Rest; Angebote ungebucht. Neue Starter, Kopien und Importe übernehmen keine Buchungsfreigabe. Eigene Namen/Werte, Archivierung und Entfernungsvermerke bleiben erhalten. [Aktueller gemeinsamer Workflow](INDUSTRY_INITIALIZATION.md), [native Referenzprüfung](review/TESTANLEITUNG.md#1070--einkauf-buchung-zahlung-und-berechtigungsfehler).
+
+
+## SF-046 – Exportprüfung mit vorhandenen Startvorlagen
+
+Die vorhandenen geschützten Partner-, Artikel- und Großhandelsreferenzen gegen den realen Registry-/Generatorumfang geprüft. Für den Export ist keine neue Generatoroption und keine Änderung von Vorlagenmengen, IDs, Namen, Seeds, Quoten oder Freigaben erforderlich. Eigene/entfernte/archivierte Starter und gespeicherte Läufe bleiben unverändert.
+
+Neue Abnahmefälle verwenden die bestehenden Referenzen und denselben Menüpunkt **Datenexportpaket vorbereiten** (BCSF-ALL-DATA). Seit 1.0.8.1 bereitet diese ausdrückliche Aktion das Paket ausschließlich in der aktuellen Firma vor; Installation/Upgrade tut dies nicht mehr. Die Starterwerte/Quoten bleiben unverändert:
+
+| Referenz | Nach Laufabschluss im Excelexport prüfen |
+| --- | --- |
+| Partner/Artikel, reine Stammdaten | Customer, Vendor, Ship-to/Order Address, Item und sämtliche Artikelbeziehungen; ggf. Standardkontakte. Ohne Buchungen keine neuen Posten erwarten. |
+| Großhandel ungebucht | Zusätzlich Sales/Purchase Header und Line mit identischen Schlüsseln/Mengen zur Standardliste. |
+| Großhandel gebucht | Gebuchte Einkaufs-/Verkaufszeilen, Item/Value/G/L/VAT/CV-Posten, Detailposten, Register und Verknüpfungen. Gemischte PO 60/20/Rest, SO 50/25/Rest und Rechnungen 67/0/Rest erhalten; Angebote ungebucht. |
+| Großhandel Zahlung/Ausgleich | Zusätzlich Bank Account Ledger Entry und Details zu Kunden-/Lieferantenausgleich. |
+| Eine manuelle synthetische Zeile plus zwei Läufe | Alle Zeilen im Paketexport enthalten, unabhängig vom gewählten Dashboardlauf/-filter. Keine Duplikate durch wiederholtes Öffnen. |
+
+Diese Fälle sind **vorbereitet, nicht nativ ausgeführt**. Vollständige Tabellen-IDs, Rechte und Standardgrenzen: [CONFIG_EXPORT.md](CONFIG_EXPORT.md).

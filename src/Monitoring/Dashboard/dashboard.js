@@ -432,6 +432,7 @@
       links.appendChild(button("scenarios", "sf-button", "scenarios"));
     if (model.company) links.appendChild(button("workflow", "sf-button sf-primary", "workflow"));
     else links.appendChild(button("setup", "sf-button", "setup"));
+    links.appendChild(button("exportPackage", "sf-button", "exportPackage"));
     append(toolbar, tabs(), links, button("refresh", "sf-button sf-refresh", "refresh"));
     const main = node("main", "sf-main");
     main.id = "sf-tab-panel";

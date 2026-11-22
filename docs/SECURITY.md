@@ -136,3 +136,10 @@ Kanonische Planungsmodulcodes vor Einplanung und vor Hintergrundvorbereitung val
 ## SF-022 – Datumsrequest 1.0.7.3
 
 Startdatum und additives Enddatumsfeld 28 nach Einplanung unveränderlich, auch bei Modify(false). Start prüft gefüllten Zeitraum mit Ende gestern, Hintergrund übernimmt die gespeicherte Grenze. Keine automatische Erweiterung von Buchungsperioden, Benutzerrechten oder Nummernserien. Historische Captures ohne Datumsmarker behalten ihre Regel; neue verwenden versionierten Vertrag, unbekannte Versionen werden abgewiesen. Technische BC-Auditzeitpunkte bleiben tatsächlich aktuell. [Vertrag/native Prüfung](INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073).
+
+
+## SF-046 – vollständiger Geschäftsdatenexport
+
+Der Nutzer hat vollständige Tabellen einschließlich bestehender Daten ausdrücklich gewählt. Der Paketdienst schreibt ausschließlich Standard-RapidStart-Metadaten, ohne erhöhte Permissions und ohne eigenen Commit; ab 1.0.8.1 überhaupt kein Paketdienstaufruf während Installation/Upgrade. Tatsächliche SaaS-Sandboxprüfung beim ausdrücklichen Aufruf, ausschließlich aktuelle Firma. Kein Zugriff auf andere Firmen und keine Paketmutation beim Öffnen/Refresh des Dashboards. Keine Freigabe für Generierung oder Posting. Standardrechte zur Paketverwaltung und direkte Tabellenleserechte bleiben erforderlich; Securityfilter/fehlende Rechte können den Standarddownload einschränken oder blockieren.
+
+Kopfkennung BCSF-EXPORT/1 schützt vor versehentlicher Übernahme eines gleichnamigen Fremdpakets; keine Zugriffsgrenze. Wiederholung ergänzt ausschließlich fehlende Tabellen, keine Entfernung fremder Pakete/Filter/Feldauswahlen. Das Paket ist zur Auswertung; gebuchte Posten nicht reimportieren. Standarddownload ist kein atomarer datenbankweiter Snapshot. Keine externen Dienste oder Datenübertragung durch die App. [Vertrag und native Rechte-/Exportfälle](CONFIG_EXPORT.md). **Zur Prüfung**.

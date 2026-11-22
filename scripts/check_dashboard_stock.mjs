@@ -71,6 +71,11 @@ for (const file of ['translations.js', 'dashboard.js'])
 const get = key => root.querySelectorAll('[data-stock-focus]').find(el => el.dataset.stockFocus === key);
 window.BCSFStart();
 assert.deepEqual(calls, [['Ready']], 'No eager metric call');
+const exportPackage = root.querySelectorAll('button[data-action]').find(el => el.dataset.action === 'exportPackage');
+assert.ok(exportPackage, 'Data export is reachable from the existing dashboard');
+assert.equal(exportPackage.textContent, 'Datenexportpaket vorbereiten');
+exportPackage.events.click();
+assert.deepEqual(calls.at(-1), ['Command', 'exportPackage', ''], 'Export uses a fixed server action without client table or company selection');
 assert.equal(root.querySelector('.sf-stock').querySelector('h2').textContent, 'Daten im Mandanten');
 assert.equal(root.querySelector('.sf-stock-list'), null);
 assert.equal(get('stockScope').children[0].selected, true);

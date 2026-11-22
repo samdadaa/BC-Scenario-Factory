@@ -47,6 +47,14 @@ page 90364 "BCSF Factory Role Center"
           ApplicationArea = All;
           RunObject = page "BCSF Factory Setup Card";
         }
+        action(ExportPackage)
+        {
+          Caption = 'Prepare data export package';
+          ToolTip = 'Creates or completes the export package in the current company and opens it. Includes full master data, documents and posted entries. Use Export to Excel to inspect current data.';
+          ApplicationArea = All;
+          Image = Export;
+          RunObject = codeunit "BCSF Config Export";
+        }
       }
     }
   }

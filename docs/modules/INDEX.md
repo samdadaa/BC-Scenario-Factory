@@ -91,3 +91,8 @@ Bestand unverändert 121 AL-Dateien, davon 19 Monitoringobjekte. Bestehende Dash
 133 Main-AL-Dateien in 16 Modulen, acht Module weiterhin ohne AL-Code. Sales sieben Objekte, ProcessEngine ein Objekt, übrige Objektzahlen unverändert. Keine neue Custom-Tabelle/Seite; separate bestehende Test-Codeunit jetzt 19 Tests. [Vertrag](../SALES_PROCESS.md), [Prüfstand](../TESTS.md#sf-021--verkaufsprozess-20112026). **Zur Prüfung**.
 
 SF-021-Vorlagenkorrektur 1.0.5.1: Objektbestand unverändert (133/16 Module); vorhandene ScenarioManagement-/IndustryProfiles-/Monitoring-/Finance-/Core-/ProcessEngine-Objekte korrigiert. Bestehender isolierter Testhost 26 Methoden. [Vorlagenmatrix und native Abnahme](../SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051), Zur Prüfung.
+
+
+## SF-046 – vollständiges Konfigurationspaket
+
+143 Main-AL-Objekte in weiterhin 16 Modulen. Monitoring: Paketdienst 90371, Install 90372 und Upgrade 90373. Ab 1.0.8.1 sind die Install-/Upgrade-Trigger leer; Paketaufbau nur nach ausdrücklicher Aktion in der aktuellen Firma. Core-Permission-Set ergänzt nur Execute. Keine neue Tabelle/Seite, keine Generatoränderung. [128 Tabellen-IDs und Bedienung](../CONFIG_EXPORT.md), [Prüfungen](../TESTS.md#sf-046--konfigurationspaket-für-vollständige-generator-daten), **Zur Prüfung**.

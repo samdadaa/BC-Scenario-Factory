@@ -4,6 +4,11 @@
 .alcache/
 .vscode/.alcache/
 
+# Local AL Test Runner page-scripting dependencies
+/.altestrunner/node_modules/
+/.altestrunner/package.json
+/.altestrunner/package-lock.json
+
 # Debugger snapshots and local logs
 .snapshots/
 *.log

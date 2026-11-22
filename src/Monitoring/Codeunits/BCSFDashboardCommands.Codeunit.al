@@ -28,6 +28,7 @@ codeunit 90366 "BCSF Dashboard Commands"
   procedure Execute(ActionCode: Text; RunIdText: Text)
   var
     Header: Record "BCSF Run Header";
+    ExportPackage: Codeunit "BCSF Config Export";
     SetupPage: Page "BCSF Factory Setup Card";
   begin
     // No client-supplied page, table, method, company, filter or approval is accepted.
@@ -36,6 +37,7 @@ codeunit 90366 "BCSF Dashboard Commands"
       'runs': Page.Run(Page::"BCSF Factory Dashboard");
       'monitor': Page.Run(Page::"BCSF Factory Dashboard");
       'setup': Page.Run(Page::"BCSF Factory Setup Card");
+      'exportPackage': ExportPackage.OpenPackage();
       'workflow':
         begin
           SetupPage.OpenWorkflow();

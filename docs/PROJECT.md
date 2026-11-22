@@ -174,3 +174,10 @@ Aktuelle Main-Version **1.0.5.0**, App-ID/Publisher/Application 28.0/Runtime 17/
 ## SF-021 – Vorlagenkorrektur 1.0.5.1
 
 Bestand unverändert 133 Main-AL-Dateien/16 Module, keine neuen AL-Objekte/Tabellen/Seiten/Felder. Main 1.0.5.1, Testhost 1.1.1.0 mit 26 Methoden. Neue Vorlagen mit GENERAL/1-Debitor-Ziel; Ausführbarkeit anhand tatsächlicher registrierter Zielmodi. Sicheres Löschen/Archivieren sichtbar. Erkennbare unveränderte 16 Branchen-Belegstarter werden auf Verkauf v2 aktualisiert, zusätzliche gemischte Verkaufsvorlage; eigene/entfernte/archivierte Vorlagen und immutable Läufe bleiben geschützt. [Vertrag](SALES_PROCESS.md#ergebnis-der-vorlagenkorrektur-1051). **Zur Prüfung**, native Prüfung/Deployment offen.
+
+
+## SF-046 – Geschäftsdatenexport, 22.11.2026
+
+Main-Version 1.0.8.1; bestehende App-ID 618c08c6-601b-430a-90d2-55f96866bfa4, Default Publisher, Application 28.0.0.0, Runtime 17.0, IDs 90100–90999 und Dependencies [] erhalten. 143 Main-AL-Objekte; drei neue Monitoring-Codeunits 90371–90373, keine neue Tabelle/Seite oder Schemaänderung. Separate Test-App 1.4.0.1 referenziert Main 1.0.8.1; bestehender Testhost um vier Methoden erweitert (52 insgesamt).
+
+BCSF-ALL-DATA wird seit 1.0.8.1 erst über die ausdrückliche Dashboard-/Role-Center-Aktion in der aktuellen SaaS-Sandboxfirma angelegt. Installation/Upgrade enthält keinen Paketaufbau; bestehende Pakete bleiben erhalten. Nutzer meldet über 40 Firmen und eine hängende Installation von 1.0.8.0; hoher Aufwand des früheren PerCompany-Aufbaus ist plausibel, aber ohne native Telemetrie nicht als alleinige Ursache bewiesen. 128 symbolgeprüfte Tabellen, vollständiger Firmenumfang ausdrücklich bestätigt. [Bedienung, IDs und Grenzen](CONFIG_EXPORT.md). Keine Veröffentlichung/native Abnahme durch den Agenten; Publisher, externe ID-Konflikte und Zielumgebung bleiben gemäß SF-001 zu prüfen.

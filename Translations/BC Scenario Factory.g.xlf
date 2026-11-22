@@ -3293,6 +3293,26 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Company Initialization - NamedType PeriodChangedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 603844782 - NamedType 4214633774" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Full company table for inspection/export, including existing data. Posted entries cannot be reimported through RapidStart.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Config Export - NamedType ExportOnlyLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 603844782 - NamedType 1105650003" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Configuration package %1 already exists without the Factory export marker. Rename that package before creating the Factory export package.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = package code</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Config Export - NamedType PackageCollisionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 603844782 - NamedType 2079299593" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory - all business data</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Config Export - NamedType PackageNameLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 603844782 - NamedType 381116628" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the Scenario Factory export package in a Business Central online sandbox.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Config Export - NamedType SandboxErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3261897160 - NamedType 1965247518" size-unit="char" translate="yes" xml:space="preserve">
           <source>Apply pending pause or cancellation requests at a safe boundary?</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3462,6 +3482,11 @@
           <source>Diagnostics and expert templates</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ExpertToolsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3789885128" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prepare data export package</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ExportPackageLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 968509841" size-unit="char" translate="yes" xml:space="preserve">
           <source>External prerequisite</source>
@@ -4262,6 +4287,16 @@
           <source>Scenario Factory</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action Factory - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 260213585 - Action 353917698 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates or completes the export package in the current company and opens it. Includes full master data, documents and posted entries. Use Export to Excel to inspect current data.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action ExportPackage - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 260213585 - Action 353917698 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prepare data export package</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Role Center - Action ExportPackage - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 260213585 - Action 1100388846 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Opens captured run configurations and all run-specific planning and execution actions.</source>

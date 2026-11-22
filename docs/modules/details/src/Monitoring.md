@@ -100,3 +100,8 @@ Company Initialization prüft/friert zusätzliche Modulauswahl vor Einplanung ei
 ## SF-022 – Datumszeitraum 1.0.7.3
 
 Request friert Anfang/Ende ein, schützt beide gegen Modify(false) und prüft erneut vor Hintergrundvorbereitung. Dashboard zeigt gespeicherten Zeitraum; tatsächliche Bestands-/Drilldownquellen unverändert. [Vertrag/offene native Abnahme](../../../INDUSTRY_INITIALIZATION.md#sf-022--datumszeitraum-1073). **Zur Prüfung**.
+
+
+## SF-046 – Standard-Konfigurationspaket
+
+Neue Codeunits 90371 Config Export, 90372 Config Export Install und 90373 Config Export Upgrade. Seit 1.0.8.1 wird Paket BCSF-ALL-DATA erst durch die ausdrückliche Aktion im bestehenden Dashboard/Role-Center angelegt bzw. ergänzt, ausschließlich in der aktuellen SaaS-Sandboxfirma. Install-/Upgrade-Trigger 90372/90373 bleiben leer; vorhandene Pakete und Objektidentitäten erhalten. 128 typsichere Tabellenreferenzen einschließlich indirekter Standardbuchungsdaten; keine Herkunftsfilter. Standard-System.IO-APIs, keine erhöhten TableData-Rechte, keine Generator-/Queue-/Checkpointänderung. Bestehende Paketfilter/Feldauswahl geschützt, Fremdcodekollision blockiert. [Vertrag/Tabellen-IDs](../../../CONFIG_EXPORT.md), [lokale Prüfungen/native Abnahme](../../../TESTS.md#sf-046--konfigurationspaket-für-vollständige-generator-daten). **Zur Prüfung**.

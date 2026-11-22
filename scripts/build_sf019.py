@@ -27,6 +27,7 @@ def main():
     subprocess.run([sys.executable, str(ROOT / 'scripts/check_sales_contracts.py')], cwd=ROOT, check=True)
     subprocess.run([sys.executable, str(ROOT / 'scripts/check_purchase_contracts.py')], cwd=ROOT, check=True)
     subprocess.run([sys.executable, str(ROOT / 'scripts/check_template_contracts.py')], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, str(ROOT / 'scripts/check_config_export_contracts.py')], cwd=ROOT, check=True)
     output = (args.output or Path(tempfile.mkdtemp(prefix='bcsf-sf019-build-'))).resolve()
     output.mkdir(parents=True, exist_ok=True)
     app = output / 'app'

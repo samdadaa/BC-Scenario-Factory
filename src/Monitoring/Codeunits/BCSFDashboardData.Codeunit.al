@@ -459,12 +459,14 @@ codeunit 90365 "BCSF Dashboard Data"
     Texts.Add('companyProgress', CompanyProgressLbl);
     Texts.Add('expertTools', ExpertToolsLbl);
     Texts.Add('workflow', WorkflowLbl);
+    Texts.Add('exportPackage', ExportPackageLbl);
     Texts.Add('requirements', RequirementsLbl);
     Texts.Add('notRecorded', NotRecordedLbl);
     Texts.Add('selected', SelectedLbl);
   end;
 
   var
+    ExportPackageLbl: Label 'Prepare data export package';
     PeriodLbl: Label 'Business dates: %1 to %2 (inclusive).', Comment = '%1 = starting date, %2 = ending date';
     DataTabLbl: Label 'Data';
     RunsTabLbl: Label 'Runs';

@@ -1,0 +1,8 @@
+{
+  "Scenario Factory - all business data": "Scenario Factory - alle Geschäftsdaten",
+  "Full company table for inspection/export, including existing data. Posted entries cannot be reimported through RapidStart.": "Vollständige Mandantentabelle zur Prüfung/zum Export einschließlich vorhandener Daten. Gebuchte Posten können nicht über RapidStart reimportiert werden.",
+  "Create the Scenario Factory export package in a Business Central online sandbox.": "Erstellen Sie das Scenario-Factory-Exportpaket in einer Business-Central-Online-Sandbox.",
+  "Configuration package %1 already exists without the Factory export marker. Rename that package before creating the Factory export package.": "Das Konfigurationspaket %1 ist bereits ohne Factory-Exportkennung vorhanden. Benennen Sie dieses Paket um, bevor Sie das Factory-Exportpaket erstellen.",
+  "Prepare data export package": "Datenexportpaket vorbereiten",
+  "Creates or completes the export package in the current company and opens it. Includes full master data, documents and posted entries. Use Export to Excel to inspect current data.": "Erstellt oder ergänzt das Exportpaket im aktuellen Mandanten und öffnet es. Enthält vollständige Stammdaten, Belege und gebuchte Posten. Prüfen Sie aktuelle Daten über den Excelexport."
+}

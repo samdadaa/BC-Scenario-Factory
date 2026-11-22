@@ -242,3 +242,10 @@ Bei reinen Stammdaten entfallen G/H. B–D sind eine commitgeschützte Vorbereit
 ## 1.0.7.1 – Herkunftszählung und Listennavigation
 
 Live-Herkunftsidentitäten werden pro Kennzahl und optionalem Lauf sitzungsintern markiert. MarkedOnly schränkt den sichtbaren Standardrecord zusätzlich zu bestehenden Filtern ein; SetTable(false) überträgt Filter und Marks, Count beim Klick erneut geprüft. Keine neuen gespeicherten Zähler und keine Gleichsetzung von bestätigter Arbeit und überlebendem Live-Bestand. Mappingseite 90370 erfüllt die bisher fehlende lesende Mandanten-/Laufroute. [Vertrag und Skalierungsgrenzen](DASHBOARD_DATA_STOCK.md#implementierter-stand-1071).
+
+
+## SF-046 – Auswertbares Standard-Konfigurationspaket
+
+Seit 1.0.8.1: ausdrückliche Dashboard-/Role-Center-Aktion in der aktuellen Firma → Monitoring Config Export 90371 → Standard Config. Package/Table/Field. Install-/Upgrade-Codeunits behalten ihre Identität und führen keinen Paketaufbau mehr aus. Paket BCSF-ALL-DATA hält nur Exportdefinitionen, keine Kopie der Geschäftsdatensätze. Dashboard/Role-Center → derselbe Dienst → Standard-Paketkarte → aktueller Excel-/RapidStart-Export. 128 typsichere Tabellenreferenzen umfassen Foundation, Stämme, Beziehungen, Belegköpfe/-zeilen, Posten, Register, Dimensions-/CRM-/Archiv-/Lagernebenwirkungen. Keine Verbindung zu Claim/Checkpoint oder Generatorausführung.
+
+Nutzer bestätigt vollständige Tabellen einschließlich Fremddaten. Bereitstellung unter Paketkopfsperre und CommitBehavior Error; fremde Paketkennung blockiert, vorhandene Filter/Feldauswahl bleiben erhalten. Keine erhöhten Standardrechte. Echter SaaS-Sandboxkontext wird unabhängig vom Setup geprüft, damit der manuelle Export unabhängig von der Freigabe zur Datengenerierung bleibt. Der erstmalige Paketaufbau erfolgt synchron nur in der ausgewählten Firma, ohne Firmeniteration oder neuen Queueauftrag; Laufzeit weiterhin nativ zu messen. Keine Generierungs-/Buchungsfreigabe daraus. [Tabellenkatalog und Exportgrenzen](CONFIG_EXPORT.md), [echte Prüfungen](TESTS.md#sf-046--konfigurationspaket-für-vollständige-generator-daten). **Zur Prüfung**.

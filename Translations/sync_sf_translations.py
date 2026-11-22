@@ -124,6 +124,7 @@ def note(unit):
 
 def sync():
     DE.update(json.loads((ROOT / "sf020.de.json").read_text(encoding="utf-8")))
+    DE.update(json.loads((ROOT / "sf046.de.json").read_text(encoding="utf-8")))
     generated = ET.parse(ROOT / f"{NAME}.g.xlf")
     units = list(generated.iter(Q("trans-unit")))
     gen_ids = [u.attrib["id"] for u in units]
