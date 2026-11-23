@@ -33,6 +33,13 @@ codeunit 90401 "BCSF Payment Processor"
     Guard.EnsureCanConfigure(CompanyName());
     GroupCode := Packages.GetTestPostingGroup(Packages.GetAppliedMode());
     Group.SecurityFiltering(SecurityFilter::Disallowed);
+    if Packages.GetAppliedMode() = "BCSF Finance Mode"::Existing then begin
+      // Confirmed German BC standard: GIROKONTO is the domestic bank posting
+      // group. Do not pick the first bank group (BAR/BETRIEB/SPARKONTO).
+      GroupCode := 'GIROKONTO';
+      Group.Get(GroupCode);
+      Group.TestField("G/L Account No.", '1810');
+    end;
     if GroupCode = '' then begin
       if Group.Count() <> 1 then
         Error(SetupErr);
@@ -42,7 +49,10 @@ codeunit 90401 "BCSF Payment Processor"
     Group.Get(GroupCode);
     Account.Get(Group."G/L Account No.");
     Account.TestField(Blocked, false);
-    Account.TestField("Direct Posting", true);
+    if Packages.GetAppliedMode() <> "BCSF Finance Mode"::Existing then
+      Account.TestField("Direct Posting", true)
+    else
+      Account.TestField("Direct Posting", false);
     Account.TestField("Account Type", Account."Account Type"::Posting);
     Bank.SecurityFiltering(SecurityFilter::Disallowed);
     Bank.LockTable();
@@ -63,6 +73,7 @@ codeunit 90401 "BCSF Payment Processor"
     Group: Record "Bank Account Posting Group";
     JournalTemplate: Record "Gen. Journal Template";
     Batch: Record "Gen. Journal Batch";
+    Packages: Codeunit "BCSF Finance Package Mgt";
   begin
     if not Scenario."Payment Posting Approved" then
       exit;
@@ -72,6 +83,10 @@ codeunit 90401 "BCSF Payment Processor"
     Bank.Get('BCSF-PAY');
     Group.Get(Bank."Bank Acc. Posting Group");
     CheckBank(Bank, Group.Code, Group."G/L Account No.");
+    if Packages.GetAppliedMode() = "BCSF Finance Mode"::Existing then begin
+      // German standard journal; its source code is FIBUBUCHBL, not GENERAL.
+      JournalTemplate.Get('ALLGEMEIN');
+    end else
     if not JournalTemplate.Get('GENERAL') then begin
       JournalTemplate.SetRange(Type, JournalTemplate.Type::General);
       JournalTemplate.SetRange(Recurring, false);
@@ -143,6 +158,8 @@ codeunit 90401 "BCSF Payment Processor"
     Bank.TestField("No.", Contract.GetText(Settings, 'bankNo'));
     CheckBank(Bank, CopyStr(Contract.GetText(Settings, 'bankGroup'), 1, 20), CopyStr(Contract.GetText(Settings, 'bankGL'), 1, 20));
     JournalTemplate.Get(Contract.GetText(Settings, 'template'));
+    if Contract.GetText(Settings, 'bankGroup') = 'GIROKONTO' then
+      JournalTemplate.TestField(Name, 'ALLGEMEIN');
     JournalTemplate.TestField(Type, JournalTemplate.Type::General);
     JournalTemplate.TestField(Recurring, false);
     JournalTemplate.TestField("Source Code", Contract.GetText(Settings, 'sourceCode'));
@@ -162,6 +179,7 @@ codeunit 90401 "BCSF Payment Processor"
   var
     Group: Record "Bank Account Posting Group";
     Account: Record "G/L Account";
+    Packages: Codeunit "BCSF Finance Package Mgt";
   begin
     Bank.TestField("No.", 'BCSF-PAY');
     Bank.TestField(Blocked, false);
@@ -172,9 +190,20 @@ codeunit 90401 "BCSF Payment Processor"
     Bank.TestField("Bank Acc. Posting Group", GroupCode);
     Group.Get(GroupCode);
     Group.TestField("G/L Account No.", AccountNo);
+    if Packages.GetAppliedMode() = "BCSF Finance Mode"::Existing then begin
+      Bank.TestField("Bank Acc. Posting Group", 'GIROKONTO');
+      Group.TestField("G/L Account No.", '1810');
+    end;
     Account.Get(AccountNo);
     Account.TestField(Blocked, false);
-    Account.TestField("Direct Posting", true);
+    if Packages.GetAppliedMode() = "BCSF Finance Mode"::Existing then begin
+      // The confirmed German BC demo bank account 1810 is an indirect
+      // posting account: never enable direct posting to make payments work.
+      Group.TestField("G/L Account No.", '1810');
+      Account.TestField("Direct Posting", false);
+    end else
+      Account.TestField("Direct Posting", true);
+    Account.TestField("Account Type", Account."Account Type"::Posting);
   end;
 
   local procedure RequirePostingCodeunit()

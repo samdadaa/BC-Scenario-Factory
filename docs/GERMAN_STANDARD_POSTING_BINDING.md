@@ -12,3 +12,9 @@ Stand: 23.11.2026. Gilt ausschließlich für den aktuellen Initialisierungsmodus
 - Bereits generierte Stammdaten werden **nicht** nachträglich geändert. Neues Szenario nach erfolgreicher Initialisierung starten.
 
 Ausstehend: Individuelle Fremdmandanten mit anderen Kontenplänen/Buchungsgruppen bleiben als separate spätere Erweiterung offen. Es wurde kein nativer BC-/AL-Buildtest durchgeführt.
+
+## Zahlungsfolgeprozess (23.11.2026)
+
+Nur für `Existing` mit bestätigter deutscher BC-Standardeinrichtung: Der synthetische interne Bankdatensatz `BCSF-PAY` verwendet die **vorhandene** Bankkontobuchungsgruppe `GIROKONTO` mit Sachkonto `1810`. Das Sachkonto bleibt `Direktbuchung = Nein`; der Zahlungsprozess bucht ausschließlich über die BC-Standardbuchungsroutine. Für den unveränderlichen Zahlungssnapshot wird die vorhandene allgemeine Buchblattvorlage `ALLGEMEIN` mit Buchblattname `STANDARD` verwendet. Kein alphabetischer oder mehrdeutiger Gruppen-/Buchblatt-Fallback. Fehlende oder abweichende finanzielle Zuordnungen werden nicht überschrieben, sondern melden einen Fehler. Es erfolgt keine Bankübertragung. SKR03/SKR04 sowie alle Modi ohne Zahlung/Ausgleich sind von dieser punktuellen Anpassung nicht betroffen.
+
+Abnahme in der BC-Sandbox ausstehend: neuer Existing-Lauf im Zahlungs-/Ausgleichsmodus einschließlich Debitoren- und Kreditorenzahlungen, offenen/ausgeglichenen Posten, anschließend Regressionen für SKR03, SKR04 und Existing ohne Zahlungen.
