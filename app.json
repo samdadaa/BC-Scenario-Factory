@@ -1,15 +1,16 @@
+
 {
   "id": "618c08c6-601b-430a-90d2-55f96866bfa4",
   "name": "BC Scenario Factory",
-  "publisher": "Default Publisher",
+  "publisher": "Sam Da",
   "version": "1.0.11.1",
-  "brief": "",
-  "description": "",
+  "brief": "Generate realistic industry-specific test data and business scenarios in Microsoft Dynamics 365 Business Central.",
+  "description": "BC Scenario Factory is an automated test data and business scenario generator for Microsoft Dynamics 365 Business Central. The extension creates realistic, interconnected master data and business transactions for development, testing, training, demonstrations, and performance evaluation. Users select an industry profile and the required business modules, while the application automatically prepares the necessary setup, generates data, executes supported business processes, and monitors progress. Supported scenarios can include customers, vendors, items, inventory, purchasing, sales, finance, posted documents, payments, and ledger entries. An integrated dashboard provides an overview of generation progress, generated records, execution status, and validation results. The solution reduces manual configuration and enables consistent, repeatable test scenarios using standard Business Central functionality. Available modules and processes depend on the selected industry profile and installed extension version.",
   "privacyStatement": "",
   "EULA": "",
   "help": "",
   "url": "",
-  "logo": "",
+  "logo": "src/image/Logo.png",
   "dependencies": [],
   "screenshots": [],
   "platform": "1.0.0.0",
@@ -34,7 +35,7 @@
     {
       "id": "e8f7f5f2-7a86-4a19-9270-6c3cf9019019",
       "name": "BC Scenario Factory SF019 Tests",
-      "publisher": "Default Publisher"
+      "publisher": "Sam Da"
     }
   ]
 }
