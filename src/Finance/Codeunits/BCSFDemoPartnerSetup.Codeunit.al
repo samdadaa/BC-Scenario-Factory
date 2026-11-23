@@ -6,6 +6,7 @@ using BCScenarioFactory.ScenarioManagement;
 using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Finance.VAT.Setup;
 using Microsoft.Inventory.Item;
+using Microsoft.Assembly.Setup;
 using Microsoft.CRM.Setup;
 using Microsoft.Finance.GeneralLedger.Journal;
 using Microsoft.Finance.GeneralLedger.Setup;
@@ -39,6 +40,7 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Sales: Record "Sales & Receivables Setup";
     Purchases: Record "Purchases & Payables Setup";
     Inventory: Record "Inventory Setup";
+    AssemblySetup: Record "Assembly Setup";
     Location: Record Location;
     Marketing: Record "Marketing Setup";
     Country: Record "Country/Region";
@@ -124,7 +126,25 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Inventory.Init();
     Inventory."Item Nos." := 'ITEM';
     Fields.Add(Inventory.FieldNo("Item Nos."));
+    if Initializing then begin
+      Inventory."Transfer Order Nos." := 'TRANSFER-ORD';
+      Inventory."Posted Transfer Shpt. Nos." := 'TRANSFER-SHPT';
+      Inventory."Posted Transfer Rcpt. Nos." := 'TRANSFER-RCPT';
+      Fields.Add(Inventory.FieldNo("Transfer Order Nos."));
+      Fields.Add(Inventory.FieldNo("Posted Transfer Shpt. Nos."));
+      Fields.Add(Inventory.FieldNo("Posted Transfer Rcpt. Nos."));
+    end;
     SetupRow(Inventory, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
+    if Initializing then begin
+      Clear(Fields);
+      AssemblySetup.Init();
+      AssemblySetup."Assembly Order Nos." := 'ASM-ORD';
+      AssemblySetup."Posted Assembly Order Nos." := 'ASM-POST';
+      Fields.Add(AssemblySetup.FieldNo("Assembly Order Nos."));
+      Fields.Add(AssemblySetup.FieldNo("Posted Assembly Order Nos."));
+      SetupRow(AssemblySetup, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+    end;
     Inventory.SecurityFiltering(SecurityFilter::Disallowed);
     Location.SecurityFiltering(SecurityFilter::Disallowed);
     Location.SetRange("Use As In-Transit", false);
@@ -192,6 +212,16 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Fields.Add(SourceSetup.FieldNo(Sales));
     Fields.Add(SourceSetup.FieldNo(Purchases));
     Fields.Add(SourceSetup.FieldNo("General Journal"));
+    if Initializing then begin
+      SourceSetup."Item Journal" := 'ITEMJNL';
+      SourceSetup."Phys. Inventory Journal" := 'PHYSINVJNL';
+      SourceSetup.Transfer := 'TRANSFER';
+      SourceSetup.Assembly := 'ASSEMBLY';
+      Fields.Add(SourceSetup.FieldNo("Item Journal"));
+      Fields.Add(SourceSetup.FieldNo("Phys. Inventory Journal"));
+      Fields.Add(SourceSetup.FieldNo(Transfer));
+      Fields.Add(SourceSetup.FieldNo(Assembly));
+    end;
     SetupRow(SourceSetup, Fields, false, EffectiveDate, Write, AllowCreate, TempDiff);
     Clear(Fields);
     Journal.SetRange(Type, Journal.Type::General);

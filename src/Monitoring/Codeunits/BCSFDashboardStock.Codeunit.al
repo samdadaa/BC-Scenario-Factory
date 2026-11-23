@@ -4,6 +4,7 @@ using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.ScenarioManagement;
 using Microsoft.Assembly.Document;
+using Microsoft.Assembly.History;
 using Microsoft.Bank.BankAccount;
 using Microsoft.Bank.Ledger;
 using Microsoft.CRM.BusinessRelation;
@@ -20,6 +21,8 @@ using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Transfer;
+using Microsoft.Projects.Resources.Ledger;
 using Microsoft.Manufacturing.ProductionBOM;
 using Microsoft.Projects.Project.Job;
 using Microsoft.Purchases.Document;
@@ -58,6 +61,8 @@ codeunit 90369 "BCSF Dashboard Stock"
     AddGroup(Groups, 'master', MasterGroupLbl);
     AddGroup(Groups, 'sales', SalesGroupLbl);
     AddGroup(Groups, 'purchase', PurchaseGroupLbl);
+    AddGroup(Groups, 'inventory', InventoryGroupLbl);
+    AddGroup(Groups, 'assembly', AssemblyGroupLbl);
     AddGroup(Groups, 'entries', EntriesGroupLbl);
     AddGroup(Groups, 'finance', FinanceGroupLbl);
     AddGroup(Groups, 'warehouse', WarehouseGroupLbl);
@@ -114,6 +119,8 @@ codeunit 90369 "BCSF Dashboard Stock"
         Metrics.Add(Value);
     AddRunMetrics('sales', RunId, Metrics);
     AddRunMetrics('purchase', RunId, Metrics);
+    AddRunMetrics('inventory', RunId, Metrics);
+    AddRunMetrics('assembly', RunId, Metrics);
     AddRunMetrics('entries', RunId, Metrics);
     Result.Add('metrics', Metrics);
     exit(Result);
@@ -137,7 +144,7 @@ codeunit 90369 "BCSF Dashboard Stock"
       MetricKey := TextProperty(Metric, 'key');
       ShowZero := (Header."Process Mode" = "BCSF Process Mode"::FollowUpProcesses) and
         (GroupKey = 'entries') and (MetricKey in ['customerPayment', 'vendorPayment', 'bankEntry']);
-      if (GroupKey = 'entries') or (MetricKey in ['quote', 'order', 'invoice', 'postedShipment', 'postedReceipt', 'postedInvoice', 'credit', 'postedCredit']) then
+      if (GroupKey in ['entries', 'inventory', 'assembly']) or (MetricKey in ['quote', 'order', 'invoice', 'postedShipment', 'postedReceipt', 'postedInvoice', 'credit', 'postedCredit']) then
         if IncludeRunMetric(Metric, ShowZero) then begin
           Metric.Replace('key', GroupKey + '/' + MetricKey);
           Metrics.Add(Metric);
@@ -216,6 +223,8 @@ codeunit 90369 "BCSF Dashboard Stock"
     Entry: Record "BCSF Generated Record";
     CustomerEntry: Record "Cust. Ledger Entry";
     VendorEntry: Record "Vendor Ledger Entry";
+    ItemEntry: Record "Item Ledger Entry";
+    AssemblyItem: Record Item;
     FilterField: FieldRef;
     PageId: Integer;
   begin
@@ -255,6 +264,36 @@ codeunit 90369 "BCSF Dashboard Stock"
         begin
           FilterField := Rows.Field(VendorEntry.FieldNo("Document Type"));
           FilterField.SetRange(VendorEntry."Document Type"::Payment);
+        end;
+      'positiveAdjustment':
+        begin
+          FilterField := Rows.Field(ItemEntry.FieldNo("Entry Type"));
+          FilterField.SetRange(ItemEntry."Entry Type"::"Positive Adjmt.");
+        end;
+      'negativeAdjustment':
+        begin
+          FilterField := Rows.Field(ItemEntry.FieldNo("Entry Type"));
+          FilterField.SetRange(ItemEntry."Entry Type"::"Negative Adjmt.");
+        end;
+      'transferEntry':
+        begin
+          FilterField := Rows.Field(ItemEntry.FieldNo("Entry Type"));
+          FilterField.SetRange(ItemEntry."Entry Type"::Transfer);
+        end;
+      'assemblyConsumption':
+        begin
+          FilterField := Rows.Field(ItemEntry.FieldNo("Entry Type"));
+          FilterField.SetRange(ItemEntry."Entry Type"::"Assembly Consumption");
+        end;
+      'assemblyOutput':
+        begin
+          FilterField := Rows.Field(ItemEntry.FieldNo("Entry Type"));
+          FilterField.SetRange(ItemEntry."Entry Type"::"Assembly Output");
+        end;
+      'assemblyItem':
+        begin
+          FilterField := Rows.Field(AssemblyItem.FieldNo("Replenishment System"));
+          FilterField.SetRange(AssemblyItem."Replenishment System"::Assembly);
         end;
       'customerCredit':
         begin
@@ -453,6 +492,8 @@ codeunit 90369 "BCSF Dashboard Stock"
     PurchInvHeader: Record "Purch. Inv. Header";
     PurchCrMemoHdr: Record "Purch. Cr. Memo Hdr.";
     ReturnShipmentHeader: Record "Return Shipment Header";
+    TransferShipmentHeader: Record "Transfer Shipment Header";
+    TransferReceiptHeader: Record "Transfer Receipt Header";
     GLEntry: Record "G/L Entry";
     CustLedgerEntry: Record "Cust. Ledger Entry";
     VendorLedgerEntry: Record "Vendor Ledger Entry";
@@ -465,6 +506,8 @@ codeunit 90369 "BCSF Dashboard Stock"
     WarehouseEntry: Record "Warehouse Entry";
     ProductionBOMHeader: Record "Production BOM Header";
     AssemblyHeader: Record "Assembly Header";
+    PostedAssemblyHeader: Record "Posted Assembly Header";
+    ResLedgerEntry: Record "Res. Ledger Entry";
     Job: Record "Job";
     ServiceItem: Record "Service Item";
     FixedAsset: Record "Fixed Asset";
@@ -632,6 +675,16 @@ codeunit 90369 "BCSF Dashboard Stock"
           Rows.SetTable(ReturnShipmentHeader, false);
           Page.Run(PageId, ReturnShipmentHeader);
         end;
+      Database::"Transfer Shipment Header":
+        begin
+          Rows.SetTable(TransferShipmentHeader, false);
+          Page.Run(PageId, TransferShipmentHeader);
+        end;
+      Database::"Transfer Receipt Header":
+        begin
+          Rows.SetTable(TransferReceiptHeader, false);
+          Page.Run(PageId, TransferReceiptHeader);
+        end;
       Database::"G/L Entry":
         begin
           Rows.SetTable(GLEntry, false);
@@ -691,6 +744,16 @@ codeunit 90369 "BCSF Dashboard Stock"
         begin
           Rows.SetTable(AssemblyHeader, false);
           Page.Run(PageId, AssemblyHeader);
+        end;
+      Database::"Posted Assembly Header":
+        begin
+          Rows.SetTable(PostedAssemblyHeader, false);
+          Page.Run(PageId, PostedAssemblyHeader);
+        end;
+      Database::"Res. Ledger Entry":
+        begin
+          Rows.SetTable(ResLedgerEntry, false);
+          Page.Run(PageId, ResLedgerEntry);
         end;
       Database::"Job":
         begin
@@ -776,6 +839,24 @@ codeunit 90369 "BCSF Dashboard Stock"
           AddMetric(Catalog, 'postedInvoice', Database::"Purch. Inv. Header", Page::"Posted Purchase Invoices", true, PurchasePostedInvoiceLbl);
           AddMetric(Catalog, 'postedCredit', Database::"Purch. Cr. Memo Hdr.", Page::"Posted Purchase Credit Memos", true, PurchasePostedCreditLbl);
           AddMetric(Catalog, 'postedReturn', Database::"Return Shipment Header", Page::"Posted Return Shipments", false, PurchasePostedReturnLbl);
+        end;
+      'inventory':
+        begin
+          AddMetric(Catalog, 'positiveAdjustment', Database::"Item Ledger Entry", Page::"Item Ledger Entries", true, PositiveAdjustmentsLbl);
+          AddMetric(Catalog, 'negativeAdjustment', Database::"Item Ledger Entry", Page::"Item Ledger Entries", true, NegativeAdjustmentsLbl);
+          AddMetric(Catalog, 'transferEntry', Database::"Item Ledger Entry", Page::"Item Ledger Entries", true, TransferEntriesLbl);
+          AddMetric(Catalog, 'transferShipment', Database::"Transfer Shipment Header", Page::"Posted Transfer Shipments", true, TransferShipmentsLbl);
+          AddMetric(Catalog, 'transferReceipt', Database::"Transfer Receipt Header", Page::"Posted Transfer Receipts", true, TransferReceiptsLbl);
+          AddMetric(Catalog, 'location', Database::"Location", Page::"Location List", false, '');
+        end;
+      'assembly':
+        begin
+          AddMetric(Catalog, 'assemblyItem', Database::"Item", Page::"Item List", true, AssemblyItemsLbl);
+          AddMetric(Catalog, 'assemblyOrder', Database::"Assembly Header", Page::"Assembly Orders", true, AssemblyOrdersLbl);
+          AddMetric(Catalog, 'postedAssembly', Database::"Posted Assembly Header", Page::"Posted Assembly Orders", true, PostedAssemblyLbl);
+          AddMetric(Catalog, 'assemblyConsumption', Database::"Item Ledger Entry", Page::"Item Ledger Entries", true, AssemblyConsumptionLbl);
+          AddMetric(Catalog, 'assemblyOutput', Database::"Item Ledger Entry", Page::"Item Ledger Entries", true, AssemblyOutputLbl);
+          AddMetric(Catalog, 'resourceEntry', Database::"Res. Ledger Entry", Page::"Resource Ledger Entries", true, '');
         end;
       'entries':
         begin
@@ -891,6 +972,18 @@ codeunit 90369 "BCSF Dashboard Stock"
     SalesGroupLbl: Label 'Sales';
     CustomerPaymentsLbl: Label 'Customer payments';
     VendorPaymentsLbl: Label 'Vendor payments';
+    InventoryGroupLbl: Label 'Stock movements';
+    AssemblyGroupLbl: Label 'Assembly';
+    PositiveAdjustmentsLbl: Label 'Positive adjustments';
+    NegativeAdjustmentsLbl: Label 'Negative adjustments';
+    TransferEntriesLbl: Label 'Transfer entries';
+    AssemblyItemsLbl: Label 'Assembly items';
+    AssemblyConsumptionLbl: Label 'Assembly consumption';
+    AssemblyOutputLbl: Label 'Assembly output';
+    AssemblyOrdersLbl: Label 'Open assembly orders';
+    PostedAssemblyLbl: Label 'Posted assembly orders';
+    TransferShipmentsLbl: Label 'Posted transfer shipments';
+    TransferReceiptsLbl: Label 'Posted transfer receipts';
     CustomerCreditsLbl: Label 'Customer credit memo entries';
     VendorCreditsLbl: Label 'Vendor credit memo entries';
     PurchaseGroupLbl: Label 'Purchasing';

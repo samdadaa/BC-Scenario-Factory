@@ -9,7 +9,7 @@
   let pollTimer;
   let polling = false;
   let queuedAction;
-  const refreshInterval = 2000;
+  const refreshInterval = 1000;
   const listen = (element, event, handler) => {
     element.sfHandlers = element.sfHandlers || {};
     element.sfHandlers[event] = handler;
@@ -271,7 +271,7 @@
       group.setAttribute("aria-pressed", String(stock.group === entry.key));
       group.disabled = busy;
       listen(group, "click", () => request("stockGroup", entry.key));
-      (index < 4 ? topGroups : extraGroups).appendChild(group);
+      (index < 6 ? topGroups : extraGroups).appendChild(group);
     });
     const extra = node("details", "sf-stock-extra");
     extra.appendChild(node("summary", "sf-section-label", text("stockMore")));
@@ -342,48 +342,112 @@
     if (run.postingSkips) section.appendChild(node("p", "sf-warning", run.postingSkips));
     return section;
   }
+  // Every business module is one large card. The existing step and result tiles stay unchanged and are embedded.
+  const moduleDefinitions = [
+    { id: "master", title: "moduleMaster", entities: ["CUSTOMER", "VENDOR", "ITEM"], match: key => !key.includes("/") },
+    { id: "sales", title: "moduleSales", entities: ["SALES.QUOTE", "SALES.ORDER", "SALES.INVOICE"],
+      match: key => key.startsWith("sales/") || ["entries/customerEntry", "entries/customerPayment", "entries/customerCredit"].includes(key) },
+    { id: "purchase", title: "modulePurchase", entities: ["PURCHASE.ORDER"],
+      match: key => key.startsWith("purchase/") || ["entries/vendorEntry", "entries/vendorPayment", "entries/vendorCredit"].includes(key) },
+    { id: "inventory", title: "moduleInventory", entities: [],
+      match: key => key.startsWith("inventory/") || ["entries/itemEntry", "entries/valueEntry"].includes(key) },
+    { id: "assembly", title: "moduleAssembly", entities: [], match: key => key.startsWith("assembly/") },
+    { id: "finance", title: "moduleFinance", entities: [], match: key => key.startsWith("entries/") },
+    { id: "other", title: "moduleOther", entities: [], match: () => true }
+  ];
+  const stepResultKey = entityCode => ({ "CUSTOMER": "customer", "VENDOR": "vendor", "ITEM": "item", "SALES.QUOTE": "sales/quote",
+    "SALES.ORDER": "sales/order", "SALES.INVOICE": "sales/invoice", "PURCHASE.ORDER": "purchase/order" })[entityCode] || "";
+  function stepCard(step, results, matched) {
+    const key = stepResultKey(step.entityCode);
+    const metric = results.find(item => item.key === key);
+    // Posted document chains legitimately reduce the number of open
+    // documents. Opening the surviving records must not require a count
+    // equal to the number of confirmed generation units.
+    const safe = metric?.canOpen && metric.count > 0;
+    if (metric && metric.count > 0) matched.add(key);
+    const card = node(safe ? "button" : "div", "sf-tile sf-step");
+    card.dataset.renderKey = "step:" + step.entityCode;
+    append(card, node("span", "sf-stock-label", localized(step.entity)),
+      node("strong", "sf-step-value", number(step.confirmed) + " / " + number(step.target)),
+      node("span", "sf-help", text("created") + " / " + text("target") + " · " + text("remaining") + " " + number(step.remaining)),
+      node("span", "sf-step-state", step.complete ? text("completed") : localized(step.state)));
+    if (step.skipped > 0)
+      card.appendChild(node("span", "sf-warning", text("skippedUnits") + " · " + number(step.skipped)));
+    if (step.reviewUnits > 0)
+      card.appendChild(node("span", "sf-warning", text("reviewUnits") + " · " + number(step.reviewUnits)));
+    if (safe && metric.count !== step.confirmed)
+      card.appendChild(node("span", "sf-help", text("stockOpen") + " · " + number(metric.count)));
+    if (safe) {
+      card.type = "button";
+      card.dataset.stockFocus = "result:" + key;
+      card.title = text("stockOpen");
+      card.disabled = busy;
+      listen(card, "click", () => request("runOpen", key));
+    }
+    return card;
+  }
+  function moduleState(steps, allStepsDone, finished) {
+    if (steps.some(step => step.reviewUnits > 0)) return "review";
+    if (steps.length) return steps.every(step => step.complete) ? "done" : "open";
+    // Modules fed by the purchase flow or the whole run finish together with it.
+    return allStepsDone && finished ? "done" : "open";
+  }
+  function moduleCard(definition, steps, tiles, state) {
+    const card = node("section", "sf-module sf-module-" + state + " sf-mod-" + definition.id);
+    card.dataset.renderKey = "module:" + definition.id;
+    const stateKey = state === "done" ? "moduleDone" : state === "review" ? "moduleReview" : "moduleOpen";
+    const title = text(definition.title);
+    const label = text(stateKey);
+    card.setAttribute("aria-label", [title, label].join(" · "));
+    const head = node("header", "sf-module-head");
+    const badge = node("span", "sf-module-state");
+    append(badge, node("span", "sf-module-dot"), node("span", "", label));
+    append(head, node("h4", "sf-module-title", title), badge);
+    card.appendChild(head);
+    const target = steps.reduce((sum, step) => sum + (step.target || 0), 0);
+    if (steps.length && target > 0) {
+      const confirmed = steps.reduce((sum, step) => sum + Math.min(step.confirmed || 0, step.target || 0), 0);
+      const meter = node("div", "sf-module-meter");
+      meter.setAttribute("role", "progressbar");
+      meter.setAttribute("aria-valuemin", "0");
+      meter.setAttribute("aria-valuemax", String(target));
+      meter.setAttribute("aria-valuenow", String(confirmed));
+      const bar = node("span", "sf-module-bar");
+      bar.style.width = Math.round(100 * confirmed / target) + "%";
+      meter.appendChild(bar);
+      card.appendChild(meter);
+    }
+    const grid = node("div", "sf-tile-grid sf-module-grid");
+    tiles.forEach(tile => grid.appendChild(tile));
+    card.appendChild(grid);
+    return card;
+  }
   function stepPanel(view = model) {
     const section = node("section", "sf-steps");
     append(section, node("h3", "", text(view.companyProgress ? "companyProgress" : "steps")),
       node("p", "sf-scope", text("selectedRunScope") + " · " + view.selected.description));
     if (!view.steps.length) return append(section, node("p", "sf-help", text("noSteps")));
-    const grid = node("div", "sf-tile-grid");
     const results = view.runStock?.metrics || [];
     const matched = new Set();
-    view.steps.filter(step => !step.external).forEach(step => {
-      const key = step.entityCode === "CUSTOMER" ? "customer" : step.entityCode === "VENDOR" ? "vendor" : step.entityCode === "ITEM" ? "item" : step.entityCode === "SALES.QUOTE" ? "sales/quote" : step.entityCode === "SALES.ORDER" ? "sales/order" : step.entityCode === "SALES.INVOICE" ? "sales/invoice" : step.entityCode === "PURCHASE.ORDER" ? "purchase/order" : "";
-      const metric = results.find(item => item.key === key);
-      // Posted document chains legitimately reduce the number of open
-      // documents. Opening the surviving records must not require a count
-      // equal to the number of confirmed generation units.
-      const safe = metric?.canOpen && metric.count > 0;
-      if (metric && metric.count > 0) matched.add(key);
-      const card = node(safe ? "button" : "div", "sf-tile sf-step");
-      card.dataset.renderKey = "step:" + step.entityCode;
-      append(card, node("span", "sf-stock-label", localized(step.entity)),
-        node("strong", "sf-step-value", number(step.confirmed) + " / " + number(step.target)),
-        node("span", "sf-help", text("created") + " / " + text("target") + " · " + text("remaining") + " " + number(step.remaining)),
-        node("span", "sf-step-state", step.complete ? text("completed") : localized(step.state)));
-      if (step.skipped > 0)
-        card.appendChild(node("span", "sf-warning", text("skippedUnits") + " · " + number(step.skipped)));
-      if (step.reviewUnits > 0)
-        card.appendChild(node("span", "sf-warning", text("reviewUnits") + " · " + number(step.reviewUnits)));
-      if (safe && metric.count !== step.confirmed)
-        card.appendChild(node("span", "sf-help", text("stockOpen") + " · " + number(metric.count)));
-      if (safe) {
-        card.type = "button";
-        card.dataset.stockFocus = "result:" + key;
-        card.title = text("stockOpen");
-        card.disabled = busy;
-        listen(card, "click", () => request("runOpen", key));
-      }
-      grid.appendChild(card);
+    const ownSteps = view.steps.filter(step => !step.external);
+    const allStepsDone = ownSteps.length > 0 && ownSteps.every(step => step.complete);
+    const finished = view.selected.statusCode === undefined || [9, 10].includes(view.selected.statusCode);
+    const claimed = new Set();
+    const container = node("div", "sf-modules");
+    moduleDefinitions.forEach(definition => {
+      const steps = ownSteps.filter(step => definition.entities.includes(step.entityCode));
+      const tiles = steps.map(step => stepCard(step, results, matched));
+      // A metric belongs to the first module that claims it; matched step results are not repeated.
+      results.forEach(metric => {
+        if (claimed.has(metric.key) || matched.has(metric.key) || !definition.match(metric.key)) return;
+        if (!(metric.count >= 0 || (!Number.isSafeInteger(metric.count) && !metric.noGenerator))) return;
+        claimed.add(metric.key);
+        tiles.push(metricTile(metric, "runOpen"));
+      });
+      if (!tiles.length) return;
+      container.appendChild(moduleCard(definition, steps, tiles, moduleState(steps, allStepsDone, finished)));
     });
-    // Live result counts are separate from confirmed work. Never relabel artifact totals as addresses.
-    results.filter(metric => !matched.has(metric.key) &&
-      (metric.count >= 0 || (!Number.isSafeInteger(metric.count) && !metric.noGenerator)))
-      .forEach(metric => grid.appendChild(metricTile(metric, "runOpen")));
-    section.appendChild(grid);
+    section.appendChild(container);
     return section;
   }
   function actionPanel() {
@@ -494,7 +558,7 @@
     if (unavailable) unavailable.open = unavailableOpen;
     const extraStock = root.querySelector(".sf-stock-extra");
     if (extraStock) extraStock.open = extraStockOpen ||
-      model.stock.groups.slice(4).some(group => group.key === model.stock.group);
+      model.stock.groups.slice(6).some(group => group.key === model.stock.group);
     setBusy(busy);
     if (focused) {
       const target = Array.from(root.querySelectorAll("button[data-action]")).find(element => element.dataset.action === focused);

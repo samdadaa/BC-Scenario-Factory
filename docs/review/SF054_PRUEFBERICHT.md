@@ -1,0 +1,30 @@
+# SF-054 – Assembly: Montage-Stammdaten und Montageaufträge
+
+**23.11.2026 · App-Version unverändert (1.0.12.0) · Zur Prüfung.** Ausdrücklich beauftragt: SF-054 vollständig (XERJ-Index `bcsf-docs` genutzt). Kein Commit, kein Deployment. **Nicht kompiliert** (AL-Compiler der installierten Extension braucht .NET 10, vorhanden 8.0.8), keine AL-Testausführung, keine native Sandbox.
+
+## Umsetzung
+Kein neuer Entitätsgenerator: Der vorhandene Einkaufsgenerator erzeugt in der **Folgeprozess-Stufe** (nach Zahlung, Gutschrift und Lagerbewegungs-Planung; gleicher Plan wie SF-053) in 13 % der gebuchten Einkaufsrechnungen eine **Montage** (neue Codeunit `BCSF Assembly Processor` 90483, Namespace `BCScenarioFactory.Assembly`):
+
+1. **Stammdaten:** neuer synthetischer Montageartikel (Nummernserie der Artikel, Posten-/MwSt.-/Lagerbuchungsgruppen und Basiseinheit der ersten Komponente, Kostenmethode FIFO, Wiederbeschaffung *Montage*, Montagerichtlinie *Auf Lager montieren*, Stückkosten aus der Stückliste, Verkaufspreis +35 %), **Montagestückliste** aus den ersten ein bis zwei Artikelzeilen der Rechnung (verschiedene Artikel, Menge je 1, Basiseinheit) und – wenn verfügbar – einer Ressourcenzeile (`BCSF-MONT`, 1 Stunde je Einheit). Artikel und Stücklistenzeilen sind in der Herkunft registriert (`ASSEMBLY-ITEM`, `ASSEMBLY-BOM-n`).
+2. **Montageauftrag** über Standard-Dokument: Menge = kleinste Einheitenmenge der Komponentenzeilen (1–3, höchstens die Hälfte der geplanten Bestandsreserve wie SF-053), Datum zwischen Rechnungsdatum und Periodenende. Aufteilung per Seed: ⅓ **ungebuchter** Auftrag (`ASSEMBLY-ORDER`), ⅓ **vollständig gebucht**, ⅓ **teilweise gebucht** (Fertigstellungsgrad ≈ 50 %, offener Rest bleibt als ungebuchter Auftrag; ab 2 Einheiten, sonst voll). Buchung über Standard `Assembly-Post` (Commit unterdrückt) nach Freigabe.
+3. **Nachweis:** gebuchter Montageauftrag (`ASSEMBLY-POSTED`), Artikelposten für Verbrauch/Output, Wertposten, Sachposten, Ressourcenposten. Die Ausgabevalidierung prüft Artikel, Stückliste, Auftragsstand (Menge, Montiert/Rest), Output = gebuchte Menge, Verbrauch je Komponente = −gebuchte Menge und Bestand je Lagerort bis zum Datum nicht negativ.
+
+**Vorprüfung ohne Schreibzugriff, kontrollierter Skip:** `SOURCE` bei fehlender Artikel-Nummernserie, gesperrter oder nicht lagergeführter Komponente, Chargen-/Seriennummernpflicht, **Artikelvarianten** (keine Variantenmontage, keine automatische Alternativkomponente) oder nicht nutzbarer Buchungsmatrix (Konten fehlen); `STOCK` bei knappem oder reserviertem freiem Bestand (nur gebuchte Aufträge); `DIMENSION` bei unzulässiger Dimensionskombination von Auftrag oder Zeilen (der noch ungebuchte Auftrag wird dann gelöscht). Der Skip steht als `MOVEMENT-SKIP` an der Rechnung (vorhandene Warnung „Buchung übersprungen“). Ein Fehlbestand erzeugt keine Beschaffung.
+
+## Foundation (additiv) und Featureverfügbarkeit
+In der Folgeprozess-Stufe (und über die vorhandene Foundation) werden fehlende technische Zeilen ergänzt, vorhandene nie überschrieben: Montageeinrichtung (Nummernserien `ASM-ORD`/`ASM-POST`), Herkunftscodes `ITEMJNL`, `PHYSINVJNL`, `TRANSFER`, `ASSEMBLY` und Umlagerungs-Nummernserien (damit auch SF-053 in frischen Firmen läuft), **Buchungsmatrixzeilen ohne Geschäftsbuchungsgruppe** je verwendeter Artikel-Produktbuchungsgruppe (Kopie einer bereits nutzbaren Zeile derselben Produktgruppe; keine erfundenen Konten) sowie die Ressource `BCSF-MONT` (nur wenn Einheit `STD` und eine nutzbare Matrix existieren). Die Montage wird nur geplant, wenn bei der Erfassung Montageeinrichtung, beide Nummernserien, Herkunftscode, Artikelnummernserie und automatische Kostenbuchung brauchbar sind (`paymentSetup.assemblyVersion = 1`); sonst bleibt sie für diesen Lauf aus. Die Ressourcenzeile gibt es nur bei `assemblyResource = true`. Gebaut gegen BC 28.5 / Runtime 17.
+
+## Dashboard und Querschnitt
+Neue Ergebniskacheln **Offene Montageaufträge** und **Gebuchte Montageaufträge**; Montageartikel erscheinen in der Artikelkachel, Artikel-/Wert-/Sachposten in den vorhandenen Ergebniskacheln. Workflow: kein neuer Schritt (Folgeprozess-Stufe der Großhandelsvorlage und gleich erfasste Starter). Stammdaten/Einrichtung: siehe Foundation. Übersetzungen: fünf neue Texte in `Translations/sf054.de.json` (Sync nach erstem Build: `python3 Translations/sync_sf_translations.py`, `python3 scripts/build_dashboard_translations.py`, danach neu bauen).
+
+## Prüfung auf unzulässige Daten (nach erstem Lauf)
+Alle von SF-054 gesetzten Werte wurden gegen Feldlängen und Voraussetzungen der Standardtabellen geprüft: Herkunftscode `ASSEMBLY` (`Code[10]`), Nummernserien `ASM-ORD`/`ASM-POST` (`Code[20]`), Ressource `BCSF-MONT`, Montageartikel mit Beschreibung ≤ 100 Zeichen, Stücklisteneinheit gleich Basiseinheit der Komponente. Das Transitlager aus SF-053 heißt jetzt `BCSF-TRN` (Lagerortcode höchstens 10 Zeichen).
+
+## Dashboard (Korrektur)
+Die Kacheln stehen jetzt in den eigenen Datengruppen **Lagerbewegungen** bzw. **Montage** und im Laufergebnis als Modulkarte (siehe [DASHBOARD_DATA_STOCK.md](../DASHBOARD_DATA_STOCK.md#modulkacheln-im-laufergebnis-23112026)). Kacheln erscheinen nur bei vorhandenen Datensätzen aus dem Lauf.
+
+## Abgrenzung (andere Tickets)
+Manufacturing/Produktionsaufträge (SF-029), Lagerplätze/WMS (SF-028), Assemble-to-Order mit Verkaufszeile, Montage mit Varianten oder mehreren Stücklistenstufen.
+
+## Native Prüffälle
+A01 Folgeprozesslauf klein/mittel: Montageartikel mit Stückliste (+ Ressource), ungebuchter, voll und teilgebuchter Auftrag; Komponentenverbrauch, Output und Posten je Lagerort. A02 Frische SKR03/SKR04-Firma: Foundation legt Montageeinrichtung, Herkunftscodes und Matrixzeilen an. A03 Existing-Firma ohne Montageeinrichtung/Berechtigung: keine Montage, kein Abbruch. A04 Variantenartikel/gesperrte Komponente/knapper Bestand: Skip `SOURCE`/`STOCK` mit Warnung. A05 Wiederanlauf ohne Doppelbuchung. A06 Verkaufsbestand bleibt gedeckt (keine neuen STOCK-Skips). A07 Dashboard-Kacheln und Drilldowns, DE/EN. A08 Rechte nur Factory-Rolle.

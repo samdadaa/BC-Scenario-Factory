@@ -101,6 +101,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Numbers: Codeunit "No. Series";
     Payments: Codeunit "BCSF Payment Processor";
     Credits: Codeunit "BCSF Credit Memo Processor";
+    Movements: Codeunit "BCSFInventoryMovementProcessor";
     Guard: Codeunit "BCSF Environment Guard";
     Source: Codeunit "BCSF Master Data Source";
     Token: JsonToken;
@@ -167,6 +168,10 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
         if Credits.Enabled(Context) then begin
           Credits.CheckSetup(false);
           Guard.EnsurePostingTableAccess(Database::"Purch. Cr. Memo Hdr.", false);
+        end;
+        if Movements.Enabled(Context) then begin
+          Guard.EnsurePostingTableAccess(Database::"Item Ledger Entry", false);
+          Guard.EnsurePostingTableAccess(Database::"Value Entry", false);
         end;
       end;
     end;
@@ -389,6 +394,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Evidence: Codeunit "BCSF Purchase Evidence";
     Payments: Codeunit "BCSF Payment Processor";
     Credits: Codeunit "BCSF Credit Memo Processor";
+    Movements: Codeunit "BCSFInventoryMovementProcessor";
     PurchasePost: Codeunit "Purch.-Post";
     Token: JsonToken;
     NoParent: Guid;
@@ -507,6 +513,9 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
       // Optional follow-up of the same stage: unposted or posted credit memo for this invoice.
       if Credits.Enabled(Context) then
         Credits.CreateForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, BatchId, Invoice, ParentId);
+      // Optional stock movement of the same stage: adjustment, physical inventory difference or transfer.
+      if Movements.Enabled(Context) then
+        Movements.CreateForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, BatchId, Invoice, ParentId);
     end;
   end;
 
@@ -526,6 +535,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Registry: Codeunit "BCSF Record Registry";
     Payments: Codeunit "BCSF Payment Processor";
     Credits: Codeunit "BCSF Credit Memo Processor";
+    Movements: Codeunit "BCSFInventoryMovementProcessor";
     RunId: Guid;
     BatchId: Guid;
     LogicalKey: Integer;
@@ -592,6 +602,8 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
           Payments.ValidatePayment(RunId, 'PURCHASE.ORDER', LogicalKey, Invoice."Vendor Ledger Entry No.", false);
           if Credits.Enabled(Context) then
             Credits.ValidateForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, Invoice);
+          if Movements.Enabled(Context) then
+            Movements.ValidateForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, Invoice);
         end;
       end;
       if Mode <> 1 then begin

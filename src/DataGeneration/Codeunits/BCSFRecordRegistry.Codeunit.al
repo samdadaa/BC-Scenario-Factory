@@ -2,14 +2,19 @@ namespace BCScenarioFactory.DataGeneration;
 
 using BCScenarioFactory.ScenarioManagement;
 using Microsoft.Bank.Ledger;
+using Microsoft.Assembly.Document;
+using Microsoft.Assembly.History;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Finance.VAT.Ledger;
+using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Transfer;
+using Microsoft.Projects.Resources.Ledger;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
 using Microsoft.Purchases.Payables;
@@ -126,9 +131,13 @@ codeunit 90252 "BCSF Record Registry"
     if Entry."Posting Skipped" <> (Entry."Skip Reason Code" <> '') then
       Error(TargetErr);
     if Entry."Posting Skipped" then
-      if (Entry."Skip Reason Code" <> 'STOCK') or (Entry."Artifact Code" <> 'DOCUMENT') or
-        (Entry."Table Id" <> Database::"Sales Header") or
-        not (Entry."Node Code" in ['SALES.ORDER', 'SALES.INVOICE']) then
+      // Two documented skip forms: a retained unposted sales document (STOCK) and a stock movement
+      // that was rejected by read-only preflight before any posting (STOCK or DIMENSION).
+      if not (((Entry."Skip Reason Code" = 'STOCK') and (Entry."Artifact Code" = 'DOCUMENT') and
+        (Entry."Table Id" = Database::"Sales Header") and (Entry."Node Code" in ['SALES.ORDER', 'SALES.INVOICE'])) or
+        ((Entry."Skip Reason Code" in ['STOCK', 'DIMENSION']) and (Entry."Artifact Code" = 'MOVEMENT-SKIP') and
+        (Entry."Table Id" = Database::"Purch. Inv. Header") and (Entry."Node Code" = 'PURCHASE.ORDER')))
+      then
         Error(TargetErr);
     OnCheckBatch(Entry);
   end;
@@ -157,6 +166,8 @@ codeunit 90252 "BCSF Record Registry"
       Database::"Item Reference", Database::"Item Vendor", Database::"Item Substitution",
       Database::"Stockkeeping Unit", Database::Bin, Database::"Bin Content", Database::"Ship-to Address", Database::"Order Address",
       Database::"Customer Bank Account", Database::"Vendor Bank Account",
+      Database::"Transfer Shipment Header", Database::"Transfer Receipt Header",
+      Database::"Assembly Header", Database::"Posted Assembly Header", Database::"BOM Component", Database::"Res. Ledger Entry",
       Database::"Sales Header", Database::"Purchase Header", Database::"Sales Invoice Header",
       Database::"Sales Cr.Memo Header", Database::"Sales Shipment Header", Database::"Purch. Inv. Header",
       Database::"Purch. Cr. Memo Hdr.", Database::"Purch. Rcpt. Header", Database::"Cust. Ledger Entry",

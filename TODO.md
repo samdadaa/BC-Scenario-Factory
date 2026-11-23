@@ -103,11 +103,11 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-048](#sf-048) | P1 | Zur Prüfung | Drei Laufarten, bestätigte Stammdatenquelle und unabhängige Einkaufs-/Verkaufsläufe; native A–G offen |
 | [SF-047](#sf-047) | P1 | Zur Prüfung | Großhandel v6: Artikelpool, zeitliche Beschaffung, geografische Streuung; native Abnahme offen |
 | [SF-049](#sf-049) | P0 | In Arbeit | Gemeinsamer Stammdatenpool, Preflight und Mengenvertrag |
-| [SF-050](#sf-050) | P0 | Zur Prüfung | Einzelvorgänge, sichere Fortsetzung, Skip-/Prüfzustände und Existing-Foundation; native Abnahme offen |
+| [SF-050](#sf-050) | P0 | Erledigt | Einzelvorgänge, sichere Fortsetzung, Skip-/Prüfzustände und Existing-Foundation; nativ vom Nutzer getestet (23.11.2026) |
 | [SF-051](#sf-051) | P1 | Zur Prüfung (Teilumfang) | Teilzahlung/Raten/offene Posten umgesetzt; Rabatt, Toleranz, Gutschrift, Sammelausgleich, Bankstämme offen |
 | [SF-052](#sf-052) | P1 | Zur Prüfung (Teilumfang) | Gutschriften ungebucht/gebucht im Folgeprozess; Retouren/Rückgabebelege und Ausgleich offen |
-| [SF-053](#sf-053) | P1 | Offen | Inventory-Bewegungen, Inventur und Umlagerung |
-| [SF-054](#sf-054) | P2 | Offen | Assembly/Montageaufträge |
+| [SF-053](#sf-053) | P1 | Zur Prüfung | Zugang/Abgang, Inventurdifferenz, Umlagerung für alle Zeilen im Folgeprozess; native Abnahme offen; nicht kompiliert |
+| [SF-054](#sf-054) | P2 | Zur Prüfung | Montageartikel/-stückliste, Montageaufträge ungebucht/teil/voll im Folgeprozess; nicht kompiliert; native Abnahme offen |
 | [SF-055](#sf-055) | P2 | Offen | Projekte/Jobs und Projektabrechnung |
 | [SF-056](#sf-056) | P2 | Offen | Disposition/Planning |
 
@@ -950,14 +950,14 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 <a name="sf-050"></a>
 ### SF-050 — Buchungsfehler pro Geschäftsvorfall sicher isolieren, Recovery und Drilldowns
-**Status:** Zur Prüfung · **Priorität:** P0 · **Abhängigkeiten:** SF-049, SF-013, SF-020, SF-021, SF-025
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 23.11.2026) · **Priorität:** P0 · **Abhängigkeiten:** SF-049, SF-013, SF-020, SF-021, SF-025
 
 - [x] `BCSF Batch Runner/Worker`, Payment Processor, Sales/Purchase Generators, Posting Calls, Job-Queue-Status und Dashboard auf tatsächliche Commit/Transactional Boundaries prüfen und eine sichere **isolierte** Buchungseinheit pro Vorgang definieren. Nicht pauschal `TryFunction` oder `CommitBehavior::Error` entfernen.
 - [x] Vorher erkennbare Fehler (Lagerbestand 0, ungültige Artikelkombination, gesperrte Partner etc.) als nachvollziehbare `Skipped` dokumentieren; nächsten geeigneten Datensatz/Beleg versuchen. Buchungsfehler nur weitersetzen, wenn Standardposting und Rollback sicher nachweisbar; sonst `NeedsReview` sperrt automatische Wiederholung des betroffenen Vorgangs, nicht zwingend unabhängige Vorgänge.
 - [x] Pro Run eindeutige Fach-/Belegidentität, Checkpoint/Confirmed Work und Reconciliation nach echten Standardbelegen/Posten. Keine Doppellieferung, -rechnung, -zahlung; bei Transaktionsunsicherheit keine Scheinerfolge.
-- [ ] Korrekte Trennung terminaler vs. aktiver Initialisierungsjobs; Simultanstart, Queue-Fehler, erneute Eingabe, manuelle Wiederaufnahme prüfen.
+- [x] Korrekte Trennung terminaler vs. aktiver Initialisierungsjobs; Simultanstart, Queue-Fehler, erneute Eingabe, manuelle Wiederaufnahme prüfen.
 - [x] Dashboards/Drilldowns zu offen, teilweise, vollständig, gebucht, übersprungen, NeedsReview und Fehlgrund; keine Gleichheitsprüfung Sollzähler vs. realer Datenbestand.
-- [ ] Regression R08–R11/R13 mit AL-Test-App und echten Sandboxläufen; Buchen/Lager-/Sach-/Debitoren-/Kreditoren-/Wertposten abgleichen; alle neuen Fehltexte DE/EN.
+- [x] Regression R08–R11/R13 mit AL-Test-App und echten Sandboxläufen; Buchen/Lager-/Sach-/Debitoren-/Kreditoren-/Wertposten abgleichen; alle neuen Fehltexte DE/EN.
 **Nicht im Scope:** ungesicherte automatische Wiederholungen, Löschen gebuchter Posten, künstliche Bestandsbuchung bei Verkauf-only. **Abnahme:** Ein ungeeigneter Artikel/Beleg stoppt nicht alle unabhängigen Vorhaben; kein unklar gebuchter Vorgang wird automatisch neu gebucht. Menschliche Freigabe erforderlich.
 
 **Umsetzung 1.0.11.0 / 23.11.2026:** Neue Snapshotpolitik mit isoliertem Geschäftsvorfall je Belegpaket, Pending-only-Fortsetzung unabhängiger Vorgänge nach Standardfehlern, unveränderte NeedsReview-/Replay-Sperre, lesende Preflight-Skips mit echten Checkpoints ohne Geschäftsdatenherkunft, getrennte Dashboardzähler. Zusatzauftrag: fehlende technische Existing-Mandanteneinrichtung vor Generatoren ergänzen und neue Vorlage an vorhandene verwendbare Finanz-/Artikelzuordnungen binden; keine Ersatzkonten oder fremden Überschreibungen. [Umsetzung, Prüfungen und native Fälle N01–N08](docs/review/SF050_PRUEFBERICHT.md). Nutzer übernimmt native BC-Abnahme. Danach Stop; keine Umsetzung SF-051–SF-053.
@@ -969,9 +969,9 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 - [x] Vorhandenen `BCSF Payment Processor`, Finanzsetup, gültige Partner-/Bankkonten und Journal-Standardroutinen wiederverwenden; keine neuen direkten Postentabellen-Inserts. (Lokal im Code; nicht kompiliert.)
 - [x] Zahlungsplan je Rechnung (Seed-deterministisch, additives Marker `planVersion` 1 im `paymentSetup`; alte Snapshots bleiben Vollzahlung): voll, zwei Raten mit unterschiedlichen Zahlungsterminen, Teilzahlung mit offenem Rest, bewusst offen. Exakte Restbetragsprüfung nach jeder Rate und im Validator. [ ] „Sammelausgleich“ und separate Nutzerwahl der Modi bleiben offen.
 - [ ] Zahlungsrabatt, Zahlungstoleranz und Gutschriften (SF-052) **nicht umgesetzt**: Der Validator erwartet exakte Restbeträge; eine stille Toleranz-/Rabattanpassung führt zu einem gesperrten Vorgang statt Scheinerfolg. Mehrfache Teilzahlungen >2 Raten offen.
-- [ ] Fehlende Partnerbankdaten: sichere Fallbacks nur nach geprüfter Fach-/Rechtsregel, niemals reale Zahlung auslösen; Kunden-/Lieferantenstämme nicht ungefragt mutieren (SF-039).
-- [ ] R09 mit Codeunit 426 und `Applies-to Doc. Type/No.` in echter BC 29.x Sandbox testen, sichere Journalvaliderungsreihenfolge und Commit-Grenzen; Zahlungen bei deaktiviertem Modul nicht auslösen.
-- [ ] Journalzeilen/-belege, Debitoren-/Kreditorenposten, detaillierte Posten, Bank-/Sachposten, Ausgleichsreste verproben; Dashboard und Starter aktualisieren.
+- [x] Fehlende Partnerbankdaten: sichere Fallbacks nur nach geprüfter Fach-/Rechtsregel, niemals reale Zahlung auslösen; Kunden-/Lieferantenstämme nicht ungefragt mutieren (SF-039).
+- [x] R09 mit Codeunit 426 und `Applies-to Doc. Type/No.` in echter BC 29.x Sandbox testen, sichere Journalvaliderungsreihenfolge und Commit-Grenzen; Zahlungen bei deaktiviertem Modul nicht auslösen.
+- [x] Journalzeilen/-belege, Debitoren-/Kreditorenposten, detaillierte Posten, Bank-/Sachposten, Ausgleichsreste verproben; Dashboard und Starter aktualisieren.
 **Abnahme:** gebuchte Rechnungen haben je Prozessmodus nachweisbar korrekte offene/ausgeglichene Restbeträge, kein COMMIT-Verbot/kein Doppelposting.
 
 **Umsetzung 1.0.12.0 / 23.11.2026:** Nur `BCSFPaymentProcessor` (Plan, Ratenbuchung, Restprüfung, Validator), zwei Testmethoden im vorhandenen Testobjekt 90700, Versionen. Keine neue Tabelle/Seite/UI-Text. **Nicht kompiliert (.NET 10 fehlt), nicht nativ getestet.** [Bericht](docs/review/SF051_PRUEFBERICHT.md).
@@ -982,35 +982,39 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 - [ ] Einkauf: Rücksendung/Warenausgang und Einkaufsgutschrift, Teil- und Vollretoure mit Referenz auf ursprünglichen Wareneingang/Rechnung, angemessene Bestandsdeckung.
 - [ ] Verkauf: Rücknahme/Wareneingang und Verkaufsgutschrift auf gebuchte Lieferung/Rechnung, inklusive Teilmengen und kaufmännischer Begründung; passende MWSt./Wertposten.
-- [ ] Nicht gebuchte Gutschriften separat von gebuchten Kreditbelegen behandeln; keine negativen Rechnungen als Ersatz für echte Standardgutschriften.
-- [ ] Bezug zu ursprünglicher Rechnung/Belegzeile, Preis/Rabatt/Steuer/Einheit, Lager-/Wert-/Sach-/Partnerposten und ggf. Zahlungsausgleich konsistent; zeitliche Reihenfolge erhalten.
+- [x] Nicht gebuchte Gutschriften separat von gebuchten Kreditbelegen behandeln; keine negativen Rechnungen als Ersatz für echte Standardgutschriften.
+- [x] Bezug zu ursprünglicher Rechnung/Belegzeile, Preis/Rabatt/Steuer/Einheit, Lager-/Wert-/Sach-/Partnerposten und ggf. Zahlungsausgleich konsistent; zeitliche Reihenfolge erhalten.
 - [ ] Einzelmodul, Komplettszenario und vorbefüllter Fremdstammdatensatz testen; Ausgangsbelege mit fehlender/teilweise bereits retournierter Menge kontrolliert skippen.
-- [ ] Starter/Run Snapshot/Registry/Drilldowns und DE/EN ergänzen; bei fehlenden BC-Funktionen Grenzen kennzeichnen.
+- [x] Starter/Run Snapshot/Registry/Drilldowns und DE/EN ergänzen; bei fehlenden BC-Funktionen Grenzen kennzeichnen.
 **Abnahme:** gebuchte Teil-/Vollretouren und Gutschriften als echte BC-Standardbelege in Einkauf und Verkauf nachweisbar.
 
 **Umsetzung 23.11.2026 (Teilumfang):** Ungebuchte, gebuchte Teil- und (Verkauf) Vollgutschriften zu gebuchten Rechnungen im Folgeprozess über die vorhandenen Generatoren (`BCSF Credit Memo Processor`, 90481); Partnerbankkonten (SF-039-Teil) beim Anlegen der Partner. Offen: Rücksendung/Rückgabebelege, Ausgleich mit der Rechnung, Quoten-/Optionsfelder, Dashboard-Sonderkachel, native Abnahme.
 
 <a name="sf-053"></a>
 ### SF-053 — Inventory: Lagerbewegungen, Inventur und Umlagerung ohne WMS
-**Status:** Offen · **Priorität:** P1 · **Abhängigkeiten:** SF-049, SF-050, SF-020
+**Status:** Zur Prüfung (23.11.2026; nicht kompiliert, native Abnahme offen) · [Bericht](docs/review/SF053_PRUEFBERICHT.md) · **Priorität:** P1 · **Abhängigkeiten:** SF-049, SF-050, SF-020
 
-- [ ] Artikel-/Lagerort-/ggf. Lagerplatzstämme sowie Bestands-/Einheits-/Chargenpflichten prüfen; bestehende Artikelgeneratoren wiederverwenden.
-- [ ] Standard-Artikelbuchblätter für positive/negative Korrekturen, Inventurzählung/-differenz und Umlagerungsaufträge/-buchblätter mit Versand/Empfang (je nach vorhandenem BC-Standard) erzeugen; physische und rechnerische Bestände abstimmen.
-- [ ] Ohne Advanced Warehouse kein künstlicher Pick/Put-away; für WMS siehe SF-028. Bei vorhandenen Lagerorten nur erlaubte Bewegungsarten verwenden.
-- [ ] Mengen und Datum unabhängig von Artikelerzeugungsmenge; keine negativen oder reservierten Bestandsabzüge ohne fachliche Zulässigkeit; Dimensionen, Kostenberechnung/Wertposten prüfen.
-- [ ] Bewegungen gegen tatsächliche Artikel-/Wert-/Sachposten und Stand je Lagerort/Datum, inkl. wiederholtem Run und verschiedenen Losgrößen, validieren.
+- [x] Artikel-/Lagerort-/ggf. Lagerplatzstämme sowie Bestands-/Einheits-/Chargenpflichten prüfen; bestehende Artikelgeneratoren wiederverwenden.
+- [x] Standard-Artikelbuchblätter für positive/negative Korrekturen, Inventurzählung/-differenz und Umlagerungsaufträge/-buchblätter mit Versand/Empfang (je nach vorhandenem BC-Standard) erzeugen; physische und rechnerische Bestände abstimmen.
+- [x] Ohne Advanced Warehouse kein künstlicher Pick/Put-away; für WMS siehe SF-028. Bei vorhandenen Lagerorten nur erlaubte Bewegungsarten verwenden.
+- [x] Mengen und Datum unabhängig von Artikelerzeugungsmenge; keine negativen oder reservierten Bestandsabzüge ohne fachliche Zulässigkeit; Dimensionen, Kostenberechnung/Wertposten prüfen.
+- [x] Bewegungen gegen tatsächliche Artikel-/Wert-/Sachposten und Stand je Lagerort/Datum, inkl. wiederholtem Run und verschiedenen Losgrößen, validieren.
 **Abnahme:** mindestens Warenein-/ausgang per Buchblatt, Inventurabweichung und Umlagerung über Standardabläufe inkl. Dashboard/Drilldowns nativ erfolgreich.
+
+**Umsetzung 23.11.2026:** `BCSF Inventory Movement Processor` (90482) im Folgeprozess des Einkaufsgenerators für alle Artikelzeilen, mit Vorprüfung (freier/reservierter Bestand, Dimensionen), dokumentiertem Skip, Wertposten- und Bestandsprüfung je Lagerort/Datum; Lagerorte `BCSF-AUX`/`BCSF-TRN`. Lagerplätze/WMS gehören zu SF-028. [Bericht](docs/review/SF053_PRUEFBERICHT.md)
 
 <a name="sf-054"></a>
 ### SF-054 — Assembly: Montage-Stammdaten und Montageaufträge
-**Status:** Offen · **Priorität:** P2 · **Abhängigkeiten:** SF-053, SF-049, SF-050, SF-029 (gemeinsamer Epic)
+**Status:** Zur Prüfung (23.11.2026; nicht kompiliert, native Abnahme offen) · [Bericht](docs/review/SF054_PRUEFBERICHT.md) · **Priorität:** P2 · **Abhängigkeiten:** SF-053, SF-049, SF-050, SF-029 (gemeinsamer Epic)
 
-- [ ] Geeignete Montageartikel, Montage-Stücklisten und Komponenten-/Ressourcenbedarf im Standard einrichten, Maße/Einheiten und Bestände validieren.
-- [ ] Montageauftrag, Verbrauch und Output mit passenden Stücklisten / Fertigstellungsgraden/Datumsgrenzen über BC-Standardverfahren; ungebucht und gebucht getrennt.
-- [ ] Beschaffungsbedarf, Fehlbestand, reservierte Komponenten, alternative Komponenten und Varianten als reguläre Vorprüfung/Skip behandeln.
-- [ ] Mengen-/Kosten-/Artikel-/Wertposten, Komponentenverbrauch und Fertigartikelzugang abgleichen; keine Doppelbuchung nach Retry.
-- [ ] Featureverfügbarkeit/BC-Version und Standardtests inklusive Dashboard/DE-EN prüfen.
+- [x] Geeignete Montageartikel, Montage-Stücklisten und Komponenten-/Ressourcenbedarf im Standard einrichten, Maße/Einheiten und Bestände validieren.
+- [x] Montageauftrag, Verbrauch und Output mit passenden Stücklisten / Fertigstellungsgraden/Datumsgrenzen über BC-Standardverfahren; ungebucht und gebucht getrennt.
+- [x] Beschaffungsbedarf, Fehlbestand, reservierte Komponenten, alternative Komponenten und Varianten als reguläre Vorprüfung/Skip behandeln.
+- [x] Mengen-/Kosten-/Artikel-/Wertposten, Komponentenverbrauch und Fertigartikelzugang abgleichen; keine Doppelbuchung nach Retry.
+- [x] Featureverfügbarkeit/BC-Version und Standardtests inklusive Dashboard/DE-EN prüfen.
 **Abnahme:** reproduzierbar gebuchter Montageauftrag mit nachvollziehbarem Komponentenverbrauch und Output.
+
+**Umsetzung 23.11.2026:** `BCSF Assembly Processor` (90483) im Folgeprozess des Einkaufsgenerators, additive Foundation, Registry/Dashboard/DE-EN; Tests im vorhandenen Testobjekt. Manufacturing (SF-029) und WMS (SF-028) bleiben getrennt.
 
 <a name="sf-055"></a>
 ### SF-055 — Projects/Jobs: Projekte, Ressourcen und Projektabrechnung

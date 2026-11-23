@@ -1,5 +1,6 @@
 namespace BCScenarioFactory.Core;
 
+using BCScenarioFactory.Assembly;
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.DependencyManager;
@@ -19,13 +20,15 @@ using System.Environment.Configuration;
 
 permissionset 90105 "BCSF ADMIN"
 {
-  Assignable = true;
-  Caption = 'Scenario Factory Setup Admin';
-  Permissions =
+    Assignable = true;
+    Caption = 'Scenario Factory Setup Admin';
+    Permissions =
     codeunit "BCSF Master Data Source" = X,
     codeunit "BCSF Config Export" = X,
     codeunit "BCSF Payment Processor" = X,
     codeunit "BCSF Credit Memo Processor" = X,
+    codeunit "BCSFInventoryMovementProcessor" = X,
+    codeunit "BCSF Assembly Processor" = X,
     codeunit "BCSF Purchase Evidence" = X,
     codeunit "BCSF Wholesale Profile" = X,
     codeunit "BCSF Company Initialization" = X,

@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { spawn, execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -219,6 +219,11 @@ try {
   assert.equal(await evaluate('document.querySelector(".sf-stat-label").textContent'), 'Templates');
   assert.equal(await evaluate('document.querySelector(".sf-stat-value").textContent'), '1.000');
   const germanBySource = JSON.parse(execFileSync('python3', ['-c', 'import json,xml.etree.ElementTree as E; n={"x":"urn:oasis:names:tc:xliff:document:1.2"};t=E.parse("Translations/BC Scenario Factory.de-DE.xlf"); print(json.dumps({u.find("x:source",n).text:u.find("x:target",n).text for u in t.findall(".//x:trans-unit",n)}))'], { cwd: root, encoding: 'utf8' }));
+  // New labels have no compiler-generated XLIFF id before the first build; the reviewed language maps cover them.
+  for (const name of ['sf041', 'sf044', 'sf052', 'sf053', 'sf054']) {
+    const reviewed = JSON.parse(readFileSync(join(root, 'Translations', name + '.de.json'), 'utf8'));
+    for (const [source, target] of Object.entries(reviewed)) germanBySource[source] ??= target;
+  }
   const germanTexts = Object.fromEntries(Object.entries(texts).map(([key, value]) => [key, germanBySource[value]]));
   assert.ok(Object.values(germanTexts).every(Boolean), 'All labels have German XLIFF targets.');
   await redraw(`window.fixture.texts=${JSON.stringify(germanTexts)};window.fixture.language='de-DE'`);
@@ -317,7 +322,7 @@ try {
   }
   const companyShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true });
   await writeFile(join(tmpdir(), 'BCSF-dashboard-SF045-company.png'), Buffer.from(companyShot.data, 'base64'));
-  // SF-045 follow-up: real two-second polling preserves nodes and never disables controls.
+  // SF-045 follow-up: real one-second polling preserves nodes and never disables controls.
   await redraw('window.fixture.company.hasJob=false;window.fixture.stock.metrics=[{key:"customer",caption:"Customers",count:25,canOpen:true}];window.fixture.readAt="before"');
   await evaluate(`window.stableTile=document.querySelector('[data-stock-focus="metric:customer"]');window.stableNumber=window.stableTile.querySelector("strong");window.stableFilter=document.querySelector("select");window.stableExpert=document.querySelector(".sf-experts");window.stableExpert.open=true;window.fixture.stock.metrics[0].count=26;window.fixture.readAt="after";window.hold=true;window.calls=[]`);
   await until('window.calls.some(call=>call.args[0]==="autoRefresh")');
@@ -338,7 +343,7 @@ try {
   assert.equal(await evaluate('document.querySelector("[data-action=workflow]").disabled'), false);
   await click('[data-action=refresh]');
   assert.equal(await evaluate('document.querySelector(".sf-feedback").textContent'), '');
-  console.log('PASS: two-second silent refresh, stable tile/text/filter/details nodes, changed live count, single-flight slow polling and recoverable polling errors.');
+  console.log('PASS: one-second silent refresh, stable tile/text/filter/details nodes, changed live count, single-flight slow polling and recoverable polling errors.');
   console.log('PASS: SF-045 company summary, collapsed expert templates, same-run confirmed progress, German labels, error/XSS and responsive widths. Client bridge only, no native BC execution.');
   console.log('PASS: SF-044 Chromium client regression: separate accessible tabs, scope isolation (25 company / 20 run), entire tile routing, child results, zero/ACL/generator states, stale result separation, summary routes, compact actions, diagnosis, status/quality, DE/EN, duplicate suppression, error/XSS, responsive grids and scrolling at 1440/768/320px.');
   console.log(`Synthetic previews: ${join(tmpdir(), 'BCSF-dashboard-SF044-runs.png')}, ${join(tmpdir(), 'BCSF-dashboard-SF044-data.png')}. No Business Central runtime, permissions or native target filters were executed.`);

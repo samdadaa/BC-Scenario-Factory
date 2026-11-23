@@ -36,6 +36,8 @@ def render():
     extra = json.loads((ROOT / "Translations/sf041.de.json").read_text(encoding="utf-8"))
     extra.update(json.loads((ROOT / "Translations/sf044.de.json").read_text(encoding="utf-8")))
     extra.update(json.loads((ROOT / "Translations/sf052.de.json").read_text(encoding="utf-8")))
+    extra.update(json.loads((ROOT / "Translations/sf053.de.json").read_text(encoding="utf-8")))
+    extra.update(json.loads((ROOT / "Translations/sf054.de.json").read_text(encoding="utf-8")))
     for source, target in extra.items():
         translations.setdefault(source, target)
     catalog = json.dumps({"de": translations}, ensure_ascii=True, sort_keys=True, indent=2)

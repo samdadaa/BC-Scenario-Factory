@@ -378,6 +378,16 @@ codeunit 90365 "BCSF Dashboard Data"
 
   local procedure AddTexts(var Texts: JsonObject)
   begin
+    Texts.Add('moduleMaster', ModuleMasterLbl);
+    Texts.Add('moduleSales', ModuleSalesLbl);
+    Texts.Add('modulePurchase', ModulePurchaseLbl);
+    Texts.Add('moduleInventory', ModuleInventoryLbl);
+    Texts.Add('moduleAssembly', ModuleAssemblyLbl);
+    Texts.Add('moduleFinance', ModuleFinanceLbl);
+    Texts.Add('moduleOther', ModuleOtherLbl);
+    Texts.Add('moduleOpen', ModuleOpenLbl);
+    Texts.Add('moduleDone', ModuleDoneLbl);
+    Texts.Add('moduleReview', ModuleReviewLbl);
     Texts.Add('dataTab', DataTabLbl);
     Texts.Add('runsTab', RunsTabLbl);
     Texts.Add('selectedRunScope', SelectedRunScopeLbl);
@@ -517,6 +527,16 @@ codeunit 90365 "BCSF Dashboard Data"
   end;
 
   var
+    ModuleMasterLbl: Label 'Master data';
+    ModuleSalesLbl: Label 'Sales';
+    ModulePurchaseLbl: Label 'Purchasing';
+    ModuleInventoryLbl: Label 'Stock movements';
+    ModuleAssemblyLbl: Label 'Assembly';
+    ModuleFinanceLbl: Label 'Accounting';
+    ModuleOtherLbl: Label 'Further results';
+    ModuleOpenLbl: Label 'In progress';
+    ModuleDoneLbl: Label 'Completed';
+    ModuleReviewLbl: Label 'Review required';
     ExistingMastersLbl: Label 'Eligible existing company data';
     PoolSummaryLbl: Label 'Master data eligible/checked: customers %1/%2, vendors %3/%4, items %5/%6. Other checked records were excluded.', Comment = '%1/%2 = customers, %3/%4 = vendors, %5/%6 = items';
     PostingSkipsLbl: Label '%1 documents retained unposted because stock was insufficient. Review provenance for STOCK reasons and the unposted result lists.', Comment = '%1 = skipped posting count';

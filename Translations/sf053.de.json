@@ -1,0 +1,7 @@
+{
+  "Posted transfer shipments": "Gebuchte Umlagerungslieferungen",
+  "Posted transfer receipts": "Gebuchte Umlagerungseingänge",
+  "Scenario Factory synthetic test location": "Scenario-Factory-Testlagerort (synthetisch)",
+  "The inventory movement setup is not supported or changed. Review the item journal source codes, the transfer number series and the synthetic transfer locations.": "Die Einrichtung der Lagerbewegungen wird nicht unterstützt oder wurde geändert. Prüfen Sie die Herkunftscodes des Artikelbuchblatts, die Nummernserien der Umlagerung und die synthetischen Umlagerungslagerorte.",
+  "Inventory movement results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain posting.": "Die Ergebnisse der Lagerbewegung fehlen, wurden geändert oder sind nicht prüfbar. Lassen Sie das Paket zur Prüfung gesperrt und wiederholen Sie keine unsichere Buchung."
+}

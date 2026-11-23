@@ -1,6 +1,7 @@
 #if BCSFTESTS
 namespace BCScenarioFactory.Inventory.Tests;
 
+using BCScenarioFactory.Assembly;
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
@@ -897,6 +898,61 @@ codeunit 90700 "BCSF Inventory Tests"
     Children.SyntheticBank(Context, 'VENDOR', 1, BranchNo, AccountNo, Iban);
     Children.SyntheticBank(Context, 'CUSTOMER', 1, OtherBranch, OtherAccount, OtherIban);
     Assert(Iban <> OtherIban, 'Customer and vendor bank accounts must not share the same synthetic number.');
+  end;
+
+  [Test]
+  procedure MovementPlanIsDeterministicAndTransfersNeedCapturedLocations()
+  var
+    Movements: Codeunit "BCSFInventoryMovementProcessor";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    WithTransfer: JsonObject;
+    OtherRun: JsonObject;
+    Settings: JsonObject;
+    TransferSettings: JsonObject;
+    LogicalKey: Integer;
+    Kind: Integer;
+    Seen: array[6] of Boolean;
+    AssemblyProc: Codeunit "BCSF Assembly Processor";
+  begin
+    Context := ContextFixture();
+    Settings.Add('version', 1);
+    Settings.Add('approved', true);
+    Context.Add('paymentSetup', Settings);
+    Assert(not Movements.Enabled(Context), 'A missing movement marker must keep stock movements off.');
+    TransferSettings.Add('version', 1);
+    TransferSettings.Add('approved', true);
+    TransferSettings.Add('inventoryVersion', 1);
+    TransferSettings.Add('transferTo', 'BCSF-AUX');
+    TransferSettings.Add('transit', 'BCSF-TRN');
+    TransferSettings.Add('assemblyVersion', 1);
+    WithTransfer := Contract.Clone(Context);
+    WithTransfer.Replace('paymentSetup', TransferSettings);
+    Assert(Movements.Enabled(WithTransfer), 'The movement marker with approved payments enables stock movements.');
+    OtherRun := Contract.Clone(WithTransfer);
+    OtherRun.Replace('runId', Format(CreateGuid(), 0, 4));
+    for LogicalKey := 1 to 300 do begin
+      Kind := Movements.PlanKind(WithTransfer, 'PURCHASE.ORDER', LogicalKey, 'BCSF-MAIN');
+      Assert(Kind = Movements.PlanKind(OtherRun, 'PURCHASE.ORDER', LogicalKey, 'BCSF-MAIN'), 'The movement plan must not depend on the run id.');
+      Seen[Kind + 1] := true;
+      Assert(Movements.PlanKind(WithTransfer, 'PURCHASE.ORDER', LogicalKey, 'BCSF-AUX') <> 4, 'No transfer onto the same location.');
+      Assert(Movements.PlanKind(Context, 'PURCHASE.ORDER', LogicalKey, 'BCSF-MAIN') <> 4, 'No transfer without captured locations.');
+      Assert(Movements.PlanKind(Context, 'PURCHASE.ORDER', LogicalKey, 'BCSF-MAIN') <> 5, 'No assembly without the captured marker.');
+      Assert(AssemblyProc.SubKind(Context, 'PURCHASE.ORDER', LogicalKey, 1) <> 3, 'A partial assembly needs at least two units.');
+      Assert(AssemblyProc.SubKind(Context, 'PURCHASE.ORDER', LogicalKey, 2) = AssemblyProc.SubKind(OtherRun, 'PURCHASE.ORDER', LogicalKey, 2), 'The assembly mode must not depend on the run id.');
+    end;
+    Assert(Seen[1] and Seen[2] and Seen[3] and Seen[4] and Seen[5] and Seen[6], 'All movement plan kinds including assembly must occur with the captured markers.');
+    for LogicalKey := 1 to 100 do begin
+      Assert((Movements.LineUnits(Context, 'PURCHASE.ORDER', LogicalKey, 1, 50) >= 1) and (Movements.LineUnits(Context, 'PURCHASE.ORDER', LogicalKey, 1, 50) <= 4),
+        'Line units are 1 to 3 and never above half of the stock reserve.');
+      Assert(Movements.LineUnits(Context, 'PURCHASE.ORDER', LogicalKey, 2, 1) = 1, 'Line units never exceed the posted quantity.');
+      Assert(Movements.LineUnits(Context, 'PURCHASE.ORDER', LogicalKey, 1, 50) = Movements.LineUnits(OtherRun, 'PURCHASE.ORDER', LogicalKey, 1, 50),
+        'Line units must not depend on the run id.');
+    end;
+    TransferSettings.Replace('inventoryVersion', 2);
+    WithTransfer.Replace('paymentSetup', TransferSettings);
+    asserterror Movements.Enabled(WithTransfer);
+    Assert(GetLastErrorText() <> '', 'An unknown movement marker must stop.');
   end;
 
   [Test]

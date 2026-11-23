@@ -7,7 +7,8 @@ const root = new Element('root');
 const calls = [];
 const view = { groups: [
   { key: 'master', caption: 'Master data' }, { key: 'sales', caption: 'Sales' },
-  { key: 'purchase', caption: 'Purchasing' }, { key: 'entries', caption: 'Ledger entries' },
+  { key: 'purchase', caption: 'Purchasing' }, { key: 'inventory', caption: 'Stock movements' },
+  { key: 'assembly', caption: 'Assembly' }, { key: 'entries', caption: 'Ledger entries' },
   { key: 'finance', caption: 'Finance and banking' }
 ], group: '', entireCompany: false, runId: '', metrics: [] };
 const generated = [
