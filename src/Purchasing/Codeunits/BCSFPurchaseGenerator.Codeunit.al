@@ -122,7 +122,6 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
       Error(SetupErr);
     Purchases.Get();
     Purchases.TestField("Order Nos.", Contract.GetText(Settings, 'orderSeries'));
-    Purchases.TestField("Invoice Rounding", false);
     Location.Get(Contract.GetText(Settings, 'location'));
     Location.TestField("Use As In-Transit", false);
     Location.TestField("Bin Mandatory", false);
@@ -210,6 +209,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
   var
     Item: Record Item;
     Vendor: Record Vendor;
+    Foundation: Codeunit "BCSF Demo Partner Setup";
     Source: Codeunit "BCSF Master Data Source";
     Coordinator: Codeunit "BCSF Process Coordinator";
     Contract: Codeunit "BCSF Contract JSON";
@@ -224,6 +224,8 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Sources(Context, RunId, LogicalKey, Item, Vendor);
     Reason := 'VENDOR';
     Vendor.TestField(Blocked, Vendor.Blocked::" ");
+    if Coordinator.Disposition(Context, 'PURCHASE.ORDER', LogicalKey) > 0 then
+      Foundation.CheckInvoiceRounding(false, Vendor."Vendor Posting Group");
     for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', LogicalKey) do begin
       Reason := 'ITEM';
       if Coordinator.IsWholesaleQualityProfile(Context) then
@@ -373,6 +375,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     ItemVendor: Record "Item Vendor";
     Invoice: Record "Purch. Inv. Header";
     Receipt: Record "Purch. Rcpt. Header";
+    Foundation: Codeunit "BCSF Demo Partner Setup";
     Registry: Codeunit "BCSF Record Registry";
     Coordinator: Codeunit "BCSF Process Coordinator";
     Contract: Codeunit "BCSF Contract JSON";
@@ -408,6 +411,8 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     VAT.TestField(Blocked, false);
     VAT.TestField("VAT Calculation Type", VAT."VAT Calculation Type"::"Normal VAT");
     Mode := Coordinator.Disposition(Context, 'PURCHASE.ORDER', LogicalKey);
+    if Mode > 0 then
+      Foundation.CheckInvoiceRounding(false, Vendor."Vendor Posting Group");
     Quantity := Coordinator.PurchaseQuantity(Context, LogicalKey);
     LineCount := Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', LogicalKey);
     Date := Coordinator.PurchaseDate(Context, LogicalKey);

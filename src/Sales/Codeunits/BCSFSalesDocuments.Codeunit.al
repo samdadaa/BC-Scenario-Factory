@@ -29,6 +29,7 @@ codeunit 90430 "BCSF Sales Documents"
     Credit: Record "Sales Cr.Memo Header";
     Receipt: Record "Return Receipt Header";
     Entry: Record "Item Ledger Entry";
+    Foundation: Codeunit "BCSF Demo Partner Setup";
     Setup: Codeunit "BCSF Sales Setup";
     Coordinator: Codeunit "BCSF Process Coordinator";
     Contract: Codeunit "BCSF Contract JSON";
@@ -60,6 +61,8 @@ codeunit 90430 "BCSF Sales Documents"
     Date := Coordinator.DocumentDate(Context, EntityCode, LogicalKey);
     Setup.CustomerFor(Context, LogicalKey, Customer);
     Setup.CheckCustomer(Customer);
+    if Mode > 0 then
+      Foundation.CheckInvoiceRounding(true, Customer."Customer Posting Group");
     // Reused customer data can contain articles with no stock. Do not
     // abort the whole sales run during setup; leave that document unposted.
     if Mode > 0 then

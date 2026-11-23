@@ -77,6 +77,7 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
   var
     Customer: Record Customer;
     Item: Record Item;
+    Foundation: Codeunit "BCSF Demo Partner Setup";
     Setup: Codeunit "BCSF Sales Setup";
     Source: Codeunit "BCSF Master Data Source";
     Coordinator: Codeunit "BCSF Process Coordinator";
@@ -93,6 +94,8 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     Reason := 'CUSTOMER';
     Setup.CustomerFor(Context, LogicalKey, Customer);
     Setup.CheckCustomer(Customer);
+    if Coordinator.Disposition(Context, EntityCode, LogicalKey) > 0 then
+      Foundation.CheckInvoiceRounding(true, Customer."Customer Posting Group");
     for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, LogicalKey) do begin
       Reason := 'ITEM';
       ItemKey := LogicalKey;

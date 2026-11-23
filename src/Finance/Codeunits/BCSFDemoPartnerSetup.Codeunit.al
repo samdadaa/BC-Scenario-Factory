@@ -93,10 +93,6 @@ codeunit 90408 "BCSF Demo Partner Setup"
       Fields.Add(Sales.FieldNo("Posted Return Receipt Nos."));
     end;
     SetupRow(Sales, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
-    Sales.SecurityFiltering(SecurityFilter::Disallowed);
-    if Sales.Get() then
-      if Sales."Invoice Rounding" then
-        Block(Sales.TableCaption() + ' / ' + Sales.FieldCaption("Invoice Rounding"), Write, TempDiff);
     Clear(Fields);
     Purchases.Init();
     Purchases."Vendor Nos." := 'VENDOR';
@@ -124,10 +120,6 @@ codeunit 90408 "BCSF Demo Partner Setup"
       Fields.Add(Purchases.FieldNo("Posted Return Shpt. Nos."));
     end;
     SetupRow(Purchases, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
-    Purchases.SecurityFiltering(SecurityFilter::Disallowed);
-    if Purchases.Get() then
-      if Purchases."Invoice Rounding" then
-        Block(Purchases.TableCaption() + ' / ' + Purchases.FieldCaption("Invoice Rounding"), Write, TempDiff);
     Clear(Fields);
     Inventory.Init();
     Inventory."Item Nos." := 'ITEM';
@@ -451,7 +443,8 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Found := false;
     if CustomerGroup.FindSet() then
       repeat
-        if UsableAccount(CustomerGroup."Receivables Account", true) then begin
+        if UsableAccount(CustomerGroup."Receivables Account", true) and
+          CanUseInvoiceRoundingAccount(true, CustomerGroup."Invoice Rounding Account") then begin
           Scenario."Customer Posting Group" := CustomerGroup.Code;
           Found := true;
           break;
@@ -464,7 +457,8 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Found := false;
     if VendorGroup.FindSet() then
       repeat
-        if UsableAccount(VendorGroup."Payables Account", true) then begin
+        if UsableAccount(VendorGroup."Payables Account", true) and
+          CanUseInvoiceRoundingAccount(false, VendorGroup."Invoice Rounding Account") then begin
           Scenario."Vendor Posting Group" := VendorGroup.Code;
           Found := true;
           break;
@@ -502,6 +496,67 @@ codeunit 90408 "BCSF Demo Partner Setup"
       (not ControlAccount or not Account."Direct Posting"));
   end;
 
+  // Read-only checks for the LCY-only document generators. Standard posting
+  // remains responsible for creating and booking any actual rounding line.
+  procedure CheckInvoiceRounding(SalesSide: Boolean; PostingGroupCode: Code[20])
+  var
+    GL: Record "General Ledger Setup";
+    CustomerPosting: Record "Customer Posting Group";
+    VendorPosting: Record "Vendor Posting Group";
+    RoundingAccount: Code[20];
+    Requirement: Text;
+  begin
+    if not InvoiceRoundingEnabled(SalesSide) then
+      exit;
+    GL.SecurityFiltering(SecurityFilter::Disallowed);
+    GL.Get();
+    GL.TestField("Amount Rounding Precision");
+    GL.TestField("Inv. Rounding Precision (LCY)");
+    if (GL."Amount Rounding Precision" < 0) or (GL."Inv. Rounding Precision (LCY)" < 0) or
+      (Round(GL."Inv. Rounding Precision (LCY)", GL."Amount Rounding Precision") <> GL."Inv. Rounding Precision (LCY)") then
+      Error(BlockedErr, GL.TableCaption() + ' / ' + GL.FieldCaption("Inv. Rounding Precision (LCY)"));
+    CustomerPosting.SecurityFiltering(SecurityFilter::Disallowed);
+    VendorPosting.SecurityFiltering(SecurityFilter::Disallowed);
+    if SalesSide then begin
+      CustomerPosting.Get(PostingGroupCode);
+      RoundingAccount := CustomerPosting."Invoice Rounding Account";
+      Requirement := CustomerPosting.TableCaption() + ' / ' + PostingGroupCode + ' / ' + CustomerPosting.FieldCaption("Invoice Rounding Account");
+    end else begin
+      VendorPosting.Get(PostingGroupCode);
+      RoundingAccount := VendorPosting."Invoice Rounding Account";
+      Requirement := VendorPosting.TableCaption() + ' / ' + PostingGroupCode + ' / ' + VendorPosting.FieldCaption("Invoice Rounding Account");
+    end;
+    if not CanUseInvoiceRoundingAccount(SalesSide, RoundingAccount) then
+      Error(BlockedErr, Requirement);
+  end;
+
+  local procedure InvoiceRoundingEnabled(SalesSide: Boolean): Boolean
+  var
+    Sales: Record "Sales & Receivables Setup";
+    Purchases: Record "Purchases & Payables Setup";
+  begin
+    if SalesSide then begin
+      Sales.SecurityFiltering(SecurityFilter::Disallowed);
+      Sales.Get();
+      exit(Sales."Invoice Rounding");
+    end;
+    Purchases.SecurityFiltering(SecurityFilter::Disallowed);
+    Purchases.Get();
+    exit(Purchases."Invoice Rounding");
+  end;
+
+  local procedure CanUseInvoiceRoundingAccount(SalesSide: Boolean; AccountNo: Code[20]): Boolean
+  var
+    Account: Record "G/L Account";
+  begin
+    if not InvoiceRoundingEnabled(SalesSide) then
+      exit(true);
+    Account.SecurityFiltering(SecurityFilter::Disallowed);
+    if not Account.Get(AccountNo) then
+      exit(false);
+    exit(not Account.Blocked and Account."Direct Posting" and (Account."Account Type" = Account."Account Type"::Posting));
+  end;
+
   local procedure PrepareLedger(EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
   var
     GL: Record "General Ledger Setup";
@@ -520,13 +575,14 @@ codeunit 90408 "BCSF Demo Partner Setup"
     if not Missing then
       if ((GL."LCY Code" <> '') and (GL."LCY Code" <> 'EUR')) or
          (GL."Amount Rounding Precision" < 0) or (GL."Unit-Amount Rounding Precision" < 0) or
+         (GL."Inv. Rounding Precision (LCY)" < 0) or
          ((GL."Allow Posting From" <> 0D) and (EffectiveDate < GL."Allow Posting From")) or
          ((GL."Allow Posting To" <> 0D) and (EffectiveDate > GL."Allow Posting To")) then begin
         Block(GL.TableCaption(), Write, TempDiff);
         exit;
       end;
     if not (Missing or (GL."LCY Code" = '') or (GL."Amount Rounding Precision" = 0) or
-       (GL."Unit-Amount Rounding Precision" = 0)) then
+       (GL."Unit-Amount Rounding Precision" = 0) or (GL."Inv. Rounding Precision (LCY)" = 0)) then
       exit;
     if not AllowCreate or not Packages.HasSetupWritePermission(Database::"General Ledger Setup", Missing) then begin
       Block(GL.TableCaption(), Write, TempDiff);
@@ -545,6 +601,8 @@ codeunit 90408 "BCSF Demo Partner Setup"
       GL."Amount Rounding Precision" := 0.01;
     if GL."Unit-Amount Rounding Precision" = 0 then
       GL."Unit-Amount Rounding Precision" := 0.00001;
+    if GL."Inv. Rounding Precision (LCY)" = 0 then
+      GL."Inv. Rounding Precision (LCY)" := GL."Amount Rounding Precision";
     if Missing then
       GL.Insert(true)
     else

@@ -210,7 +210,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
     begin
         if not Write then
             if (Mode <> Mode::Existing) and (GetVersion(Mode) = '1.0.0') then
-                CheckFoundation(EffectiveDate, true, TempDiff);
+                CheckFoundation(EffectiveDate, TempDiff);
         if Mode = Mode::Existing then begin
             ExistingFoundation.PrepareExisting(EffectiveDate, Write, TempDiff);
             CheckExisting(TempDiff);
@@ -285,7 +285,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
         if Write and (GetVersion(Mode) <> '1.0.0') then begin
             TempDiff.Reset();
             TempDiff.DeleteAll();
-            CheckFoundation(EffectiveDate, true, TempDiff);
+            CheckFoundation(EffectiveDate, TempDiff);
             if SetupManager.HasBlockers(TempDiff) then
                 ThrowFirstBlocker(TempDiff);
         end;
@@ -931,7 +931,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
         exit(Write);
     end;
 
-    local procedure CheckFoundation(EffectiveDate: Date; TestPackage: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+    local procedure CheckFoundation(EffectiveDate: Date; var TempDiff: Record "BCSF Setup Diff" temporary)
     var
         GL: Record "General Ledger Setup";
         Sales: Record "Sales & Receivables Setup";
@@ -956,8 +956,6 @@ codeunit 90400 "BCSF Finance Package Mgt"
         else
             CheckPresence(GL.TableCaption(), false, TempDiff);
         if Sales.ReadPermission() and Sales.Get() then begin
-            if TestPackage then
-                CheckPresence(Sales.TableCaption() + ' / ' + Sales.FieldCaption("Invoice Rounding"), not Sales."Invoice Rounding", TempDiff);
             CheckSeries(Sales.FieldCaption("Customer Nos."), Sales."Customer Nos.", EffectiveDate, true, TempDiff);
             CheckSeries(Sales.FieldCaption("Invoice Nos."), Sales."Invoice Nos.", EffectiveDate, false, TempDiff);
             CheckSeries(Sales.FieldCaption("Posted Invoice Nos."), Sales."Posted Invoice Nos.", EffectiveDate, false, TempDiff);
@@ -966,8 +964,6 @@ codeunit 90400 "BCSF Finance Package Mgt"
         end else
             CheckPresence(Sales.TableCaption(), false, TempDiff);
         if Purchases.ReadPermission() and Purchases.Get() then begin
-            if TestPackage then
-                CheckPresence(Purchases.TableCaption() + ' / ' + Purchases.FieldCaption("Invoice Rounding"), not Purchases."Invoice Rounding", TempDiff);
             CheckSeries(Purchases.FieldCaption("Vendor Nos."), Purchases."Vendor Nos.", EffectiveDate, true, TempDiff);
             CheckSeries(Purchases.FieldCaption("Invoice Nos."), Purchases."Invoice Nos.", EffectiveDate, false, TempDiff);
             CheckSeries(Purchases.FieldCaption("Posted Invoice Nos."), Purchases."Posted Invoice Nos.", EffectiveDate, false, TempDiff);
@@ -1310,7 +1306,7 @@ codeunit 90400 "BCSF Finance Package Mgt"
                 exit;
             Inspect(Mode, EffectiveDate, false, false, TempPackageDiff);
             if Package.Version <> '1.0.0' then
-                CheckFoundation(EffectiveDate, true, TempPackageDiff);
+                CheckFoundation(EffectiveDate, TempPackageDiff);
         end;
         if TempPackageDiff.FindSet() then
             repeat

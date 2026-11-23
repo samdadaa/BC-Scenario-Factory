@@ -286,7 +286,6 @@ codeunit 90429 "BCSF Sales Setup"
     Location.TestField("Require Pick", false);
     Location.TestField("Directed Put-away and Pick", false);
     Sales.Get();
-    Sales.TestField("Invoice Rounding", false);
     Sales.TestField("Quote Nos.", Contract.GetText(Values, 'quoteSeries'));
     Sales.TestField("Order Nos.", Contract.GetText(Values, 'orderSeries'));
     Sales.TestField("Invoice Nos.", Contract.GetText(Values, 'invoiceSeries'));
