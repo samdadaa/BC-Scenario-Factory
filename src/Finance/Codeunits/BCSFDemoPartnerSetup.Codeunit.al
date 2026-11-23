@@ -244,6 +244,9 @@ codeunit 90408 "BCSF Demo Partner Setup"
       Guard.EnsureCanConfigure(CompanyName());
     Prepare(EffectiveDate, Write, true, true, TempDiff, true);
     EnsureReferencedGroups(Write, TempDiff);
+    EnsurePartnerPostingGroups(Write, TempDiff);
+    EnsureGermanStandardControlAccount('INLAND', '1202', true, Write, TempDiff);
+    EnsureGermanStandardControlAccount('INLAND', '3301', false, Write, TempDiff);
     LocationCode := SimpleLocation();
     if LocationCode = '' then begin
       LocationCode := 'MAIN';
@@ -358,6 +361,89 @@ codeunit 90408 "BCSF Demo Partner Setup"
       until Inventory.Next() = 0;
   end;
 
+  // Only derive Factory-owned posting groups from already explicitly assigned
+  // financial roles. Never choose an arbitrary G/L account by number/name.
+  local procedure EnsurePartnerPostingGroups(Write: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    Customer: Record "Customer Posting Group";
+    Vendor: Record "Vendor Posting Group";
+    CandidateCustomer: Record "Customer Posting Group";
+    CandidateVendor: Record "Vendor Posting Group";
+    Packages: Codeunit "BCSF Finance Package Mgt";
+    Fields: List of [Integer];
+    CustomerAccount: Code[20];
+    VendorAccount: Code[20];
+    CustomerRounding: Code[20];
+    VendorRounding: Code[20];
+    HasValidCustomer: Boolean;
+    HasValidVendor: Boolean;
+  begin
+    Customer.SecurityFiltering(SecurityFilter::Disallowed);
+    Vendor.SecurityFiltering(SecurityFilter::Disallowed);
+    if Customer.FindSet() then
+      repeat
+        if UsableAccount(Customer."Receivables Account", false) then begin
+          if CustomerAccount = '' then
+            CustomerAccount := Customer."Receivables Account";
+          if CanUseInvoiceRoundingAccount(true, Customer."Invoice Rounding Account") then
+            HasValidCustomer := true;
+        end;
+        if (CustomerRounding = '') and (Customer."Invoice Rounding Account" <> '') then
+          if UsableRoundingAccount(Customer."Invoice Rounding Account") then
+            CustomerRounding := Customer."Invoice Rounding Account";
+      until Customer.Next() = 0;
+    if Vendor.FindSet() then
+      repeat
+        if UsableAccount(Vendor."Payables Account", false) then begin
+          if VendorAccount = '' then
+            VendorAccount := Vendor."Payables Account";
+          if CanUseInvoiceRoundingAccount(false, Vendor."Invoice Rounding Account") then
+            HasValidVendor := true;
+        end;
+        if (VendorRounding = '') and (Vendor."Invoice Rounding Account" <> '') then
+          if UsableRoundingAccount(Vendor."Invoice Rounding Account") then
+            VendorRounding := Vendor."Invoice Rounding Account";
+      until Vendor.Next() = 0;
+
+    if not HasValidCustomer and (CustomerAccount <> '') and
+      (not InvoiceRoundingEnabled(true) or (CustomerRounding <> '')) then begin
+      CandidateCustomer.Init();
+      CandidateCustomer.Code := 'BCSF-EXIST';
+      CandidateCustomer.Description := ExistingGroupLbl;
+      CandidateCustomer."Receivables Account" := CustomerAccount;
+      CandidateCustomer."Invoice Rounding Account" := CustomerRounding;
+      Fields.Add(CandidateCustomer.FieldNo("Receivables Account"));
+      if InvoiceRoundingEnabled(true) then
+        Fields.Add(CandidateCustomer.FieldNo("Invoice Rounding Account"));
+      if Packages.NeedsInsert(CandidateCustomer, Fields, Write, true, TempDiff) then begin
+        CandidateCustomer.Validate("Receivables Account", CustomerAccount);
+        if InvoiceRoundingEnabled(true) then
+          CandidateCustomer.Validate("Invoice Rounding Account", CustomerRounding);
+        CandidateCustomer.Insert(true);
+      end;
+    end;
+    Clear(Fields);
+    if not HasValidVendor and (VendorAccount <> '') and
+      (not InvoiceRoundingEnabled(false) or (VendorRounding <> '')) then begin
+      CandidateVendor.Init();
+      CandidateVendor.Code := 'BCSF-EXIST';
+      CandidateVendor.Description := ExistingGroupLbl;
+      CandidateVendor."Payables Account" := VendorAccount;
+      CandidateVendor."Invoice Rounding Account" := VendorRounding;
+      Fields.Add(CandidateVendor.FieldNo("Payables Account"));
+      if InvoiceRoundingEnabled(false) then
+        Fields.Add(CandidateVendor.FieldNo("Invoice Rounding Account"));
+      if Packages.NeedsInsert(CandidateVendor, Fields, Write, true, TempDiff) then begin
+        CandidateVendor.Validate("Payables Account", VendorAccount);
+        if InvoiceRoundingEnabled(false) then
+          CandidateVendor.Validate("Invoice Rounding Account", VendorRounding);
+        CandidateVendor.Insert(true);
+      end;
+    end;
+  end;
+
+  // Current German BC standard company profile only. Custom posting-group mappings
+  // are deliberately not guessed or supported by this binding yet.
   procedure BindExistingScenario(var Scenario: Record "BCSF Scenario")
   var
     General: Record "General Posting Setup";
@@ -367,6 +453,8 @@ codeunit 90408 "BCSF Demo Partner Setup"
     VendorGroup: Record "Vendor Posting Group";
     Business: Record "Gen. Business Posting Group";
     Product: Record "Gen. Product Posting Group";
+    VATBusiness: Record "VAT Business Posting Group";
+    VATProduct: Record "VAT Product Posting Group";
     Found: Boolean;
   begin
     General.SecurityFiltering(SecurityFilter::Disallowed);
@@ -376,8 +464,10 @@ codeunit 90408 "BCSF Demo Partner Setup"
     VendorGroup.SecurityFiltering(SecurityFilter::Disallowed);
     Business.SecurityFiltering(SecurityFilter::Disallowed);
     Product.SecurityFiltering(SecurityFilter::Disallowed);
-    // This method changes only the new template record supplied by its caller.
-    // It never modifies a standard master or an existing financial mapping.
+    VATBusiness.SecurityFiltering(SecurityFilter::Disallowed);
+    VATProduct.SecurityFiltering(SecurityFilter::Disallowed);
+
+    // Prefer the default simple warehouse and existing inventory account mapping.
     if Scenario."Item Location Code" = '' then
       Scenario."Item Location Code" := SimpleLocation();
     if Scenario."Item Location Code" = '' then
@@ -396,76 +486,102 @@ codeunit 90408 "BCSF Demo Partner Setup"
       until InventoryPosting.Next() = 0;
     if not Found then
       Error(ExistingBindingErr, InventoryPosting.TableCaption());
-    General.SetRange(Blocked, false);
-    if Scenario."Gen. Bus. Posting Group" <> '' then
-      General.SetRange("Gen. Bus. Posting Group", Scenario."Gen. Bus. Posting Group");
-    if Scenario."Item Product Group" <> '' then
-      General.SetRange("Gen. Prod. Posting Group", Scenario."Item Product Group");
-    Found := false;
-    if General.FindSet() then
-      repeat
-        if Business.Get(General."Gen. Bus. Posting Group") and Product.Get(General."Gen. Prod. Posting Group") and
-          UsableAccount(General."Sales Account", false) and UsableAccount(General."Purch. Account", false) and
-          UsableAccount(General."COGS Account", false) and UsableAccount(General."Inventory Adjmt. Account", false) and
-          UsableAccount(General."Direct Cost Applied Account", false) then begin
-          VAT.Reset();
-          VAT.SetRange(Blocked, false);
-          VAT.SetRange("VAT Calculation Type", VAT."VAT Calculation Type"::"Normal VAT");
-          if Scenario."VAT Bus. Posting Group" <> '' then
-            VAT.SetRange("VAT Bus. Posting Group", Scenario."VAT Bus. Posting Group")
-          else
-            if Business."Def. VAT Bus. Posting Group" <> '' then
-              VAT.SetRange("VAT Bus. Posting Group", Business."Def. VAT Bus. Posting Group");
-          if Scenario."Item VAT Product Group" <> '' then
-            VAT.SetRange("VAT Prod. Posting Group", Scenario."Item VAT Product Group")
-          else
-            if Product."Def. VAT Prod. Posting Group" <> '' then
-              VAT.SetRange("VAT Prod. Posting Group", Product."Def. VAT Prod. Posting Group");
-          if VAT.FindSet() then
-            repeat
-              if (VAT."VAT %" = 0) or (UsableAccount(VAT."Sales VAT Account", false) and UsableAccount(VAT."Purchase VAT Account", false)) then begin
-                Scenario."Gen. Bus. Posting Group" := General."Gen. Bus. Posting Group";
-                Scenario."Item Product Group" := General."Gen. Prod. Posting Group";
-                Scenario."VAT Bus. Posting Group" := VAT."VAT Bus. Posting Group";
-                Scenario."Item VAT Product Group" := VAT."VAT Prod. Posting Group";
-                Found := true;
-                break;
-              end;
-            until VAT.Next() = 0;
-        end;
-        if Found then
-          break;
-      until General.Next() = 0;
-    if not Found then
-      Error(ExistingBindingErr, General.TableCaption() + ' / ' + VAT.TableCaption());
-    if Scenario."Customer Posting Group" <> '' then
-      CustomerGroup.SetRange(Code, Scenario."Customer Posting Group");
-    Found := false;
-    if CustomerGroup.FindSet() then
-      repeat
-        if UsableAccount(CustomerGroup."Receivables Account", true) and
-          CanUseInvoiceRoundingAccount(true, CustomerGroup."Invoice Rounding Account") then begin
-          Scenario."Customer Posting Group" := CustomerGroup.Code;
-          Found := true;
-          break;
-        end;
-      until CustomerGroup.Next() = 0;
-    if not Found then
-      Error(ExistingBindingErr, CustomerGroup.TableCaption());
-    if Scenario."Vendor Posting Group" <> '' then
-      VendorGroup.SetRange(Code, Scenario."Vendor Posting Group");
-    Found := false;
-    if VendorGroup.FindSet() then
-      repeat
-        if UsableAccount(VendorGroup."Payables Account", true) and
-          CanUseInvoiceRoundingAccount(false, VendorGroup."Invoice Rounding Account") then begin
-          Scenario."Vendor Posting Group" := VendorGroup.Code;
-          Found := true;
-          break;
-        end;
-      until VendorGroup.Next() = 0;
-    if not Found then
-      Error(ExistingBindingErr, VendorGroup.TableCaption());
+
+    // These codes are the verified German BC standard company setup used by
+    // the current DE wholesale demo. Do not fall back to EU/AUSLAND or 0% VAT.
+    if not Business.Get('INLAND') or not Product.Get('HANDEL') or
+      not VATBusiness.Get('INLAND') or not VATProduct.Get('VAT19') then
+      Error(ExistingBindingErr, GermanStandardSetupLbl);
+    if not General.Get('INLAND', 'HANDEL') then
+      Error(ExistingBindingErr, General.TableCaption() + ' / INLAND / HANDEL');
+    if General.Blocked or
+      not UsableAccount(General."Sales Account", false) or
+      not UsableAccount(General."Purch. Account", false) or
+      not UsableAccount(General."COGS Account", false) or
+      not UsableAccount(General."Inventory Adjmt. Account", false) or
+      not UsableAccount(General."Direct Cost Applied Account", false) then
+      Error(ExistingBindingErr, General.TableCaption() + ' / INLAND / HANDEL');
+    if not VAT.Get('INLAND', 'VAT19') then
+      Error(ExistingBindingErr, VAT.TableCaption() + ' / INLAND / VAT19');
+    if VAT.Blocked or (VAT."VAT Calculation Type" <> VAT."VAT Calculation Type"::"Normal VAT") or
+      (VAT."VAT %" <> 19) or
+      not UsableAccount(VAT."Sales VAT Account", false) or
+      not UsableAccount(VAT."Purchase VAT Account", false) then
+      Error(ExistingBindingErr, VAT.TableCaption() + ' / INLAND / VAT19');
+
+    if not CustomerGroup.Get('INLAND') then
+      Error(ExistingBindingErr, CustomerGroup.TableCaption() + ' / INLAND');
+    if (CustomerGroup."Receivables Account" <> '1202') or
+      not UsableAccount('1202', true) or
+      not CanUseInvoiceRoundingAccount(true, CustomerGroup."Invoice Rounding Account") then
+      Error(ExistingBindingErr, CustomerGroup.TableCaption() + ' / INLAND / 1202');
+    if not VendorGroup.Get('INLAND') then
+      Error(ExistingBindingErr, VendorGroup.TableCaption() + ' / INLAND');
+    if (VendorGroup."Payables Account" <> '3301') or
+      not UsableAccount('3301', true) or
+      not CanUseInvoiceRoundingAccount(false, VendorGroup."Invoice Rounding Account") then
+      Error(ExistingBindingErr, VendorGroup.TableCaption() + ' / INLAND / 3301');
+
+    Scenario."Gen. Bus. Posting Group" := 'INLAND';
+    Scenario."VAT Bus. Posting Group" := 'INLAND';
+    Scenario."Customer Posting Group" := 'INLAND';
+    Scenario."Vendor Posting Group" := 'INLAND';
+    Scenario."Item Product Group" := 'HANDEL';
+    Scenario."Item VAT Product Group" := 'VAT19';
+  end;
+
+  // The two existing German standard control accounts are the sole permitted
+  // modifications of non-empty financial setup in this scope. No new accounts
+  // or alternate account mappings are invented.
+  local procedure EnsureGermanStandardControlAccount(GroupCode: Code[20]; AccountNo: Code[20]; SalesSide: Boolean; Write: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    Account: Record "G/L Account";
+    CustomerGroup: Record "Customer Posting Group";
+    VendorGroup: Record "Vendor Posting Group";
+    Manager: Codeunit "BCSF Setup Manager";
+  begin
+    Account.SecurityFiltering(SecurityFilter::Disallowed);
+    CustomerGroup.SecurityFiltering(SecurityFilter::Disallowed);
+    VendorGroup.SecurityFiltering(SecurityFilter::Disallowed);
+    if SalesSide then begin
+      if not CustomerGroup.Get(GroupCode) then begin
+        Block('Debitorenbuchungsgruppe / ' + GroupCode, Write, TempDiff);
+        exit;
+      end;
+      if CustomerGroup."Receivables Account" <> AccountNo then begin
+        Block('Debitorenbuchungsgruppe / ' + GroupCode + ' / ' + AccountNo, Write, TempDiff);
+        exit;
+      end;
+    end else begin
+      if not VendorGroup.Get(GroupCode) then begin
+        Block('Kreditorenbuchungsgruppe / ' + GroupCode, Write, TempDiff);
+        exit;
+      end;
+      if VendorGroup."Payables Account" <> AccountNo then begin
+        Block('Kreditorenbuchungsgruppe / ' + GroupCode + ' / ' + AccountNo, Write, TempDiff);
+        exit;
+      end;
+    end;
+    if not Account.Get(AccountNo) then begin
+      Block(Account.TableCaption() + ' / ' + AccountNo, Write, TempDiff);
+      exit;
+    end;
+    if Account.Blocked or (Account."Account Type" <> Account."Account Type"::Posting) then begin
+      Block(Account.TableCaption() + ' / ' + AccountNo, Write, TempDiff);
+      exit;
+    end;
+    if not Account."Direct Posting" then
+      exit;
+    if not Account.WritePermission() then begin
+      Block(Account.TableCaption() + ' / ' + AccountNo, Write, TempDiff);
+      exit;
+    end;
+    if not Write then begin
+      Manager.AddFinding(TempDiff, Account.TableCaption() + ' / ' + AccountNo, false, ControlPostingFindingLbl, ControlPostingActionLbl);
+      exit;
+    end;
+    Account.Validate("Direct Posting", false);
+    Account.Modify(true);
   end;
 
   local procedure SimpleLocation(): Code[10]
@@ -485,6 +601,8 @@ codeunit 90408 "BCSF Demo Partner Setup"
     exit('');
   end;
 
+  // Direct Posting is not a validity criterion for receivables/payables posting
+  // through standard customer/vendor posting groups. Preserve existing account settings.
   local procedure UsableAccount(No: Code[20]; ControlAccount: Boolean): Boolean
   var
     Account: Record "G/L Account";
@@ -546,11 +664,16 @@ codeunit 90408 "BCSF Demo Partner Setup"
   end;
 
   local procedure CanUseInvoiceRoundingAccount(SalesSide: Boolean; AccountNo: Code[20]): Boolean
-  var
-    Account: Record "G/L Account";
   begin
     if not InvoiceRoundingEnabled(SalesSide) then
       exit(true);
+    exit(UsableRoundingAccount(AccountNo));
+  end;
+
+  local procedure UsableRoundingAccount(AccountNo: Code[20]): Boolean
+  var
+    Account: Record "G/L Account";
+  begin
     Account.SecurityFiltering(SecurityFilter::Disallowed);
     if not Account.Get(AccountNo) then
       exit(false);
@@ -756,8 +879,12 @@ codeunit 90408 "BCSF Demo Partner Setup"
   end;
 
   var
+    ExistingGroupLbl: Label 'Factory posting group based on existing account mappings';
     GermanyLbl: Label 'Germany';
     SimpleLocationLbl: Label 'Central warehouse';
+    GermanStandardSetupLbl: Label 'German BC standard posting groups INLAND / HANDEL / VAT19';
+    ControlPostingFindingLbl: Label 'Direct Posting is enabled on a German standard customer/vendor control account.';
+    ControlPostingActionLbl: Label 'Set Direct Posting to No for this verified control account during initialization.';
     ExistingBindingErr: Label 'Existing company setup has no compatible account mapping for %1. Missing technical setup can be added, but financial account roles must be configured explicitly. Existing mappings were retained.', Comment = '%1 = setup table or role';
     JournalLbl: Label 'General Journal';
     FillLbl: Label 'Create missing setup or fill empty number series bindings';

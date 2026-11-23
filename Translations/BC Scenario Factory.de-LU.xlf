@@ -8835,7 +8835,7 @@
           <note from="Developer" annotates="general" priority="2" />
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType SkippedUnitsLbl</note>
         </trans-unit>
-      </group>
+      <trans-unit id="Codeunit 90408 - NamedType 90010200" translate="yes" xml:space="preserve"><source>German BC standard posting groups INLAND / HANDEL / VAT19</source><target state="translated">Deutsche BC-Standardbuchungsgruppen INLAND / HANDEL / VAT19</target><note from="Developer" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType GermanStandardSetupLbl</note></trans-unit><trans-unit id="Codeunit 90408 - NamedType 90010201" translate="yes" xml:space="preserve"><source>Direct Posting is enabled on a German standard customer/vendor control account.</source><target state="translated">Direktbuchung ist auf einem deutschen Standard-Debitoren-/Kreditorensammelkonto aktiviert.</target><note from="Developer" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ControlPostingFindingLbl</note></trans-unit><trans-unit id="Codeunit 90408 - NamedType 90010202" translate="yes" xml:space="preserve"><source>Set Direct Posting to No for this verified control account during initialization.</source><target state="translated">Direktbuchung bei der Initialisierung für dieses geprüfte Sammelkonto auf Nein setzen.</target><note from="Developer" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ControlPostingActionLbl</note></trans-unit></group>
     </body>
   </file>
 </xliff>

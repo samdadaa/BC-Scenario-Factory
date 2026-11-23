@@ -2313,15 +2313,35 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ConfirmLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 1179794989" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set Direct Posting to No for this verified control account during initialization.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ControlPostingActionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 1688188908" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Direct Posting is enabled on a German standard customer/vendor control account.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ControlPostingFindingLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3327067986 - NamedType 1130450473" size-unit="char" translate="yes" xml:space="preserve">
           <source>Existing company setup has no compatible account mapping for %1. Missing technical setup can be added, but financial account roles must be configured explicitly. Existing mappings were retained.</source>
           <note from="Developer" annotates="general" priority="2">%1 = setup table or role</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ExistingBindingErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 3830690826" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Factory posting group based on existing account mappings</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ExistingGroupLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3327067986 - NamedType 1288870255" size-unit="char" translate="yes" xml:space="preserve">
           <source>Create missing setup or fill empty number series bindings</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType FillLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 4219471696" size-unit="char" translate="yes" xml:space="preserve">
+          <source>German BC standard posting groups INLAND / HANDEL / VAT19</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType GermanStandardSetupLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3327067986 - NamedType 2234300843" size-unit="char" translate="yes" xml:space="preserve">
           <source>Germany</source>
