@@ -2303,6 +2303,21 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Finance Package - Field Version - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Codeunit 517982695 - NamedType 2230233351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The credit memo dimensions are blocked or required dimensions are missing. Review the customer, vendor and item defaults.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Credit Memo Processor - NamedType DimensionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 517982695 - NamedType 2714761632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Credit memo results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain posting.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Credit Memo Processor - NamedType ResultErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 517982695 - NamedType 2685700126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Credit memo setup is not supported: credit memo number series are missing, or returns are posted with a separate return document. Review the standard sales and purchase setup.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Credit Memo Processor - NamedType SetupErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3327067986 - NamedType 3621259247" size-unit="char" translate="yes" xml:space="preserve">
           <source>Finance foundation %1 is missing, incompatible or not writable. Review setup and permissions before applying.</source>
           <note from="Developer" annotates="general" priority="2">%1 = setup requirement</note>
@@ -4233,6 +4248,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType ContactsGroupLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 1514598332" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer credit memo entries</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType CustomerCreditsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 616362993" size-unit="char" translate="yes" xml:space="preserve">
           <source>Customer payments</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -4397,6 +4417,11 @@
           <source>This view cannot be matched reliably to the standard list.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType UnverifiedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 1122109396" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor credit memo entries</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType VendorCreditsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 126709513" size-unit="char" translate="yes" xml:space="preserve">
           <source>Vendor payments</source>

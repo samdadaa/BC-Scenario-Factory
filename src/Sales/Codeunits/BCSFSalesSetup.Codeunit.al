@@ -239,6 +239,7 @@ codeunit 90429 "BCSF Sales Setup"
     Inventory: Record "Inventory Setup";
     Contract: Codeunit "BCSF Contract JSON";
     Payments: Codeunit "BCSF Payment Processor";
+    Credits: Codeunit "BCSF Credit Memo Processor";
     Guard: Codeunit "BCSF Environment Guard";
     Source: Codeunit "BCSF Master Data Source";
     Values: JsonObject;
@@ -310,8 +311,13 @@ codeunit 90429 "BCSF Sales Setup"
         Inventory.Get();
         Inventory.TestField("Automatic Cost Posting", true);
       end;
-      if Payments.Enabled(Context) then
+      if Payments.Enabled(Context) then begin
         Payments.Check(Context);
+        if Credits.Enabled(Context) then begin
+          Credits.CheckSetup(true);
+          Guard.EnsurePostingTableAccess(Database::"Sales Cr.Memo Header", false);
+        end;
+      end;
       CheckSeries(CopyStr(Contract.GetCode(Values, 'postedInvoiceSeries'), 1, 20), DateFrom, DateTo);
       if Code = 'SALES.ORDER' then
         CheckSeries(CopyStr(Contract.GetCode(Values, 'shipmentSeries'), 1, 20), DateFrom, DateTo);

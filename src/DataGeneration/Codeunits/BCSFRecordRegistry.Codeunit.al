@@ -156,6 +156,7 @@ codeunit 90252 "BCSF Record Registry"
       Database::"Item Attribute Value", Database::"Item Attribute Value Mapping", Database::"Item Variant",
       Database::"Item Reference", Database::"Item Vendor", Database::"Item Substitution",
       Database::"Stockkeeping Unit", Database::Bin, Database::"Bin Content", Database::"Ship-to Address", Database::"Order Address",
+      Database::"Customer Bank Account", Database::"Vendor Bank Account",
       Database::"Sales Header", Database::"Purchase Header", Database::"Sales Invoice Header",
       Database::"Sales Cr.Memo Header", Database::"Sales Shipment Header", Database::"Purch. Inv. Header",
       Database::"Purch. Cr. Memo Hdr.", Database::"Purch. Rcpt. Header", Database::"Cust. Ledger Entry",

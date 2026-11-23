@@ -190,6 +190,8 @@ codeunit 90144 "BCSF Snapshot Writer"
     Settings.Add('paymentMethod', Scenario."Partner Payment Method");
     Settings.Add('dimension1', Scenario."Partner Dimension 1");
     Settings.Add('dimension2', Scenario."Partner Dimension 2");
+    // Additive marker: new captures create a synthetic bank account with each partner.
+    Settings.Add('bankAccountVersion', 1);
     Settings.Add('paymentReady', false);
     OnCapturePartnerSetup(FinanceMode, Settings);
     exit(Settings);

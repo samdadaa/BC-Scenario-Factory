@@ -104,8 +104,8 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-047](#sf-047) | P1 | Zur Prüfung | Großhandel v6: Artikelpool, zeitliche Beschaffung, geografische Streuung; native Abnahme offen |
 | [SF-049](#sf-049) | P0 | In Arbeit | Gemeinsamer Stammdatenpool, Preflight und Mengenvertrag |
 | [SF-050](#sf-050) | P0 | Zur Prüfung | Einzelvorgänge, sichere Fortsetzung, Skip-/Prüfzustände und Existing-Foundation; native Abnahme offen |
-| [SF-051](#sf-051) | P1 | Offen | Finanzen: Teilzahlungen, Toleranz und Ausgleich |
-| [SF-052](#sf-052) | P1 | Offen | Retouren und Gutschriften für Einkauf und Verkauf |
+| [SF-051](#sf-051) | P1 | Zur Prüfung (Teilumfang) | Teilzahlung/Raten/offene Posten umgesetzt; Rabatt, Toleranz, Gutschrift, Sammelausgleich, Bankstämme offen |
+| [SF-052](#sf-052) | P1 | Zur Prüfung (Teilumfang) | Gutschriften ungebucht/gebucht im Folgeprozess; Retouren/Rückgabebelege und Ausgleich offen |
 | [SF-053](#sf-053) | P1 | Offen | Inventory-Bewegungen, Inventur und Umlagerung |
 | [SF-054](#sf-054) | P2 | Offen | Assembly/Montageaufträge |
 | [SF-055](#sf-055) | P2 | Offen | Projekte/Jobs und Projektabrechnung |
@@ -964,19 +964,21 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 <a name="sf-051"></a>
 ### SF-051 — Finanzen: Teilzahlungen, Ausgleich und Zahlungsmodus robust abschließen
-**Status:** Offen · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-039
+**Status:** Zur Prüfung (Teilumfang, 23.11.2026) · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-039
 
-- [ ] Vorhandenen `BCSF Payment Processor`, Finanzsetup, gültige Partner-/Bankkonten und Journal-Standardroutinen wiederverwenden; keine neuen direkten Postentabellen-Inserts.
-- [ ] Zahlungsmodi „ohne Zahlung“, „vollständig“, „teilweise“, „mit Ausgleich“ fachlich getrennt planen; Teilzahlungen/Restbeträge, unterschiedliche Zahlungstermine, Einzel- und Sammelausgleich (nur soweit BC-Standardfunktion unterstützt) korrekt abbilden.
-- [ ] Zahlungsrabatt, Zahlungstoleranz, negative Beträge/Gutschriften, mehrfache Teilzahlungen und verbleibende offene Posten nach Standardregeln berücksichtigen; Posting/Anwendung auf tatsächliche Rechnungen begrenzen.
+- [x] Vorhandenen `BCSF Payment Processor`, Finanzsetup, gültige Partner-/Bankkonten und Journal-Standardroutinen wiederverwenden; keine neuen direkten Postentabellen-Inserts. (Lokal im Code; nicht kompiliert.)
+- [x] Zahlungsplan je Rechnung (Seed-deterministisch, additives Marker `planVersion` 1 im `paymentSetup`; alte Snapshots bleiben Vollzahlung): voll, zwei Raten mit unterschiedlichen Zahlungsterminen, Teilzahlung mit offenem Rest, bewusst offen. Exakte Restbetragsprüfung nach jeder Rate und im Validator. [ ] „Sammelausgleich“ und separate Nutzerwahl der Modi bleiben offen.
+- [ ] Zahlungsrabatt, Zahlungstoleranz und Gutschriften (SF-052) **nicht umgesetzt**: Der Validator erwartet exakte Restbeträge; eine stille Toleranz-/Rabattanpassung führt zu einem gesperrten Vorgang statt Scheinerfolg. Mehrfache Teilzahlungen >2 Raten offen.
 - [ ] Fehlende Partnerbankdaten: sichere Fallbacks nur nach geprüfter Fach-/Rechtsregel, niemals reale Zahlung auslösen; Kunden-/Lieferantenstämme nicht ungefragt mutieren (SF-039).
 - [ ] R09 mit Codeunit 426 und `Applies-to Doc. Type/No.` in echter BC 29.x Sandbox testen, sichere Journalvaliderungsreihenfolge und Commit-Grenzen; Zahlungen bei deaktiviertem Modul nicht auslösen.
 - [ ] Journalzeilen/-belege, Debitoren-/Kreditorenposten, detaillierte Posten, Bank-/Sachposten, Ausgleichsreste verproben; Dashboard und Starter aktualisieren.
 **Abnahme:** gebuchte Rechnungen haben je Prozessmodus nachweisbar korrekte offene/ausgeglichene Restbeträge, kein COMMIT-Verbot/kein Doppelposting.
 
+**Umsetzung 1.0.12.0 / 23.11.2026:** Nur `BCSFPaymentProcessor` (Plan, Ratenbuchung, Restprüfung, Validator), zwei Testmethoden im vorhandenen Testobjekt 90700, Versionen. Keine neue Tabelle/Seite/UI-Text. **Nicht kompiliert (.NET 10 fehlt), nicht nativ getestet.** [Bericht](docs/review/SF051_PRUEFBERICHT.md).
+
 <a name="sf-052"></a>
 ### SF-052 — Verkauf/Einkauf: Retouren und Gutschriften vollständig als Folgeschritte
-**Status:** Offen · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-051
+**Status:** Zur Prüfung (Teilumfang: Gutschriften, 23.11.2026; nicht kompiliert) · [Bericht](docs/review/SF052_PRUEFBERICHT.md) · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-051
 
 - [ ] Einkauf: Rücksendung/Warenausgang und Einkaufsgutschrift, Teil- und Vollretoure mit Referenz auf ursprünglichen Wareneingang/Rechnung, angemessene Bestandsdeckung.
 - [ ] Verkauf: Rücknahme/Wareneingang und Verkaufsgutschrift auf gebuchte Lieferung/Rechnung, inklusive Teilmengen und kaufmännischer Begründung; passende MWSt./Wertposten.
@@ -985,6 +987,8 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 - [ ] Einzelmodul, Komplettszenario und vorbefüllter Fremdstammdatensatz testen; Ausgangsbelege mit fehlender/teilweise bereits retournierter Menge kontrolliert skippen.
 - [ ] Starter/Run Snapshot/Registry/Drilldowns und DE/EN ergänzen; bei fehlenden BC-Funktionen Grenzen kennzeichnen.
 **Abnahme:** gebuchte Teil-/Vollretouren und Gutschriften als echte BC-Standardbelege in Einkauf und Verkauf nachweisbar.
+
+**Umsetzung 23.11.2026 (Teilumfang):** Ungebuchte, gebuchte Teil- und (Verkauf) Vollgutschriften zu gebuchten Rechnungen im Folgeprozess über die vorhandenen Generatoren (`BCSF Credit Memo Processor`, 90481); Partnerbankkonten (SF-039-Teil) beim Anlegen der Partner. Offen: Rücksendung/Rückgabebelege, Ausgleich mit der Rechnung, Quoten-/Optionsfelder, Dashboard-Sonderkachel, native Abnahme.
 
 <a name="sf-053"></a>
 ### SF-053 — Inventory: Lagerbewegungen, Inventur und Umlagerung ohne WMS

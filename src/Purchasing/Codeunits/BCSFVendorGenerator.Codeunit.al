@@ -51,6 +51,8 @@ codeunit 90450 "BCSF Vendor Generator" implements "BCSF Generator"
     Rules.CheckSetup(Context, 'VENDOR');
     if Contract.GetInteger(Rules.ReadSettings(Context), 'version') = 2 then
       Children.CheckPermissions(false);
+    if Children.HasBankAccount(Rules.ReadSettings(Context)) then
+      Children.CheckBankPermissions(false);
     Partner.SecurityFiltering(SecurityFilter::Disallowed);
     if not Partner.ReadPermission() or not Partner.WritePermission() then
       Error(PermissionErr);
@@ -146,6 +148,9 @@ codeunit 90450 "BCSF Vendor Generator" implements "BCSF Generator"
     ParentId := Registry.RegisterResult(RunId, 'VENDOR', LogicalKey, 'VENDOR', BatchId, Partner.RecordId(), NoParent);
     if Contract.GetInteger(Settings, 'version') = 2 then
         Children.CreateVendor(Context, Partner, RunId, BatchId, LogicalKey, ParentId);
+    // Bank account is created together with the partner, in the same batch transaction.
+    if Children.HasBankAccount(Settings) then
+      Children.CreateVendorBank(Context, Partner, RunId, BatchId, LogicalKey, ParentId);
   end;
 
   procedure ValidateOutput(Context: JsonObject; Target: JsonObject; Batch: JsonObject; Result: JsonObject; var Findings: JsonArray)
@@ -183,6 +188,10 @@ codeunit 90450 "BCSF Vendor Generator" implements "BCSF Generator"
           Children.CheckVendor(Context, Partner, RunId, BatchId, LogicalKey, Entry."Entry Id");
           ExpectedArtifacts += 1;
         end;
+      if Children.HasBankAccount(Settings) then begin
+        Children.CheckVendorBank(Context, Partner, RunId, BatchId, LogicalKey, Entry."Entry Id");
+        ExpectedArtifacts += 1;
+      end;
       Partner.TestField(Name, Contract.GetText(Values, 'name'));
       Partner.TestField(Contact, Contract.GetText(Values, 'contact'));
       Partner.TestField(Address, Contract.GetText(Values, 'address'));

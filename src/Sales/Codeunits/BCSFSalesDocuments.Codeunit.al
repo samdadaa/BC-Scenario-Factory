@@ -36,6 +36,7 @@ codeunit 90430 "BCSF Sales Documents"
     Registry: Codeunit "BCSF Record Registry";
     Evidence: Codeunit "BCSF Sales Evidence";
     Payments: Codeunit "BCSF Payment Processor";
+    Credits: Codeunit "BCSF Credit Memo Processor";
     SalesPost: Codeunit "Sales-Post";
     QuoteToOrder: Codeunit "Sales-Quote to Order";
     ParentId: Guid;
@@ -201,8 +202,12 @@ codeunit 90430 "BCSF Sales Documents"
       end;
     end;
     Evidence.RegisterPosting(Context, RunId, EntityCode, LogicalKey, BatchId, Invoice, Shipment, ParentId);
-    if Payments.Enabled(Context) then
+    if Payments.Enabled(Context) then begin
       Payments.Pay(Context, RunId, EntityCode, LogicalKey, BatchId, Invoice."Cust. Ledger Entry No.", true, ParentId);
+      // Optional follow-up of the same stage: unposted or posted credit memo for this invoice.
+      if Credits.Enabled(Context) then
+        Credits.CreateForSalesInvoice(Context, RunId, EntityCode, LogicalKey, BatchId, Invoice, ParentId);
+    end;
   end;
 
   local procedure ApplyShipTo(Context: JsonObject; var Header: Record "Sales Header"; Customer: Record Customer)

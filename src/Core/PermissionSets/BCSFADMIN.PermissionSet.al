@@ -25,6 +25,7 @@ permissionset 90105 "BCSF ADMIN"
     codeunit "BCSF Master Data Source" = X,
     codeunit "BCSF Config Export" = X,
     codeunit "BCSF Payment Processor" = X,
+    codeunit "BCSF Credit Memo Processor" = X,
     codeunit "BCSF Purchase Evidence" = X,
     codeunit "BCSF Wholesale Profile" = X,
     codeunit "BCSF Company Initialization" = X,

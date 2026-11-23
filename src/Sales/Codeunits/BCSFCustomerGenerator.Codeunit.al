@@ -54,6 +54,8 @@ codeunit 90425 "BCSF Customer Generator" implements "BCSF Generator"
     // Only business customers receive an additional delivery address.
     if (Contract.GetInteger(Settings, 'version') = 2) and (Contract.GetInteger(Settings, 'b2cPercent') < 100) then
       Children.CheckPermissions(true);
+    if Children.HasBankAccount(Settings) then
+      Children.CheckBankPermissions(true);
     Partner.SecurityFiltering(SecurityFilter::Disallowed);
     if not Partner.ReadPermission() or not Partner.WritePermission() then
       Error(PermissionErr);
@@ -157,6 +159,9 @@ codeunit 90425 "BCSF Customer Generator" implements "BCSF Generator"
     if Contract.GetInteger(Settings, 'version') = 2 then
       if not Contract.GetBoolean(Values, 'consumer') then
         Children.CreateCustomer(Context, Partner, RunId, BatchId, LogicalKey, ParentId);
+    // Bank account is created together with the partner (consumers included).
+    if Children.HasBankAccount(Settings) then
+      Children.CreateCustomerBank(Context, Partner, RunId, BatchId, LogicalKey, ParentId);
   end;
 
   procedure ValidateOutput(Context: JsonObject; Target: JsonObject; Batch: JsonObject; Result: JsonObject; var Findings: JsonArray)
@@ -195,6 +200,10 @@ codeunit 90425 "BCSF Customer Generator" implements "BCSF Generator"
           Children.CheckCustomer(Context, Partner, RunId, BatchId, LogicalKey, Entry."Entry Id");
           ExpectedArtifacts += 1;
         end;
+      if Children.HasBankAccount(Settings) then begin
+        Children.CheckCustomerBank(Context, Partner, RunId, BatchId, LogicalKey, Entry."Entry Id");
+        ExpectedArtifacts += 1;
+      end;
       Partner.TestField(Name, Contract.GetText(Values, 'name'));
       Partner.TestField(Contact, Contract.GetText(Values, 'contact'));
       Partner.TestField(Address, Contract.GetText(Values, 'address'));

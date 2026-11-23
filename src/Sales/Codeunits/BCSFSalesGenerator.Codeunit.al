@@ -204,6 +204,7 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     Contract: Codeunit "BCSF Contract JSON";
     Coordinator: Codeunit "BCSF Process Coordinator";
     Payments: Codeunit "BCSF Payment Processor";
+    Credits: Codeunit "BCSF Credit Memo Processor";
     RunId: Guid;
     BatchId: Guid;
     LogicalKey: Integer;
@@ -243,8 +244,11 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
         if Contract.GetDatePolicyVersion(Context) = 1 then
           Invoice.TestField("Document Date", Coordinator.DocumentDate(Context, EntityCode, LogicalKey));
         Invoice.TestField("Sell-to Customer No.", Customer."No.");
-        if Payments.Enabled(Context) then
+        if Payments.Enabled(Context) then begin
           Payments.ValidatePayment(RunId, EntityCode, LogicalKey, Invoice."Cust. Ledger Entry No.", true);
+          if Credits.Enabled(Context) then
+            Credits.ValidateForSalesInvoice(Context, RunId, EntityCode, LogicalKey, Invoice);
+        end;
         for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, LogicalKey) do begin
           if Coordinator.IsWholesaleQualityProfile(Context) then begin
             Setup.ItemFor(Context, Coordinator.WholesaleSalesItemKey(Context, EntityCode, LogicalKey, LineIndex), Item);

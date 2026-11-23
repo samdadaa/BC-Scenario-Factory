@@ -1,0 +1,7 @@
+{
+  "Credit memo setup is not supported: credit memo number series are missing, or returns are posted with a separate return document. Review the standard sales and purchase setup.": "Die Gutschrifteneinrichtung wird nicht unterstützt: Nummernserien für Gutschriften fehlen oder Rücksendungen werden mit einem eigenen Rückgabebeleg gebucht. Prüfen Sie die Standardeinrichtung für Verkauf und Einkauf.",
+  "The credit memo dimensions are blocked or required dimensions are missing. Review the customer, vendor and item defaults.": "Die Dimensionen der Gutschrift sind gesperrt oder erforderliche Dimensionen fehlen. Prüfen Sie die Standardwerte von Debitor, Kreditor und Artikel.",
+  "Credit memo results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain posting.": "Die Gutschriftsergebnisse fehlen, wurden geändert oder sind nicht prüfbar. Lassen Sie das Paket zur Prüfung gesperrt und wiederholen Sie keine unsichere Buchung.",
+  "Customer credit memo entries": "Debitorengutschriftsposten",
+  "Vendor credit memo entries": "Kreditorengutschriftsposten"
+}

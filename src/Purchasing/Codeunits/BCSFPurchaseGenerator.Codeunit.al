@@ -100,6 +100,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Contract: Codeunit "BCSF Contract JSON";
     Numbers: Codeunit "No. Series";
     Payments: Codeunit "BCSF Payment Processor";
+    Credits: Codeunit "BCSF Credit Memo Processor";
     Guard: Codeunit "BCSF Environment Guard";
     Source: Codeunit "BCSF Master Data Source";
     Token: JsonToken;
@@ -161,8 +162,13 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
       if ((GL."Allow Posting From" <> 0D) and (DateFrom < GL."Allow Posting From")) or
         ((GL."Allow Posting To" <> 0D) and (DateTo > GL."Allow Posting To")) then
         Error(SetupErr);
-      if Payments.Enabled(Context) then
+      if Payments.Enabled(Context) then begin
         Payments.Check(Context);
+        if Credits.Enabled(Context) then begin
+          Credits.CheckSetup(false);
+          Guard.EnsurePostingTableAccess(Database::"Purch. Cr. Memo Hdr.", false);
+        end;
+      end;
     end;
 
   end;
@@ -382,6 +388,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Dimensions: Codeunit DimensionManagement;
     Evidence: Codeunit "BCSF Purchase Evidence";
     Payments: Codeunit "BCSF Payment Processor";
+    Credits: Codeunit "BCSF Credit Memo Processor";
     PurchasePost: Codeunit "Purch.-Post";
     Token: JsonToken;
     NoParent: Guid;
@@ -495,8 +502,12 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
       Registry.RegisterResult(RunId, 'PURCHASE.ORDER', LogicalKey, 'DOCUMENT', BatchId, Header.RecordId(), ParentId);
     end;
     Evidence.RegisterPosting(RunId, LogicalKey, BatchId, Invoice, Receipt, ParentId);
-    if Payments.Enabled(Context) then
+    if Payments.Enabled(Context) then begin
       Payments.Pay(Context, RunId, 'PURCHASE.ORDER', LogicalKey, BatchId, Invoice."Vendor Ledger Entry No.", false, ParentId);
+      // Optional follow-up of the same stage: unposted or posted credit memo for this invoice.
+      if Credits.Enabled(Context) then
+        Credits.CreateForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, BatchId, Invoice, ParentId);
+    end;
   end;
 
   procedure ValidateOutput(Context: JsonObject; Target: JsonObject; Batch: JsonObject; Result: JsonObject; var Findings: JsonArray)
@@ -514,6 +525,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Coordinator: Codeunit "BCSF Process Coordinator";
     Registry: Codeunit "BCSF Record Registry";
     Payments: Codeunit "BCSF Payment Processor";
+    Credits: Codeunit "BCSF Credit Memo Processor";
     RunId: Guid;
     BatchId: Guid;
     LogicalKey: Integer;
@@ -576,8 +588,11 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
           ReceiptLine.TestField("No.", Item."No.");
           ReceiptLine.TestField(Quantity, PostedQuantity);
         end;
-        if Payments.Enabled(Context) then
+        if Payments.Enabled(Context) then begin
           Payments.ValidatePayment(RunId, 'PURCHASE.ORDER', LogicalKey, Invoice."Vendor Ledger Entry No.", false);
+          if Credits.Enabled(Context) then
+            Credits.ValidateForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, Invoice);
+        end;
       end;
       if Mode <> 1 then begin
         Entry.Get(RunId, 'PURCHASE.ORDER', LogicalKey, 'DOCUMENT');

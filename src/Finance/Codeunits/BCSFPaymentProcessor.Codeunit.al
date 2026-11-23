@@ -7,6 +7,7 @@ using BCScenarioFactory.ScenarioManagement;
 using Microsoft.Bank.BankAccount;
 using Microsoft.Bank.Ledger;
 using Microsoft.Finance.GeneralLedger.Account;
+using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.GeneralLedger.Journal;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Finance.GeneralLedger.Posting;
@@ -74,12 +75,15 @@ codeunit 90401 "BCSF Payment Processor"
     JournalTemplate: Record "Gen. Journal Template";
     Batch: Record "Gen. Journal Batch";
     Packages: Codeunit "BCSF Finance Package Mgt";
+    Credits: Codeunit "BCSF Credit Memo Processor";
   begin
     if not Scenario."Payment Posting Approved" then
       exit;
     Scenario.TestField("Sales Posting Approved", true);
     Scenario.TestField("Purchase Posting Approved", true);
     Scenario.TestField("Process Mode", "BCSF Process Mode"::FollowUpProcesses);
+    Credits.CheckSetup(true);
+    Credits.CheckSetup(false);
     Bank.Get('BCSF-PAY');
     Group.Get(Bank."Bank Acc. Posting Group");
     CheckBank(Bank, Group.Code, Group."G/L Account No.");
@@ -104,6 +108,11 @@ codeunit 90401 "BCSF Payment Processor"
       Batch.FindFirst();
     end;
     Settings.Add('version', 1);
+    // Additive payment-plan marker: new captures mix full, split, partial and open items.
+    // A missing marker keeps the historical single full payment per invoice.
+    Settings.Add('planVersion', 1);
+    // Additive marker: credit memos for posted invoices (unposted and posted) in the same approved stage.
+    Settings.Add('creditVersion', 1);
     Settings.Add('approved', true);
     Settings.Add('bankId', Format(Bank.SystemId, 0, 4));
     Settings.Add('bankNo', Bank."No.");
@@ -124,6 +133,83 @@ codeunit 90401 "BCSF Payment Processor"
       exit(InvoiceDate);
     Evaluate(EndingDate, Contract.GetText(Context, 'endingDate'), 9);
     exit(Seed.SampleDate(Context, NodeCode, Format(LogicalKey, 0, 9), 'PAYMENT-DATE', InvoiceDate, EndingDate, false));
+  end;
+
+  procedure PaymentDateSecond(Context: JsonObject; NodeCode: Code[30]; LogicalKey: Integer; FirstDate: Date): Date
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+    Seed: Codeunit "BCSF Seed Engine";
+    EndingDate: Date;
+  begin
+    if Contract.GetDatePolicyVersion(Context) = 0 then
+      exit(FirstDate);
+    Evaluate(EndingDate, Contract.GetText(Context, 'endingDate'), 9);
+    exit(Seed.SampleDate(Context, NodeCode, Format(LogicalKey, 0, 9), 'PAYMENT-DATE-2', FirstDate, EndingDate, false));
+  end;
+
+  /// <summary>0 = historical contract (one full payment), 1 = deterministic payment plan.</summary>
+  procedure PlanVersion(Context: JsonObject): Integer
+  var
+    Token: JsonToken;
+    Settings: JsonObject;
+  begin
+    if not Context.Get('paymentSetup', Token) then
+      exit(0);
+    Settings := Token.AsObject();
+    if not Settings.Get('planVersion', Token) then
+      exit(0);
+    if Token.AsValue().AsInteger() <> 1 then
+      Error(SetupErr);
+    exit(1);
+  end;
+
+  /// <summary>
+  /// Deterministic plan from seed and the signed invoice amount. Kind 0 = one full payment,
+  /// 1 = two installments that clear the invoice, 2 = one partial payment with open rest,
+  /// 3 = no payment (open item). Amounts keep the sign of the invoice amount; invoices too
+  /// small to split fall back to one full payment.
+  /// </summary>
+  procedure PlanAmounts(Context: JsonObject; NodeCode: Code[30]; LogicalKey: Integer; Total: Decimal; var Kind: Integer; var FirstAmount: Decimal; var SecondAmount: Decimal)
+  var
+    GLSetup: Record "General Ledger Setup";
+    Seed: Codeunit "BCSF Seed Engine";
+    Precision: Decimal;
+    Roll: Integer;
+    Percent: Integer;
+  begin
+    Kind := 0;
+    FirstAmount := Total;
+    SecondAmount := 0;
+    if PlanVersion(Context) = 0 then
+      exit;
+    Roll := Seed.SampleInteger(Context, NodeCode, Format(LogicalKey, 0, 9), 'PAYMENT-PLAN', 1, 100);
+    case true of
+      Roll <= 55:
+        exit;
+      Roll <= 75:
+        Kind := 1;
+      Roll <= 90:
+        Kind := 2;
+      else
+        Kind := 3;
+    end;
+    if Kind = 3 then begin
+      FirstAmount := 0;
+      exit;
+    end;
+    GLSetup.Get();
+    Precision := GLSetup."Amount Rounding Precision";
+    if Precision <= 0 then
+      Precision := 0.01;
+    Percent := Seed.SampleInteger(Context, NodeCode, Format(LogicalKey, 0, 9), 'PAYMENT-PERCENT', 30, 70);
+    FirstAmount := Round(Total * Percent / 100, Precision);
+    if (Abs(FirstAmount) < 2 * Precision) or (Abs(Total - FirstAmount) < 2 * Precision) then begin
+      Kind := 0;
+      FirstAmount := Total;
+      exit;
+    end;
+    if Kind = 1 then
+      SecondAmount := Total - FirstAmount;
   end;
 
   procedure Enabled(Context: JsonObject): Boolean
@@ -151,6 +237,7 @@ codeunit 90401 "BCSF Payment Processor"
       Error(ApprovalErr);
     if Contract.GetInteger(Context, 'processMode') <> 3 then
       Error(ApprovalErr);
+    PlanVersion(Context);
     Context.Get('paymentSetup', Token);
     Settings := Token.AsObject();
     Evaluate(BankId, Contract.GetText(Settings, 'bankId'));
@@ -223,11 +310,8 @@ codeunit 90401 "BCSF Payment Processor"
   [CommitBehavior(CommitBehavior::Error)]
   procedure Pay(Context: JsonObject; RunId: Guid; NodeCode: Code[30]; LogicalKey: Integer; BatchId: Guid; InvoiceEntryNo: Integer; CustomerPayment: Boolean; ParentId: Guid)
   var
-    TempLine: Record "Gen. Journal Line" temporary;
     CustomerEntry: Record "Cust. Ledger Entry";
     VendorEntry: Record "Vendor Ledger Entry";
-    GL: Record "G/L Entry";
-    GLRegister: Record "G/L Register";
     Parent: Record "BCSF Generated Record";
     PurchaseInvoice: Record "Purch. Inv. Header";
     SalesInvoice: Record "Sales Invoice Header";
@@ -235,7 +319,6 @@ codeunit 90401 "BCSF Payment Processor"
     Manager: Codeunit "BCSF Scenario Manager";
     Rules: Codeunit "BCSF Partner Rules";
     Guard: Codeunit "BCSF Environment Guard";
-    PostLine: Codeunit "Gen. Jnl.-Post Line";
     Contract: Codeunit "BCSF Contract JSON";
     Stored: JsonObject;
     Target: JsonObject;
@@ -248,6 +331,10 @@ codeunit 90401 "BCSF Payment Processor"
     DocumentNo: Code[20];
     PostingDate: Date;
     Remaining: Decimal;
+    OriginalAmount: Decimal;
+    FirstAmount: Decimal;
+    SecondAmount: Decimal;
+    Kind: Integer;
     PaymentTransactionNo: Integer;
   begin
     // Reconstruct and verify the immutable contract and actual claimed worker before any payment.
@@ -279,7 +366,8 @@ codeunit 90401 "BCSF Payment Processor"
       CustomerEntry.TestField(Open, true);
       CustomerEntry.TestField("Document Type", CustomerEntry."Document Type"::Invoice);
       CustomerEntry.TestField("Currency Code", '');
-      CustomerEntry.CalcFields("Remaining Amount");
+      CustomerEntry.CalcFields("Remaining Amount", "Original Amount");
+      OriginalAmount := CustomerEntry."Original Amount";
       AccountNo := CustomerEntry."Customer No.";
       DocumentNo := CustomerEntry."Document No.";
       PostingDate := CustomerEntry."Posting Date";
@@ -292,7 +380,8 @@ codeunit 90401 "BCSF Payment Processor"
       VendorEntry.TestField(Open, true);
       VendorEntry.TestField("Document Type", VendorEntry."Document Type"::Invoice);
       VendorEntry.TestField("Currency Code", '');
-      VendorEntry.CalcFields("Remaining Amount");
+      VendorEntry.CalcFields("Remaining Amount", "Original Amount");
+      OriginalAmount := VendorEntry."Original Amount";
       AccountNo := VendorEntry."Vendor No.";
       DocumentNo := VendorEntry."Document No.";
       PostingDate := VendorEntry."Posting Date";
@@ -300,6 +389,34 @@ codeunit 90401 "BCSF Payment Processor"
     end;
     if Remaining = 0 then
       Error(ResultErr);
+    // A freshly posted invoice has no earlier application; the plan relies on it.
+    if Remaining <> OriginalAmount then
+      Error(ResultErr);
+    PlanAmounts(Stored, NodeCode, LogicalKey, Remaining, Kind, FirstAmount, SecondAmount);
+    if Kind = 3 then
+      exit; // Planned open item: nothing is posted or registered as a payment.
+    PostingDate := PaymentDate(Stored, NodeCode, LogicalKey, PostingDate);
+    PaymentTransactionNo := PostInstallment(Settings, DocumentNo, LogicalKey, CustomerPayment, AccountNo, PostingDate, -FirstAmount);
+    RegisterPayment(RunId, NodeCode, LogicalKey, BatchId, InvoiceEntryNo, CustomerPayment, PaymentTransactionNo, ParentId, 'PAYMENT');
+    CheckRemaining(InvoiceEntryNo, CustomerPayment, Remaining - FirstAmount);
+    if Kind = 1 then begin
+      PostingDate := PaymentDateSecond(Stored, NodeCode, LogicalKey, PostingDate);
+      PaymentTransactionNo := PostInstallment(Settings, DocumentNo, LogicalKey, CustomerPayment, AccountNo, PostingDate, -SecondAmount);
+      RegisterPayment(RunId, NodeCode, LogicalKey, BatchId, InvoiceEntryNo, CustomerPayment, PaymentTransactionNo, ParentId, 'PAYMENT-2');
+      CheckRemaining(InvoiceEntryNo, CustomerPayment, 0);
+    end;
+    ValidatePayment(RunId, NodeCode, LogicalKey, InvoiceEntryNo, CustomerPayment);
+  end;
+
+  local procedure PostInstallment(Settings: JsonObject; DocumentNo: Code[20]; LogicalKey: Integer; CustomerPayment: Boolean; AccountNo: Code[20]; PostingDate: Date; PaymentAmount: Decimal): Integer
+  var
+    TempLine: Record "Gen. Journal Line" temporary;
+    GL: Record "G/L Entry";
+    GLRegister: Record "G/L Register";
+    PostLine: Codeunit "Gen. Jnl.-Post Line";
+    Contract: Codeunit "BCSF Contract JSON";
+    PaymentTransactionNo: Integer;
+  begin
     TempLine.Init();
     // Field validation invokes payment-tolerance management before posting.
     // Forward suppression to that instance while keeping the batch commit guard.
@@ -307,7 +424,6 @@ codeunit 90401 "BCSF Payment Processor"
     TempLine."Journal Template Name" := CopyStr(Contract.GetText(Settings, 'template'), 1, 10);
     TempLine."Journal Batch Name" := CopyStr(Contract.GetText(Settings, 'batch'), 1, 10);
     TempLine."Line No." := LogicalKey;
-    PostingDate := PaymentDate(Stored, NodeCode, LogicalKey, PostingDate);
     TempLine.Validate("Posting Date", PostingDate);
     TempLine.Validate("Document Date", PostingDate);
     TempLine.Validate("Document Type", TempLine."Document Type"::Payment);
@@ -320,8 +436,8 @@ codeunit 90401 "BCSF Payment Processor"
     TempLine.Validate("Bal. Account Type", TempLine."Bal. Account Type"::"Bank Account");
     TempLine.Validate("Bal. Account No.", CopyStr(Contract.GetText(Settings, 'bankNo'), 1, 20));
     // Assign the payment amount before application; both validations use the
-    // standard commit suppression configured above.
-    TempLine.Validate(Amount, -Remaining);
+    // standard commit suppression configured above. A partial amount stays partial.
+    TempLine.Validate(Amount, PaymentAmount);
     TempLine.Validate("Applies-to Doc. Type", TempLine."Applies-to Doc. Type"::Invoice);
     TempLine.Validate("Applies-to Doc. No.", DocumentNo);
     TempLine."Source Code" := CopyStr(Contract.GetText(Settings, 'sourceCode'), 1, 10);
@@ -344,11 +460,29 @@ codeunit 90401 "BCSF Payment Processor"
     GL.SetFilter("Transaction No.", '<>%1', PaymentTransactionNo);
     if not GL.IsEmpty() then
       Error(ResultErr);
-    RegisterPayment(RunId, NodeCode, LogicalKey, BatchId, InvoiceEntryNo, CustomerPayment, PaymentTransactionNo, ParentId);
-    ValidatePayment(RunId, NodeCode, LogicalKey, InvoiceEntryNo, CustomerPayment);
+    exit(PaymentTransactionNo);
   end;
 
-  local procedure RegisterPayment(RunId: Guid; NodeCode: Code[30]; LogicalKey: Integer; BatchId: Guid; InvoiceEntryNo: Integer; CustomerPayment: Boolean; TransactionNo: Integer; ParentId: Guid)
+  /// <summary>Verifies the standard application result: exact open rest, no silent tolerance or discount.</summary>
+  local procedure CheckRemaining(InvoiceEntryNo: Integer; CustomerPayment: Boolean; ExpectedRemaining: Decimal)
+  var
+    CustomerEntry: Record "Cust. Ledger Entry";
+    VendorEntry: Record "Vendor Ledger Entry";
+  begin
+    if CustomerPayment then begin
+      CustomerEntry.Get(InvoiceEntryNo);
+      CustomerEntry.CalcFields("Remaining Amount");
+      if (CustomerEntry."Remaining Amount" <> ExpectedRemaining) or (CustomerEntry.Open <> (ExpectedRemaining <> 0)) then
+        Error(ResultErr);
+    end else begin
+      VendorEntry.Get(InvoiceEntryNo);
+      VendorEntry.CalcFields("Remaining Amount");
+      if (VendorEntry."Remaining Amount" <> ExpectedRemaining) or (VendorEntry.Open <> (ExpectedRemaining <> 0)) then
+        Error(ResultErr);
+    end;
+  end;
+
+  local procedure RegisterPayment(RunId: Guid; NodeCode: Code[30]; LogicalKey: Integer; BatchId: Guid; InvoiceEntryNo: Integer; CustomerPayment: Boolean; TransactionNo: Integer; ParentId: Guid; PaymentArtifact: Code[30])
   var
     CustomerEntry: Record "Cust. Ledger Entry";
     VendorEntry: Record "Vendor Ledger Entry";
@@ -366,7 +500,7 @@ codeunit 90401 "BCSF Payment Processor"
         Error(ResultErr);
       CustomerEntry.FindFirst();
       PaymentEntryNo := CustomerEntry."Entry No.";
-      Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'PAYMENT', BatchId, CustomerEntry.RecordId(), ParentId);
+      Registry.RegisterResult(RunId, NodeCode, LogicalKey, PaymentArtifact, BatchId, CustomerEntry.RecordId(), ParentId);
       CustomerDetail.SetFilter("Cust. Ledger Entry No.", '%1|%2', InvoiceEntryNo, PaymentEntryNo);
       if CustomerDetail.FindSet() then
         repeat
@@ -379,7 +513,7 @@ codeunit 90401 "BCSF Payment Processor"
         Error(ResultErr);
       VendorEntry.FindFirst();
       PaymentEntryNo := VendorEntry."Entry No.";
-      Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'PAYMENT', BatchId, VendorEntry.RecordId(), ParentId);
+      Registry.RegisterResult(RunId, NodeCode, LogicalKey, PaymentArtifact, BatchId, VendorEntry.RecordId(), ParentId);
       VendorDetail.SetFilter("Vendor Ledger Entry No.", '%1|%2', InvoiceEntryNo, PaymentEntryNo);
       if VendorDetail.FindSet() then
         repeat
@@ -406,20 +540,52 @@ codeunit 90401 "BCSF Payment Processor"
     CustomerEntry: Record "Cust. Ledger Entry";
     VendorEntry: Record "Vendor Ledger Entry";
     Manager: Codeunit "BCSF Scenario Manager";
-    Contract: Codeunit "BCSF Contract JSON";
     Context: JsonObject;
     InvoiceDate: Date;
+    OriginalAmount: Decimal;
+    FirstAmount: Decimal;
+    SecondAmount: Decimal;
+    FirstDate: Date;
+    Kind: Integer;
   begin
     Manager.ReadSnapshot(RunId, Context);
-    Entry.Get(RunId, NodeCode, LogicalKey, 'PAYMENT');
     if CustomerPayment then begin
       CustomerEntry.Get(InvoiceEntryNo);
       InvoiceDate := CustomerEntry."Posting Date";
-      CustomerEntry.CalcFields("Remaining Amount");
-      CustomerEntry.TestField(Open, false);
-      CustomerEntry.TestField("Remaining Amount", 0);
+      CustomerEntry.CalcFields("Original Amount");
+      OriginalAmount := CustomerEntry."Original Amount";
+    end else begin
+      VendorEntry.Get(InvoiceEntryNo);
+      InvoiceDate := VendorEntry."Posting Date";
+      VendorEntry.CalcFields("Original Amount");
+      OriginalAmount := VendorEntry."Original Amount";
+    end;
+    PlanAmounts(Context, NodeCode, LogicalKey, OriginalAmount, Kind, FirstAmount, SecondAmount);
+    // The invoice rest must equal the plan exactly; open items are intentional for kinds 2 and 3.
+    CheckRemaining(InvoiceEntryNo, CustomerPayment, OriginalAmount - FirstAmount - SecondAmount);
+    if Kind = 3 then begin
+      if Entry.Get(RunId, NodeCode, LogicalKey, 'PAYMENT') then
+        Error(ResultErr);
+      exit;
+    end;
+    FirstDate := PaymentDate(Context, NodeCode, LogicalKey, InvoiceDate);
+    ValidateInstallment(Context, RunId, NodeCode, LogicalKey, 'PAYMENT', FirstDate, CustomerPayment);
+    if Kind = 1 then
+      ValidateInstallment(Context, RunId, NodeCode, LogicalKey, 'PAYMENT-2', PaymentDateSecond(Context, NodeCode, LogicalKey, FirstDate), CustomerPayment);
+  end;
+
+  local procedure ValidateInstallment(Context: JsonObject; RunId: Guid; NodeCode: Code[30]; LogicalKey: Integer; ArtifactCode: Code[30]; ExpectedDate: Date; CustomerPayment: Boolean)
+  var
+    Entry: Record "BCSF Generated Record";
+    CustomerEntry: Record "Cust. Ledger Entry";
+    VendorEntry: Record "Vendor Ledger Entry";
+    Contract: Codeunit "BCSF Contract JSON";
+  begin
+    Entry.Get(RunId, NodeCode, LogicalKey, ArtifactCode);
+    // Every installment is fully applied; only the invoice may keep an open rest.
+    if CustomerPayment then begin
       CustomerEntry.GetBySystemId(Entry."Record SystemId");
-      CustomerEntry.TestField("Posting Date", PaymentDate(Context, NodeCode, LogicalKey, InvoiceDate));
+      CustomerEntry.TestField("Posting Date", ExpectedDate);
       if Contract.GetDatePolicyVersion(Context) = 1 then
         CustomerEntry.TestField("Document Date", CustomerEntry."Posting Date");
       CustomerEntry.TestField("Document Type", CustomerEntry."Document Type"::Payment);
@@ -427,13 +593,8 @@ codeunit 90401 "BCSF Payment Processor"
       CustomerEntry.TestField("Remaining Amount", 0);
       CustomerEntry.TestField(Open, false);
     end else begin
-      VendorEntry.Get(InvoiceEntryNo);
-      InvoiceDate := VendorEntry."Posting Date";
-      VendorEntry.CalcFields("Remaining Amount");
-      VendorEntry.TestField(Open, false);
-      VendorEntry.TestField("Remaining Amount", 0);
       VendorEntry.GetBySystemId(Entry."Record SystemId");
-      VendorEntry.TestField("Posting Date", PaymentDate(Context, NodeCode, LogicalKey, InvoiceDate));
+      VendorEntry.TestField("Posting Date", ExpectedDate);
       if Contract.GetDatePolicyVersion(Context) = 1 then
         VendorEntry.TestField("Document Date", VendorEntry."Posting Date");
       VendorEntry.TestField("Document Type", VendorEntry."Document Type"::Payment);

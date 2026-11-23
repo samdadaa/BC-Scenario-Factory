@@ -768,6 +768,157 @@ codeunit 90700 "BCSF Inventory Tests"
   end;
 
   [Test]
+  procedure PaymentPlanIsDeterministicExactAndLegacySafe()
+  var
+    Payments: Codeunit "BCSF Payment Processor";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    OtherRun: JsonObject;
+    Settings: JsonObject;
+    Kind: Integer;
+    OtherKind: Integer;
+    First: Decimal;
+    Second: Decimal;
+    OtherFirst: Decimal;
+    OtherSecond: Decimal;
+    Total: Decimal;
+    LogicalKey: Integer;
+    Seen: array[4] of Boolean;
+    Sign: Integer;
+    Direction: Integer;
+  begin
+    Context := ContextFixture();
+    Settings.Add('version', 1);
+    Settings.Add('approved', true);
+    // Historical snapshots without a plan marker keep one full payment.
+    Context.Add('paymentSetup', Settings);
+    Payments.PlanAmounts(Context, 'SALES.INVOICE', 1, 119.5, Kind, First, Second);
+    Assert((Kind = 0) and (First = 119.5) and (Second = 0), 'A missing plan marker must keep the single full payment.');
+    Settings.Add('planVersion', 1);
+    Context.Replace('paymentSetup', Settings);
+    OtherRun := Contract.Clone(Context);
+    OtherRun.Replace('runId', Format(CreateGuid(), 0, 4));
+    for Direction := 0 to 1 do
+      for LogicalKey := 1 to 200 do begin
+        Sign := 1 - 2 * Direction;
+        Total := Sign * (50 + LogicalKey * 7.31);
+        Payments.PlanAmounts(Context, 'SALES.INVOICE', LogicalKey, Total, Kind, First, Second);
+        Payments.PlanAmounts(OtherRun, 'SALES.INVOICE', LogicalKey, Total, OtherKind, OtherFirst, OtherSecond);
+        Assert((Kind = OtherKind) and (First = OtherFirst) and (Second = OtherSecond), 'The payment plan must not depend on the run id.');
+        Seen[Kind + 1] := true;
+        case Kind of
+          0:
+            Assert((First = Total) and (Second = 0), 'Kind 0 pays the full amount.');
+          1:
+            begin
+              Assert(First + Second = Total, 'Installments must clear the invoice exactly.');
+              Assert((Abs(First) > 0) and (Abs(Second) > 0) and (Sign * First > 0) and (Sign * Second > 0), 'Installments keep the invoice sign.');
+            end;
+          2:
+            Assert((Abs(First) > 0) and (Abs(First) < Abs(Total)) and (Sign * First > 0) and (Second = 0), 'A partial payment leaves an open rest.');
+          3:
+            Assert((First = 0) and (Second = 0), 'A planned open item has no payment.');
+        end;
+      end;
+    Assert(Seen[1] and Seen[2] and Seen[3] and Seen[4], 'All four payment plan kinds must occur across 400 invoices.');
+    // Tiny invoices cannot be split.
+    Payments.PlanAmounts(Context, 'SALES.INVOICE', 5, 0.03, Kind, First, Second);
+    Assert((Kind = 0) or (Kind = 3), 'An invoice too small to split is paid in full or left open.');
+  end;
+
+  [Test]
+  procedure CreditPlanIsDeterministicAndPurchaseCreditsStayPartial()
+  var
+    Credits: Codeunit "BCSF Credit Memo Processor";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    OtherRun: JsonObject;
+    Settings: JsonObject;
+    LogicalKey: Integer;
+    Kind: Integer;
+    Seen: array[4] of Boolean;
+  begin
+    Context := ContextFixture();
+    Settings.Add('version', 1);
+    Settings.Add('approved', true);
+    Context.Add('paymentSetup', Settings);
+    Assert(not Credits.Enabled(Context), 'A missing credit marker must keep credit memos off.');
+    Settings.Add('creditVersion', 1);
+    Context.Replace('paymentSetup', Settings);
+    Assert(Credits.Enabled(Context), 'The credit marker with approved payments enables credit memos.');
+    OtherRun := Contract.Clone(Context);
+    OtherRun.Replace('runId', Format(CreateGuid(), 0, 4));
+    for LogicalKey := 1 to 300 do begin
+      Kind := Credits.PlanKind(Context, 'SALES.INVOICE', LogicalKey, true);
+      Assert(Kind = Credits.PlanKind(OtherRun, 'SALES.INVOICE', LogicalKey, true), 'The credit plan must not depend on the run id.');
+      Seen[Kind + 1] := true;
+      Assert(Credits.PlanKind(Context, 'PURCHASE.ORDER', LogicalKey, false) <> 3, 'Purchase credit memos are never full credits.');
+    end;
+    Assert(Seen[1] and Seen[2] and Seen[3] and Seen[4], 'All four sales credit plan kinds must occur.');
+    Assert(Credits.CreditQuantity(3, 6, true) = 6, 'Full credit repeats the invoiced quantity.');
+    Assert(Credits.CreditQuantity(2, 5, true) = 3, 'Partial sales credit uses whole units.');
+    Assert(Credits.CreditQuantity(2, 8, false) = 1, 'Purchase credit stays at one unit.');
+    Assert(Credits.CreditQuantity(2, 1, true) = 1, 'A credit never exceeds the invoiced quantity.');
+    Settings.Replace('creditVersion', 2);
+    Context.Replace('paymentSetup', Settings);
+    asserterror Credits.Enabled(Context);
+    Assert(GetLastErrorText() <> '', 'An unknown credit marker must stop.');
+  end;
+
+  [Test]
+  procedure SyntheticPartnerBankIsSeedBasedAndChecksumValid()
+  var
+    Children: Codeunit "BCSF Partner Children";
+    Context: JsonObject;
+    BranchNo: Text[20];
+    AccountNo: Text[30];
+    Iban: Code[50];
+    OtherBranch: Text[20];
+    OtherAccount: Text[30];
+    OtherIban: Code[50];
+    Digits: Text;
+    Remainder: Integer;
+    Index: Integer;
+    LogicalKey: Integer;
+  begin
+    Context := ContextFixture();
+    for LogicalKey := 1 to 50 do begin
+      Children.SyntheticBank(Context, 'CUSTOMER', LogicalKey, BranchNo, AccountNo, Iban);
+      Children.SyntheticBank(Context, 'CUSTOMER', LogicalKey, OtherBranch, OtherAccount, OtherIban);
+      Assert(Iban = OtherIban, 'The synthetic IBAN must be reproducible.');
+      Assert((StrLen(Iban) = 22) and (CopyStr(Iban, 1, 2) = 'DE'), 'Synthetic bank data uses a 22 character German IBAN.');
+      // ISO 13616 check: BBAN + country + check digits as numbers must be 1 modulo 97.
+      Digits := CopyStr(Iban, 5) + '1314' + CopyStr(Iban, 3, 2);
+      Remainder := 0;
+      for Index := 1 to StrLen(Digits) do
+        Remainder := (Remainder * 10 + Digits[Index] - 48) mod 97;
+      Assert(Remainder = 1, 'The synthetic IBAN checksum must be valid.');
+    end;
+    Children.SyntheticBank(Context, 'VENDOR', 1, BranchNo, AccountNo, Iban);
+    Children.SyntheticBank(Context, 'CUSTOMER', 1, OtherBranch, OtherAccount, OtherIban);
+    Assert(Iban <> OtherIban, 'Customer and vendor bank accounts must not share the same synthetic number.');
+  end;
+
+  [Test]
+  procedure UnknownPaymentPlanVersionIsRejected()
+  var
+    Payments: Codeunit "BCSF Payment Processor";
+    Context: JsonObject;
+    Settings: JsonObject;
+    Kind: Integer;
+    First: Decimal;
+    Second: Decimal;
+  begin
+    Context := ContextFixture();
+    Settings.Add('version', 1);
+    Settings.Add('approved', true);
+    Settings.Add('planVersion', 2);
+    Context.Add('paymentSetup', Settings);
+    asserterror Payments.PlanAmounts(Context, 'SALES.INVOICE', 1, 100, Kind, First, Second);
+    Assert(GetLastErrorText() <> '', 'An unknown payment plan version must stop before any posting.');
+  end;
+
+  [Test]
   procedure CompletedSmallPostedCompanyHasStandardEvidence()
   var
     Setup: Record "BCSF Factory Setup";
