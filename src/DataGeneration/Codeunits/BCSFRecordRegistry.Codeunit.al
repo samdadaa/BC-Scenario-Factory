@@ -28,6 +28,12 @@ codeunit 90252 "BCSF Record Registry"
   /// <summary>Register in the same transaction as creation. Never commits or creates the target record.</summary>
   [CommitBehavior(CommitBehavior::Error)]
   procedure RegisterResult(RunId: Guid; NodeCode: Code[30]; LogicalKey: Integer; ArtifactCode: Code[30]; BatchId: Guid; TargetId: RecordId; ParentEntryId: Guid): Guid
+  begin
+    exit(RegisterResult(RunId, NodeCode, LogicalKey, ArtifactCode, BatchId, TargetId, ParentEntryId, ''));
+  end;
+
+  [CommitBehavior(CommitBehavior::Error)]
+  procedure RegisterResult(RunId: Guid; NodeCode: Code[30]; LogicalKey: Integer; ArtifactCode: Code[30]; BatchId: Guid; TargetId: RecordId; ParentEntryId: Guid; SkipReason: Code[30]): Guid
   var
     Header: Record "BCSF Run Header";
     Step: Record "BCSF Run Step";
@@ -51,6 +57,7 @@ codeunit 90252 "BCSF Record Registry"
     if Entry.Get(RunId, NodeCode, LogicalKey, ArtifactCode) then begin
       if (Entry."Table Id" <> TargetId.TableNo()) or (Entry."Record SystemId" <> TargetSystemId) or
         (Entry."Batch Id" <> BatchId) or (Entry."Parent Entry Id" <> ParentEntryId) or
+        (Entry."Skip Reason Code" <> SkipReason) or
         (Entry."Generator Code" <> Step."Generator Code") or (Entry."Generator Version" <> Step."Generator Version")
       then
         Error(DuplicateErr);
@@ -70,6 +77,8 @@ codeunit 90252 "BCSF Record Registry"
     Entry."Record Id" := TargetId;
     Entry."Parent Entry Id" := ParentEntryId;
     Entry."Created At" := CurrentDateTime();
+    Entry."Posting Skipped" := SkipReason <> '';
+    Entry."Skip Reason Code" := SkipReason;
     Entry.Insert(true);
     exit(Entry."Entry Id");
   end;
@@ -114,6 +123,13 @@ codeunit 90252 "BCSF Record Registry"
       if Parent."Entry Id" = Entry."Entry Id" then
         Error(ParentErr);
     end;
+    if Entry."Posting Skipped" <> (Entry."Skip Reason Code" <> '') then
+      Error(TargetErr);
+    if Entry."Posting Skipped" then
+      if (Entry."Skip Reason Code" <> 'STOCK') or (Entry."Artifact Code" <> 'DOCUMENT') or
+        (Entry."Table Id" <> Database::"Sales Header") or
+        not (Entry."Node Code" in ['SALES.ORDER', 'SALES.INVOICE']) then
+        Error(TargetErr);
     OnCheckBatch(Entry);
   end;
 

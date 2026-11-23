@@ -1,3 +1,7 @@
+**SF-050 · App 1.0.11.0 · Zur Prüfung (23.11.2026):** Neue Belegläufe isolieren je Geschäftsvorfall; unbekannte Buchungsergebnisse bleiben NeedsReview, unabhängige Pending-Vorgänge können weiterlaufen. No-write-Skips, Qualitäts-/Dashboardbilanz und fehlende technische Existing-Einrichtung sind integriert. Native BC-Abnahme durch den Nutzer offen. SF-051–SF-053 nicht umgesetzt. [Vertrag, Paket und native Prüffälle](docs/review/SF050_PRUEFBERICHT.md).
+
+**Historischer Teilstand SF-049/SF-050 · App 1.0.10.0 · In Arbeit:** Neuer modulabhängiger Mandantenpool ohne pauschale Zwei-Lieferanten-Pflicht; Fehlbestandsbelege erhalten einen ausdrücklichen STOCK-Nachweis und Dashboard-/Qualitätswarnung. Sichere Isolation unerwarteter Buchungsfehler und native Abnahme offen. SF-051–SF-053 noch nicht implementiert. [Teilstand und Prüfung](docs/review/SF049_SF050_PRUEFBERICHT.md).
+
 # BC Scenario Factory
 
 **SF-048 – App 1.0.9.0:** Im vorhandenen Unternehmensassistenten Komplett, nur Stammdaten oder nur Bewegungsdaten wählen. Einkauf/Verkauf können geprüfte Stammdaten desselben Mandanten wiederverwenden, auch aus fehlgeschlagenen Läufen mit vollständig bestätigten Stammdatenpaketen. [Bedienung und Quellenvertrag](docs/MODULAR_GENERATION.md), [Build und offene Sandboxabnahme](docs/review/SF048_PRUEFBERICHT.md). **Zur Prüfung**.

@@ -73,3 +73,13 @@ Gebuchte Eingangs-/Rechnungsdaten über Process Coordinator verteilt, spätesten
 ## SF-048 – Modulare Geschäftsläufe
 
 Generator liest Artikel-/Lieferanten-IDs aus ursprünglichem Quellrun, registriert ausschließlich neue Belege im eigenen Run. Standardbuchungen und Zahlungen nur nach bestehendem Freigabevertrag; Quellenprüfung vor jeder Generatorausführung. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.
+
+
+## SF-049/SF-050 – lokaler Teilstand 1.0.10.0
+
+Bestehenden Quellen-/Snapshot-/Mengen-/Registry-/Qualitäts-/Dashboardpfad für den modulabhängigen Pool Version 3 und ausdrückliche STOCK-Auslassungsnachweise ergänzt. Keine neue Batchengine und keine automatische Wiederholung unerwarteter Buchungsfehler. Unterstützter Umfang, konkrete Dateien/Datenflüsse, Kompatibilität und noch offene native Modulprüfung im [gemeinsamen Prüfbericht](../../../review/SF049_SF050_PRUEFBERICHT.md). Status In Arbeit, keine native Abnahme.
+
+
+## SF-050 – aktuelle Umsetzung 1.0.11.0 / 23.11.2026
+
+Isolierte neue Geschäftsvorfälle, lesende Prüfung der tatsächlich gewählten Quellen, atomare No-write-Skip-Checkpoints, fortgesetzte unabhängige Pending-Arbeit und unveränderte NeedsReview-Sperren. Bestehende Einrichtungen werden nur im bestätigten Foundationpfad ergänzt; neue interne Vorlagen verwenden konkrete kompatible Zuordnungen. Quellen, betroffene Moduldateien, Ergebnis-/Listenvertrag und Grenzen im [aktuellen Prüfbericht](../../../review/SF050_PRUEFBERICHT.md). Fünf neue Methoden im vorhandenen Testobjekt; lokale Nachweise dort, native Modulabnahme N01–N08 durch den Nutzer noch offen. **Zur Prüfung**, SF-051–SF-053 nicht umgesetzt.

@@ -1,3 +1,7 @@
+**SF-050 · App 1.0.11.0 · Zur Prüfung (23.11.2026):** Neue Belegläufe isolieren je Geschäftsvorfall; unbekannte Buchungsergebnisse bleiben NeedsReview, unabhängige Pending-Vorgänge können weiterlaufen. No-write-Skips, Qualitäts-/Dashboardbilanz und fehlende technische Existing-Einrichtung sind integriert. Native BC-Abnahme durch den Nutzer offen. SF-051–SF-053 nicht umgesetzt. [Vertrag, Paket und native Prüffälle](review/SF050_PRUEFBERICHT.md).
+
+**SF-049/SF-050, lokaler Teilstand 1.0.10.0:** Neuer modulabhängiger Mandantenpool Version 3, eingefrorene Auswahl und explizite STOCK-Auslassungsnachweise mit Dashboard-/Qualitätswarnung. Zwei additive Registryfelder, weiterhin 145 Main-Objekte. SF-049/SF-050 In Arbeit; SF-051–SF-053 nicht implementiert. [Umfang, echte Prüfungen und offene native Abnahme](review/SF049_SF050_PRUEFBERICHT.md).
+
 **SF-048 / 1.0.9.0:** [Verbindlicher modularer Quellenvertrag](MODULAR_GENERATION.md): neue optionale Snapshotbindung Version 1 und Sales-v4, Source-Codeunit 90259, bestehende Queue/Registry/Recovery weiterverwendet. Stammdatenreferenzen ersetzen nur im ausdrücklich gewählten Bewegungslauf die Neuanlage; bestätigte terminal fehlgeschlagene Quellen sind zulässig. Bestände werden aktuell geprüft. Keine Run-übergreifenden Registry-Parents und keine zweite Batchengine. [Echte Prüfungen](review/SF048_PRUEFBERICHT.md).
 
 

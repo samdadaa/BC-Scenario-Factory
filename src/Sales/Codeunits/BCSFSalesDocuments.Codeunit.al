@@ -48,6 +48,7 @@ codeunit 90430 "BCSF Sales Documents"
     LineCount: Integer;
     CheckIndex: Integer;
     RequiredStock: Decimal;
+    SkipReason: Code[30];
     StockItems: array[10] of Code[20];
     StockQuantities: array[10] of Decimal;
   begin
@@ -61,6 +62,8 @@ codeunit 90430 "BCSF Sales Documents"
     Setup.CheckCustomer(Customer);
     // Reused customer data can contain articles with no stock. Do not
     // abort the whole sales run during setup; leave that document unposted.
+    if Mode > 0 then
+      Entry.LockTable();
     if (Mode > 0) and Context.Contains('masterDataSource') then
       for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, LogicalKey) do begin
         if Coordinator.IsWholesaleQualityProfile(Context) then begin
@@ -81,8 +84,10 @@ codeunit 90430 "BCSF Sales Documents"
         StockItems[LineIndex] := Item."No.";
         StockQuantities[LineIndex] := Quantity;
         if not Setup.HasStock(Context, Item, RequiredStock, Date) then
-          Mode := 0;
+          SkipReason := 'STOCK';
       end;
+    if SkipReason <> '' then
+      Mode := 0;
     if Mode > 0 then
       // Serialize this app's stock-consuming batches, then check each generated position.
       Entry.LockTable();
@@ -158,7 +163,7 @@ codeunit 90430 "BCSF Sales Documents"
       end;
     end;
     if Mode = 0 then begin
-      ParentId := Registry.RegisterResult(RunId, EntityCode, LogicalKey, 'DOCUMENT', BatchId, Header.RecordId(), NoParent);
+      ParentId := Registry.RegisterResult(RunId, EntityCode, LogicalKey, 'DOCUMENT', BatchId, Header.RecordId(), NoParent, SkipReason);
       exit;
     end;
     for LineIndex := 1 to LineCount do begin

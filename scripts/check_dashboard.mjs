@@ -120,6 +120,21 @@ try {
   assert.equal(await evaluate('document.querySelectorAll(".sf-stat button").length'), 0, 'Tiles never contain nested buttons.');
   assert.equal(await evaluate('document.querySelector(".sf-step-value").textContent'), '20 / 100');
   assert.equal(await evaluate('document.querySelector(".sf-quality").classList.contains("sf-success")'), true);
+  await redraw('window.fixture.selected.masterPool="Eligible 1/2 customers, 0/0 vendors, 40/45 items";window.fixture.selected.postingSkips="2 documents unposted: STOCK"');
+  assert.ok((await evaluate('document.querySelector(".sf-run").textContent')).includes('40/45 items'));
+  assert.ok((await evaluate('document.querySelector(".sf-run").textContent')).includes('2 documents unposted: STOCK'));
+  await redraw('window.fixture.selected.masterPool="<img src=x onerror=window.poolInjected=true>"');
+  assert.equal(await evaluate('document.querySelectorAll(".sf-run img").length'), 0);
+  assert.equal(await evaluate('Boolean(window.poolInjected)'), false);
+  await redraw('delete window.fixture.selected.masterPool;delete window.fixture.selected.postingSkips');
+  await redraw('window.fixture.steps[0].skipped=1;window.fixture.steps[0].reviewUnits=2;window.fixture.steps[0].remaining=79');
+  assert.ok((await evaluate('document.querySelector(".sf-step").textContent')).includes(texts.skippedUnits));
+  assert.ok((await evaluate('document.querySelector(".sf-step").textContent')).includes(texts.reviewUnits));
+  assert.equal(await evaluate('document.querySelector(".sf-step-value").textContent'), '20 / 100', 'Skipped and uncertain units must not increase created work.');
+  await redraw('delete window.fixture.steps[0].skipped;delete window.fixture.steps[0].reviewUnits;window.fixture.steps[0].remaining=80');
+
+  assert.ok(!(await evaluate('document.querySelector(".sf-run").textContent')).includes('2 documents unposted: STOCK'));
+
   assert.equal(await evaluate('document.querySelectorAll(".sf-step").length'), 2, 'External checks stay in diagnostics.');
   await click('[data-stock-focus="result:customer"]');
   assert.deepEqual(await evaluate('window.calls.at(-1).args'), ['runOpen', 'customer']);
@@ -156,8 +171,13 @@ try {
   assert.equal(await evaluate('window.calls.length'), callsBefore);
   // Stale/deleted business results must not turn confirmed work into a false list count.
   await redraw('window.fixture.runStock.metrics[0].count=19');
+  assert.equal(await evaluate('document.querySelector(".sf-step").tagName'), 'BUTTON');
+  assert.ok((await evaluate('document.querySelector(".sf-step").textContent')).includes('19'));
+  await click('.sf-step');
+  assert.deepEqual(await evaluate('window.calls.at(-1).args'), ['runOpen', 'customer']);
+  await redraw('window.fixture.runStock.metrics[0].count=0');
   assert.equal(await evaluate('document.querySelector(".sf-step").tagName'), 'DIV');
-  assert.equal(await evaluate(`document.querySelector('[data-stock-focus="result:customer"] .sf-stock-number').textContent`), '19');
+  assert.equal(await evaluate('document.querySelectorAll(".sf-step[data-stock-focus]").length'), 0);
   await redraw('window.fixture.runStock.metrics[0].count=20;window.fixture.selected.description="<img src=x onerror=window.injected=true>"');
   assert.equal(await evaluate('document.querySelectorAll("img").length'), 0);
   assert.equal(await evaluate('Boolean(window.injected)'), false);

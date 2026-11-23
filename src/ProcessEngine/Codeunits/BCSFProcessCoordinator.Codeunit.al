@@ -280,9 +280,12 @@ codeunit 90275 "BCSF Process Coordinator"
 
   procedure WholesalePurchaseItemKey(Context: JsonObject; PurchaseKey: Integer; LineIndex: Integer): Integer
   var
+    Source: Codeunit "BCSF Master Data Source";
     ItemCount: Integer;
     VendorCount: Integer;
   begin
+    if Source.UsesSelectedPool(Context) then
+      exit(Source.PurchaseItemKey(Context, PurchaseKey, LineIndex));
     ItemCount := WholesaleTargetQuantity(Context, "BCSF Entity Type"::Item);
     VendorCount := WholesaleTargetQuantity(Context, "BCSF Entity Type"::Vendor);
     if (ItemCount < 1) or (VendorCount < 1) or (PurchaseKey < 1) or (LineIndex < 1) then

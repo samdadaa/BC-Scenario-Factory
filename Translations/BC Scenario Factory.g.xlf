@@ -138,6 +138,26 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Sequence No. - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 336769476 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the preflight stage that rejected this unit: CUSTOMER, VENDOR, ITEM, DIMENSION or SOURCE. Review the selected master data; no posting was attempted.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Skip Reason Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 336769476 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Skip Reason Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Skip Reason Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 830047999 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies requested units deliberately skipped by read-only preflight before any business writes. These units are not created or posted.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Skipped Units - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2357143668 - Field 830047999 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Skipped Units</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Batch - Field Skipped Units - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 2357143668 - Field 2014922888 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies when processing was claimed.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -457,6 +477,11 @@
           <source>Effective job queue write and execution permissions are required. Ask an administrator to review the standard job queue role.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Queue Dispatcher - NamedType QueuePermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3969735799 - NamedType 1648274217" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Independent work cannot be scheduled with the current job queue permissions. The failed unit remains blocked for review.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Queue Failure - NamedType ContinuationPermissionErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3484784390 - NamedType 1381824369" size-unit="char" translate="yes" xml:space="preserve">
           <source>Control identities, cancellation requests and confirmed checkpoints cannot be removed or rewritten. Resume only through the guarded recovery actions.</source>
@@ -933,6 +958,11 @@
           <note from="Developer" annotates="general" priority="2">%1 = purchases, %2 = quotes, %3 = orders, %4 = invoices</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType DocumentsLbl</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 208276886" size-unit="char" translate="yes" xml:space="preserve">
+          <source> Existing financial accounts and mappings are retained. Missing required technical setup is added before generation; financial roles without a usable mapping remain blocked.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType ExistingFoundationLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 1788334240" size-unit="char" translate="yes" xml:space="preserve">
           <source>The master data foundation has been checked and completed successfully.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -999,7 +1029,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ChartStep - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 2286664889 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Choose the local test chart once. Existing company accounts and settings are preserved.</source>
+          <source>Choose the chart once. Existing financial mappings are retained; missing required technical setup is added before generation.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control ChartChoice - Property ToolTip</note>
         </trans-unit>
@@ -1628,6 +1658,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Generated Record - Field Parent Entry Id - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 4258977634 - Field 330468796 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies that requested posting was skipped before calling standard posting; the document remains unposted.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Generated Record - Field Posting Skipped - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 4258977634 - Field 330468796 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting Skipped</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Generated Record - Field Posting Skipped - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 4258977634 - Field 1829115764 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the captured record key; SystemId remains the stable identity after a rename.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -1658,6 +1698,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Generated Record - Field Run Id - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 4258977634 - Field 336769476 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the stable reason for skipped posting. STOCK means insufficient unreserved stock on the document date.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Generated Record - Field Skip Reason Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 4258977634 - Field 336769476 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Skip Reason Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Generated Record - Field Skip Reason Code - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 4258977634 - Field 2066789741 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the standard result table.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -1682,6 +1732,11 @@
           <source>No suitable non-bin location found for wholesale transactions.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Master Data Source - NamedType LocationErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1342277927 - NamedType 1729308755" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No compatible master-data pool for the selected modules: customers %1/%2, vendors %3/%4, items %5/%6 eligible/checked. Review blocks, units, location, supplier relations and posting setup.</source>
+          <note from="Developer" annotates="general" priority="2">%1/%2 = customers, %3/%4 = vendors, %5/%6 = items eligible/checked</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Master Data Source - NamedType PoolErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1342277927 - NamedType 4281848628" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select a confirmed wholesale master-data source in this company with matching profile version and intact customer, vendor and item identities.</source>
@@ -2258,6 +2313,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ConfirmLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 1130450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing company setup has no compatible account mapping for %1. Missing technical setup can be added, but financial account roles must be configured explicitly. Existing mappings were retained.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = setup table or role</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ExistingBindingErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3327067986 - NamedType 1288870255" size-unit="char" translate="yes" xml:space="preserve">
           <source>Create missing setup or fill empty number series bindings</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -2277,6 +2337,11 @@
           <source>Reuse existing setup</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType ReuseLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3327067986 - NamedType 931450331" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Central warehouse</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Demo Partner Setup - NamedType SimpleLocationLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2902468460 - NamedType 4291717659" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory accrual account</source>
@@ -2617,11 +2682,6 @@
           <source>E-Commerce</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType EcommerceLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3043848220 - NamedType 103200263" size-unit="char" translate="yes" xml:space="preserve">
-          <source>For existing company setup, select the existing item units, posting groups and compatible location under Item Assortment. No test package will be applied.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Starter Catalog - NamedType ExistingFoundationErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3043848220 - NamedType 1886611882" size-unit="char" translate="yes" xml:space="preserve">
           <source>Planning Only: Follow-Up Processes</source>
@@ -3398,6 +3458,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Step Metric - Field Review Batches - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 1917353054 - Field 51447369 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies units in failed or NeedsReview batches. Their requested work is not reported as created or posted.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Step Metric - Field Review Units - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1917353054 - Field 51447369 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unconfirmed Units</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Step Metric - Field Review Units - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 1917353054 - Field 3633922808 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the owning captured run.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3417,6 +3487,16 @@
           <source>Running Batches</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Step Metric - Field Running Batches - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1917353054 - Field 830047999 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies preflight skips with no business record created. Posting skips on retained documents are reported separately.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Step Metric - Field Skipped Units - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 1917353054 - Field 830047999 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Skipped Units</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table BCSF Step Metric - Field Skipped Units - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 1917353054 - Field 269761521 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the observed step state, not a global quality approval.</source>
@@ -3793,6 +3873,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PlanLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 2342793230" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Master data eligible/checked: customers %1/%2, vendors %3/%4, items %5/%6. Other checked records were excluded.</source>
+          <note from="Developer" annotates="general" priority="2">%1/%2 = customers, %3/%4 = vendors, %5/%6 = items</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PoolSummaryLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1894451138" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posted documents without payments</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3802,6 +3887,11 @@
           <source>Posted documents with payments and application</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PostedWithPaymentsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 4139240900" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 documents retained unposted because stock was insufficient. Review provenance for STOCK reasons and the unposted result lists.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = skipped posting count</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType PostingSkipsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 4191897503" size-unit="char" translate="yes" xml:space="preserve">
           <source>Setup preflight</source>
@@ -3893,6 +3983,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ReviewCountLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1004411743" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unconfirmed; review required</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ReviewUnitsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 950047948" size-unit="char" translate="yes" xml:space="preserve">
           <source>Captured runs</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3962,6 +4057,11 @@
           <source>Factory setup</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType SetupLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1227982585" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Skipped before creation</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType SkippedUnitsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 2962635917" size-unit="char" translate="yes" xml:space="preserve">
           <source>Started</source>

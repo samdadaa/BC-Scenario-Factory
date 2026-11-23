@@ -58,8 +58,6 @@ codeunit 90155 "BCSF Starter Catalog"
     begin
         Guard.EnsureCanConfigure(CompanyName());
         SetupMgt.EnsureInitialized();
-        if Packages.GetAppliedMode() = "BCSF Finance Mode"::Existing then
-            Error(ExistingFoundationErr);
         // Same applied package, same accounts; existing conflict/posted-company guards remain active.
         Packages.InitializeCompany(Packages.GetAppliedMode());
         Seed();
@@ -758,7 +756,6 @@ codeunit 90155 "BCSF Starter Catalog"
     end;
 
     var
-        ExistingFoundationErr: Label 'For existing company setup, select the existing item units, posting groups and compatible location under Item Assortment. No test package will be applied.';
         MixedSalesLbl: Label 'Sales – Mixed Posted Documents';
         SalesDocumentsLbl: Label 'Sales – Quotes, Orders and Invoices';
         ModulesWholesaleLbl: Label 'Wholesale - Warehouse and CRM planned';

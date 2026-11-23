@@ -36,7 +36,6 @@ codeunit 90402 "BCSF Finance Setup Check"
     GeneralMatrix: Record "General Posting Setup";
     VATMatrix: Record "VAT Posting Setup";
     InventoryMatrix: Record "Inventory Posting Setup";
-    BankGroup: Record "Bank Account Posting Group";
     Fields: List of [Integer];
   begin
     Fields.Add(GeneralMatrix.FieldNo("Sales Account"));
@@ -49,9 +48,6 @@ codeunit 90402 "BCSF Finance Setup Check"
     Clear(Fields);
     Fields.Add(InventoryMatrix.FieldNo("Inventory Account"));
     CheckMatrix(Database::"Inventory Posting Setup", Fields, 0, TempDiff);
-    Clear(Fields);
-    Fields.Add(BankGroup.FieldNo("G/L Account No."));
-    CheckMatrix(Database::"Bank Account Posting Group", Fields, 0, TempDiff);
   end;
 
   local procedure CheckMatrix(TableId: Integer; AccountFields: List of [Integer]; BlockedField: Integer; var TempDiff: Record "BCSF Setup Diff" temporary)

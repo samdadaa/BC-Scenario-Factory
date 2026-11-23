@@ -103,6 +103,18 @@ table 90300 "BCSF Batch"
       ToolTip = 'Specifies the unique worker session identity and prevents session number reuse from authorizing recovery.';
       DataClassification = SystemMetadata;
     }
+    field(19; "Skipped Units"; Integer)
+    {
+      Caption = 'Skipped Units';
+      ToolTip = 'Specifies requested units deliberately skipped by read-only preflight before any business writes. These units are not created or posted.';
+      DataClassification = SystemMetadata;
+    }
+    field(20; "Skip Reason Code"; Code[30])
+    {
+      Caption = 'Skip Reason Code';
+      ToolTip = 'Specifies the preflight stage that rejected this unit: CUSTOMER, VENDOR, ITEM, DIMENSION or SOURCE. Review the selected master data; no posting was attempted.';
+      DataClassification = SystemMetadata;
+    }
   }
   keys
   {

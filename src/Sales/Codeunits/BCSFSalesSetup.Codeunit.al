@@ -32,12 +32,11 @@ codeunit 90429 "BCSF Sales Setup"
   Access = Internal;
 
   [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Snapshot Writer", 'OnCaptureSalesSetup', '', false, false)]
-  local procedure Capture(Scenario: Record "BCSF Scenario"; InventorySettings: JsonObject; var Settings: JsonObject)
+  local procedure Capture(Scenario: Record "BCSF Scenario"; InventorySettings: JsonObject; MasterBinding: JsonObject; var Settings: JsonObject)
   var
     Target: Record "BCSF Data Target";
     Sales: Record "Sales & Receivables Setup";
     Contract: Codeunit "BCSF Contract JSON";
-    Source: Codeunit "BCSF Master Data Source";
     Binding: JsonObject;
     SourceContext: JsonObject;
     Token: JsonToken;
@@ -69,10 +68,8 @@ codeunit 90429 "BCSF Sales Setup"
     Settings.Add('postedInvoiceSeries', Sales."Posted Invoice Nos.");
     Settings.Add('shipmentSeries', Sales."Posted Shipment Nos.");
     if Scenario."Generation Kind" = Scenario."Generation Kind"::Transactions then begin
-      if IsNullGuid(Scenario."Master Source Run Id") then
-        Binding := Source.CaptureExisting()
-      else
-        Binding := Source.Capture(Scenario."Master Source Run Id", Scenario."Profile Code", Scenario."Profile Version");
+      // Reuse the exact binding captured once by Snapshot Writer.
+      Binding := Contract.Clone(MasterBinding);
       Settings.Add('sourceRunId', Format(Scenario."Master Source Run Id", 0, 4));
       Binding.Get('customers', Token);
       Settings.Add('customers', Token.AsArray());
@@ -149,15 +146,17 @@ codeunit 90429 "BCSF Sales Setup"
     for LogicalKey := 1 to CandidateCount do begin
       Entry.Get(RunId, NodeCode, LogicalKey, NodeCode);
       Entry.TestField("Table Id", TableId);
-      if not Registry.ExistsByIdentity(Entry) then
-        Error(DriftErr);
+      if not Contract.IsDocumentIsolation(Context) then
+        if not Registry.ExistsByIdentity(Entry) then
+          Error(DriftErr);
       Ids.Add(Format(Entry."Record SystemId", 0, 4));
       if Entity = Entity::Customer then
         if Delivery.Get(RunId, NodeCode, LogicalKey, 'DELIVERY') then begin
           Delivery.TestField("Table Id", Database::"Ship-to Address");
           Delivery.TestField("Parent Entry Id", Entry."Entry Id");
-          if not Registry.ExistsByIdentity(Delivery) then
-            Error(DriftErr);
+          if not Contract.IsDocumentIsolation(Context) then
+            if not Registry.ExistsByIdentity(Delivery) then
+              Error(DriftErr);
           Addresses.Add(Format(Delivery."Record SystemId", 0, 4));
         end;
     end;
@@ -267,8 +266,9 @@ codeunit 90429 "BCSF Sales Setup"
           Error(ReceiptRequiredErr);
       end;
     end else
-      if Contract.GetText(Values, 'masterFingerprint') <> MasterFingerprint(Context) then
-        Error(DriftErr);
+      if not Contract.IsDocumentIsolation(Context) then
+        if Contract.GetText(Values, 'masterFingerprint') <> MasterFingerprint(Context) then
+          Error(DriftErr);
     Code := Contract.GetCode(Target, 'entityCode');
     if not (Code in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE']) or
       (Contract.GetCode(Target, 'moduleCode') <> 'SALES') or not (Contract.GetInteger(Target, 'processMode') in [1, 2]) then
@@ -333,6 +333,8 @@ codeunit 90429 "BCSF Sales Setup"
         ((GL."Allow Posting To" <> 0D) and (DateTo > GL."Allow Posting To")) then
         Error(DateErr);
     end;
+    if Contract.IsDocumentIsolation(Context) then
+      exit; // Per-document read-only inspection checks the chosen masters.
     if UsesRunMasters(Context) then begin
       if not Context.Contains('batchId') then
         exit;
@@ -351,6 +353,50 @@ codeunit 90429 "BCSF Sales Setup"
       CheckCombinations(Context, Item, Posting);
       if Posting then
         CheckRemainingStock(Context, Item, Index, Ids.AsArray().Count());
+    end;
+  end;
+
+  procedure CheckFrozenMasters(Context: JsonObject; Customer: Record Customer; Item: Record Item)
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+    Settings: JsonObject;
+    Subset: JsonObject;
+    Ids: JsonArray;
+    EmptyIds: JsonArray;
+    Actual: JsonArray;
+    Captured: JsonArray;
+    ActualToken: JsonToken;
+    CapturedToken: JsonToken;
+    ActualText: Text;
+    CapturedText: Text;
+    Found: Boolean;
+  begin
+    if UsesRunMasters(Context) then
+      exit;
+    Settings := Contract.Clone(ReadSettings(Context));
+    Captured.ReadFrom(Contract.GetText(Settings, 'masterFingerprint'));
+    Subset := Contract.Clone(Context);
+    Ids.Add(Format(Customer.SystemId, 0, 4));
+    Settings.Replace('customers', Ids);
+    Clear(Ids);
+    Ids.Add(Format(Item.SystemId, 0, 4));
+    Settings.Replace('items', Ids);
+    Settings.Replace('shipToIds', EmptyIds);
+    Subset.Replace('salesSetup', Settings);
+    Actual.ReadFrom(MasterFingerprint(Subset));
+    foreach ActualToken in Actual do begin
+      Found := false;
+      foreach CapturedToken in Captured do
+        if Contract.GetText(CapturedToken.AsObject(), 'id') = Contract.GetText(ActualToken.AsObject(), 'id') then begin
+          ActualToken.WriteTo(ActualText);
+          CapturedToken.WriteTo(CapturedText);
+          if ActualText <> CapturedText then
+            Error(DriftErr);
+          Found := true;
+          break;
+        end;
+      if not Found then
+        Error(DriftErr);
     end;
   end;
 

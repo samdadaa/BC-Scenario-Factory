@@ -1,3 +1,5 @@
+**Aktueller SF-050-Vertrag ab 1.0.11.0:** [Isolierte Dokumentjobs, lesende Skip-Nachweise, NeedsReview/Fortsetzung, Ergänzung vorhandener Mandanteneinrichtung und native Abnahme](review/SF050_PRUEFBERICHT.md). Additiv Batchfelder 19/20, temporäre Kennzahlen 20/21 und optionale Snapshot-Ausführungspolitik 1; keine Migration historischer Captures, kein ForceSync. Neue Captures vorhandener geschützter Starter nutzen die Politik automatisch. Native Prüfung durch den Nutzer offen, Status Zur Prüfung. Ältere datierte Ausführungs-/Existing-Beschreibungen unten bleiben historische Nachweise.
+
 # Hintergrundverarbeitung und Wiederaufnahme
 
 **SF-048:** ExecutionRules bestätigt Quellläufe nur bei terminalem zulässigem Zustand ohne Running-Batch und vollständigen abgeschlossenen Stammdatenpaketen mit bestätigten Ergebnissen/Checkpoints. Neue unabhängige Läufe erhalten eigene IDs; Recovery und NeedsReview alter Läufe bleiben unverändert. Aktive/pausierte Vorgänger sperren den neuen Unternehmensstart. [Vertrag und native Grenzen](MODULAR_GENERATION.md).

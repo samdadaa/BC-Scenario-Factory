@@ -210,22 +210,26 @@ codeunit 90356 "BCSF Monitoring Mgt"
                 TempMetric."Completed Batches" += 1;
                 TempMetric."Confirmed Units" += Batch."Processed Units";
                 TempMetric."Created Artifacts" += Batch."Created Records";
+                TempMetric."Skipped Units" += Batch."Skipped Units";
               end;
             Batch.Status::Running:
               TempMetric."Running Batches" += 1;
             Batch.Status::Cancelled:
               TempMetric."Cancelled Batches" += 1;
             Batch.Status::Failed, Batch.Status::NeedsReview:
-              TempMetric."Review Batches" += 1;
+              begin
+                TempMetric."Review Batches" += 1;
+                TempMetric."Review Units" += Batch."Last Key" - Batch."First Key" + 1;
+              end;
           end;
           TempMetric.Modify();
         end;
       until Batch.Next() = 0;
     if TempMetric.FindSet() then
       repeat
-        TempMetric."Remaining Units" := TempMetric."Planned Units" - TempMetric."Confirmed Units";
+        TempMetric."Remaining Units" := TempMetric."Planned Units" - TempMetric."Confirmed Units" - TempMetric."Skipped Units";
         if not TempMetric."External Check" and (TempMetric."Planned Units" > 0) then
-          TempMetric."Progress Percent" := Round(100 * TempMetric."Confirmed Units" / TempMetric."Planned Units", 0.01);
+          TempMetric."Progress Percent" := Round(100 * (TempMetric."Confirmed Units" + TempMetric."Skipped Units") / TempMetric."Planned Units", 0.01);
         TempMetric.State := WaitingLbl;
         if not TempMetric."Plan Saved" then
           TempMetric.State := NoPlanLbl
@@ -246,6 +250,9 @@ codeunit 90356 "BCSF Monitoring Mgt"
                     (TempMetric."Confirmed Units" = TempMetric."Planned Units")
                   then
                     TempMetric.State := BatchCompleteLbl;
+        if (TempMetric."Total Batches" > 0) and (TempMetric."Completed Batches" = TempMetric."Total Batches") and
+          (TempMetric."Skipped Units" > 0) then
+          TempMetric.State := Format("BCSF Run Status"::CompletedWithWarnings);
         TempMetric.Modify();
       until TempMetric.Next() = 0;
   end;

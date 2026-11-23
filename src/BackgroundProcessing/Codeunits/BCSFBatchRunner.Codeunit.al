@@ -27,12 +27,14 @@ codeunit 90307 "BCSF Batch Runner"
     Dispatcher: Codeunit "BCSF Queue Dispatcher";
     Rules: Codeunit "BCSF Execution Rules";
     Recovery: Codeunit "BCSF Batch Recovery";
+    PartnerRules: Codeunit "BCSF Partner Rules";
     Generator: Interface "BCSF Generator";
     Context: JsonObject;
     Target: JsonObject;
     BatchJson: JsonObject;
     Result: JsonObject;
     Findings: JsonArray;
+    SkipReason: Code[30];
   begin
     Batch.Get(BatchId);
     Header.LockTable();
@@ -63,7 +65,24 @@ codeunit 90307 "BCSF Batch Runner"
     if TempCapability."Contract Probe" or (TempCapability.Version <> Step."Generator Version") then
       Error(ResultErr);
     Registry.RequirePrerequisites(Generator, Context, Target);
-    Generator.ExecuteBatch(Contract.Clone(Context), Contract.Clone(Target), Contract.Clone(BatchJson), Result);
+    if Contract.IsDocumentIsolation(Context) and (Batch."First Key" = Batch."Last Key") then
+      SkipReason := PartnerRules.InspectDocument(Contract.Clone(Context), Contract.Clone(Target), Batch."First Key");
+    if SkipReason = '' then
+      Generator.ExecuteBatch(Contract.Clone(Context), Contract.Clone(Target), Contract.Clone(BatchJson), Result)
+    else begin
+      Batch."Skipped Units" := 1;
+      Batch."Skip Reason Code" := SkipReason;
+      Rules.CheckSkipped(Batch);
+      Batch.Modify(true);
+      Result.Add('generatorCode', Step."Generator Code");
+      Result.Add('runId', Contract.GetText(Context, 'runId'));
+      Result.Add('batchKey', Batch."Batch Key");
+      Result.Add('processedUnits', 0);
+      Result.Add('createdRecords', 0);
+      Result.Add('dataLanguage', Header."Data Language".AsInteger());
+      Result.Add('completed', true);
+      Result.Add('contractProbe', false);
+    end;
     if (Contract.GetCode(Result, 'generatorCode') <> Step."Generator Code") or
       (Contract.GetText(Result, 'runId') <> Contract.GetText(Context, 'runId')) or
       (Contract.GetText(Result, 'batchKey') <> Batch."Batch Key") or
@@ -74,7 +93,8 @@ codeunit 90307 "BCSF Batch Runner"
     Batch."Processed Units" := Contract.GetInteger(Result, 'processedUnits');
     Batch."Created Records" := Contract.GetInteger(Result, 'createdRecords');
     Rules.CheckCoverage(Batch);
-    Generator.ValidateOutput(Contract.Clone(Context), Contract.Clone(Target), Contract.Clone(BatchJson), Contract.Clone(Result), Findings);
+    if SkipReason = '' then
+      Generator.ValidateOutput(Contract.Clone(Context), Contract.Clone(Target), Contract.Clone(BatchJson), Contract.Clone(Result), Findings);
     if Findings.Count() <> 0 then
       Error(ResultErr);
     Recovery.SaveCheckpoint(Batch, Result);

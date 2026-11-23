@@ -338,6 +338,8 @@
     const quality = node("p", "sf-quality" + (run.qualityCode === 0 ? " sf-success" :
       run.qualityCode === 1 ? " sf-warning" : run.qualityCode === 2 ? " sf-error" : ""), localized(run.quality) || text("quality"));
     section.appendChild(quality);
+    if (run.masterPool) section.appendChild(node("p", "sf-scope", run.masterPool));
+    if (run.postingSkips) section.appendChild(node("p", "sf-warning", run.postingSkips));
     return section;
   }
   function stepPanel(view = model) {
@@ -362,6 +364,10 @@
         node("strong", "sf-step-value", number(step.confirmed) + " / " + number(step.target)),
         node("span", "sf-help", text("created") + " / " + text("target") + " · " + text("remaining") + " " + number(step.remaining)),
         node("span", "sf-step-state", step.complete ? text("completed") : localized(step.state)));
+      if (step.skipped > 0)
+        card.appendChild(node("span", "sf-warning", text("skippedUnits") + " · " + number(step.skipped)));
+      if (step.reviewUnits > 0)
+        card.appendChild(node("span", "sf-warning", text("reviewUnits") + " · " + number(step.reviewUnits)));
       if (safe && metric.count !== step.confirmed)
         card.appendChild(node("span", "sf-help", text("stockOpen") + " · " + number(metric.count)));
       if (safe) {

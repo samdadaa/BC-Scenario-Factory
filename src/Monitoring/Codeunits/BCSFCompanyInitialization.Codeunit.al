@@ -77,6 +77,8 @@ codeunit 90361 "BCSF Company Initialization"
   begin
     if Setup."Company Initialized" then begin
       Setup.TestField("Generation Enabled", true);
+      if Packages.GetAppliedMode() = "BCSF Finance Mode"::Existing then
+        Packages.InitializeCompany("BCSF Finance Mode"::Existing);
       if Setup."Industry Finance Mode" <> Packages.GetAppliedMode() then
         Error(ChartErr);
     end else
@@ -335,7 +337,7 @@ codeunit 90361 "BCSF Company Initialization"
         not (SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0)))) then
       Error(RequestErr);
     if IsNullGuid(SourceId) then
-      Source.CaptureExisting()
+      Source.CaptureExisting(PurchaseSelected and (Purchases > 0), SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0)))
     else begin
       Header.Get(SourceId);
       Source.Capture(SourceId, 'TRADE', Header."Profile Version");

@@ -20,6 +20,8 @@ Normalweg: **Einrichtung → Kontenplan einmalig → Großhandel → Module → 
 
 ## Bedeutung der Häkchen und gemeinsame Regeln
 
+**Standhinweis:** Grundlage dieser Aktualisierung ist der zuletzt hochgeladene vollständige Projektstand `BC Scenario Factory(5).zip` und der Gesprächsverlauf der heutigen Sandbox-Tests. Später separat gelieferte AL-Patches sind nicht automatisch Teil dieses ZIPs; vor Implementierung stets aktuellen Workspace gegen einzelne Patchstände und aktuelle App-Version abgleichen.
+
 **Aktiver Implementierungsauftrag 22.11.2026:** SF-047-Zahlungsfehler zuerst korrigieren, danach ausdrücklich ausgewähltes SF-048 aus Nutzeranhang umsetzen. Bestätigte Stammdaten aus fehlgeschlagenen Läufen sind nach erneuter Prüfung ausdrücklich zugelassen. Frühere Ticketstände bleiben Historie.
 
 - `[x]` bedeutet **im aktuellen Code vorhanden oder lokal belegt**. Es bedeutet keine bestandene native Prüfung oder menschliche Abnahme.
@@ -41,6 +43,12 @@ Normalweg: **Einrichtung → Kontenplan einmalig → Großhandel → Module → 
 - **SF-027/SF-037:** Vorlagenarchivierung ist vorhanden; fehlende Lauf-/Fachdaten-Retention bleibt offen.
 
 Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätze sind durch diese gemeinsamen Regeln ersetzt. Ursprüngliche Ziele/Abhängigkeiten und historische Begründungen bleiben im verlinkten Archiv nachvollziehbar. Keine offene Fachanforderung wird allein wegen ihres Alters gestrichen.
+
+**Aktuelle Entwicklungsreihenfolge:** [Generator- und Modulfahrplan ab 22.11.2026](#entwicklungsfahrplan-ab-22112026--vollständig-definierte-generatoren-vor-neuen-branchen). Neue Tickets SF-049–SF-056 erst einzeln nach Freigabe implementieren.
+
+**Aktueller Auftrag 22.11.2026:** SF-049 bis SF-053 ausdrücklich gemeinsam zur sequenziellen Umsetzung ausgewählt. Lokaler Teilstand SF-049/SF-050 siehe [Prüfbericht](docs/review/SF049_SF050_PRUEFBERICHT.md); native Abnahme und sichere Buchungsisolation offen, SF-051–SF-053 noch nicht implementiert. Dieser Auftrag ersetzt die älteren rein dokumentarischen Freigabevermerke für diese Auswahl.
+
+**Aktuelle Begrenzung 23.11.2026:** Ausschließlich SF-050 fertigstellen, einschließlich ausdrücklich nachbeauftragter Ergänzung fehlender technischer Einrichtung bei Existing, danach Stop. Native Tests übernimmt der Nutzer. SF-051 bis SF-053 bleiben offen. [Aktueller Prüfbericht](docs/review/SF050_PRUEFBERICHT.md).
 
 ## Ticketübersicht
 
@@ -94,6 +102,15 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-046](#sf-046) | P1 | Zur Prüfung | Konfigurationspaket mit 128 Tabellen; native Exportabnahme offen |
 | [SF-048](#sf-048) | P1 | Zur Prüfung | Drei Laufarten, bestätigte Stammdatenquelle und unabhängige Einkaufs-/Verkaufsläufe; native A–G offen |
 | [SF-047](#sf-047) | P1 | Zur Prüfung | Großhandel v6: Artikelpool, zeitliche Beschaffung, geografische Streuung; native Abnahme offen |
+| [SF-049](#sf-049) | P0 | In Arbeit | Gemeinsamer Stammdatenpool, Preflight und Mengenvertrag |
+| [SF-050](#sf-050) | P0 | Zur Prüfung | Einzelvorgänge, sichere Fortsetzung, Skip-/Prüfzustände und Existing-Foundation; native Abnahme offen |
+| [SF-051](#sf-051) | P1 | Offen | Finanzen: Teilzahlungen, Toleranz und Ausgleich |
+| [SF-052](#sf-052) | P1 | Offen | Retouren und Gutschriften für Einkauf und Verkauf |
+| [SF-053](#sf-053) | P1 | Offen | Inventory-Bewegungen, Inventur und Umlagerung |
+| [SF-054](#sf-054) | P2 | Offen | Assembly/Montageaufträge |
+| [SF-055](#sf-055) | P2 | Offen | Projekte/Jobs und Projektabrechnung |
+| [SF-056](#sf-056) | P2 | Offen | Disposition/Planning |
+
 
 ## Ticketdetails
 
@@ -854,6 +871,182 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 **Nachweise/Dateien:** [SF-048-Prüfbericht](docs/review/SF048_PRUEFBERICHT.md), [Vertrag](docs/MODULAR_GENERATION.md). Zwei neue Objekte 90114/90259; additive Felder in Setup/Szenario, vorhandene Planner-, Generator-, Snapshot-, UI- und Queueobjekte erweitert. 64 AL-Testmethoden kompiliert, davon fünf neue für SF-048; keine neue Test-Codeunit.
 
+
+## Entwicklungsfahrplan ab 22.11.2026 – vollständig definierte Generatoren vor neuen Branchen
+
+**Nutzerentscheidung:** Zuerst alle relevanten fachlichen Module auf einer stabilen, wiederverwendbaren Generatorplattform implementieren und **nativ abnehmen**; erst danach weitere Branchenprofile aktivieren. Großhandel ist Referenzszenario, nicht Sonderimplementierung. Die hier aufgeführten neuen Tickets sind **Planungs-/Implementierungsaufträge, keine bereits fertiggestellten Funktionen**. Nur das ausdrücklich gewählte Ticket bearbeiten (`AGENTS.md`). Die bisherigen Tickets SF-022, SF-025–SF-033, SF-039, SF-042 und SF-047/048 bleiben erhalten; neue Tickets konkretisieren Querschnittsverträge oder abgrenzbare Teilmodule, ohne vorhandene Grundlagen neu zu entwickeln.
+
+### Priorisierung und Modulmatrix
+
+| Reihenfolge | Modul / Generator | Nachweisbarer Bestand aus Projekt | Restumfang / führendes Ticket | Freigabe |
+| --- | --- | --- | --- | --- |
+| 0 | Gemeinsamer Generatorvertrag / Wiederanlauf / Preflight | Registry, Snapshot, Batch, Run, teilweise Master-Pool | **SF-049**, danach **SF-050** | Vor weiteren Fachgeneratoren |
+| 1 | Kunden, Lieferanten, Artikel, Lager-Grundstämme | Generatoren vorhanden | Datenqualität, Fremdstamm-Eignung und Mengenunabhängigkeit **SF-049/050**, SF-039/040/047/048 | Pflicht für Belegmodule |
+| 2 | Verkauf (Angebot/Auftrag/Rechnung/Lieferung) | Generatoren vorhanden | Bestandsabhängige Buchung, isolierte Fehler, Einzelbelegarten, Drilldowns **SF-050**, SF-021/024 | Regression vor Ausbau |
+| 3 | Einkauf (Bestellung/Wareneingang/Rechnung) | Generator vorhanden | Teilbuchungen, Wiederverwendung, Mandantenvoraussetzungen, isolierte Fehler **SF-050**, SF-020/024 | Regression vor Ausbau |
+| 4 | Finanzen, Zahlung, Ausgleich | Finanzbasis und vollständige Zahlung vorhanden | **SF-051**: Teilzahlung, Zahlungsrabatt/-toleranz, Ausgleich, Zahlungsmodi, Bankstämme SF-039 | Nach 0–3 |
+| 5 | Retouren, Verkaufs-/Einkaufsgutschriften | Im TODO offen | **SF-052** als konkrete Teilumsetzung von SF-022 | Nach 0–4 |
+| 6 | Lagerbewegungen ohne erweitertes Warehouse | Artikel/Lagerorte vorhanden | **SF-053**: Umlagerung, Inventur, Artikelbuchblatt, Bestand/Kosten | Nach 0–3 |
+| 7 | Warehouse / WMS | Kein Prozessgenerator | **SF-028** konkretisiert; Empfang, Pick, Put-away, Shipment nur bei passender Lagerort-Konfiguration | Nach SF-053 |
+| 8 | Assembly | Kein Generator | **SF-054** als abgrenzbarer Teil von SF-029 | Nach SF-053 |
+| 9 | Manufacturing | Kein Generator | **SF-029**: Produktionsaufträge, Komponenten, Kapazität, Output | Nach SF-054 / Lizenzklärung |
+| 10 | Projekte / Jobs | Kein Generator | **SF-055** als abgrenzbarer Teil von SF-030 | Nach SF-051 |
+| 11 | Service Management | Kein Generator | **SF-030**: Serviceartikel, Serviceaufträge und -buchungen | Nach SF-055 / Lizenzklärung |
+| 12 | Fixed Assets | Kein Generator | **SF-031**: Anlagen, Abschreibung, Abgang | Nach SF-051 |
+| 13 | CRM / Kontakte / Verkaufschancen | Nur abgeleitete Kontakte | **SF-033** als eigenständiger Fachumfang | Nach 0–4 |
+| 14 | Planning / Disposition | Kein ausführbarer Generator | **SF-056** als abgrenzbarer Teil von SF-033 | Nach Einkauf/Lager/Warehouse |
+| 15 | Neue Branchenprofile | Nur Großhandel im Normalweg | **SF-032** erst nach modulfähiger, getesteter Grundlage | Abschließende Freigabe |
+
+**Nicht als bereits unterstützt ausgeben:** WMS, Fertigung, Montage, Projekte, Service, Anlagen, CRM-Kampagnen/Chancen, Disposition, Retouren und Gutschriften, solange zugehöriger ausführbarer Generator, Voraussetzungen, Testfälle und reale BC-Standardbelege/Posten fehlen. Markierte/angezeigte Module ohne ausführbare Registry-Bindung sind nicht nutzbar. Für nicht lizenzierte oder in der Zielversion fehlende Features: *Nicht verfügbar*, statt Scheindaten oder pauschaler Erfolgsanzeige.
+
+### Verbindlicher modulübergreifender Qualitätsvertrag (gilt für SF-049–SF-056 und bestehende SF-022/SF-028–SF-033)
+
+1. **Unabhängige Mengen und Laufarten.** `Komplett`, `Nur Stammdaten`, `Nur Bewegungsdaten` mit wählbaren ausführbaren Modulen und Einzelbelegarten (auch ausschließlich `SALES.INVOICE`, Einkauf 0, andere Verkaufsmengen 0). Menge 0 = bewusst nicht ausgewählt, nicht pauschal Eingabefehler. Für jede vom Produktlimit gedeckte positive Anforderung die Verteilung exakt/überlappungsfrei planen (Summe der Quotentypen = angeforderte Menge); Mengen dürfen nicht an Anzahl der Kunden/Artikel gekoppelt sein. Nicht erfüllbare fachliche Bedingungen **konkret** melden statt generischer Mengenfehlermeldungen. Grenzen müssen dokumentiert und getestet sein; *keine Garantie für beliebig große Mengen ohne Ressourcenlimit*.
+2. **Mandantenstammdaten unabhängig von früheren Läufen.** Null-GUID bezeichnet *vorhandene geeignete Daten im aktuellen Unternehmen*, nicht einen zu ladenden Run. Factory-Stämme aus anderen Läufen und manuell/importierte BC-Stämme nach derselben fachlichen Eignungsprüfung verwenden; existierende Stämme nie stillschweigend duplizieren, um Bewegungsbelege auszuführen. Auswahl über stabile SystemIds im eigenen unveränderlichen Lauf-Snapshot einfrieren; Registry-Provenienz/Quelllaufbezüge der Originale nicht umschreiben. Ungeeignete Datensätze überspringen und nächsten **geeigneten** versuchen; bei unzureichendem Pool mit nachvollziehbarer Diagnose beenden. Kein fremdes Unternehmen/Company übergreifend lesen.
+3. **Vorprüfung pro angeforderter Belegart.** BC-Basis- und Finanz-Setup, Buchungsgruppen/Kombinationen, MwSt.-Einrichtung, Nummernserien, Einheiten, gesperrte Stammdaten, Haupt-/Alternativlieferanten, Lagerort/-platz, verfügbare und nicht reservierte Menge, Dimensionen, erlaubte Buchungsdaten und Perioden, Berechtigungen, Features/Lizenz und gewünschte Folgeschritte prüfen. Für Bestandsbuchung aktuellen verfügbaren Bestand **zum Buchungszeitpunkt** prüfen; geeigneten Ersatzartikel/anderen Belegplan deterministisch wählen, sonst einen nachvollziehbaren **nicht gebuchten/übersprungenen** Einzelfall erzeugen. Kein erfundener Bestand, keine stillen Änderungen an vorhandenen Stammdaten und Buchungsgruppen.
+4. **Sichere Fehlerisolierung.** Ein fachlich nicht geeigneter Datensatz oder *eindeutig vor jeder Buchung erkannter* Belegfehler darf den übrigen Lauf nicht blockieren. Bei wirklichen Postingfehlern nur nach sicherer Transaktionsabgrenzung und geklärtem Commit-Verhalten fortsetzen; `TryFunction` ist kein garantierter Rollback. Unklare, teilweise bestätigte oder möglicherweise gebuchte Vorgänge = `NeedsReview`, niemals automatischer Replay und niemals als erfolgreich zählen. Kein `COMMIT` im gesperrten Bereich; BC-Standardcodeunits mit internem Commit (u. a. Zahlungstoleranz in Zahlungsjournal-Validierungen) separat auf sichere Architektur prüfen. Keine direkten Writes in Standardposten.
+5. **Korrekte Buchungs- und Zeitlogik.** Einkauf/Wareneingang → verfügbare Menge → Verkauf/Lieferung/Rechnung → optional Zahlung/Ausgleich; jede Belegart hat zulässige voneinander unabhängige Mengen und Datumsgrenzen; Vorbedingungen und tatsächliche Bestandsmengen aus bereits gebuchten anderen Läufen berücksichtigen. Reproduzierbare Seed-Werte, fachlich sinnvolle Mehrpositionsbelege und realistische Preis-/Mengen-/Partnerverteilung. Historische Profile/Snapshots unverändert behandeln.
+6. **Kein festhängender Start.** Doppelte Unternehmensinitialisierung verhindern, solange tatsächlich aktiver Queue-Job/Request existiert. Fehlgeschlagene/abgeschlossene Job-Queue-Entries ohne aktiven Run dürfen neue Ausführung nicht dauerhaft sperren; konkurrierende Starts synchron und im Job-Kontext absichern. Wiederaufnahme unterscheidet neuen Run von Retry derselben Run-ID; Checkpoints/Confirmed Work dürfen nicht erneut buchen.
+7. **Dashboard ist Ergebnisansicht, kein Fortschrittsfilter.** Kachel/Drilldown bei existierendem Datensatz öffnen, auch wenn Anzahl *erzeugt* von aktuell *vorhanden* abweicht (z. B. Auftrag nach Buchung gelöscht/umgewandelt). Lauf- und Unternehmenszähler getrennt; klare Kategorien Erzeugt / ungebucht / teilweise gebucht / gebucht / übersprungen / fehlgeschlagen / NeedsReview. Zählung aus realen Belegen/Posten und Herkunft, nicht bloß Sollwert oder Status. Standardlistenfilter müssen konkrete gültige Datensätze zeigen, einschließlich nachfolgender Belegarten; leere Kacheln nicht anklickbar ausgeben.
+8. **Branchenunabhängige Engine.** Branche liefert Datenprofile, Pflichtmodule, zulässige Prozesse, Plausibilitätsregeln und interne Ausgangsverteilungen. Keine branchenabhängigen hart codierten Artikel-/Kundenlimits, keine ad-hoc Sonderlogik im Batch Runner, keine neuen parallelen Pipeline/Setup/UI-Systeme. Profile nur für tatsächlich ausführbare Module aktivieren. Einheitliche Kernel-Tests für jedes Modul und jede Branche.
+9. **Testfallmatrix je Ticket.** Kleines/Mittleres/Großes Paket; SKR03, SKR04 und vorhandene BC-Einrichtung; neuer/leerer und vorbefüllter Mandant; komplett, nur Stamm, nur Bewegung mit/ohne Quell-Run; ausschließlich eine Belegart; 0/1/2/viele Mengen; unterschiedliche Quotensätze/Seed/Batchgrößen; fehlende/gesperrte/unvollständige Stammdaten; Artikel ohne/mit knappem/reserviertem Bestand; gebuchte und ungebuchte Modi; Zahlungsmodus ohne/mit Zahlung; fehlgeschlagener Batch, Recovery, erneuter Start, Job Queue; DE/EN und Rollen; Datenkonsistenz, Standardposten, Dashboard/Drilldowns; Altprofil/Upgrade. Für >Kapazität/Limit erwartetes kontrolliertes Verhalten nachweisen. Abweichungen mit tatsächlichem Run/Seed/Objekt und erwarteter Behandlung dokumentieren; kein pauschales „alles funktioniert“.
+10. **Abschluss jedes Generatortickets.** Bestehende Starter und Templates nur bei tatsächlich neu ausführbarem Modul aktualisieren; technische Referenzen/Module/Registrierung/Test-App/DE-EN-Labels/Dashboard und Docs synchron. Vorhandene Testobjekte ergänzen, neue Testobjekte nur mit ausdrücklichem Ticketauftrag. Erst nach echter AL-Kompilierung, Test-App-Ausführung, Sandbox-Lauf und fachlichem Soll-/Ist-Vergleich `Zur Prüfung` – `Erledigt` ausschließlich durch Menschen. Wenn Lauf nicht ausführbar: offen lassen und technische Ursache präzise nennen. `AGENTS.md` hat Vorrang.
+
+### Konkrete Regressionen aus der Testserie vom 22.11.2026
+
+| Fall | Früherer Fehler | Verbindlicher Regressionstest |
+| --- | --- | --- |
+| R01 | Artikelattribute Material „Messing“/„Edelstahl“ aus Kategorie geerbt | 400 unterschiedliche Artikel, Kategorieattribute vs. Artikelattribute konfliktfrei, keine Duplikatbeschreibung ohne echte Variante |
+| R02 | Ein einziger Hauptlieferant/Ein-Positionsbelege | Unterschiedliche passende Haupt-/Alternativlieferanten, 2–5 Verkaufs-/2–4 Einkaufspositionen, keine fremden Lieferantenzeilen |
+| R03 | Nur erste Hälfte des Artikelstamms benutzt | Voller geeigneter Artikelpool ohne feste 50/200-Grenze, keine fest verdrahteten Indexbereiche; Backtests 40/400 Artikel |
+| R04 | Alle Einkäufe am ersten Tag und zwei Städte dominieren | Geplante zeitliche Verteilung und 20 Stadt-/PLZ-Kombinationen, reproduzierbar und keine unplausiblen Klumpen |
+| R05 | `Master Source Run Id = 0000...` und gescheiterte Fremdstammquelle | Nur Bewegungsdaten aus vorhandenen Mandantenstämmen ohne vorherige Run-ID läuft; keine neuen Kunden/Lieferanten/Artikel |
+| R06 | `PurchaseQuantity()` erwartet Stammdatenziel im aktuellen Bewegungslauf | Menge aus eingefrorenem geeigneten Stammdatenpool; für kleine/belegartbezogene Läufe keine generische widersprüchliche-Verteilungs-Meldung |
+| R07 | Nur `SALES.INVOICE` wurde durch Requestvalidierung abgelehnt | Alle anderen Belegmengen 0: ausschließlich angeforderte Verkaufsrechnungen zulässig; keine automatischen Nebenbelege außerhalb Pflichtfolgeprozessen |
+| R08 | Artikel benötigt 6 Einheiten, verfügbar 0 | Kein gesamter Abbruch wegen nicht verfügbarer Artikel; deterministische geeignete Ersatzwahl oder expliziter Skip vor Buchung; keine künstlichen Lagerposten |
+| R09 | Commit verboten: `BCSF Payment Processor.Pay` → Codeunit 426 Zahlungstoleranz | Zahlungsjournalvalidierung mit/ohne Toleranz/Applies-to, sichere Transaktionsgrenzen, kein stilles Commit/kein Doppelposting; „ohne Zahlungen“ ruft Zahlung nie auf |
+| R10 | Abgeschlossener/gefallener Initialisierungsrequest blockiert Folge-Run | Aktiven Job schützen, terminale Job Queue nicht dauerhaft sperren, Retry/Re-Start sicher, keine parallele Doppelinitialisierung |
+| R11 | Kacheln mit existierenden Belegen nicht klickbar nach Statuswechsel | Jede belegte Karte zeigt reale Standardliste nach Buchung/Umwandlung; keine Abhängigkeit vom Sollzähler |
+| R12 | Neuer kompletter Lauf erzeugt gleichartige Stammduplikate | **Erwartung unterscheiden**: Komplettlauf darf gemäß Modus neue synthetische Stämme generieren; Bewegungslauf darf das nicht. Reuse/Neuanlage transparent anzeigen und testen |
+| R13 | Fachlicher Buchungsfehler stoppt komplette Queue oder wird verschluckt | Safe preflight skip und sichere pro-Beleg Isolation; unklare Transaktion => NeedsReview + keine automatische Wiederbuchung |
+
+**Abnahmemetriken und belegbare Grenzen:** Jede Generatorcharge besitzt `Requested`, `Created`, `Posted`, `Skipped`, `Failed`, `NeedsReview` (falls zugehörige Datenstruktur diese Werte unterstützt; andernfalls die Zuordnung vor Implementierung entwerfen). Bilanz: `Requested = erfolgreich erledigte + dokumentiert nicht erledigte` ohne doppelte Zählung teilgebuchter Belege; Ergebnisse in Standardbelegen/Posten nachprüfbar. **Keine Aussage „für jede Branche und jede Datenmenge garantiert erfolgreich“**: fachlich ungeeignete Kundenstämme, Rechte, Lizenz, Buchungsperioden, Zeit- und Mengenlimits dürfen kontrolliert zu Skips/Fehlern führen, aber niemals zu fälschlich als erfolgreich gemeldeten Belegen.
+
+<a name="sf-049"></a>
+### SF-049 — Einheitlicher Preflight, Stammdatenpool und Mengenvertrag für alle Generatoren
+**Status:** In Arbeit · **Priorität:** P0 · **Abhängigkeiten:** SF-048, SF-040, SF-042 · **Gilt für:** alle Module
+
+**Ziel:** Einen gemeinsamen *lesenden* Eignungs- und Auswahlvertrag über existierende Partner/Artikel/Einrichtungen herstellen; Null-Run-ID, 0-Mengen, einzelne Dokumentarten und beliebige positive Belegmengen im zulässigen Limit richtig planen, ohne vorhandene Stammdaten zu ändern.
+
+- [x] `BCSF Master Data Source`, `BCSF Company Initialization`, Scenario/Run Snapshot, Dependency Planner, `BCSF Process Coordinator` und Sales/Purchase-Resolver in den aktuellen Quellen nach festen Run-IDs, harten Mengen-/Artikelgrenzen und divergierenden Selektoren untersuchen; keine vorhandene korrekte Implementierung duplizieren.
+- [ ] Eignungsprüfungen modular pro Belegart: Stammdatensatz, Posting-Gruppen, Nummernserien, USt, Einheiten, Lagerort, Lieferanten, Sperren, Dimensionen und BC-Rechte; ungeeignete Alternativen in begrenzter deterministischer Suche ersetzen; keine manuellen Setup-Pflichten beim Nutzer erfinden.
+- [ ] Snapshot enthält nur explizit ausgewählte geeignete SystemIds/Setupinformationen und Prozessmengen; kein Rückschreiben fremder Masterdatensätze und keine falschen generierten Registry-Identitäten.
+- [ ] Verkauf nur: `SALES.INVOICE=1` bei Angebot/Auftrag/Einkauf=0; Einkauf nur; mehrfache Läufe mit denselben 40 Artikeln; alter/fehlender Source-Run; 0/1/Grenzwert Mengen, Quote 0/100 und Rundung testen.
+- [ ] Dashboard meldet Anzahl geeigneter/geprüfter/übersprungener Stämme und konkreten Grund bei zu kleinem Pool; vorhandene Filter/Run-Kontrakte erhalten.
+- [ ] Bestehende `tests/SF019` ergänzen; kleines/mittleres und negatives Sandbox-Szenario, SKR03/SKR04/Bestandsmandant, DE/EN; keine globale Erfolgsmeldung ohne echte Buchung.
+**Nicht im Scope:** Neue Fachmodule, neue Datenbank/Batch-Engine, pauschales Autofix fremder Finanzstämme. **Abnahme:** Zulässiger reiner Bewegungslauf mit/ohne Factory-Run-ID vollständig planbar, keine zusätzlichen Stammobjekte, keine falschen Mengenfehler; Testprotokoll und menschliche Freigabe.
+
+**Lokaler Teilstand 1.0.10.0:** Modulabhängiger bestehender Pool Version 3, geeignete SystemIds ohne neue 500-/Gleichmengenbegrenzung, lieferantentreue Auswahl, einmaliger Capture und eingefrorene Identitätsprüfung, Dashboarddiagnose und vorhandener Testhost ergänzt. Konservative Kontenprüfung/Dimensionskombinationen und native Abnahme bleiben offen. Kein vollständiger Abschluss; [Dateien, Grenzen und Prüfungen](docs/review/SF049_SF050_PRUEFBERICHT.md).
+
+<a name="sf-050"></a>
+### SF-050 — Buchungsfehler pro Geschäftsvorfall sicher isolieren, Recovery und Drilldowns
+**Status:** Zur Prüfung · **Priorität:** P0 · **Abhängigkeiten:** SF-049, SF-013, SF-020, SF-021, SF-025
+
+- [x] `BCSF Batch Runner/Worker`, Payment Processor, Sales/Purchase Generators, Posting Calls, Job-Queue-Status und Dashboard auf tatsächliche Commit/Transactional Boundaries prüfen und eine sichere **isolierte** Buchungseinheit pro Vorgang definieren. Nicht pauschal `TryFunction` oder `CommitBehavior::Error` entfernen.
+- [x] Vorher erkennbare Fehler (Lagerbestand 0, ungültige Artikelkombination, gesperrte Partner etc.) als nachvollziehbare `Skipped` dokumentieren; nächsten geeigneten Datensatz/Beleg versuchen. Buchungsfehler nur weitersetzen, wenn Standardposting und Rollback sicher nachweisbar; sonst `NeedsReview` sperrt automatische Wiederholung des betroffenen Vorgangs, nicht zwingend unabhängige Vorgänge.
+- [x] Pro Run eindeutige Fach-/Belegidentität, Checkpoint/Confirmed Work und Reconciliation nach echten Standardbelegen/Posten. Keine Doppellieferung, -rechnung, -zahlung; bei Transaktionsunsicherheit keine Scheinerfolge.
+- [ ] Korrekte Trennung terminaler vs. aktiver Initialisierungsjobs; Simultanstart, Queue-Fehler, erneute Eingabe, manuelle Wiederaufnahme prüfen.
+- [x] Dashboards/Drilldowns zu offen, teilweise, vollständig, gebucht, übersprungen, NeedsReview und Fehlgrund; keine Gleichheitsprüfung Sollzähler vs. realer Datenbestand.
+- [ ] Regression R08–R11/R13 mit AL-Test-App und echten Sandboxläufen; Buchen/Lager-/Sach-/Debitoren-/Kreditoren-/Wertposten abgleichen; alle neuen Fehltexte DE/EN.
+**Nicht im Scope:** ungesicherte automatische Wiederholungen, Löschen gebuchter Posten, künstliche Bestandsbuchung bei Verkauf-only. **Abnahme:** Ein ungeeigneter Artikel/Beleg stoppt nicht alle unabhängigen Vorhaben; kein unklar gebuchter Vorgang wird automatisch neu gebucht. Menschliche Freigabe erforderlich.
+
+**Umsetzung 1.0.11.0 / 23.11.2026:** Neue Snapshotpolitik mit isoliertem Geschäftsvorfall je Belegpaket, Pending-only-Fortsetzung unabhängiger Vorgänge nach Standardfehlern, unveränderte NeedsReview-/Replay-Sperre, lesende Preflight-Skips mit echten Checkpoints ohne Geschäftsdatenherkunft, getrennte Dashboardzähler. Zusatzauftrag: fehlende technische Existing-Mandanteneinrichtung vor Generatoren ergänzen und neue Vorlage an vorhandene verwendbare Finanz-/Artikelzuordnungen binden; keine Ersatzkonten oder fremden Überschreibungen. [Umsetzung, Prüfungen und native Fälle N01–N08](docs/review/SF050_PRUEFBERICHT.md). Nutzer übernimmt native BC-Abnahme. Danach Stop; keine Umsetzung SF-051–SF-053.
+
+<a name="sf-051"></a>
+### SF-051 — Finanzen: Teilzahlungen, Ausgleich und Zahlungsmodus robust abschließen
+**Status:** Offen · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-039
+
+- [ ] Vorhandenen `BCSF Payment Processor`, Finanzsetup, gültige Partner-/Bankkonten und Journal-Standardroutinen wiederverwenden; keine neuen direkten Postentabellen-Inserts.
+- [ ] Zahlungsmodi „ohne Zahlung“, „vollständig“, „teilweise“, „mit Ausgleich“ fachlich getrennt planen; Teilzahlungen/Restbeträge, unterschiedliche Zahlungstermine, Einzel- und Sammelausgleich (nur soweit BC-Standardfunktion unterstützt) korrekt abbilden.
+- [ ] Zahlungsrabatt, Zahlungstoleranz, negative Beträge/Gutschriften, mehrfache Teilzahlungen und verbleibende offene Posten nach Standardregeln berücksichtigen; Posting/Anwendung auf tatsächliche Rechnungen begrenzen.
+- [ ] Fehlende Partnerbankdaten: sichere Fallbacks nur nach geprüfter Fach-/Rechtsregel, niemals reale Zahlung auslösen; Kunden-/Lieferantenstämme nicht ungefragt mutieren (SF-039).
+- [ ] R09 mit Codeunit 426 und `Applies-to Doc. Type/No.` in echter BC 29.x Sandbox testen, sichere Journalvaliderungsreihenfolge und Commit-Grenzen; Zahlungen bei deaktiviertem Modul nicht auslösen.
+- [ ] Journalzeilen/-belege, Debitoren-/Kreditorenposten, detaillierte Posten, Bank-/Sachposten, Ausgleichsreste verproben; Dashboard und Starter aktualisieren.
+**Abnahme:** gebuchte Rechnungen haben je Prozessmodus nachweisbar korrekte offene/ausgeglichene Restbeträge, kein COMMIT-Verbot/kein Doppelposting.
+
+<a name="sf-052"></a>
+### SF-052 — Verkauf/Einkauf: Retouren und Gutschriften vollständig als Folgeschritte
+**Status:** Offen · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-051
+
+- [ ] Einkauf: Rücksendung/Warenausgang und Einkaufsgutschrift, Teil- und Vollretoure mit Referenz auf ursprünglichen Wareneingang/Rechnung, angemessene Bestandsdeckung.
+- [ ] Verkauf: Rücknahme/Wareneingang und Verkaufsgutschrift auf gebuchte Lieferung/Rechnung, inklusive Teilmengen und kaufmännischer Begründung; passende MWSt./Wertposten.
+- [ ] Nicht gebuchte Gutschriften separat von gebuchten Kreditbelegen behandeln; keine negativen Rechnungen als Ersatz für echte Standardgutschriften.
+- [ ] Bezug zu ursprünglicher Rechnung/Belegzeile, Preis/Rabatt/Steuer/Einheit, Lager-/Wert-/Sach-/Partnerposten und ggf. Zahlungsausgleich konsistent; zeitliche Reihenfolge erhalten.
+- [ ] Einzelmodul, Komplettszenario und vorbefüllter Fremdstammdatensatz testen; Ausgangsbelege mit fehlender/teilweise bereits retournierter Menge kontrolliert skippen.
+- [ ] Starter/Run Snapshot/Registry/Drilldowns und DE/EN ergänzen; bei fehlenden BC-Funktionen Grenzen kennzeichnen.
+**Abnahme:** gebuchte Teil-/Vollretouren und Gutschriften als echte BC-Standardbelege in Einkauf und Verkauf nachweisbar.
+
+<a name="sf-053"></a>
+### SF-053 — Inventory: Lagerbewegungen, Inventur und Umlagerung ohne WMS
+**Status:** Offen · **Priorität:** P1 · **Abhängigkeiten:** SF-049, SF-050, SF-020
+
+- [ ] Artikel-/Lagerort-/ggf. Lagerplatzstämme sowie Bestands-/Einheits-/Chargenpflichten prüfen; bestehende Artikelgeneratoren wiederverwenden.
+- [ ] Standard-Artikelbuchblätter für positive/negative Korrekturen, Inventurzählung/-differenz und Umlagerungsaufträge/-buchblätter mit Versand/Empfang (je nach vorhandenem BC-Standard) erzeugen; physische und rechnerische Bestände abstimmen.
+- [ ] Ohne Advanced Warehouse kein künstlicher Pick/Put-away; für WMS siehe SF-028. Bei vorhandenen Lagerorten nur erlaubte Bewegungsarten verwenden.
+- [ ] Mengen und Datum unabhängig von Artikelerzeugungsmenge; keine negativen oder reservierten Bestandsabzüge ohne fachliche Zulässigkeit; Dimensionen, Kostenberechnung/Wertposten prüfen.
+- [ ] Bewegungen gegen tatsächliche Artikel-/Wert-/Sachposten und Stand je Lagerort/Datum, inkl. wiederholtem Run und verschiedenen Losgrößen, validieren.
+**Abnahme:** mindestens Warenein-/ausgang per Buchblatt, Inventurabweichung und Umlagerung über Standardabläufe inkl. Dashboard/Drilldowns nativ erfolgreich.
+
+<a name="sf-054"></a>
+### SF-054 — Assembly: Montage-Stammdaten und Montageaufträge
+**Status:** Offen · **Priorität:** P2 · **Abhängigkeiten:** SF-053, SF-049, SF-050, SF-029 (gemeinsamer Epic)
+
+- [ ] Geeignete Montageartikel, Montage-Stücklisten und Komponenten-/Ressourcenbedarf im Standard einrichten, Maße/Einheiten und Bestände validieren.
+- [ ] Montageauftrag, Verbrauch und Output mit passenden Stücklisten / Fertigstellungsgraden/Datumsgrenzen über BC-Standardverfahren; ungebucht und gebucht getrennt.
+- [ ] Beschaffungsbedarf, Fehlbestand, reservierte Komponenten, alternative Komponenten und Varianten als reguläre Vorprüfung/Skip behandeln.
+- [ ] Mengen-/Kosten-/Artikel-/Wertposten, Komponentenverbrauch und Fertigartikelzugang abgleichen; keine Doppelbuchung nach Retry.
+- [ ] Featureverfügbarkeit/BC-Version und Standardtests inklusive Dashboard/DE-EN prüfen.
+**Abnahme:** reproduzierbar gebuchter Montageauftrag mit nachvollziehbarem Komponentenverbrauch und Output.
+
+<a name="sf-055"></a>
+### SF-055 — Projects/Jobs: Projekte, Ressourcen und Projektabrechnung
+**Status:** Offen · **Priorität:** P2 · **Abhängigkeiten:** SF-049, SF-050, SF-051, SF-030 (gemeinsamer Epic)
+
+- [ ] Projekt-/Job-Stamm, Aufgaben, Planungszeilen, Ressourcen, Kosten und ggf. Artikelbezüge über vorhandene BC-Standards anlegen.
+- [ ] Ressourcenzeit-/Materialverbrauch über Projektbuchblatt, Fakturavorschlag/Verkaufsrechnung und gebuchte Projekt-/Sach-/Partnerposten als nachvollziehbare Kette realisieren.
+- [ ] Teilabrechnung, unterschiedliche Projektlaufzeiten, Kosten-/Ertragszuordnung, Dimensionen und fehlende Ressourcenkapazität prüfen; Phasen und Buchungsrechte respektieren.
+- [ ] Reine Projektstammdaten und zusätzliche unabhängige Abrechnungsläufe erlauben; keine Stammdatenvervielfachung.
+- [ ] Von Service Management trennen; eigene Modulverfügbarkeit und Tests, Drilldowns/DE-EN.
+**Abnahme:** reales Projekt mit Zeit/Material, gebuchten Projektposten und Rechnung, belastbarer Soll-/Ist-Abgleich.
+
+<a name="sf-056"></a>
+### SF-056 — Disposition/Planning: Bedarf, Beschaffung und Vorschläge
+**Status:** Offen · **Priorität:** P2 · **Abhängigkeiten:** SF-053, SF-020, SF-029 (falls Produktionsplanung)
+
+- [ ] Planungsparameter (Wiederbeschaffungsverfahren, Lieferzeiten, Losgrößen, Wiederbeschaffungslagerorte) nur für eigens erzeugte Testsynthese setzen; bestehende Fremdstämme lesen und prüfen.
+- [ ] Verkaufsbedarf, Meldebestände, vorhandenen Bestand und offene Einkaufs-/Produktionsaufträge zu Planungszeilen oder Bestellvorschlägen über BC-Standardfunktionen zusammenführen.
+- [ ] Planungsvorschlag von tatsächlicher Bestellung/Buchung klar trennen; nur ausdrücklich gewünschte Umsetzung aktivieren; doppelte Deckung und Zeit-/Lagerortprobleme verhindern.
+- [ ] Ergebnisse anhand Bedarf/Deckung/Buchungszeitpunkt, Vorschlagsmenge und tatsächlichen Belegen nachvollziehbar prüfen; Advanced-Planning-Funktionen nur bei Verfügbarkeit.
+**Abnahme:** reproduzierbare und fachlich passende Vorschläge für Unter-/Überdeckung inklusive negativer Varianten.
+
+### Detaillierte Arbeitspakete für bereits bestehende offene Modultickets
+
+**SF-028 – Warehouse (nach SF-053):** Setup-/Featurematrix nach Lagerort (`Bin Mandatory`, `Require Receive/Put-away/Pick/Shipment`, Directed Put-away and Pick), geeignete Lagerplätze/Zonen/Behälter und Standard-Warehouse-Stämme; getrennte Generatorpfade für Warehouse Receipt/Put-away, Pick/Shipment, Umlagerung und Inventur nach tatsächlich aktiver Standortkonfiguration. Menge, Reservierung, offene Belegmenge und Buchungsreihenfolge berücksichtigen; Warehouse Entries, Artikelposten, Lagerplatzinhalt/Wertposten nach Standardprozessen abstimmen. Ohne aktivierte Funktionen keine erfundenen WMS-Belege; Kompatibilität und Standardlisten/Drilldowns/DE-EN prüfen. Abnahme in zwei Lagerortkonfigurationen inkl. negativer Bestands-/Lagerplatzfälle und Wiederanlauf.
+
+**SF-029 – Manufacturing (Assembly separat SF-054):** Artikel- und Produktionsstücklisten, Versionen, Arbeitsplätze/-gruppen, Arbeitspläne, Einheiten, Produktionskalender/Schichten, Komponentenverfügbarkeit und passende BC-Feature-/Lizenzprüfung. Freigegebene Produktionsaufträge, Komponentenverbrauch, Output, Teilmengen, Fertigmeldung und ggf. Kostenregulierung als Standardprozess, nicht direkte Posteninserts. Engpässe/fehlende Komponenten/gesperrte Perioden kontrolliert melden. Ist-Komponenten-/Output-/Kapazitäts-/Artikel-/Wert-/Sachposten abgleichen; unterschiedliche Losgrößen, Seeds, Batchgrößen und Wiederanlauf testen.
+
+**SF-030 – Service Management (Projects separat SF-055):** Serviceartikel und Kundenbezug, Serviceverträge sofern verfügbar/gewählt, Wartungspläne/-intervalle, Serviceaufträge, Ersatzteile, Ressourcen-/Arbeitszeiten, Serviceverbrauch, Fakturierung und Standard-Serviceposten. Fehlende Serviceberechtigung/Erweiterung blockiert nur das gewählte Fachmodul, nicht den gesamten Mandanten. End-to-end zwei unterschiedliche Servicefälle inkl. Teilreparatur, Ressourcen-/Teileverfügbarkeit, berechneter Rechnung und Drilldown.
+
+**SF-031 – Fixed Assets:** Anlagenbuchungsgruppen, Abschreibungsbücher, Anlagenklassen, Anschaffung über Standard-Anlagen-/Einkaufsbuchungsprozess, periodische Abschreibung und Verkauf/Abgang; Geschäftsperioden, Dimensionen, Rundung, Abschreibungsverfahren/Nutzungsdauer und Teilabgang nach Standard prüfen. Anlagen-/Sachposten und Restbuchwert abgleichen; ungebuchte Stammphase separat. Negative Fälle: fehlende Buchungsgruppe, geschlossene Periode, Doppelabschreibung/zweiter Lauf.
+
+**SF-033 – CRM (Disposition separat SF-056):** Kontakte/Unternehmen/Personen, Beziehungen zum Debitor/Kreditor, Aktivitäten, Verkaufschancen, Aufgaben, Kampagnen/Segmente soweit in BC-Standard und Lizenz vorhanden; realistische B2B-Vertriebspipeline, nachvollziehbare Statusübergänge und optional Übergang zu Angebot/Auftrag (nur wenn Sales aktiviert). Ausgewählte Kontakte nicht duplizieren; Kontakte aus Fremdstämmen nur mit ausdrücklichem, datenschutzgeeignetem Testmodus. CRM-Aufgaben nicht als gebuchte Belege ausgeben; Zugriff, Testdaten, Drilldowns und DE/EN prüfen.
+
+**SF-032 – Branchenfreigabe:** Pro zusätzlichem Profil getrennte Freigabe nur bei verfügbaren getesteten Modulbausteinen, profiltypischen internen Produkt-/Partner-/Preis-/Belegmustern und neutraler Modul-Pipeline. Erste Kandidaten aus bestehendem TODO: E-Commerce/Einzelhandel, Fertigung, Dienstleistungen, Bau, Logistik, Wartung. Weitere mögliche Unterprofile nur nach fachlicher Spezifikation; eine adesso-Wirtschaftsbranche impliziert kein vorhandenes BC-Standardmodul. Pro Profil kleiner/mittlerer nativer Durchlauf, Modulauswahl, Bestands-/Buchungs-/Drilldownqualität, Wiederverwendung in vorhandener Firma, DE/EN und Versionierung. Nicht freigegebene Branchen nicht anklickbar anbieten.
+
+**Ressourcen-/Performancegate SF-026:** Erst nach stabilen klein/mittel Szenarien 1k/10k/50k/100k stufenweise benchmarken, Laufdauer, Laufzeitlimit, Speicher, Datenbankzugriffe, Queue, abgebrochene/übersprungene Postings und Wiederanlauf dokumentieren; bei Grenzwerten kontrolliert begrenzen statt instabil weiterzulaufen.
+
+---
+
 ## Ticketvorlage
 
 ### SF-XXX — Titel
@@ -871,33 +1064,3 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 - [ ] Menschliche Abnahme; erst danach Erledigt.
 
 **Testprotokoll:** Zielversion/Umgebung/Rolle, Inputs/Seed/Zeitraum, Soll/Ist, echte Ergebnisse und offene Grenzen.
-
-
-### SF-048 – Nachbesserung Verkaufsbestand und Dashboard (22.11.2026)
-
-**Status: Zur Prüfung.** Ausdrücklich beauftragter Fix für reine Bewegungsläufe
-mit vorhandenen Stammdaten und für nicht anklickbare Ergebnis-Kacheln.
-
-- [x] Keine pauschale Bestandsblockade mehr während der Verkaufsvorprüfung
-  bei einem vorhandenen Stammdatenpool.
-- [x] Pro Verkaufsbeleg vor der Buchung Bestand am gewählten Lagerort und
-  Belegdatum prüfen, einschließlich kumulierter Mengen mehrfacher Artikel.
-- [x] Nicht buchbare Belege als ungebuchte Dokumente erhalten; nicht als
-  erfolgreich gebuchte Rechnung ausgeben. Vorhandene Rechnungen/Posten
-  bleiben unverändert; BC-Standardbuchung und Commit-Sperre bleiben aktiv.
-- [x] Validierung berücksichtigt bei der geprüften Stammdaten-Wiederverwendung
-  sowohl gebuchte als auch mangels Bestand ungebuchte Ergebnisse.
-- [x] Dashboard-Drilldown nicht mehr an numerische Gleichheit mit dem
-  bestätigten Lauf-Fortschritt koppeln; echte Listenanzahl separat anzeigen.
-- [ ] AL-Kompilierung und Sandbox-Test für kein/teilweise/vollständig
-  vorhandenen Bestand sowie teil-/vollständig gebuchte Verkaufsbelege.
-- [ ] Test: ohne Bestand werden keine gebuchten Verkaufsrechnungen und
-  Artikelposten fälschlich als erfolgreich angezeigt.
-- [ ] Echte alternative Artikel und übersprungene Belege mit separater
-  Fehlerstatistik sind noch nicht implementiert; hierfür ist ein eigener
-  sicherer Persistenz-/Validierungsvertrag nötig.
-
-**Statische Prüfung:** JavaScript-Syntaxprüfung und einfache AL-Strukturprüfung
-(Balancierung) durchgeführt. Keine lokale AL-Compiler- oder BC-Sandbox-Abnahme.
-**Querschnitt:** Dashboard und Verkauf betroffen; keine neuen UI-Texte,
-Stammdatentabellen oder Einrichtungen eingeführt.

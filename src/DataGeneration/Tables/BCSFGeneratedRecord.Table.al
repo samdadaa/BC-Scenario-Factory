@@ -73,6 +73,16 @@ table 90251 "BCSF Generated Record"
       Caption = 'Created At';
       ToolTip = 'Specifies when this entry was created.';
     }
+    field(14; "Posting Skipped"; Boolean)
+    {
+      Caption = 'Posting Skipped';
+      ToolTip = 'Specifies that requested posting was skipped before calling standard posting; the document remains unposted.';
+    }
+    field(15; "Skip Reason Code"; Code[30])
+    {
+      Caption = 'Skip Reason Code';
+      ToolTip = 'Specifies the stable reason for skipped posting. STOCK means insufficient unreserved stock on the document date.';
+    }
   }
   keys
   {

@@ -33,6 +33,8 @@ page 90352 "BCSF Step Progress"
         field("Node Code"; Rec."Node Code") { }
         field("Planned Units"; Rec."Planned Units") { }
         field("Confirmed Units"; Rec."Confirmed Units") { }
+        field("Skipped Units"; Rec."Skipped Units") { }
+        field("Review Units"; Rec."Review Units") { }
         field("Remaining Units"; Rec."Remaining Units") { }
         field("Created Artifacts"; Rec."Created Artifacts") { }
         field("Progress Percent"; Rec."Progress Percent") { }

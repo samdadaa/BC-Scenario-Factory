@@ -86,3 +86,8 @@ Payment Processor verteilt neue Zahlungsbuchungen zwischen Rechnung und erfasste
 ## SF-047 – Zahlungsvalidierung 1.0.8.5
 
 Payment Processor 90401 setzt `TempLine.SetSuppressCommit(true)` unmittelbar nach Init und vor sämtlichen Validierungen, unbedingt für Kunden-/Lieferantenzahlungen. Die Standard-Toleranzinstanz erhält dadurch die Unterdrückung ihrer eigenen Commits; fehlender Schutz führte nativ unter BC 29.1 zum Abbruch in DelVendPmtTolAcc. Strenger Batchguard, Berechtigungen, Standardbuchung/Ausgleich, Herkunft, Restbetrag-/Datumskontrolle und unsichere-Retry-Sperren bleiben erhalten. Kein Schemawechsel, keine neue UI/Setupvorgabe. Standard-API-Quellregression mit vier Negativkontrollen bestanden; Main/Test gegen lokale 28.5-Symbole kompiliert. [Native BC-29.1-Fälle und lokale Prüfgrenzen](../../../review/SF047_PRUEFBERICHT.md#zahlungskorrektur-1085--commit-bei-ausgleichsvalidierung). **Zur Prüfung**.
+
+
+## SF-050 – aktuelle Umsetzung 1.0.11.0 / 23.11.2026
+
+Isolierte neue Geschäftsvorfälle, lesende Prüfung der tatsächlich gewählten Quellen, atomare No-write-Skip-Checkpoints, fortgesetzte unabhängige Pending-Arbeit und unveränderte NeedsReview-Sperren. Bestehende Einrichtungen werden nur im bestätigten Foundationpfad ergänzt; neue interne Vorlagen verwenden konkrete kompatible Zuordnungen. Quellen, betroffene Moduldateien, Ergebnis-/Listenvertrag und Grenzen im [aktuellen Prüfbericht](../../../review/SF050_PRUEFBERICHT.md). Fünf neue Methoden im vorhandenen Testobjekt; lokale Nachweise dort, native Modulabnahme N01–N08 durch den Nutzer noch offen. **Zur Prüfung**, SF-051–SF-053 nicht umgesetzt.

@@ -1,3 +1,7 @@
+**SF-050 · App 1.0.11.0 · Zur Prüfung (23.11.2026):** Neue Belegläufe isolieren je Geschäftsvorfall; unbekannte Buchungsergebnisse bleiben NeedsReview, unabhängige Pending-Vorgänge können weiterlaufen. No-write-Skips, Qualitäts-/Dashboardbilanz und fehlende technische Existing-Einrichtung sind integriert. Native BC-Abnahme durch den Nutzer offen. SF-051–SF-053 nicht umgesetzt. [Vertrag, Paket und native Prüffälle](../review/SF050_PRUEFBERICHT.md).
+
+**SF-049/SF-050, lokaler Teilstand 1.0.10.0:** Neuer modulabhängiger Mandantenpool Version 3, eingefrorene Auswahl und explizite STOCK-Auslassungsnachweise mit Dashboard-/Qualitätswarnung. Zwei additive Registryfelder, weiterhin 145 Main-Objekte. SF-049/SF-050 In Arbeit; SF-051–SF-053 nicht implementiert. [Umfang, echte Prüfungen und offene native Abnahme](../review/SF049_SF050_PRUEFBERICHT.md).
+
 # Modulindex – Zielarchitektur
 
 **SF-048 / 1.0.9.0:** 145 Main-AL-Objekte. Core ergänzt Enum 90114, DataGeneration den lesenden Master Data Source 90259; vorhandene ScenarioManagement-, IndustryProfiles-, DependencyManager-, BackgroundProcessing-, ProcessEngine-, Monitoring-, Sales-, Purchasing- und Inventoryobjekte verwenden explizit bestätigte Fremdlaufstammdaten. Keine neue Tabelle/Seite/Engine. [Vertrag](../MODULAR_GENERATION.md), [Prüfbericht](../review/SF048_PRUEFBERICHT.md). **Zur Prüfung**. Nachfolgende Zählstände sind historisch.

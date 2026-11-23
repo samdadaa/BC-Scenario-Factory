@@ -1,3 +1,5 @@
+**Aktueller lokaler Teilstand 1.0.10.0 (SF-049/SF-050):** Leere Quelllauf-ID verwendet bei neuen Captures den modulabhängigen vorhandenen Mandantenpool Version 3. Einkauf benötigt keinen Kunden und Verkauf keinen Lieferanten; ein geeigneter Lieferant genügt. Neue STOCK-Nachweise/Qualitätswarnungen unterscheiden angeforderte von tatsächlich gebuchter Arbeit. Die folgenden früheren Abnahmestände sind historisch. [Vertrag, Vorlagen und offene Grenzen](review/SF049_SF050_PRUEFBERICHT.md). **In Arbeit.**
+
 # SF-048 – Modulare Großhandelsläufe ab 1.0.9.0
 
 Status **Zur Prüfung**. Implementierter Vertrag; lokale Prüfung ist keine native BC-Abnahme. [Prüfbericht](review/SF048_PRUEFBERICHT.md).

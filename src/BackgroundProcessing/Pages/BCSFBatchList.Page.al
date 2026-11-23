@@ -26,6 +26,8 @@ page 90311 "BCSF Batch List"
         field("Last Key"; Rec."Last Key") { ApplicationArea = All; }
         field("Status"; Rec."Status") { ApplicationArea = All; }
         field("Processed Units"; Rec."Processed Units") { ApplicationArea = All; }
+        field("Skipped Units"; Rec."Skipped Units") { ApplicationArea = All; }
+        field("Skip Reason Code"; Rec."Skip Reason Code") { ApplicationArea = All; }
         field("Created Records"; Rec."Created Records") { ApplicationArea = All; }
         field("Job Queue Entry Id"; Rec."Job Queue Entry Id") { ApplicationArea = All; }
         field("Schedule Attempts"; Rec."Schedule Attempts") { ApplicationArea = All; }

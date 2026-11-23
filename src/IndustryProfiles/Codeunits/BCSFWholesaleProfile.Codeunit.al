@@ -2,6 +2,7 @@ namespace BCScenarioFactory.IndustryProfiles;
 
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
+using BCScenarioFactory.Finance;
 using BCScenarioFactory.ScenarioManagement;
 
 codeunit 90153 "BCSF Wholesale Profile"
@@ -165,6 +166,8 @@ codeunit 90153 "BCSF Wholesale Profile"
     TempModules: Record "BCSF Scenario Module" temporary;
     Target: Record "BCSF Data Target";
     Policy: Codeunit "BCSF Scenario Policy";
+    Packages: Codeunit "BCSF Finance Package Mgt";
+    Foundation: Codeunit "BCSF Demo Partner Setup";
     Entity: Enum "BCSF Entity Type";
     Ordinal: Integer;
   begin
@@ -191,6 +194,8 @@ codeunit 90153 "BCSF Wholesale Profile"
       Scenario."Batch Size" := Setup."Default Batch Size";
     Scenario."Data Language" := Setup."Default Data Language";
     Scenario."B2C Percent" := 0;
+    if Packages.GetAppliedMode() = "BCSF Finance Mode"::Existing then
+      Foundation.BindExistingScenario(Scenario);
     Scenario.Insert(true);
     TempModules.SetRange(Enabled, true);
     if TempModules.FindSet() then
@@ -260,7 +265,7 @@ codeunit 90153 "BCSF Wholesale Profile"
       (not PurchaseSelected and not SalesSelected) then
       Error(GenerationErr);
     if IsNullGuid(SourceId) then
-      Source.CaptureExisting()
+      Source.CaptureExisting(PurchaseSelected and (Purchases > 0), SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0)))
     else begin
       SourceHeader.Get(SourceId);
       Source.Capture(SourceId, 'TRADE', SourceHeader."Profile Version");

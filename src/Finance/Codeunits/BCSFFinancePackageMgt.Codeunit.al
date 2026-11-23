@@ -41,8 +41,8 @@ codeunit 90400 "BCSF Finance Package Mgt"
         if (CurrentMode <> CurrentMode::Existing) and (CurrentMode <> Mode) then
             Error(DifferentPackageLbl);
         if Mode = Mode::Existing then begin
-            if not Preview(Mode, TempDiff) then
-                ThrowFirstBlocker(TempDiff);
+            Inspect(Mode, WorkDate(), true, true, TempDiff);
+            ThrowIfBlocked(TempDiff);
             exit;
         end;
         Apply(Mode);
@@ -98,6 +98,14 @@ codeunit 90400 "BCSF Finance Package Mgt"
             Error(DifferentPackageLbl);
         Inspect(Mode, WorkDate(), false, true, TempDiff);
         if SetupManager.HasBlockers(TempDiff) then
+            ThrowFirstBlocker(TempDiff);
+    end;
+
+    local procedure ThrowIfBlocked(var TempDiff: Record "BCSF Setup Diff" temporary)
+    var
+        Manager: Codeunit "BCSF Setup Manager";
+    begin
+        if Manager.HasBlockers(TempDiff) then
             ThrowFirstBlocker(TempDiff);
     end;
 
@@ -194,15 +202,17 @@ codeunit 90400 "BCSF Finance Package Mgt"
         Location: Record Location;
         Inventory: Record "Inventory Setup";
         SetupManager: Codeunit "BCSF Setup Manager";
+        ExistingFoundation: Codeunit "BCSF Demo Partner Setup";
         AccountNos: Dictionary of [Code[20], Code[20]];
         GroupCode: Code[20];
         ReportPrefix: Code[6];
         AllowCreate: Boolean;
     begin
         if not Write then
-            if (Mode = Mode::Existing) or (GetVersion(Mode) = '1.0.0') then
-                CheckFoundation(EffectiveDate, Mode <> Mode::Existing, TempDiff);
+            if (Mode <> Mode::Existing) and (GetVersion(Mode) = '1.0.0') then
+                CheckFoundation(EffectiveDate, true, TempDiff);
         if Mode = Mode::Existing then begin
+            ExistingFoundation.PrepareExisting(EffectiveDate, Write, TempDiff);
             CheckExisting(TempDiff);
             exit;
         end;
@@ -1138,9 +1148,34 @@ codeunit 90400 "BCSF Finance Package Mgt"
     local procedure SetGroupDefault(var Settings: JsonObject; KeyName: Text; GroupCode: Code[20])
     var
         Contract: Codeunit "BCSF Contract JSON";
+        Requested: Code[20];
     begin
+        Requested := CopyStr(Contract.GetText(Settings, KeyName), 1, MaxStrLen(Requested));
+        if (GetAppliedMode() = "BCSF Finance Mode"::Existing) and (Requested <> '') then
+            if HasExistingGroup(KeyName, Requested) then
+                exit;
         if Contract.GetText(Settings, KeyName) in ['', 'BCSF-DEMO', 'BCSF03', 'BCSF04', 'INLAND03', 'INLAND04'] then
             Settings.Replace(KeyName, GroupCode);
+    end;
+
+    local procedure HasExistingGroup(KeyName: Text; Code: Code[20]): Boolean
+    var
+        ExistingCustomerGroup: Record "Customer Posting Group";
+        ExistingVendorGroup: Record "Vendor Posting Group";
+        ExistingBusinessGroup: Record "Gen. Business Posting Group";
+        ExistingVATBusinessGroup: Record "VAT Business Posting Group";
+    begin
+        ExistingCustomerGroup.SecurityFiltering(SecurityFilter::Disallowed);
+        ExistingVendorGroup.SecurityFiltering(SecurityFilter::Disallowed);
+        ExistingBusinessGroup.SecurityFiltering(SecurityFilter::Disallowed);
+        ExistingVATBusinessGroup.SecurityFiltering(SecurityFilter::Disallowed);
+        case KeyName of
+            'customerPostingGroup': exit(ExistingCustomerGroup.Get(Code));
+            'vendorPostingGroup': exit(ExistingVendorGroup.Get(Code));
+            'genBusPostingGroup': exit(ExistingBusinessGroup.Get(Code));
+            'vatBusPostingGroup': exit(ExistingVATBusinessGroup.Get(Code));
+        end;
+        exit(false);
     end;
 
     local procedure SetTermDefault(var Settings: JsonObject; KeyName: Text; Preferred: Code[10]; Immediate: Boolean)

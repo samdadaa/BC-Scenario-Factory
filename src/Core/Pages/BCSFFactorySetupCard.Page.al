@@ -31,7 +31,7 @@ page 90101 "BCSF Factory Setup Card"
           Caption = 'Chart of accounts';
           OptionCaption = 'SKR03,SKR04,Use existing valid BC setup';
           Editable = not Initialized;
-          ToolTip = 'Choose the local test chart once. Existing company accounts and settings are preserved.';
+          ToolTip = 'Choose the chart once. Existing financial mappings are retained; missing required technical setup is added before generation.';
         }
       }
       group(IndustryStep)
@@ -495,6 +495,8 @@ page 90101 "BCSF Factory Setup Card"
       if ProcessChoice = ProcessChoice::Payments then
         ReviewText += PaymentsReviewLbl;
     end;
+    if SelectedChart() = "BCSF Finance Mode"::Existing then
+      ReviewText += ExistingFoundationLbl;
   end;
 
   local procedure SelectedQuantity(Selected: Boolean; Quantity: Integer): Integer
@@ -554,6 +556,7 @@ page 90101 "BCSF Factory Setup Card"
     PostingApproved: Boolean;
     IndustryName: Text;
     ReviewText: Text;
+    ExistingFoundationLbl: Label ' Existing financial accounts and mappings are retained. Missing required technical setup is added before generation; financial roles without a usable mapping remain blocked.';
     NewDatasetLbl: Label 'A new run creates the displayed synthetic records in this company. ';
     CostPostingLbl: Label ' Automatic inventory cost posting is enabled only in a company without posted activity; an existing conflicting cost policy stops the run.';
     PostingMixLbl: Label ' Purchase orders: 20% unposted, 20% partial, 60% fully invoiced; sales orders: 25% unposted, 25% partial, 50% fully invoiced; sales invoices: 33% unposted, 67% posted. Rounded down per target; remaining units stay unposted.';

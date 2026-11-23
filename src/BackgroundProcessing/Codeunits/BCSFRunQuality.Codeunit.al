@@ -40,7 +40,7 @@ codeunit 90317 "BCSF Run Quality"
           Severity := Severity::Error;
         end;
         Validation.RecordCheck(Batch."Run Id", Batch."Batch Id", Batch."Node Code", 'REQUIRED-OUTPUT',
-          BatchSeverity, Batch."Last Key" - Batch."First Key" + 1, Batch."Processed Units");
+          BatchSeverity, Batch."Last Key" - Batch."First Key" + 1 - Batch."Skipped Units", Batch."Processed Units");
         if BatchSeverity = BatchSeverity::Passed then begin
           Clear(WarningCodes);
           if not CheckOptionalOutput(Batch."Batch Id", WarningCodes) then begin
@@ -227,7 +227,7 @@ codeunit 90317 "BCSF Run Quality"
       Batch.TestField("Node Code", Result."Node Code");
       Batch.TestField(Status, Batch.Status::Completed);
       if Result."Rule Code" = 'REQUIRED-OUTPUT' then begin
-        Result.TestField("Expected Units", Batch."Last Key" - Batch."First Key" + 1);
+        Result.TestField("Expected Units", Batch."Last Key" - Batch."First Key" + 1 - Batch."Skipped Units");
         Result.TestField("Reported Units", Batch."Processed Units");
         if Result.Severity = Result.Severity::Warning then
           Error(BatchCountErr);
@@ -272,9 +272,18 @@ codeunit 90317 "BCSF Run Quality"
   [TryFunction]
   local procedure CheckOptionalOutput(BatchId: Guid; var WarningCodes: List of [Code[30]])
   var
+    Entry: Record "BCSF Generated Record";
+    Batch: Record "BCSF Batch";
     UniqueCodes: List of [Code[30]];
     WarningCode: Code[30];
   begin
+    Batch.Get(BatchId);
+    if Batch."Skipped Units" > 0 then
+      WarningCodes.Add('WARN-UNIT-SKIPPED');
+    Entry.SetRange("Batch Id", BatchId);
+    Entry.SetRange("Posting Skipped", true);
+    if not Entry.IsEmpty() then
+      WarningCodes.Add('WARN-POSTING-SKIPPED');
     OnCheckOptionalOutput(BatchId, WarningCodes);
     if WarningCodes.Count() > 20 then
       Error(OptionalContractErr);

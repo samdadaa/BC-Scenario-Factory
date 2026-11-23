@@ -15,8 +15,12 @@ using BCScenarioFactory.Finance;
 using BCScenarioFactory.ProcessEngine;
 using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.Monitoring;
+using BCScenarioFactory.SetupManager;
 using Microsoft.Sales.History;
 using Microsoft.Finance.GeneralLedger.Ledger;
+using Microsoft.Finance.GeneralLedger.Account;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Finance.VAT.Setup;
 using Microsoft.Finance.Dimension;
 using Microsoft.Finance.VAT.Ledger;
 using Microsoft.Sales.Receivables;
@@ -2060,6 +2064,325 @@ codeunit 90700 "BCSF Inventory Tests"
     Again.WriteTo(Second);
     Assert(First = Second, 'Confirmed source identities must remain stable.');
     Assert(Entry.Count() = BeforeCount, 'Reading an existing source must never register the same records again.');
+  end;
+
+  [Test]
+  procedure SelectedPoolAllowsSalesWithoutVendors()
+  var
+    Source: Codeunit "BCSF Master Data Source";
+    Generator: Codeunit "BCSF Sales Generator";
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Context: JsonObject;
+    Binding: JsonObject;
+    Settings: JsonObject;
+    Ids: JsonArray;
+    EmptyIds: JsonArray;
+    Targets: JsonArray;
+    Dependencies: JsonArray;
+  begin
+    Context := ContextFixture();
+    Context.Add('runId', Format(CreateGuid(), 0, 4));
+    Context.Replace('profileCode', 'TRADE');
+    Context.Replace('profileVersion', '6');
+    Ids.Add(Format(CreateGuid(), 0, 4));
+    Binding.Add('version', 3);
+    Binding.Add('customers', Ids.Clone());
+    Binding.Add('items', Ids.Clone());
+    Binding.Add('vendors', EmptyIds);
+    Context.Add('masterDataSource', Binding);
+    Settings.Add('version', 4);
+    Context.Add('salesSetup', Settings);
+    AddMixedTarget(Targets, "BCSF Entity Type"::SalesInvoice, 1, 100, 0);
+    Context.Replace('targets', Targets);
+    Generator.GetDependencies(Context, Settings, Dependencies);
+    Assert(Dependencies.Count() = 0, 'One invoice must not add purchase or master-data targets.');
+    Assert(Source.IsExistingPool(Context), 'Version 3 references existing company identities.');
+    Assert(Source.Quantity(Context, "BCSF Entity Type"::Vendor) = 0, 'Sales-only must not require a vendor pool.');
+    Assert(Coordinator.Disposition(Context, 'SALES.INVOICE', 1) = 1, 'One invoice at 100 percent must be posted.');
+    Assert(Coordinator.Disposition(Context, 'SALES.ORDER', 1) = 0, 'Missing order means no order.');
+    Assert(Coordinator.Disposition(Context, 'SALES.INVOICE', 2) = 0, 'Keys outside the target must not be planned.');
+  end;
+
+  [Test]
+  procedure SelectedSupplierPoolsAllowUnequalCounts()
+  var
+    VendorA: Record Vendor;
+    VendorB: Record Vendor;
+    VendorC: Record Vendor;
+    Item: Record Item;
+    Source: Codeunit "BCSF Master Data Source";
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Context: JsonObject;
+    Binding: JsonObject;
+    Vendors: JsonArray;
+    Items: JsonArray;
+    ItemVendors: JsonArray;
+    Index: Integer;
+    PurchaseKey: Integer;
+    LineIndex: Integer;
+    ItemKey: Integer;
+    Seen: List of [Integer];
+  begin
+    // Synthetic fixture only. The AL test transaction rolls back these
+    // lightweight records; no posting or master-pool eligibility is bypassed.
+    VendorA.Init();
+    VendorA."No." := CopyStr(DelChr(Format(CreateGuid(), 0, 4), '=', '{}-'), 1, 20);
+    VendorA.Insert(false);
+    VendorB.Init();
+    VendorB."No." := CopyStr(DelChr(Format(CreateGuid(), 0, 4), '=', '{}-'), 1, 20);
+    VendorB.Insert(false);
+    VendorC.Init();
+    VendorC."No." := CopyStr(DelChr(Format(CreateGuid(), 0, 4), '=', '{}-'), 1, 20);
+    VendorC.Insert(false);
+    Vendors.Add(Format(VendorA.SystemId, 0, 4));
+    Vendors.Add(Format(VendorB.SystemId, 0, 4));
+    Vendors.Add(Format(VendorC.SystemId, 0, 4));
+    for Index := 1 to 10 do begin
+      Item.Init();
+      Item."No." := CopyStr(DelChr(Format(CreateGuid(), 0, 4), '=', '{}-'), 1, 20);
+      if Index <= 2 then
+        Item."Vendor No." := VendorA."No."
+      else
+        if Index <= 7 then
+          Item."Vendor No." := VendorB."No."
+        else
+          Item."Vendor No." := VendorC."No.";
+      Item.Insert(false);
+      Items.Add(Format(Item.SystemId, 0, 4));
+      if Index <= 2 then
+        ItemVendors.Add(Format(VendorA.SystemId, 0, 4))
+      else
+        if Index <= 7 then
+          ItemVendors.Add(Format(VendorB.SystemId, 0, 4))
+        else
+          ItemVendors.Add(Format(VendorC.SystemId, 0, 4));
+    end;
+    Binding.Add('version', 3);
+    Binding.Add('vendors', Vendors);
+    Binding.Add('items', Items);
+    Binding.Add('itemVendors', ItemVendors);
+    Context := ContextFixture();
+    Context.Replace('profileCode', 'TRADE');
+    Context.Replace('profileVersion', '6');
+    Context.Add('masterDataSource', Binding);
+    for PurchaseKey := 1 to 30 do
+      for LineIndex := 1 to 4 do begin
+        ItemKey := Coordinator.WholesalePurchaseItemKey(Context, PurchaseKey, LineIndex);
+        Assert((ItemKey >= 1) and (ItemKey <= 10), 'Every position must stay within the captured pool.');
+        case PurchaseKey mod 3 of
+          1: Assert(ItemKey <= 2, 'Supplier A positions must only use supplier A items.');
+          2: Assert((ItemKey >= 3) and (ItemKey <= 7), 'Supplier B positions must only use supplier B items.');
+          0: Assert(ItemKey >= 8, 'Supplier C positions must only use supplier C items.');
+        end;
+        if not Seen.Contains(ItemKey) then
+          Seen.Add(ItemKey);
+      end;
+    Assert(Seen.Count() = 10, 'Unequal assortments must retain every selected article.');
+    Vendors.RemoveAt(1);
+    Vendors.RemoveAt(1);
+    Binding.Replace('vendors', Vendors);
+    Context.Replace('masterDataSource', Binding);
+    for LineIndex := 1 to 4 do
+      Assert(Source.PurchaseItemKey(Context, 1, LineIndex) >= 8, 'One supplier is sufficient and cycles its own assortment.');
+    asserterror Source.PurchaseItemKey(Context, 0, 1);
+    asserterror Source.PurchaseItemKey(Context, 1, 0);
+  end;
+
+  [Test]
+  procedure SkippedDocumentsHaveNoPostingEvidence()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Entry: Record "BCSF Generated Record";
+    InvoiceEntry: Record "BCSF Generated Record";
+    Header: Record "Sales Header";
+    Line: Record "Sales Line";
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Entry.SetRange("Run Id", Setup."Industry Run Id");
+    Entry.SetRange("Posting Skipped", true);
+    Assert(Entry.FindSet(), 'Prepare the stock-shortage reference run before executing this native case.');
+    repeat
+      Entry.TestField("Skip Reason Code", 'STOCK');
+      Entry.TestField("Artifact Code", 'DOCUMENT');
+      Entry.TestField("Table Id", Database::"Sales Header");
+      Header.GetBySystemId(Entry."Record SystemId");
+      Assert(not InvoiceEntry.Get(Entry."Run Id", Entry."Node Code", Entry."Logical Key", 'INVOICE'), 'A skipped document must not have a posted invoice identity.');
+      Line.SetRange("Document Type", Header."Document Type");
+      Line.SetRange("Document No.", Header."No.");
+      Assert(Line.FindSet(), 'A retained document needs actual lines.');
+      repeat
+        Line.TestField("Quantity Shipped", 0);
+        Line.TestField("Quantity Invoiced", 0);
+      until Line.Next() = 0;
+    until Entry.Next() = 0;
+  end;
+
+  [Test]
+  procedure IsolatedDocumentPlansKeepLegacyMasterBatches()
+  var
+    Rules: Codeunit "BCSF Partner Rules";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    Target: JsonObject;
+    Plans: JsonArray;
+    Token: JsonToken;
+    UnitKey: Integer;
+  begin
+    Context := ContextFixture();
+    Context.Replace('processMode', 2);
+    Target.Add('entityCode', 'SALES.INVOICE');
+    Target.Add('moduleCode', 'SALES');
+    Target.Add('quantity', 8);
+    Target.Add('processMode', 2);
+    Rules.Plan('SALES.INVOICE', Context, Target, 1, 100, Plans);
+    Assert(Plans.Count() = 3, 'Legacy snapshots keep their existing batch cuts.');
+    Context.Add('executionPolicyVersion', 1);
+    Rules.Plan('SALES.INVOICE', Context, Target, 1, 100, Plans);
+    Assert(Plans.Count() = 8, 'Each new document has its own transaction and checkpoint.');
+    UnitKey := 0;
+    foreach Token in Plans do begin
+      UnitKey += 1;
+      Assert(Contract.GetInteger(Token.AsObject(), 'firstKey') = UnitKey, 'Singleton plans must cover every requested key exactly once.');
+      Assert(Contract.GetInteger(Token.AsObject(), 'lastKey') = UnitKey, 'A document transaction must contain exactly one requested unit.');
+    end;
+    Rules.Plan('ITEM', Context, ItemTarget(), 1, 100, Plans);
+    Assert(Plans.Count() = 3, 'Master generation keeps the captured batch size.');
+    Context.Replace('executionPolicyVersion', 99);
+    asserterror Contract.CheckContext(Context);
+  end;
+
+  [Test]
+  procedure MissingDocumentSourceIsReadOnlySkip()
+  var
+    Header: Record "Sales Header";
+    Line: Record "Sales Line";
+    Rules: Codeunit "BCSF Partner Rules";
+    Context: JsonObject;
+    Settings: JsonObject;
+    Binding: JsonObject;
+    Target: JsonObject;
+    Ids: JsonArray;
+    BeforeHeaders: Integer;
+    BeforeLines: Integer;
+  begin
+    Context := ContextFixture();
+    Context.Add('executionPolicyVersion', 1);
+    Settings.Add('version', 4);
+    Settings.Add('location', '');
+    Ids.Add(Format(CreateGuid(), 0, 4));
+    Settings.Add('customers', Ids);
+    Context.Add('salesSetup', Settings);
+    Binding.Add('version', 3);
+    Context.Add('masterDataSource', Binding);
+    Target.Add('entityCode', 'SALES.INVOICE');
+    Target.Add('moduleCode', 'SALES');
+    BeforeHeaders := Header.Count();
+    BeforeLines := Line.Count();
+    Assert(Rules.InspectDocument(Context, Target, 1) = 'CUSTOMER', 'A missing selected customer must be classified before any document write.');
+    Assert(Header.Count() = BeforeHeaders, 'Read-only inspection must not create a sales header.');
+    Assert(Line.Count() = BeforeLines, 'Read-only inspection must not create sales lines.');
+  end;
+
+  [Test]
+  procedure CompletedPreflightSkipsHaveNoBusinessEvidence()
+  var
+    Setup: Record "BCSF Factory Setup";
+    TempMetric: Record "BCSF Step Metric" temporary;
+    Monitoring: Codeunit "BCSF Monitoring Mgt";
+    Batch: Record "BCSF Batch";
+    Entry: Record "BCSF Generated Record";
+    Checkpoint: Record "BCSF Batch Checkpoint";
+    Recovery: Codeunit "BCSF Batch Recovery";
+    Contract: Codeunit "BCSF Contract JSON";
+    Result: JsonObject;
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Batch.SetRange("Run Id", Setup."Industry Run Id");
+    Batch.SetRange("Skipped Units", 1);
+    Assert(Batch.FindSet(), 'Prepare the native blocked-master reference run before this case.');
+    repeat
+      Batch.TestField(Status, Batch.Status::Completed);
+      Batch.TestField("Processed Units", 0);
+      Batch.TestField("Created Records", 0);
+      Entry.SetRange("Batch Id", Batch."Batch Id");
+      Assert(Entry.IsEmpty(), 'A preflight skip must never fabricate standard provenance.');
+      Checkpoint.Get(Batch."Batch Id");
+      Result := Checkpoint.ReadStoredResult();
+      Assert(Contract.GetInteger(Result, 'processedUnits') = 0, 'Skip checkpoint must not claim created work.');
+      Recovery.VerifyCheckpoint(Batch."Batch Id");
+    until Batch.Next() = 0;
+    Monitoring.LoadSteps(Setup."Industry Run Id", TempMetric);
+    if TempMetric.FindSet() then
+      repeat
+        Assert(TempMetric."Planned Units" = TempMetric."Confirmed Units" + TempMetric."Skipped Units" + TempMetric."Remaining Units", 'Requested work must equal created, skipped and outstanding units without double counting.');
+      until TempMetric.Next() = 0;
+  end;
+
+  [Test]
+  procedure UncertainDocumentIsNotRetriedWhileOthersFinish()
+  var
+    Setup: Record "BCSF Factory Setup";
+    Failed: Record "BCSF Batch";
+    Later: Record "BCSF Batch";
+    Execution: Record "BCSF Run Execution";
+  begin
+    Setup.Get(Setup.GetSetupKey());
+    Failed.SetRange("Run Id", Setup."Industry Run Id");
+    Failed.SetRange(Status, Failed.Status::NeedsReview);
+    Assert(Failed.FindFirst(), 'Prepare the native standard-posting failure reference run.');
+    Failed.TestField("Schedule Attempts", 1);
+    Later.SetRange("Run Id", Failed."Run Id");
+    Later.SetRange("Node Code", Failed."Node Code");
+    Later.SetFilter("Sequence No.", '>%1', Failed."Sequence No.");
+    Later.SetRange(Status, Later.Status::Completed);
+    Later.SetFilter("Processed Units", '>0');
+    Assert(not Later.IsEmpty(), 'An uncertain document must not prevent independent later documents from finishing.');
+    Execution.Get(Failed."Run Id");
+    Execution.TestField(Status, Execution.Status::Failed);
+    Failed.Get(Failed."Batch Id");
+    Failed.TestField(Status, Failed.Status::NeedsReview);
+  end;
+
+  [Test]
+  procedure ExistingFoundationAddsTechnicalSetupIdempotently()
+  var
+    TempDiff: Record "BCSF Setup Diff" temporary;
+    Scenario: Record "BCSF Scenario";
+    Location: Record Location;
+    Account: Record "G/L Account";
+    General: Record "General Posting Setup";
+    VAT: Record "VAT Posting Setup";
+    InventoryPosting: Record "Inventory Posting Setup";
+    Foundation: Codeunit "BCSF Demo Partner Setup";
+    AccountCount: Integer;
+    LocationCount: Integer;
+    MappingCount: Integer;
+  begin
+    AccountCount := Account.Count();
+    LocationCount := Location.Count();
+    MappingCount := InventoryPosting.Count();
+    Foundation.PrepareExisting(Today(), false, TempDiff);
+    Assert(Location.Count() = LocationCount, 'Preview must not create a location.');
+    Assert(InventoryPosting.Count() = MappingCount, 'Preview must not create posting mappings.');
+    Foundation.PrepareExisting(Today(), true, TempDiff);
+    Scenario.Init();
+    Foundation.BindExistingScenario(Scenario);
+    Location.Get(Scenario."Item Location Code");
+    Location.TestField("Bin Mandatory", false);
+    Location.TestField("Require Shipment", false);
+    Location.TestField("Require Receive", false);
+    General.Get(Scenario."Gen. Bus. Posting Group", Scenario."Item Product Group");
+    VAT.Get(Scenario."VAT Bus. Posting Group", Scenario."Item VAT Product Group");
+    InventoryPosting.Get(Location.Code, Scenario."Item Inventory Group");
+    LocationCount := Location.Count();
+    MappingCount := InventoryPosting.Count();
+    Foundation.PrepareExisting(Today(), true, TempDiff);
+    Assert(Location.Count() = LocationCount, 'Repeated preparation must not duplicate locations.');
+    Assert(InventoryPosting.Count() = MappingCount, 'Repeated preparation must not duplicate mappings.');
+    Assert(Account.Count() = AccountCount, 'Existing finance mode must never invent G/L accounts.');
+    Scenario."Item Product Group" := CopyStr(DelChr(Format(CreateGuid(), 0, 4), '=', '{}-'), 1, 20);
+    asserterror Foundation.BindExistingScenario(Scenario);
+    Assert(Account.Count() = AccountCount, 'An explicit unmapped role must fail without creating substitute accounts.');
   end;
 
   local procedure Assert(Condition: Boolean; MessageText: Text)

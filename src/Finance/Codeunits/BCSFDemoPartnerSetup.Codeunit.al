@@ -1,6 +1,11 @@
 namespace BCScenarioFactory.Finance;
 
 using BCScenarioFactory.SetupManager;
+using BCScenarioFactory.Lifecycle;
+using BCScenarioFactory.ScenarioManagement;
+using Microsoft.Finance.GeneralLedger.Account;
+using Microsoft.Finance.VAT.Setup;
+using Microsoft.Inventory.Item;
 using Microsoft.CRM.Setup;
 using Microsoft.Finance.GeneralLedger.Journal;
 using Microsoft.Finance.GeneralLedger.Setup;
@@ -14,6 +19,8 @@ using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
 using Microsoft.Purchases.Setup;
 using Microsoft.Sales.Setup;
+using Microsoft.Sales.Customer;
+using Microsoft.Purchases.Vendor;
 
 codeunit 90408 "BCSF Demo Partner Setup"
 {
@@ -22,6 +29,12 @@ codeunit 90408 "BCSF Demo Partner Setup"
   /// <summary>Foundation of the explicitly reviewed finance package. Never creates substitute G/L accounts.</summary>
   [CommitBehavior(CommitBehavior::Error)]
   procedure Prepare(EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; Initializing: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  begin
+    Prepare(EffectiveDate, Write, AllowCreate, Initializing, TempDiff, false);
+  end;
+
+  [CommitBehavior(CommitBehavior::Error)]
+  local procedure Prepare(EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; Initializing: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary; ReuseExistingTerms: Boolean)
   var
     Sales: Record "Sales & Receivables Setup";
     Purchases: Record "Purchases & Payables Setup";
@@ -174,10 +187,10 @@ codeunit 90408 "BCSF Demo Partner Setup"
       if Packages.NeedsInsert(Payment, Fields, Write, AllowCreate, TempDiff) then
         Payment.Insert(true);
     end;
-    Terms('NET00', '<0D>', Write, AllowCreate, TempDiff);
-    Terms('NET14', '<14D>', Write, AllowCreate, TempDiff);
-    Terms('NET30', '<30D>', Write, AllowCreate, TempDiff);
-    Terms('NET60', '<60D>', Write, AllowCreate, TempDiff);
+    Terms('NET00', '<0D>', Write, AllowCreate, TempDiff, ReuseExistingTerms);
+    Terms('NET14', '<14D>', Write, AllowCreate, TempDiff, ReuseExistingTerms);
+    Terms('NET30', '<30D>', Write, AllowCreate, TempDiff, ReuseExistingTerms);
+    Terms('NET60', '<60D>', Write, AllowCreate, TempDiff, ReuseExistingTerms);
     Clear(Fields);
     SourceSetup.Init();
     SourceSetup.Sales := 'SALES';
@@ -221,6 +234,272 @@ codeunit 90408 "BCSF Demo Partner Setup"
           JournalBatch.Insert(true);
       end;
     end;
+  end;
+
+  // Existing financial roles are reused; no account is inferred from a name
+  // or created as a substitute. Only absent technical setup is supplemented.
+  procedure PrepareExisting(EffectiveDate: Date; Write: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    Location: Record Location;
+    InventoryPosting: Record "Inventory Posting Setup";
+    SourcePosting: Record "Inventory Posting Setup";
+    Packages: Codeunit "BCSF Finance Package Mgt";
+    Guard: Codeunit "BCSF Environment Guard";
+    Fields: List of [Integer];
+    LocationCode: Code[10];
+  begin
+    if Write then
+      Guard.EnsureCanConfigure(CompanyName());
+    Prepare(EffectiveDate, Write, true, true, TempDiff, true);
+    EnsureReferencedGroups(Write, TempDiff);
+    LocationCode := SimpleLocation();
+    if LocationCode = '' then begin
+      LocationCode := 'MAIN';
+      if Location.Get(LocationCode) then
+        LocationCode := 'BCSF-MAIN';
+      Location.Init();
+      Location.Code := LocationCode;
+      Location.Name := SimpleLocationLbl;
+      Fields.Add(Location.FieldNo("Bin Mandatory"));
+      Fields.Add(Location.FieldNo("Use As In-Transit"));
+      Fields.Add(Location.FieldNo("Require Receive"));
+      Fields.Add(Location.FieldNo("Require Shipment"));
+      Fields.Add(Location.FieldNo("Require Pick"));
+      Fields.Add(Location.FieldNo("Require Put-away"));
+      Fields.Add(Location.FieldNo("Directed Put-away and Pick"));
+      if Packages.NeedsInsert(Location, Fields, Write, true, TempDiff) then
+        Location.Insert(true);
+    end;
+    InventoryPosting.SecurityFiltering(SecurityFilter::Disallowed);
+    InventoryPosting.SetRange("Location Code", LocationCode);
+    if InventoryPosting.FindSet() then
+      repeat
+        if UsableAccount(InventoryPosting."Inventory Account", false) then
+          exit;
+      until InventoryPosting.Next() = 0;
+    // Extend a known inventory-account role to the dedicated/simple location.
+    // Existing location/group mappings are never changed.
+    SourcePosting.SecurityFiltering(SecurityFilter::Disallowed);
+    if SourcePosting.FindSet() then
+      repeat
+        if UsableAccount(SourcePosting."Inventory Account", false) then
+          if not InventoryPosting.Get(LocationCode, SourcePosting."Invt. Posting Group Code") then begin
+            InventoryPosting := SourcePosting;
+            InventoryPosting."Location Code" := LocationCode;
+            Clear(Fields);
+            Fields.Add(InventoryPosting.FieldNo("Inventory Account"));
+            Fields.Add(InventoryPosting.FieldNo("Inventory Account (Interim)"));
+            if Packages.NeedsInsert(InventoryPosting, Fields, Write, true, TempDiff) then
+              InventoryPosting.Insert(true);
+            exit;
+          end;
+      until SourcePosting.Next() = 0;
+    Block(InventoryPosting.TableCaption(), Write, TempDiff);
+  end;
+
+  local procedure EnsureReferencedGroups(Write: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  var
+    General: Record "General Posting Setup";
+    VAT: Record "VAT Posting Setup";
+    Inventory: Record "Inventory Posting Setup";
+    Business: Record "Gen. Business Posting Group";
+    Product: Record "Gen. Product Posting Group";
+    VATBusiness: Record "VAT Business Posting Group";
+    VATProduct: Record "VAT Product Posting Group";
+    InventoryGroup: Record "Inventory Posting Group";
+    Packages: Codeunit "BCSF Finance Package Mgt";
+    Fields: List of [Integer];
+  begin
+    General.SecurityFiltering(SecurityFilter::Disallowed);
+    VAT.SecurityFiltering(SecurityFilter::Disallowed);
+    Inventory.SecurityFiltering(SecurityFilter::Disallowed);
+    General.SetRange(Blocked, false);
+    if General.FindSet() then
+      repeat
+        if UsableAccount(General."Sales Account", false) and UsableAccount(General."Purch. Account", false) then begin
+          if General."Gen. Bus. Posting Group" <> '' then begin
+            Business.Init();
+            Business.Code := General."Gen. Bus. Posting Group";
+            Business.Description := Business.Code;
+            if Packages.NeedsInsert(Business, Fields, Write, true, TempDiff) then
+              Business.Insert(true);
+          end;
+          if General."Gen. Prod. Posting Group" <> '' then begin
+            Product.Init();
+            Product.Code := General."Gen. Prod. Posting Group";
+            Product.Description := Product.Code;
+            if Packages.NeedsInsert(Product, Fields, Write, true, TempDiff) then
+              Product.Insert(true);
+          end;
+        end;
+      until General.Next() = 0;
+    VAT.SetRange(Blocked, false);
+    VAT.SetRange("VAT Calculation Type", VAT."VAT Calculation Type"::"Normal VAT");
+    if VAT.FindSet() then
+      repeat
+        if (VAT."VAT %" = 0) or (UsableAccount(VAT."Sales VAT Account", false) and UsableAccount(VAT."Purchase VAT Account", false)) then begin
+          if VAT."VAT Bus. Posting Group" <> '' then begin
+            VATBusiness.Init();
+            VATBusiness.Code := VAT."VAT Bus. Posting Group";
+            VATBusiness.Description := VATBusiness.Code;
+            if Packages.NeedsInsert(VATBusiness, Fields, Write, true, TempDiff) then
+              VATBusiness.Insert(true);
+          end;
+          if VAT."VAT Prod. Posting Group" <> '' then begin
+            VATProduct.Init();
+            VATProduct.Code := VAT."VAT Prod. Posting Group";
+            VATProduct.Description := VATProduct.Code;
+            if Packages.NeedsInsert(VATProduct, Fields, Write, true, TempDiff) then
+              VATProduct.Insert(true);
+          end;
+        end;
+      until VAT.Next() = 0;
+    if Inventory.FindSet() then
+      repeat
+        if (Inventory."Invt. Posting Group Code" <> '') and UsableAccount(Inventory."Inventory Account", false) then begin
+          InventoryGroup.Init();
+          InventoryGroup.Code := Inventory."Invt. Posting Group Code";
+          InventoryGroup.Description := InventoryGroup.Code;
+          if Packages.NeedsInsert(InventoryGroup, Fields, Write, true, TempDiff) then
+            InventoryGroup.Insert(true);
+        end;
+      until Inventory.Next() = 0;
+  end;
+
+  procedure BindExistingScenario(var Scenario: Record "BCSF Scenario")
+  var
+    General: Record "General Posting Setup";
+    VAT: Record "VAT Posting Setup";
+    InventoryPosting: Record "Inventory Posting Setup";
+    CustomerGroup: Record "Customer Posting Group";
+    VendorGroup: Record "Vendor Posting Group";
+    Business: Record "Gen. Business Posting Group";
+    Product: Record "Gen. Product Posting Group";
+    Found: Boolean;
+  begin
+    General.SecurityFiltering(SecurityFilter::Disallowed);
+    VAT.SecurityFiltering(SecurityFilter::Disallowed);
+    InventoryPosting.SecurityFiltering(SecurityFilter::Disallowed);
+    CustomerGroup.SecurityFiltering(SecurityFilter::Disallowed);
+    VendorGroup.SecurityFiltering(SecurityFilter::Disallowed);
+    Business.SecurityFiltering(SecurityFilter::Disallowed);
+    Product.SecurityFiltering(SecurityFilter::Disallowed);
+    // This method changes only the new template record supplied by its caller.
+    // It never modifies a standard master or an existing financial mapping.
+    if Scenario."Item Location Code" = '' then
+      Scenario."Item Location Code" := SimpleLocation();
+    if Scenario."Item Location Code" = '' then
+      Error(ExistingBindingErr, 'Location');
+    InventoryPosting.SetRange("Location Code", Scenario."Item Location Code");
+    if Scenario."Item Inventory Group" <> '' then
+      InventoryPosting.SetRange("Invt. Posting Group Code", Scenario."Item Inventory Group");
+    Found := false;
+    if InventoryPosting.FindSet() then
+      repeat
+        if UsableAccount(InventoryPosting."Inventory Account", false) then begin
+          Scenario."Item Inventory Group" := InventoryPosting."Invt. Posting Group Code";
+          Found := true;
+          break;
+        end;
+      until InventoryPosting.Next() = 0;
+    if not Found then
+      Error(ExistingBindingErr, InventoryPosting.TableCaption());
+    General.SetRange(Blocked, false);
+    if Scenario."Gen. Bus. Posting Group" <> '' then
+      General.SetRange("Gen. Bus. Posting Group", Scenario."Gen. Bus. Posting Group");
+    if Scenario."Item Product Group" <> '' then
+      General.SetRange("Gen. Prod. Posting Group", Scenario."Item Product Group");
+    Found := false;
+    if General.FindSet() then
+      repeat
+        if Business.Get(General."Gen. Bus. Posting Group") and Product.Get(General."Gen. Prod. Posting Group") and
+          UsableAccount(General."Sales Account", false) and UsableAccount(General."Purch. Account", false) and
+          UsableAccount(General."COGS Account", false) and UsableAccount(General."Inventory Adjmt. Account", false) and
+          UsableAccount(General."Direct Cost Applied Account", false) then begin
+          VAT.Reset();
+          VAT.SetRange(Blocked, false);
+          VAT.SetRange("VAT Calculation Type", VAT."VAT Calculation Type"::"Normal VAT");
+          if Scenario."VAT Bus. Posting Group" <> '' then
+            VAT.SetRange("VAT Bus. Posting Group", Scenario."VAT Bus. Posting Group")
+          else
+            if Business."Def. VAT Bus. Posting Group" <> '' then
+              VAT.SetRange("VAT Bus. Posting Group", Business."Def. VAT Bus. Posting Group");
+          if Scenario."Item VAT Product Group" <> '' then
+            VAT.SetRange("VAT Prod. Posting Group", Scenario."Item VAT Product Group")
+          else
+            if Product."Def. VAT Prod. Posting Group" <> '' then
+              VAT.SetRange("VAT Prod. Posting Group", Product."Def. VAT Prod. Posting Group");
+          if VAT.FindSet() then
+            repeat
+              if (VAT."VAT %" = 0) or (UsableAccount(VAT."Sales VAT Account", false) and UsableAccount(VAT."Purchase VAT Account", false)) then begin
+                Scenario."Gen. Bus. Posting Group" := General."Gen. Bus. Posting Group";
+                Scenario."Item Product Group" := General."Gen. Prod. Posting Group";
+                Scenario."VAT Bus. Posting Group" := VAT."VAT Bus. Posting Group";
+                Scenario."Item VAT Product Group" := VAT."VAT Prod. Posting Group";
+                Found := true;
+                break;
+              end;
+            until VAT.Next() = 0;
+        end;
+        if Found then
+          break;
+      until General.Next() = 0;
+    if not Found then
+      Error(ExistingBindingErr, General.TableCaption() + ' / ' + VAT.TableCaption());
+    if Scenario."Customer Posting Group" <> '' then
+      CustomerGroup.SetRange(Code, Scenario."Customer Posting Group");
+    Found := false;
+    if CustomerGroup.FindSet() then
+      repeat
+        if UsableAccount(CustomerGroup."Receivables Account", true) then begin
+          Scenario."Customer Posting Group" := CustomerGroup.Code;
+          Found := true;
+          break;
+        end;
+      until CustomerGroup.Next() = 0;
+    if not Found then
+      Error(ExistingBindingErr, CustomerGroup.TableCaption());
+    if Scenario."Vendor Posting Group" <> '' then
+      VendorGroup.SetRange(Code, Scenario."Vendor Posting Group");
+    Found := false;
+    if VendorGroup.FindSet() then
+      repeat
+        if UsableAccount(VendorGroup."Payables Account", true) then begin
+          Scenario."Vendor Posting Group" := VendorGroup.Code;
+          Found := true;
+          break;
+        end;
+      until VendorGroup.Next() = 0;
+    if not Found then
+      Error(ExistingBindingErr, VendorGroup.TableCaption());
+  end;
+
+  local procedure SimpleLocation(): Code[10]
+  var
+    Location: Record Location;
+  begin
+    Location.SecurityFiltering(SecurityFilter::Disallowed);
+    Location.SetRange("Use As In-Transit", false);
+    Location.SetRange("Bin Mandatory", false);
+    Location.SetRange("Require Receive", false);
+    Location.SetRange("Require Shipment", false);
+    Location.SetRange("Require Pick", false);
+    Location.SetRange("Require Put-away", false);
+    Location.SetRange("Directed Put-away and Pick", false);
+    if Location.FindFirst() then
+      exit(Location.Code);
+    exit('');
+  end;
+
+  local procedure UsableAccount(No: Code[20]; ControlAccount: Boolean): Boolean
+  var
+    Account: Record "G/L Account";
+  begin
+    Account.SecurityFiltering(SecurityFilter::Disallowed);
+    if not Account.Get(No) then
+      exit(false);
+    exit(not Account.Blocked and (Account."Account Type" = Account."Account Type"::Posting) and
+      (not ControlAccount or not Account."Direct Posting"));
   end;
 
   local procedure PrepareLedger(EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
@@ -275,6 +554,7 @@ codeunit 90408 "BCSF Demo Partner Setup"
   local procedure SetupRow(ExpectedRow: Variant; SeriesFields: List of [Integer]; NumberSeries: Boolean; EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
   var
     Series: Record "No. Series";
+    SeriesLine: Record "No. Series Line";
     Manager: Codeunit "BCSF Setup Manager";
     Packages: Codeunit "BCSF Finance Package Mgt";
     NoSeries: Codeunit "No. Series";
@@ -316,15 +596,19 @@ codeunit 90408 "BCSF Demo Partner Setup"
       if NumberSeries then begin
         Series.SecurityFiltering(SecurityFilter::Disallowed);
         if not Series.Get(Code) then
-          Block(ActualField.Caption() + ' / ' + Code, Write, TempDiff)
+          EnsureSeries(Code, Write, AllowCreate, TempDiff)
         else begin
           if not Series."Default Nos." then
             Block(ActualField.Caption() + ' / ' + Code, Write, TempDiff);
-          if NoSeries.PeekNextNo(Code, EffectiveDate) = '' then
-            Block(ActualField.Caption() + ' / ' + Code, Write, TempDiff);
+          SeriesLine.SetRange("Series Code", Code);
+          if SeriesLine.IsEmpty() then
+            EnsureSeries(Code, Write, AllowCreate, TempDiff)
+          else
+            if NoSeries.PeekNextNo(Code, EffectiveDate) = '' then
+              Block(ActualField.Caption() + ' / ' + Code, Write, TempDiff);
         end;
       end else
-        CheckSourceCode(Code, Write, TempDiff);
+        EnsureSourceCode(Code, Write, AllowCreate, TempDiff);
     end;
     if Changed then begin
       if not AllowCreate or not Packages.HasSetupWritePermission(Actual.Number(), Missing) then begin
@@ -354,15 +638,6 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Expected.Description := CopyStr(Code, 1, MaxStrLen(Expected.Description));
     if Packages.NeedsInsert(Expected, Fields, Write, AllowCreate, TempDiff) then
       Expected.Insert(true);
-  end;
-
-  local procedure CheckSourceCode(Code: Code[20]; Write: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
-  var
-    Source: Record "Source Code";
-  begin
-    Source.SecurityFiltering(SecurityFilter::Disallowed);
-    if not Source.Get(Code) then
-      Block(Source.TableCaption() + ' / ' + Code, Write, TempDiff);
   end;
 
   local procedure EnsureSeries(Code: Code[20]; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
@@ -395,12 +670,14 @@ codeunit 90408 "BCSF Demo Partner Setup"
       Line.Insert(true);
   end;
 
-  local procedure Terms(Code: Code[10]; Formula: Text; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+  local procedure Terms(Code: Code[10]; Formula: Text; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary; ReuseExisting: Boolean)
   var
     Expected: Record "Payment Terms";
     Packages: Codeunit "BCSF Finance Package Mgt";
     Fields: List of [Integer];
   begin
+    if ReuseExisting and Expected.Get(Code) then
+      exit;
     Expected.Init();
     Expected.Code := Code;
     Evaluate(Expected."Due Date Calculation", Formula);
@@ -422,6 +699,8 @@ codeunit 90408 "BCSF Demo Partner Setup"
 
   var
     GermanyLbl: Label 'Germany';
+    SimpleLocationLbl: Label 'Central warehouse';
+    ExistingBindingErr: Label 'Existing company setup has no compatible account mapping for %1. Missing technical setup can be added, but financial account roles must be configured explicitly. Existing mappings were retained.', Comment = '%1 = setup table or role';
     JournalLbl: Label 'General Journal';
     FillLbl: Label 'Create missing setup or fill empty number series bindings';
     ConfirmLbl: Label 'Review the finance package and confirm. Existing nonempty settings are retained.';

@@ -1,3 +1,7 @@
+**SF-050 · App 1.0.11.0 · Zur Prüfung (23.11.2026):** Neue Belegläufe isolieren je Geschäftsvorfall; unbekannte Buchungsergebnisse bleiben NeedsReview, unabhängige Pending-Vorgänge können weiterlaufen. No-write-Skips, Qualitäts-/Dashboardbilanz und fehlende technische Existing-Einrichtung sind integriert. Native BC-Abnahme durch den Nutzer offen. SF-051–SF-053 nicht umgesetzt. [Vertrag, Paket und native Prüffälle](review/SF050_PRUEFBERICHT.md).
+
+**SF-049/SF-050, lokaler Teilstand 1.0.10.0:** Neuer modulabhängiger Mandantenpool Version 3, eingefrorene Auswahl und explizite STOCK-Auslassungsnachweise mit Dashboard-/Qualitätswarnung. Zwei additive Registryfelder, weiterhin 145 Main-Objekte. SF-049/SF-050 In Arbeit; SF-051–SF-053 nicht implementiert. [Umfang, echte Prüfungen und offene native Abnahme](review/SF049_SF050_PRUEFBERICHT.md).
+
 **Aktuell SF-048 (22.11.2026):** App `1.0.9.0`, separate Test-App `1.5.0.0`, 145 Main-Objekte und 64 kompilierte AL-Testmethoden. Neu Enum 90114 und lesende Source-Codeunit 90259; additive Setup-/Szenariofelder, keine neue Tabelle/Seite/Runtimeabhängigkeit. Drei Laufarten im vorhandenen Workflow, wiederverwendbare bestätigte Stammdaten auch aus terminal fehlgeschlagenen Läufen. Lokaler Build gegen BC 28.5 erfolgreich, native BC-29.1-Prüfung offen; acht bestehende Analyzerfehler. [Vertrag](MODULAR_GENERATION.md), [Prüfbericht](review/SF048_PRUEFBERICHT.md). **Zur Prüfung**. Nachfolgende Versionsstände sind historisch.
 
 

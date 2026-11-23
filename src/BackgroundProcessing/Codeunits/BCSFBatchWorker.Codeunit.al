@@ -17,12 +17,12 @@ codeunit 90303 "BCSF Batch Worker"
     Batch: Record "BCSF Batch";
     Execution: Record "BCSF Run Execution";
     Header: Record "BCSF Run Header";
-    Prior: Record "BCSF Batch";
     StoredJob: Record "Job Queue Entry";
     Active: Record "Active Session";
     Writer: Codeunit "BCSF Plan Writer";
     Runner: Codeunit "BCSF Batch Runner";
     Recovery: Codeunit "BCSF Batch Recovery";
+    Dispatcher: Codeunit "BCSF Queue Dispatcher";
     Reference: RecordRef;
   begin
     if GuiAllowed() then
@@ -59,10 +59,7 @@ codeunit 90303 "BCSF Batch Worker"
       Error(JobErr);
     if Execution."Earliest Start" > CurrentDateTime() then
       Error(JobErr);
-    Prior.SetRange("Run Id", Batch."Run Id");
-    Prior.SetFilter("Sequence No.", '<%1', Batch."Sequence No.");
-    Prior.SetFilter(Status, '<>%1', Prior.Status::Completed);
-    if not Prior.IsEmpty() then
+    if not Dispatcher.CanExecute(Batch) then
       Error(JobErr);
     if Recovery.ApplyBoundary(Execution, Rec.ID) then begin
       Execution.Modify(true);

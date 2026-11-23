@@ -84,3 +84,8 @@ Wholesale Profile übernimmt validierte Start-/Endgrenzen. Vier neue Großhandel
 ## SF-048 – Modulare Geschäftsläufe
 
 Wholesale konfiguriert drei Laufarten und gewählte Belegmengen. Drei zusätzliche geschützte Teststarter, keine Änderung bestehender Vorlagen oder gespeicherter Läufe. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.
+
+
+## SF-050 – aktuelle Umsetzung 1.0.11.0 / 23.11.2026
+
+Isolierte neue Geschäftsvorfälle, lesende Prüfung der tatsächlich gewählten Quellen, atomare No-write-Skip-Checkpoints, fortgesetzte unabhängige Pending-Arbeit und unveränderte NeedsReview-Sperren. Bestehende Einrichtungen werden nur im bestätigten Foundationpfad ergänzt; neue interne Vorlagen verwenden konkrete kompatible Zuordnungen. Quellen, betroffene Moduldateien, Ergebnis-/Listenvertrag und Grenzen im [aktuellen Prüfbericht](../../../review/SF050_PRUEFBERICHT.md). Fünf neue Methoden im vorhandenen Testobjekt; lokale Nachweise dort, native Modulabnahme N01–N08 durch den Nutzer noch offen. **Zur Prüfung**, SF-051–SF-053 nicht umgesetzt.

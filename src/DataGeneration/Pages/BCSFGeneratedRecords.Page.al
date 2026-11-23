@@ -59,6 +59,8 @@ page 90254 "BCSF Generated Records"
         field("Table Id"; Rec."Table Id") { ApplicationArea = All; Visible = not AttributeMappingView; }
         field("Record SystemId"; Rec."Record SystemId") { ApplicationArea = All; Visible = not AttributeMappingView; }
         field("Record Id"; Rec."Record Id") { ApplicationArea = All; Visible = not AttributeMappingView; }
+        field("Posting Skipped"; Rec."Posting Skipped") { ApplicationArea = All; Visible = not AttributeMappingView; }
+        field("Skip Reason Code"; Rec."Skip Reason Code") { ApplicationArea = All; Visible = not AttributeMappingView; }
         field("Created At"; Rec."Created At") { ApplicationArea = All; Visible = not AttributeMappingView; }
       }
     }

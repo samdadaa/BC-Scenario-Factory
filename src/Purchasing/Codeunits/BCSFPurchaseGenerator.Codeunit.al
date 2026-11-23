@@ -117,7 +117,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
       Error(SetupErr);
     Settings := Token.AsObject();
     if not (Contract.GetInteger(Settings, 'version') in [1, 2]) or
-      (ItemSetup.Quantity(Context, "BCSF Entity Type"::Vendor) < 2) or
+      (ItemSetup.Quantity(Context, "BCSF Entity Type"::Vendor) < 1) or
       (ItemSetup.Quantity(Context, "BCSF Entity Type"::Item) < 1) then
       Error(SetupErr);
     Purchases.Get();
@@ -189,6 +189,48 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     if not Row.ReadPermission() or not Row.WritePermission() then
       Error(PermissionErr, Row.Caption());
     Row.Close();
+  end;
+
+  [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Partner Rules", 'OnInspectDocument', '', false, false)]
+  local procedure InspectDocument(Context: JsonObject; Target: JsonObject; LogicalKey: Integer; var Reason: Code[30])
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+  begin
+    if Contract.GetCode(Target, 'entityCode') <> 'PURCHASE.ORDER' then
+      exit;
+    Reason := 'SOURCE';
+    if TryInspectDocument(Context, LogicalKey, Reason) then
+      Clear(Reason)
+    else
+      ClearLastError();
+  end;
+
+  [TryFunction]
+  local procedure TryInspectDocument(Context: JsonObject; LogicalKey: Integer; var Reason: Code[30])
+  var
+    Item: Record Item;
+    Vendor: Record Vendor;
+    Source: Codeunit "BCSF Master Data Source";
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Contract: Codeunit "BCSF Contract JSON";
+    Token: JsonToken;
+    RunId: Guid;
+    LineIndex: Integer;
+    LocationCode: Code[10];
+  begin
+    Evaluate(RunId, Contract.GetText(Context, 'runId'));
+    Context.Get('purchaseSetup', Token);
+    LocationCode := CopyStr(Contract.GetText(Token.AsObject(), 'location'), 1, 10);
+    Sources(Context, RunId, LogicalKey, Item, Vendor);
+    Reason := 'VENDOR';
+    Vendor.TestField(Blocked, Vendor.Blocked::" ");
+    for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, 'PURCHASE.ORDER', LogicalKey) do begin
+      Reason := 'ITEM';
+      if Coordinator.IsWholesaleQualityProfile(Context) then
+        WholesaleLineItem(Context, RunId, LogicalKey, LineIndex, Vendor."No.", Item);
+      Reason := 'DIMENSION';
+      Source.CheckPurchaseCandidate(Vendor, Item, LocationCode);
+    end;
   end;
 
   procedure GetDependencies(Context: JsonObject; Target: JsonObject; var Dependencies: JsonArray)

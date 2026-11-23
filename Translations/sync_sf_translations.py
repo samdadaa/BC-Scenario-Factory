@@ -127,6 +127,8 @@ def sync():
     DE.update(json.loads((ROOT / "sf046.de.json").read_text(encoding="utf-8")))
     DE.update(json.loads((ROOT / "sf047.de.json").read_text(encoding="utf-8")))
     DE.update(json.loads((ROOT / "sf048.de.json").read_text(encoding="utf-8")))
+    DE.update(json.loads((ROOT / "sf049.de.json").read_text(encoding="utf-8")))
+    DE.update(json.loads((ROOT / "sf050.de.json").read_text(encoding="utf-8")))
     generated = ET.parse(ROOT / f"{NAME}.g.xlf")
     units = list(generated.iter(Q("trans-unit")))
     gen_ids = [u.attrib["id"] for u in units]

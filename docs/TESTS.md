@@ -1,3 +1,7 @@
+**SF-050 · App 1.0.11.0 · Zur Prüfung (23.11.2026):** Neue Belegläufe isolieren je Geschäftsvorfall; unbekannte Buchungsergebnisse bleiben NeedsReview, unabhängige Pending-Vorgänge können weiterlaufen. No-write-Skips, Qualitäts-/Dashboardbilanz und fehlende technische Existing-Einrichtung sind integriert. Native BC-Abnahme durch den Nutzer offen. SF-051–SF-053 nicht umgesetzt. [Vertrag, Paket und native Prüffälle](review/SF050_PRUEFBERICHT.md).
+
+**SF-049/SF-050, lokaler Teilstand 1.0.10.0:** App und separate Test-App 1.6.0.0 (68 Methoden) kompiliert; Vertrags-/Dashboard-/Paket-/1.459-Texte-Prüfungen lokal bestanden. Strenger Analyzer: acht unveränderte AA0018. Keine AL-Testausführung oder native Buchungsabnahme.  Neuer modulabhängiger Mandantenpool Version 3, eingefrorene Auswahl und explizite STOCK-Auslassungsnachweise mit Dashboard-/Qualitätswarnung. Zwei additive Registryfelder, weiterhin 145 Main-Objekte. SF-049/SF-050 In Arbeit; SF-051–SF-053 nicht implementiert. [Umfang, echte Prüfungen und offene native Abnahme](review/SF049_SF050_PRUEFBERICHT.md).
+
 **SF-048 / 1.0.9.0:** [Tatsächlicher Prüfbericht](review/SF048_PRUEFBERICHT.md): Main und separate Test-App 1.5.0.0 (64 Methoden, fünf neu) gegen BC 28.5 kompiliert; Quellen-/Gegenproben, 1.448 DE/EN-Texte, Dashboard-Clientregression und Paketvergleich lokal bestanden. Strenger Analyzer scheitert ausschließlich an acht vorhandenen AA0018. Native BC 29.1, Zahlungen/Ausgleich und Fälle A–G offen. **Zur Prüfung**.
 
 

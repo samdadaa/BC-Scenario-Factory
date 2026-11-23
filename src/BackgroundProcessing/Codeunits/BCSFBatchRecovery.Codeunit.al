@@ -341,6 +341,8 @@ codeunit 90304 "BCSF Batch Recovery"
       (TempCapability."Contract Version" <> Step."Contract Version")
     then
       Error(ReviewErr);
+    if Batch."Skipped Units" > 0 then
+      exit; // CheckCoverage already verified the immutable no-write outcome.
     Generator.ValidateOutput(Contract.Clone(Context), Contract.Clone(Target), Contract.Clone(BatchJson), Contract.Clone(Result), Findings);
     if Findings.Count() <> 0 then
       Error(ReviewErr);
@@ -384,7 +386,17 @@ codeunit 90304 "BCSF Batch Recovery"
       OldBatch.Status::Pending:
         Valid := NewBatch.Status in [NewBatch.Status::Pending, NewBatch.Status::Running, NewBatch.Status::Failed, NewBatch.Status::Cancelled];
       OldBatch.Status::Running:
-        Valid := NewBatch.Status in [NewBatch.Status::Completed, NewBatch.Status::NeedsReview];
+        begin
+          Valid := NewBatch.Status in [NewBatch.Status::Completed, NewBatch.Status::NeedsReview];
+          if NewBatch.Status = NewBatch.Status::Running then begin
+            OldBatch.TestField("Skipped Units", 0);
+            NewBatch.TestField("Worker Session Id", SessionId());
+            NewBatch.TestField("Worker Server Id", ServiceInstanceId());
+            Rules.CheckSkippingOwner(NewBatch);
+            Rules.CheckSkipped(NewBatch);
+            Valid := true;
+          end;
+        end;
       OldBatch.Status::Failed:
         Valid := NewBatch.Status in [NewBatch.Status::Pending, NewBatch.Status::Cancelled];
       OldBatch.Status::NeedsReview:
@@ -392,6 +404,16 @@ codeunit 90304 "BCSF Batch Recovery"
     end;
     if not Valid then
       Error(ReviewErr);
+    if OldBatch."Skipped Units" <> 0 then begin
+      NewBatch.TestField("Skipped Units", OldBatch."Skipped Units");
+      NewBatch.TestField("Skip Reason Code", OldBatch."Skip Reason Code");
+    end else
+      if NewBatch."Skipped Units" <> 0 then begin
+        OldBatch.TestField(Status, OldBatch.Status::Running);
+        NewBatch.TestField(Status, NewBatch.Status::Running);
+        Rules.CheckSkipped(NewBatch);
+      end else
+        NewBatch.TestField("Skip Reason Code", '');
     if (OldBatch.Status = OldBatch.Status::Failed) and (NewBatch.Status = NewBatch.Status::Pending) then begin
       CheckUnclaimed(OldBatch);
       CheckStoppedJob(OldBatch, false);

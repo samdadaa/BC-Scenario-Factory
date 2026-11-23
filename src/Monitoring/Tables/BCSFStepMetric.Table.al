@@ -105,6 +105,16 @@ table 90354 "BCSF Step Metric"
       Caption = 'Cancelled Batches';
       ToolTip = 'Specifies cancelled batches whose targets remain outstanding.';
     }
+    field(20; "Skipped Units"; Integer)
+    {
+      Caption = 'Skipped Units';
+      ToolTip = 'Specifies preflight skips with no business record created. Posting skips on retained documents are reported separately.';
+    }
+    field(21; "Review Units"; Integer)
+    {
+      Caption = 'Unconfirmed Units';
+      ToolTip = 'Specifies units in failed or NeedsReview batches. Their requested work is not reported as created or posted.';
+    }
   }
   keys
   {

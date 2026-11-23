@@ -67,3 +67,8 @@ Neue Datumsregel verteilt gebuchte Beschaffung bis zum frühesten abhängigen Ve
 ## SF-048 – Modulare Geschäftsläufe
 
 Gebundene Artikel-/Lieferantenmengen kommen aus dem Source-Vertrag. Sales-only erfindet kein Einkaufsdatum; verbleibender Verkaufsbedarf berücksichtigt bereits registrierte Belege. Standardpipeline bleibt. [Vertrag](../../../MODULAR_GENERATION.md), [lokale Nachweise und offene native A–G](../../../review/SF048_PRUEFBERICHT.md). Status **Zur Prüfung**; keine native Buchungsabnahme.
+
+
+## SF-049/SF-050 – lokaler Teilstand 1.0.10.0
+
+Bestehenden Quellen-/Snapshot-/Mengen-/Registry-/Qualitäts-/Dashboardpfad für den modulabhängigen Pool Version 3 und ausdrückliche STOCK-Auslassungsnachweise ergänzt. Keine neue Batchengine und keine automatische Wiederholung unerwarteter Buchungsfehler. Unterstützter Umfang, konkrete Dateien/Datenflüsse, Kompatibilität und noch offene native Modulprüfung im [gemeinsamen Prüfbericht](../../../review/SF049_SF050_PRUEFBERICHT.md). Status In Arbeit, keine native Abnahme.

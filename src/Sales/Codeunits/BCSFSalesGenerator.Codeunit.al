@@ -58,6 +58,55 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     Setup.Check(Context, Target);
   end;
 
+  [EventSubscriber(ObjectType::Codeunit, Codeunit::"BCSF Partner Rules", 'OnInspectDocument', '', false, false)]
+  local procedure InspectDocument(Context: JsonObject; Target: JsonObject; LogicalKey: Integer; var Reason: Code[30])
+  var
+    Contract: Codeunit "BCSF Contract JSON";
+  begin
+    if not (Contract.GetCode(Target, 'entityCode') in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE']) then
+      exit;
+    Reason := 'SOURCE';
+    if TryInspectDocument(Context, Target, LogicalKey, Reason) then
+      Clear(Reason)
+    else
+      ClearLastError();
+  end;
+
+  [TryFunction]
+  local procedure TryInspectDocument(Context: JsonObject; Target: JsonObject; LogicalKey: Integer; var Reason: Code[30])
+  var
+    Customer: Record Customer;
+    Item: Record Item;
+    Setup: Codeunit "BCSF Sales Setup";
+    Source: Codeunit "BCSF Master Data Source";
+    Coordinator: Codeunit "BCSF Process Coordinator";
+    Contract: Codeunit "BCSF Contract JSON";
+    EntityCode: Code[30];
+    LineIndex: Integer;
+    ItemKey: Integer;
+    LocationCode: Code[10];
+  begin
+    // No document, dimension-set creation, number consumption or posting here.
+    Context := Setup.WithRunMasters(Context);
+    EntityCode := Contract.GetCode(Target, 'entityCode');
+    LocationCode := CopyStr(Contract.GetText(Setup.ReadSettings(Context), 'location'), 1, 10);
+    Reason := 'CUSTOMER';
+    Setup.CustomerFor(Context, LogicalKey, Customer);
+    Setup.CheckCustomer(Customer);
+    for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, LogicalKey) do begin
+      Reason := 'ITEM';
+      ItemKey := LogicalKey;
+      if Coordinator.IsWholesaleQualityProfile(Context) then
+        ItemKey := Coordinator.WholesaleSalesItemKey(Context, EntityCode, LogicalKey, LineIndex);
+      Setup.ItemFor(Context, ItemKey, Item);
+      Setup.CheckItem(Item);
+      Reason := 'SOURCE';
+      Setup.CheckFrozenMasters(Context, Customer, Item);
+      Reason := 'DIMENSION';
+      Source.CheckSalesCandidate(Customer, Item, LocationCode);
+    end;
+  end;
+
   procedure GetDependencies(Context: JsonObject; Target: JsonObject; var Dependencies: JsonArray)
   var
     Setup: Codeunit "BCSF Sales Setup";
@@ -147,6 +196,7 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     Customer: Record Customer;
     Item: Record Item;
     Setup: Codeunit "BCSF Sales Setup";
+    Source: Codeunit "BCSF Master Data Source";
     Registry: Codeunit "BCSF Record Registry";
     Contract: Codeunit "BCSF Contract JSON";
     Coordinator: Codeunit "BCSF Process Coordinator";
@@ -173,8 +223,14 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
       // In movement-only runs an invoice without stock is retained as an
       // unposted document. Validate the persisted result, not planned posting.
       if (Mode > 0) and Context.Contains('masterDataSource') then
-        if not Entry.Get(RunId, EntityCode, LogicalKey, 'INVOICE') then
+        if not Entry.Get(RunId, EntityCode, LogicalKey, 'INVOICE') then begin
+          Entry.Get(RunId, EntityCode, LogicalKey, 'DOCUMENT');
+          if Source.UsesSelectedPool(Context) then begin
+            Entry.TestField("Posting Skipped", true);
+            Entry.TestField("Skip Reason Code", 'STOCK');
+          end;
           Mode := 0;
+        end;
       Quantity := Coordinator.Quantity(Context, EntityCode, LogicalKey);
       if Mode > 0 then begin
         Entry.Get(RunId, EntityCode, LogicalKey, 'INVOICE');

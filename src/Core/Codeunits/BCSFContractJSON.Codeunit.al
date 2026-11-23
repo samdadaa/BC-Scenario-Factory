@@ -71,6 +71,17 @@ codeunit 90111 "BCSF Contract JSON"
     exit(1);
   end;
 
+  procedure IsDocumentIsolation(Context: JsonObject): Boolean
+  var
+    Token: JsonToken;
+  begin
+    if not Context.Get('executionPolicyVersion', Token) then
+      exit(false);
+    if Token.AsValue().AsInteger() <> 1 then
+      Error(ContextErr);
+    exit(true);
+  end;
+
   procedure CheckContext(Context: JsonObject)
   var
     RunId: Guid;
@@ -78,6 +89,7 @@ codeunit 90111 "BCSF Contract JSON"
     Size: Integer;
   begin
     GetDatePolicyVersion(Context);
+    IsDocumentIsolation(Context);
     if GetInteger(Context, 'schemaVersion') <> 1 then
       Error(ContextErr);
     if not Evaluate(RunId, GetText(Context, 'runId')) then

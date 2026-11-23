@@ -32,6 +32,11 @@ codeunit 90306 "BCSF Execution Rules"
     LastKey: Integer;
     Units: Integer;
   begin
+    if Batch."Skipped Units" <> 0 then begin
+      CheckSkipped(Batch);
+      exit;
+    end;
+    Batch.TestField("Skip Reason Code", '');
     Entry.SetCurrentKey("Batch Id", "Logical Key");
     Entry.SetRange("Batch Id", Batch."Batch Id");
     Entry.SetLoadFields("Run Id", "Node Code", "Logical Key");
@@ -51,6 +56,33 @@ codeunit 90306 "BCSF Execution Rules"
         end;
       until Entry.Next() = 0;
     if (Units <> Batch."Last Key" - Batch."First Key" + 1) or (Batch."Processed Units" <> Units) then
+      Error(CoverageErr);
+  end;
+
+  procedure CheckSkippingOwner(Batch: Record "BCSF Batch")
+  var
+    BatchJson: JsonObject;
+  begin
+    BatchJson.Add('batchKey', Batch."Batch Key");
+    BatchJson.Add('firstKey', Batch."First Key");
+    BatchJson.Add('lastKey', Batch."Last Key");
+    CheckPartnerWorker(Batch."Run Id", Batch."Batch Id", Batch."Node Code", BatchJson);
+  end;
+
+  procedure CheckSkipped(Batch: Record "BCSF Batch")
+  var
+    Entry: Record "BCSF Generated Record";
+    Dispatcher: Codeunit "BCSF Queue Dispatcher";
+  begin
+    if not Dispatcher.UsesIsolation(Batch."Run Id") or (Batch."First Key" <> Batch."Last Key") or
+      not (Batch."Node Code" in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE', 'PURCHASE.ORDER']) or
+      not (Batch."Skip Reason Code" in ['CUSTOMER', 'VENDOR', 'ITEM', 'DIMENSION', 'SOURCE']) then
+      Error(CoverageErr);
+    Batch.TestField("Skipped Units", 1);
+    Batch.TestField("Processed Units", 0);
+    Batch.TestField("Created Records", 0);
+    Entry.SetRange("Batch Id", Batch."Batch Id");
+    if not Entry.IsEmpty() then
       Error(CoverageErr);
   end;
 
@@ -304,6 +336,8 @@ codeunit 90306 "BCSF Execution Rules"
       Error(StateErr);
     Rec.TestField("Processed Units", 0);
     Rec.TestField("Created Records", 0);
+    Rec.TestField("Skipped Units", 0);
+    Rec.TestField("Skip Reason Code", '');
     Rec.TestField("Started At", 0DT);
     Rec.TestField("Finished At", 0DT);
     if not IsNullGuid(Rec."Job Queue Entry Id") or (Rec."Sequence No." <= 0) or

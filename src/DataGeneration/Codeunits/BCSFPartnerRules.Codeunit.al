@@ -320,6 +320,8 @@ codeunit 90256 "BCSF Partner Rules"
       Error(TargetErr);
     Quantity := Contract.GetInteger(Target, 'quantity');
     BatchSize := Contract.GetInteger(Context, 'batchSize');
+    if Contract.IsDocumentIsolation(Context) and (Code in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE', 'PURCHASE.ORDER']) then
+      BatchSize := 1;
     while (FirstKey <= Quantity) and (Batches.Count() < MaximumBatches) do begin
       LastKey := Quantity;
       if Quantity - FirstKey + 1 > BatchSize then
@@ -333,6 +335,21 @@ codeunit 90256 "BCSF Partner Rules"
         exit;
       FirstKey := LastKey + 1;
     end;
+  end;
+
+  // Inspection subscribers must be read-only; only stable reason codes may
+  // cross this boundary. No write TryFunction or posting call is caught.
+  procedure InspectDocument(Context: JsonObject; Target: JsonObject; LogicalKey: Integer): Code[30]
+  var
+    Reason: Code[30];
+  begin
+    OnInspectDocument(Context, Target, LogicalKey, Reason);
+    exit(Reason);
+  end;
+
+  [IntegrationEvent(false, false)]
+  local procedure OnInspectDocument(Context: JsonObject; Target: JsonObject; LogicalKey: Integer; var Reason: Code[30])
+  begin
   end;
 
   /// <summary>Real execution only: compare the immutable stored payload and require current worker ownership via BackgroundProcessing.</summary>

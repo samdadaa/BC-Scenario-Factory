@@ -1,0 +1,15 @@
+{
+  "Skipped Units": "Übersprungene Einheiten",
+  "Specifies requested units deliberately skipped by read-only preflight before any business writes. These units are not created or posted.": "Gibt angeforderte Einheiten an, die in der lesenden Vorprüfung vor Geschäftsdatenänderungen übersprungen wurden. Diese Einheiten wurden nicht angelegt oder gebucht.",
+  "Specifies the preflight stage that rejected this unit: CUSTOMER, VENDOR, ITEM, DIMENSION or SOURCE. Review the selected master data; no posting was attempted.": "Gibt den ablehnenden Prüfschritt an: CUSTOMER, VENDOR, ITEM, DIMENSION oder SOURCE. Prüfen Sie die ausgewählten Stammdaten. Es wurde keine Buchung versucht.",
+  "Unconfirmed Units": "Unbestätigte Einheiten",
+  "Specifies preflight skips with no business record created. Posting skips on retained documents are reported separately.": "Gibt Auslassungen vor der Anlage eines Geschäftsvorfalls an. Ausgelassene Buchungen bei erhaltenen Belegen werden separat ausgewiesen.",
+  "Specifies units in failed or NeedsReview batches. Their requested work is not reported as created or posted.": "Gibt Einheiten in fehlgeschlagenen oder prüfpflichtigen Paketen an. Ihre angeforderte Arbeit wird nicht als angelegt oder gebucht ausgewiesen.",
+  "Skipped before creation": "Vor Anlage übersprungen",
+  "Unconfirmed; review required": "Unbestätigt; Prüfung erforderlich",
+  "Independent work cannot be scheduled with the current job queue permissions. The failed unit remains blocked for review.": "Unabhängige Arbeit kann mit den aktuellen Aufgabenwarteschlangenrechten nicht eingeplant werden. Die fehlgeschlagene Einheit bleibt zur Prüfung gesperrt.",
+  "Central warehouse": "Zentrallager",
+  "Existing company setup has no compatible account mapping for %1. Missing technical setup can be added, but financial account roles must be configured explicitly. Existing mappings were retained.": "In der vorhandenen Mandanteneinrichtung fehlt eine passende Kontenzuordnung für %1. Fehlende technische Einrichtung kann ergänzt werden; finanzielle Kontenrollen benötigen eine ausdrückliche Zuordnung. Vorhandene Zuordnungen bleiben erhalten.",
+  "Choose the chart once. Existing financial mappings are retained; missing required technical setup is added before generation.": "Wählen Sie den Kontenplan einmalig. Vorhandene finanzielle Zuordnungen bleiben erhalten; fehlende benötigte technische Einrichtung wird vor der Generierung ergänzt.",
+  " Existing financial accounts and mappings are retained. Missing required technical setup is added before generation; financial roles without a usable mapping remain blocked.": " Vorhandene Finanzkonten und Zuordnungen bleiben erhalten. Fehlende benötigte technische Einrichtung wird vor der Generierung ergänzt. Finanzielle Rollen ohne nutzbare Zuordnung bleiben gesperrt."
+}

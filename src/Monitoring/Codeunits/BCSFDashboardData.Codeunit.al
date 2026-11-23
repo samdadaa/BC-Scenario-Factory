@@ -2,6 +2,7 @@ namespace BCScenarioFactory.Monitoring;
 
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Core;
+using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Finance;
 using BCScenarioFactory.IndustryProfiles;
 using System.Threading;
@@ -183,6 +184,7 @@ codeunit 90365 "BCSF Dashboard Data"
     Severity: Enum "BCSF Validation Severity";
   begin
     Header.Get(RunId);
+    AddMasterPool(RunId, Item);
     CanStart := true;
     Manager.LoadFrozenTargets(RunId, TempTarget);
     TempTarget.SetFilter(Quantity, '>0');
@@ -231,6 +233,8 @@ codeunit 90365 "BCSF Dashboard Data"
         Item.Add('target', TempMetric."Planned Units");
         Item.Add('confirmed', TempMetric."Confirmed Units");
         Item.Add('remaining', TempMetric."Remaining Units");
+        Item.Add('skipped', TempMetric."Skipped Units");
+        Item.Add('reviewUnits', TempMetric."Review Units");
         Item.Add('artifacts', TempMetric."Created Artifacts");
         Item.Add('percent', TempMetric."Progress Percent");
         Item.Add('state', TempMetric.State);
@@ -468,6 +472,41 @@ codeunit 90365 "BCSF Dashboard Data"
     Texts.Add('requirements', RequirementsLbl);
     Texts.Add('notRecorded', NotRecordedLbl);
     Texts.Add('selected', SelectedLbl);
+    Texts.Add('skippedUnits', SkippedUnitsLbl);
+    Texts.Add('reviewUnits', ReviewUnitsLbl);
+  end;
+
+  local procedure AddMasterPool(RunId: Guid; var Item: JsonObject)
+  var
+    Entry: Record "BCSF Generated Record";
+    Manager: Codeunit "BCSF Scenario Manager";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    Binding: JsonObject;
+    Token: JsonToken;
+    Ids: JsonToken;
+    Customers: Integer;
+    Vendors: Integer;
+    Items: Integer;
+  begin
+    Manager.ReadSnapshot(RunId, Context);
+    if Context.Get('masterDataSource', Token) then begin
+      Binding := Token.AsObject();
+      if Contract.GetInteger(Binding, 'version') = 3 then begin
+        Binding.Get('customers', Ids);
+        Customers := Ids.AsArray().Count();
+        Binding.Get('vendors', Ids);
+        Vendors := Ids.AsArray().Count();
+        Binding.Get('items', Ids);
+        Items := Ids.AsArray().Count();
+        Item.Add('masterPool', StrSubstNo(PoolSummaryLbl, Customers, Contract.GetInteger(Binding, 'checkedCustomers'),
+          Vendors, Contract.GetInteger(Binding, 'checkedVendors'), Items, Contract.GetInteger(Binding, 'checkedItems')));
+      end;
+    end;
+    Entry.SetRange("Run Id", RunId);
+    Entry.SetRange("Posting Skipped", true);
+    if not Entry.IsEmpty() then
+      Item.Add('postingSkips', StrSubstNo(PostingSkipsLbl, Entry.Count()));
   end;
 
   local procedure MasterSourceLabel(SourceId: Guid): Text
@@ -479,6 +518,8 @@ codeunit 90365 "BCSF Dashboard Data"
 
   var
     ExistingMastersLbl: Label 'Eligible existing company data';
+    PoolSummaryLbl: Label 'Master data eligible/checked: customers %1/%2, vendors %3/%4, items %5/%6. Other checked records were excluded.', Comment = '%1/%2 = customers, %3/%4 = vendors, %5/%6 = items';
+    PostingSkipsLbl: Label '%1 documents retained unposted because stock was insufficient. Review provenance for STOCK reasons and the unposted result lists.', Comment = '%1 = skipped posting count';
     GenerationScopeLbl: Label 'Generation: %1. Purchasing: %2; sales: %3. Master data source: %4.', Comment = '%1 = generation kind, %2 = purchasing selected, %3 = sales selected, %4 = source run';
     ExportPackageLbl: Label 'Prepare data export package';
     PeriodLbl: Label 'Business dates: %1 to %2 (inclusive).', Comment = '%1 = starting date, %2 = ending date';
@@ -573,6 +614,8 @@ codeunit 90365 "BCSF Dashboard Data"
     ErrorLbl: Label 'The action could not be completed. Review the Business Central message and try again.';
     RequirementsLbl: Label 'Missing generators or prerequisites block execution. Posting requires a separate authorization contract.';
     NotRecordedLbl: Label 'Not recorded';
+    SkippedUnitsLbl: Label 'Skipped before creation';
+    ReviewUnitsLbl: Label 'Unconfirmed; review required';
     SelectedLbl: Label 'Selected';
     PostedWithoutPaymentsLbl: Label 'Posted documents without payments';
     PostedWithPaymentsLbl: Label 'Posted documents with payments and application';
