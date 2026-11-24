@@ -15,4 +15,5 @@ enum 90135 "BCSF Entity Type"
   value(7; PurchaseInvoice) { Caption = 'Purchase Invoices'; }
   value(8; SalesCreditMemo) { Caption = 'Sales Credit Memos'; }
   value(9; PurchaseCreditMemo) { Caption = 'Purchase Credit Memos'; }
+  value(10; SalesBlanketOrder) { Caption = 'Sales Blanket Orders'; }
 }

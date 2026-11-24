@@ -11,6 +11,7 @@ codeunit 90143 "BCSF Scenario Policy"
     case Entity of
       "BCSF Entity Type"::Customer,
       "BCSF Entity Type"::SalesQuote,
+      "BCSF Entity Type"::SalesBlanketOrder,
       "BCSF Entity Type"::SalesOrder,
       "BCSF Entity Type"::SalesInvoice,
       "BCSF Entity Type"::SalesCreditMemo:
@@ -59,6 +60,7 @@ codeunit 90143 "BCSF Scenario Policy"
       "BCSF Entity Type"::Vendor: exit('VENDOR');
       "BCSF Entity Type"::Item: exit('ITEM');
       "BCSF Entity Type"::SalesQuote: exit('SALES.QUOTE');
+      "BCSF Entity Type"::SalesBlanketOrder: exit('SALES.BLANKET');
       "BCSF Entity Type"::SalesOrder: exit('SALES.ORDER');
       "BCSF Entity Type"::SalesInvoice: exit('SALES.INVOICE');
       "BCSF Entity Type"::PurchaseOrder: exit('PURCHASE.ORDER');
@@ -153,7 +155,7 @@ codeunit 90143 "BCSF Scenario Policy"
       Target."Process Mode" := Scenario."Process Mode";
       if Target."Process Mode" = "BCSF Process Mode"::FollowUpProcesses then
         Target."Process Mode" := "BCSF Process Mode"::PostedMovements;
-      if (Target."Process Mode" = "BCSF Process Mode"::SetupAndMasterData) or (Target.Entity = "BCSF Entity Type"::SalesQuote) then
+      if (Target."Process Mode" = "BCSF Process Mode"::SetupAndMasterData) or (Target.Entity in ["BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesBlanketOrder]) then
         Target."Process Mode" := "BCSF Process Mode"::UnpostedDocuments;
     end else
       Target."Process Mode" := "BCSF Process Mode"::SetupAndMasterData;
@@ -169,7 +171,7 @@ codeunit 90143 "BCSF Scenario Policy"
       Target."Process Mode" := "BCSF Process Mode"::SetupAndMasterData;
       exit;
     end;
-    if Target.Entity = "BCSF Entity Type"::SalesQuote then begin
+    if Target.Entity in ["BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesBlanketOrder] then begin
       Target."Process Mode" := "BCSF Process Mode"::UnpostedDocuments;
       exit;
     end;
@@ -224,7 +226,7 @@ codeunit 90143 "BCSF Scenario Policy"
     if Target."Process Mode" = "BCSF Process Mode"::UnpostedDocuments then
       if (Target."Posted Percent" <> 0) or (Target."Partial Percent" <> 0) then
         Error(DocumentModeErr);
-    if Target.Entity = "BCSF Entity Type"::SalesQuote then
+    if Target.Entity in ["BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesBlanketOrder] then
       if Target."Process Mode" <> "BCSF Process Mode"::UnpostedDocuments then
         Error(QuoteErr);
     if Target."Partial Percent" <> 0 then
@@ -316,7 +318,7 @@ codeunit 90143 "BCSF Scenario Policy"
     ModuleRequiredErr: Label 'Select and enable the module before assigning a positive entity target.';
     MasterDataErr: Label 'Master data requires Setup and Master Data mode and no posted or partial document shares.';
     DocumentModeErr: Label 'Select a document mode consistent with the requested posted and partial shares.';
-    QuoteErr: Label 'Sales quotes must remain unposted.';
+    QuoteErr: Label 'Sales quotes and blanket orders must remain unposted.';
     PartialErr: Label 'Partial processing shares are supported only for sales orders and purchase orders.';
     ModuleErr: Label 'Select a supported business module.';
     ModuleInUseErr: Label 'Set the module entity targets to zero before disabling or removing the module.';

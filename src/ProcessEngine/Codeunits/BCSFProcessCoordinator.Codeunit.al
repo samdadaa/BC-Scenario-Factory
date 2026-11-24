@@ -248,6 +248,9 @@ codeunit 90275 "BCSF Process Coordinator"
       exit(1);
     if EntityCode = 'PURCHASE.ORDER' then
       exit(2 + ((LogicalKey - 1) mod 3));
+    // Blanket orders always carry at least three lines (three to five).
+    if EntityCode = 'SALES.BLANKET' then
+      exit(3 + ((LogicalKey - 1) mod 3));
     exit(2 + ((LogicalKey - 1) mod 4));
   end;
 

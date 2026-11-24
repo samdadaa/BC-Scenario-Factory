@@ -161,7 +161,7 @@ codeunit 90369 "BCSF Dashboard Stock"
       MetricKey := TextProperty(Metric, 'key');
       ShowZero := (Header."Process Mode" = "BCSF Process Mode"::FollowUpProcesses) and
         (GroupKey = 'entries') and (MetricKey in ['customerPayment', 'vendorPayment', 'bankEntry']);
-      if (GroupKey in ['entries', 'inventory', 'assembly', 'projects', 'planning', 'warehouse', 'manufacturing', 'service', 'assets', 'contacts']) or (MetricKey in ['quote', 'order', 'invoice', 'postedShipment', 'postedReceipt', 'postedInvoice', 'credit', 'postedCredit']) then
+      if (GroupKey in ['entries', 'inventory', 'assembly', 'projects', 'planning', 'warehouse', 'manufacturing', 'service', 'assets', 'contacts']) or (MetricKey in ['quote', 'blanket', 'order', 'invoice', 'postedShipment', 'postedReceipt', 'postedInvoice', 'credit', 'postedCredit']) then
         if IncludeRunMetric(Metric, ShowZero) then begin
           Metric.Replace('key', GroupKey + '/' + MetricKey);
           Metrics.Add(Metric);
@@ -902,7 +902,7 @@ codeunit 90369 "BCSF Dashboard Stock"
       'sales':
         begin
           AddMetric(Catalog, 'quote', Database::"Sales Header", Page::"Sales Quotes", true, SalesQuoteLbl);
-          AddMetric(Catalog, 'blanket', Database::"Sales Header", Page::"Blanket Sales Orders", false, SalesBlanketLbl);
+          AddMetric(Catalog, 'blanket', Database::"Sales Header", Page::"Blanket Sales Orders", true, SalesBlanketLbl);
           AddMetric(Catalog, 'order', Database::"Sales Header", Page::"Sales Order List", true, SalesOrderLbl);
           AddMetric(Catalog, 'invoice', Database::"Sales Header", Page::"Sales Invoice List", true, SalesInvoiceLbl);
           AddMetric(Catalog, 'credit', Database::"Sales Header", Page::"Sales Credit Memos", true, SalesCreditLbl);

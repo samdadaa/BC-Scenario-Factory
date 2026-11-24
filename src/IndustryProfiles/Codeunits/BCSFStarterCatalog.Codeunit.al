@@ -108,9 +108,9 @@ codeunit 90155 "BCSF Starter Catalog"
                 else
                     Profile.CreateTemplateForId(Id, 0, Mode, CalcDate('<-1Y>', Today()), Today() - 1, '');
                 case VariantNo of
-                    5: Profile.ConfigureGeneration(Id, "BCSF Generation Kind"::MasterData, EmptySource, false, false, 0, 0, 0, 0);
-                    6: Profile.ConfigureTransactionDraft(Id, true, false, 15, 0, 0, 0);
-                    7: Profile.ConfigureTransactionDraft(Id, false, true, 0, 20, 0, 0);
+                    5: Profile.ConfigureGeneration(Id, "BCSF Generation Kind"::MasterData, EmptySource, false, false, 0, 0, 0, 0, 0);
+                    6: Profile.ConfigureTransactionDraft(Id, true, false, 15, 0, 0, 0, 0);
+                    7: Profile.ConfigureTransactionDraft(Id, false, true, 0, 20, 0, 0, 0);
                 end;
                 if VariantNo > 1 then begin
                     Scenario.Get(Id);

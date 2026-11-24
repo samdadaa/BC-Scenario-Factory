@@ -320,7 +320,7 @@ codeunit 90256 "BCSF Partner Rules"
       Error(TargetErr);
     Quantity := Contract.GetInteger(Target, 'quantity');
     BatchSize := Contract.GetInteger(Context, 'batchSize');
-    if Contract.IsDocumentIsolation(Context) and (Code in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE', 'PURCHASE.ORDER']) then
+    if Contract.IsDocumentIsolation(Context) and (Code in ['SALES.QUOTE', 'SALES.BLANKET', 'SALES.ORDER', 'SALES.INVOICE', 'PURCHASE.ORDER']) then
       BatchSize := 1;
     while (FirstKey <= Quantity) and (Batches.Count() < MaximumBatches) do begin
       LastKey := Quantity;

@@ -75,7 +75,7 @@ codeunit 90306 "BCSF Execution Rules"
     Dispatcher: Codeunit "BCSF Queue Dispatcher";
   begin
     if not Dispatcher.UsesIsolation(Batch."Run Id") or (Batch."First Key" <> Batch."Last Key") or
-      not (Batch."Node Code" in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE', 'PURCHASE.ORDER']) or
+      not (Batch."Node Code" in ['SALES.QUOTE', 'SALES.BLANKET', 'SALES.ORDER', 'SALES.INVOICE', 'PURCHASE.ORDER']) or
       not (Batch."Skip Reason Code" in ['CUSTOMER', 'VENDOR', 'ITEM', 'DIMENSION', 'SOURCE']) then
       Error(CoverageErr);
     Batch.TestField("Skipped Units", 1);

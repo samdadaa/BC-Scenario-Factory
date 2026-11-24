@@ -59,7 +59,7 @@ codeunit 90226 "BCSF Setup Manager"
     TempTargets.SetFilter(Quantity, '>0');
     if TempTargets.FindSet() then
       repeat
-        PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item, "BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesOrder, "BCSF Entity Type"::SalesInvoice, "BCSF Entity Type"::PurchaseOrder]);
+        PartnersOnly := PartnersOnly and (TempTargets.Entity in ["BCSF Entity Type"::Customer, "BCSF Entity Type"::Vendor, "BCSF Entity Type"::Item, "BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesBlanketOrder, "BCSF Entity Type"::SalesOrder, "BCSF Entity Type"::SalesInvoice, "BCSF Entity Type"::PurchaseOrder]);
         NeedSales := NeedSales or (TempTargets.Module = "BCSF Module Type"::Sales);
         NeedPurchases := NeedPurchases or (TempTargets.Module = "BCSF Module Type"::Purchasing);
         NeedDocuments := NeedDocuments or Policy.IsDocument(TempTargets.Entity);
@@ -311,6 +311,11 @@ codeunit 90226 "BCSF Setup Manager"
         begin
           TableId := Database::"Sales & Receivables Setup";
           FieldNo := SalesSetup.FieldNo("Quote Nos.");
+        end;
+      "BCSF Entity Type"::SalesBlanketOrder:
+        begin
+          TableId := Database::"Sales & Receivables Setup";
+          FieldNo := SalesSetup.FieldNo("Blanket Order Nos.");
         end;
       "BCSF Entity Type"::SalesOrder:
         begin

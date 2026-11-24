@@ -345,7 +345,7 @@
   // Every business module is one large card. The existing step and result tiles stay unchanged and are embedded.
   const moduleDefinitions = [
     { id: "master", title: "moduleMaster", entities: ["CUSTOMER", "VENDOR", "ITEM"], match: key => !key.includes("/") },
-    { id: "sales", title: "moduleSales", entities: ["SALES.QUOTE", "SALES.ORDER", "SALES.INVOICE"],
+    { id: "sales", title: "moduleSales", entities: ["SALES.QUOTE", "SALES.BLANKET", "SALES.ORDER", "SALES.INVOICE"],
       match: key => key.startsWith("sales/") || ["entries/customerEntry", "entries/customerPayment", "entries/customerCredit"].includes(key) },
     { id: "purchase", title: "modulePurchase", entities: ["PURCHASE.ORDER"],
       match: key => key.startsWith("purchase/") || ["entries/vendorEntry", "entries/vendorPayment", "entries/vendorCredit"].includes(key) },
@@ -362,7 +362,7 @@
     { id: "finance", title: "moduleFinance", entities: [], match: key => key.startsWith("entries/") },
     { id: "other", title: "moduleOther", entities: [], match: () => true }
   ];
-  const stepResultKey = entityCode => ({ "CUSTOMER": "customer", "VENDOR": "vendor", "ITEM": "item", "SALES.QUOTE": "sales/quote",
+  const stepResultKey = entityCode => ({ "CUSTOMER": "customer", "VENDOR": "vendor", "ITEM": "item", "SALES.QUOTE": "sales/quote", "SALES.BLANKET": "sales/blanket",
     "SALES.ORDER": "sales/order", "SALES.INVOICE": "sales/invoice", "PURCHASE.ORDER": "purchase/order" })[entityCode] || "";
   function stepCard(step, results, matched) {
     const key = stepResultKey(step.entityCode);

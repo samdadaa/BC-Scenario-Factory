@@ -30,3 +30,6 @@ W01 Lager: Einkauf klein mit Modul Lager: Lagereingang, Einlagerung, Warehouse-E
 
 ## Risiken (vor der nativen Abnahme prüfen)
 Nicht kompiliert; Feld-/Methodenverhalten von Fertigungs-Artikelbuchblatt (Verbrauch/Ausgabe), Lagereingang/Einlagerung (Lagermitarbeiter des ausführenden Benutzers, Platzzuweisung), Anlagenbuchung gegen Bank und Serviceauftragsanlage ist nur gegen die Symbole, nicht zur Laufzeit geprüft. Die Fertigungsstückliste/Fertigungsartikel setzen Felder aus Tabellenerweiterungen voraus, die nicht in den lokalen Basissymbolen stehen.
+
+## Nachtrag 24.11.2026: Verkaufsrahmenaufträge (Nutzerauftrag, kein eigenes Ticket)
+Neue Belegart `SALES.BLANKET` (Enum `SalesBlanketOrder`, Wert 10) im Verkaufsgenerator, quotengleich: immer ungebucht, mindestens drei (drei bis fünf) Zeilen, Menge klein 8, mittel 12, groß 18 (Faktor 1,5). Eigene Mengeneingabe im Assistenten bei „Nur Bewegungsdaten“, Setup-Feld 37 additiv, Snapshot-Schlüssel `blanketSeries` additiv (ältere Läufe planen keine Rahmenaufträge). Nummernserie `SALES-BLK` aus der Foundation. Dashboard: Kachel „Verkaufsrahmenaufträge“ mit Drilldown. Nicht kompiliert, nicht nativ getestet.

@@ -51,7 +51,7 @@ codeunit 90308 "BCSF Queue Failure"
     // never-claimed independent units, never another attempt of this unit.
     if (Batch.Status = Batch.Status::NeedsReview) and Dispatcher.UsesIsolation(Batch."Run Id") and
       (Batch."First Key" = Batch."Last Key") and
-      (Batch."Node Code" in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE', 'PURCHASE.ORDER']) and
+      (Batch."Node Code" in ['SALES.QUOTE', 'SALES.BLANKET', 'SALES.ORDER', 'SALES.INVOICE', 'PURCHASE.ORDER']) and
       CanContinue(Batch."Run Id") then
       Dispatcher.ScheduleNext(Execution)
     else begin

@@ -194,7 +194,7 @@ codeunit 90302 "BCSF Queue Dispatcher"
     end;
     // Earlier incomplete units of a non-document generator retain the old
     // strict ordering. Only explicitly isolated documents are independent.
-    if not (Candidate."Node Code" in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE', 'PURCHASE.ORDER']) then begin
+    if not (Candidate."Node Code" in ['SALES.QUOTE', 'SALES.BLANKET', 'SALES.ORDER', 'SALES.INVOICE', 'PURCHASE.ORDER']) then begin
       Other.Reset();
       Other.SetRange("Run Id", Candidate."Run Id");
       Other.SetFilter("Sequence No.", '<%1', Candidate."Sequence No.");

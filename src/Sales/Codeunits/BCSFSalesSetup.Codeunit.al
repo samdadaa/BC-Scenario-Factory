@@ -43,7 +43,7 @@ codeunit 90429 "BCSF Sales Setup"
     LocationCode: Code[10];
   begin
     Target.SetRange("Scenario Id", Scenario."Scenario Id");
-    Target.SetFilter(Entity, '%1|%2|%3', Target.Entity::SalesQuote, Target.Entity::SalesOrder, Target.Entity::SalesInvoice);
+    Target.SetFilter(Entity, '%1|%2|%3|%4', Target.Entity::SalesQuote, Target.Entity::SalesOrder, Target.Entity::SalesInvoice, Target.Entity::SalesBlanketOrder);
     Target.SetFilter(Quantity, '>0');
     if Target.IsEmpty() then
       exit;
@@ -63,6 +63,8 @@ codeunit 90429 "BCSF Sales Setup"
     Settings.Add('postingApproved', Scenario."Sales Posting Approved");
     Sales.Get();
     Settings.Add('quoteSeries', Sales."Quote Nos.");
+    // Additive: runs captured before blanket orders existed have no blanket series and never plan blanket orders.
+    Settings.Add('blanketSeries', Sales."Blanket Order Nos.");
     Settings.Add('orderSeries', Sales."Order Nos.");
     Settings.Add('invoiceSeries', Sales."Invoice Nos.");
     Settings.Add('postedInvoiceSeries', Sales."Posted Invoice Nos.");
@@ -271,7 +273,7 @@ codeunit 90429 "BCSF Sales Setup"
         if Contract.GetText(Values, 'masterFingerprint') <> MasterFingerprint(Context) then
           Error(DriftErr);
     Code := Contract.GetCode(Target, 'entityCode');
-    if not (Code in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE']) or
+    if not (Code in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE', 'SALES.BLANKET']) or
       (Contract.GetCode(Target, 'moduleCode') <> 'SALES') or not (Contract.GetInteger(Target, 'processMode') in [1, 2]) then
       Error(UnsupportedErr);
     Evaluate(DateFrom, Contract.GetText(Context, 'startingDate'), 9);
@@ -294,6 +296,13 @@ codeunit 90429 "BCSF Sales Setup"
     Sales.TestField("Posted Shipment Nos.", Contract.GetText(Values, 'shipmentSeries'));
     case Code of
       'SALES.QUOTE': CheckSeries(CopyStr(Contract.GetCode(Values, 'quoteSeries'), 1, 20), DateFrom, DateTo);
+      'SALES.BLANKET':
+        begin
+          if not Values.Contains('blanketSeries') then
+            Error(UnsupportedErr);
+          Sales.TestField("Blanket Order Nos.", Contract.GetText(Values, 'blanketSeries'));
+          CheckSeries(CopyStr(Contract.GetCode(Values, 'blanketSeries'), 1, 20), DateFrom, DateTo);
+        end;
       'SALES.ORDER':
         begin
           Guard.EnsureCodeunitAccess(Codeunit::"Sales-Quote to Order");

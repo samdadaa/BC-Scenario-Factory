@@ -28,5 +28,11 @@
   "Service": "Service",
   "Fixed assets": "Anlagen",
   "CRM": "CRM",
-  "Wholesale requires Sales, Purchasing, Inventory and the shared Finance foundation. Select optional modules; they generate data in the follow-up stage of the company package.": "Großhandel benötigt Verkauf, Einkauf, Lager und die gemeinsame Finanzbasis. Wählen Sie optionale Module; sie erzeugen Daten in der Folgeprozess-Stufe des Unternehmenspakets."
+  "Wholesale requires Sales, Purchasing, Inventory and the shared Finance foundation. Select optional modules; they generate data in the follow-up stage of the company package.": "Großhandel benötigt Verkauf, Einkauf, Lager und die gemeinsame Finanzbasis. Wählen Sie optionale Module; sie erzeugen Daten in der Folgeprozess-Stufe des Unternehmenspakets.",
+  "Sales Blanket Orders": "Verkaufsrahmenaufträge",
+  "Sales blanket orders": "Verkaufsrahmenaufträge",
+  "Sales Quotes, Blanket Orders, Orders and Invoices": "Verkaufsangebote, Rahmenaufträge, Aufträge und Rechnungen",
+  "Sales quotes and blanket orders must remain unposted.": "Verkaufsangebote und Rahmenaufträge müssen ungebucht bleiben.",
+  "Specifies the number of new blanket orders with at least three lines each. Blanket orders stay unposted. Zero omits this document type; master records are reused.": "Gibt die Anzahl neuer Rahmenaufträge mit jeweils mindestens drei Zeilen an. Rahmenaufträge bleiben ungebucht. Null lässt diese Belegart aus; Stammdaten werden wiederverwendet.",
+  " Sales blanket orders: %1 (at least three lines each, always unposted).": " Verkaufsrahmenaufträge: %1 (jeweils mindestens drei Zeilen, immer ungebucht)."
 }

@@ -267,7 +267,7 @@ page 90131 "BCSF Scenario Card"
     ItemTarget.SetRange(Entity, ItemTarget.Entity::Item);
     ItemTarget.SetFilter(Quantity, '>0');
     HasItemTarget := not ItemTarget.IsEmpty();
-    ItemTarget.SetFilter(Entity, '%1|%2|%3', ItemTarget.Entity::SalesQuote, ItemTarget.Entity::SalesOrder, ItemTarget.Entity::SalesInvoice);
+    ItemTarget.SetFilter(Entity, '%1|%2|%3|%4', ItemTarget.Entity::SalesQuote, ItemTarget.Entity::SalesOrder, ItemTarget.Entity::SalesInvoice, ItemTarget.Entity::SalesBlanketOrder);
     HasSalesTarget := not ItemTarget.IsEmpty();
     MaximumProcessScope := Rec."Process Mode";
     CanRunTemplate := not IsNullGuid(Rec."Scenario Id") and not Rec.Archived;

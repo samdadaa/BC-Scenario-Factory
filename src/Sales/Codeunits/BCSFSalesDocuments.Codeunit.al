@@ -102,6 +102,7 @@ codeunit 90430 "BCSF Sales Documents"
     Header.SetHideValidationDialog(true);
     case EntityCode of
       'SALES.QUOTE': Header."Document Type" := Header."Document Type"::Quote;
+      'SALES.BLANKET': Header."Document Type" := Header."Document Type"::"Blanket Order";
       'SALES.ORDER': Header."Document Type" := Header."Document Type"::Quote;
       'SALES.INVOICE': Header."Document Type" := Header."Document Type"::Invoice;
     end;

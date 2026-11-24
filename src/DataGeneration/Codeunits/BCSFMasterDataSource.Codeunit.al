@@ -133,7 +133,7 @@ codeunit 90259 "BCSF Master Data Source"
     if Target.FindSet() then
       repeat
         PurchaseSelected := PurchaseSelected or (Target.Entity = Target.Entity::PurchaseOrder);
-        SalesSelected := SalesSelected or (Target.Entity in [Target.Entity::SalesQuote, Target.Entity::SalesOrder, Target.Entity::SalesInvoice]);
+        SalesSelected := SalesSelected or (Target.Entity in [Target.Entity::SalesQuote, Target.Entity::SalesBlanketOrder, Target.Entity::SalesOrder, Target.Entity::SalesInvoice]);
       until Target.Next() = 0;
     exit(CaptureExisting(PurchaseSelected, SalesSelected));
   end;

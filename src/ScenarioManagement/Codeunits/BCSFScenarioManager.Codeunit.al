@@ -119,7 +119,7 @@ codeunit 90130 "BCSF Scenario Manager"
       exit(PlanningLbl);
     if Target.FindSet() then
       repeat
-        HasSales := HasSales or (Target.Entity in ["BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesOrder, "BCSF Entity Type"::SalesInvoice]);
+        HasSales := HasSales or (Target.Entity in ["BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesBlanketOrder, "BCSF Entity Type"::SalesOrder, "BCSF Entity Type"::SalesInvoice]);
         HasItems := HasItems or (Target.Entity = "BCSF Entity Type"::Item);
       until Target.Next() = 0;
     if HasSales then
@@ -165,7 +165,7 @@ codeunit 90130 "BCSF Scenario Manager"
       TargetScope := TargetScope::UnpostedDocuments;
     if Target.FindSet(true) then
       repeat
-        if Policy.IsDocument(Target.Entity) and (Target.Entity <> "BCSF Entity Type"::SalesQuote) then
+        if Policy.IsDocument(Target.Entity) and not (Target.Entity in ["BCSF Entity Type"::SalesQuote, "BCSF Entity Type"::SalesBlanketOrder]) then
           if Target."Process Mode" <> TargetScope then begin
             Target."Process Mode" := TargetScope;
             Policy.ApplyDocumentModeDefaults(Target);

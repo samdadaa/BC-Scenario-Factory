@@ -99,6 +99,7 @@ table 90100 "BCSF Factory Setup"
     field(34; "Industry Sales Order Quantity"; Integer) { Caption = 'Industry Sales Order Quantity', Locked = true; Editable = false; }
     field(35; "Industry Sales Quote Quantity"; Integer) { Caption = 'Industry Sales Quote Quantity', Locked = true; Editable = false; }
     field(36; "Industry Sales Inv Quantity"; Integer) { Caption = 'Industry Sales Inv Quantity', Locked = true; Editable = false; }
+    field(37; "Industry Sales Blanket Quantity"; Integer) { Caption = 'Industry Sales Blanket Quantity', Locked = true; Editable = false; }
 
 
   }

@@ -115,8 +115,20 @@ codeunit 90153 "BCSF Wholesale Profile"
       Entity::Item: exit(40 * Factor);
       Entity::PurchaseOrder: exit(15 * Factor);
       Entity::SalesQuote: exit(5 * Factor);
+      // Blanket orders: 8 (small), 12 (medium), 18 (large); a factor of 1.5 per step instead of 10.
+      Entity::SalesBlanketOrder: exit(BlanketQuantity(Size));
       Entity::SalesOrder: exit(12 * Factor);
       Entity::SalesInvoice: exit(3 * Factor);
+    end;
+    Error(SizeErr);
+  end;
+
+  local procedure BlanketQuantity(Size: Integer): Integer
+  begin
+    case Size of
+      0: exit(8);
+      1: exit(12);
+      2: exit(18);
     end;
     Error(SizeErr);
   end;
@@ -133,7 +145,7 @@ codeunit 90153 "BCSF Wholesale Profile"
     if Setup.Get(Setup.GetSetupKey()) then
       foreach Ordinal in Entity.Ordinals() do begin
         Entity := "BCSF Entity Type".FromInteger(Ordinal);
-        if Entity in [Entity::Customer, Entity::Vendor, Entity::Item, Entity::PurchaseOrder, Entity::SalesQuote, Entity::SalesOrder, Entity::SalesInvoice] then
+        if Entity in [Entity::Customer, Entity::Vendor, Entity::Item, Entity::PurchaseOrder, Entity::SalesQuote, Entity::SalesBlanketOrder, Entity::SalesOrder, Entity::SalesInvoice] then
           if Quantity(Size, Entity) > Setup."Maximum Records per Entity" then
             Error(LimitErr);
       end;
@@ -209,7 +221,7 @@ codeunit 90153 "BCSF Wholesale Profile"
     foreach Ordinal in Entity.Ordinals() do begin
       Entity := "BCSF Entity Type".FromInteger(Ordinal);
       if (Entity in [Entity::Customer, Entity::Vendor, Entity::Item]) or
-        ((Mode <> Mode::SetupAndMasterData) and (Entity in [Entity::PurchaseOrder, Entity::SalesQuote, Entity::SalesOrder, Entity::SalesInvoice])) then begin
+        ((Mode <> Mode::SetupAndMasterData) and (Entity in [Entity::PurchaseOrder, Entity::SalesQuote, Entity::SalesBlanketOrder, Entity::SalesOrder, Entity::SalesInvoice])) then begin
         Target.Init();
         Target."Scenario Id" := Scenario."Scenario Id";
         Target.Validate(Entity, Entity);
@@ -219,11 +231,11 @@ codeunit 90153 "BCSF Wholesale Profile"
           Target."Process Mode" := Mode;
           if Mode = Mode::FollowUpProcesses then
             Target."Process Mode" := Mode::PostedMovements;
-          if Entity = Entity::SalesQuote then
+          if Entity in [Entity::SalesQuote, Entity::SalesBlanketOrder] then
             Target."Process Mode" := Mode::UnpostedDocuments;
         end;
         Target."Unposted Percent" := 100;
-        if (Mode.AsInteger() >= 2) and Policy.IsDocument(Entity) and (Entity <> Entity::SalesQuote) then begin
+        if (Mode.AsInteger() >= 2) and Policy.IsDocument(Entity) and not (Entity in [Entity::SalesQuote, Entity::SalesBlanketOrder]) then begin
           case Entity of
             Entity::PurchaseOrder:
               begin
@@ -245,7 +257,7 @@ codeunit 90153 "BCSF Wholesale Profile"
     exit(Scenario."Scenario Id");
   end;
 
-  procedure ConfigureGeneration(ScenarioId: Guid; Kind: Enum "BCSF Generation Kind"; SourceId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer)
+  procedure ConfigureGeneration(ScenarioId: Guid; Kind: Enum "BCSF Generation Kind"; SourceId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer; Blankets: Integer)
   var
     Scenario: Record "BCSF Scenario";
     SourceHeader: Record "BCSF Run Header";
@@ -265,7 +277,7 @@ codeunit 90153 "BCSF Wholesale Profile"
       (not PurchaseSelected and not SalesSelected) then
       Error(GenerationErr);
     if IsNullGuid(SourceId) then
-      Source.CaptureExisting(PurchaseSelected and (Purchases > 0), SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0)))
+      Source.CaptureExisting(PurchaseSelected and (Purchases > 0), SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0) or (Blankets > 0)))
     else begin
       SourceHeader.Get(SourceId);
       Source.Capture(SourceId, 'TRADE', SourceHeader."Profile Version");
@@ -273,11 +285,11 @@ codeunit 90153 "BCSF Wholesale Profile"
     end;
     Scenario."Master Source Run Id" := SourceId;
     Scenario.Modify(true);
-    ConfigureTransactionTargets(ScenarioId, PurchaseSelected, SalesSelected, Purchases, Orders, Quotes, Invoices);
+    ConfigureTransactionTargets(ScenarioId, PurchaseSelected, SalesSelected, Purchases, Orders, Quotes, Invoices, Blankets);
   end;
 
   // A blank source selects eligible existing company master data during snapshot capture.
-  procedure ConfigureTransactionDraft(ScenarioId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer)
+  procedure ConfigureTransactionDraft(ScenarioId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer; Blankets: Integer)
   var
     Scenario: Record "BCSF Scenario";
   begin
@@ -285,10 +297,10 @@ codeunit 90153 "BCSF Wholesale Profile"
     Scenario."Generation Kind" := "BCSF Generation Kind"::Transactions;
     Clear(Scenario."Master Source Run Id");
     Scenario.Modify(true);
-    ConfigureTransactionTargets(ScenarioId, PurchaseSelected, SalesSelected, Purchases, Orders, Quotes, Invoices);
+    ConfigureTransactionTargets(ScenarioId, PurchaseSelected, SalesSelected, Purchases, Orders, Quotes, Invoices, Blankets);
   end;
 
-  local procedure ConfigureTransactionTargets(ScenarioId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer)
+  local procedure ConfigureTransactionTargets(ScenarioId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer; Blankets: Integer)
   var
     Target: Record "BCSF Data Target";
     Selection: Record "BCSF Scenario Module";
@@ -305,6 +317,8 @@ codeunit 90153 "BCSF Wholesale Profile"
             if SalesSelected then DocumentQuantity := Orders;
           Target.Entity::SalesQuote:
             if SalesSelected then DocumentQuantity := Quotes;
+          Target.Entity::SalesBlanketOrder:
+            if SalesSelected then DocumentQuantity := Blankets;
           Target.Entity::SalesInvoice:
             if SalesSelected then DocumentQuantity := Invoices;
         end;

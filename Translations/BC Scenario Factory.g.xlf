@@ -963,6 +963,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1896398021 - NamedType 2831134565" size-unit="char" translate="yes" xml:space="preserve">
+          <source> Sales blanket orders: %1 (at least three lines each, always unposted).</source>
+          <note from="Developer" annotates="general" priority="2">%1 = blanket orders</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - NamedType BlanketReviewLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1896398021 - NamedType 3474692067" size-unit="char" translate="yes" xml:space="preserve">
           <source> Automatic inventory cost posting is enabled only in a company without posted activity; an existing conflicting cost policy stops the run.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -1277,6 +1282,16 @@
           <source>Purchase orders</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control PurchaseQuantity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3137631044 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the number of new blanket orders with at least three lines each. Blanket orders stay unposted. Zero omits this document type; master records are reused.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SalesBlanketQuantity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1896398021 - Control 3137631044 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales blanket orders</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Factory Setup Card - Control SalesBlanketQuantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1896398021 - Control 3497391846 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.</source>
@@ -5564,7 +5579,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Evidence - NamedType EvidenceErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 4100430089 - NamedType 1981706351" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Sales Quotes, Orders and Invoices</source>
+          <source>Sales Quotes, Blanket Orders, Orders and Invoices</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Sales Generator - NamedType NameLbl</note>
         </trans-unit>
@@ -6769,7 +6784,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType QuantityErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2353035614 - NamedType 2906417001" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Sales quotes must remain unposted.</source>
+          <source>Sales quotes and blanket orders must remain unposted.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Scenario Policy - NamedType QuoteErr</note>
         </trans-unit>
@@ -7337,6 +7352,11 @@
           <source>Purchase Orders</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue PurchaseOrder - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3731727281 - EnumValue 3106849791 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales Blanket Orders</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum BCSF Entity Type - EnumValue SalesBlanketOrder - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3731727281 - EnumValue 4275230785 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Sales Credit Memos</source>

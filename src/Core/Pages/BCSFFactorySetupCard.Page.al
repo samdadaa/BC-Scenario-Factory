@@ -158,6 +158,13 @@ page 90101 "BCSF Factory Setup Card"
           MinValue = 0;
           ToolTip = 'Specifies the number of new documents for this independent run. Zero omits this document type; master records are reused.';
         }
+        field(SalesBlanketQuantity; SalesBlanketQuantity)
+        {
+          Caption = 'Sales blanket orders';
+          Visible = SalesSelected;
+          MinValue = 0;
+          ToolTip = 'Specifies the number of new blanket orders with at least three lines each. Blanket orders stay unposted. Zero omits this document type; master records are reused.';
+        }
         field(SalesInvoiceQuantity; SalesInvoiceQuantity)
         {
           Caption = 'Sales invoices';
@@ -311,7 +318,7 @@ page 90101 "BCSF Factory Setup Card"
         begin
           CaptureModules();
           Initialization.StartConfigured(SelectedChart(), SizeChoice, SelectedProcess(), PostingApproved, AdditionalModules, StartingDate, EndingDate,
-            GenerationKind, MasterSourceId, PurchaseSelected, SalesSelected, PurchaseQuantity, SalesOrderQuantity, SalesQuoteQuantity, SalesInvoiceQuantity);
+            GenerationKind, MasterSourceId, PurchaseSelected, SalesSelected, PurchaseQuantity, SalesOrderQuantity, SalesQuoteQuantity, SalesInvoiceQuantity, SalesBlanketQuantity);
           CurrPage.Close();
         end;
       }
@@ -466,6 +473,7 @@ page 90101 "BCSF Factory Setup Card"
     SalesOrderQuantity := Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesOrder);
     SalesQuoteQuantity := Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesQuote);
     SalesInvoiceQuantity := Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesInvoice);
+    SalesBlanketQuantity := Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesBlanketOrder);
   end;
 
   local procedure UpdateReview()
@@ -479,7 +487,8 @@ page 90101 "BCSF Factory Setup Card"
     if ProcessChoice >= ProcessChoice::Documents then
       ReviewText += StrSubstNo(DocumentsLbl, Profile.Quantity(SizeChoice, "BCSF Entity Type"::PurchaseOrder),
         Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesQuote), Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesOrder),
-        Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesInvoice));
+        Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesInvoice)) +
+        StrSubstNo(BlanketReviewLbl, Profile.Quantity(SizeChoice, "BCSF Entity Type"::SalesBlanketOrder));
     if ProcessChoice >= ProcessChoice::Posted then
       ReviewText += PostingMixLbl + CostPostingLbl;
     if ProcessChoice = ProcessChoice::Payments then
@@ -488,7 +497,8 @@ page 90101 "BCSF Factory Setup Card"
     if GenerationKind = GenerationKind::Transactions then begin
       ReviewText := StrSubstNo(SourceReviewLbl, MasterSourceId, PurchaseSelected, SalesSelected,
         SelectedQuantity(PurchaseSelected, PurchaseQuantity), SelectedQuantity(SalesSelected, SalesOrderQuantity),
-        SelectedQuantity(SalesSelected, SalesQuoteQuantity), SelectedQuantity(SalesSelected, SalesInvoiceQuantity)) + ' ' +
+        SelectedQuantity(SalesSelected, SalesQuoteQuantity), SelectedQuantity(SalesSelected, SalesInvoiceQuantity)) +
+        StrSubstNo(BlanketReviewLbl, SelectedQuantity(SalesSelected, SalesBlanketQuantity)) + ' ' +
         StrSubstNo(PeriodLbl, StartingDate, EndingDate) + ' ' + SelectStr(ProcessChoice + 1, ProcessesLbl);
       if ProcessChoice >= ProcessChoice::Posted then
         ReviewText += PostingMixLbl + CostPostingLbl;
@@ -540,6 +550,7 @@ page 90101 "BCSF Factory Setup Card"
     PurchaseQuantity: Integer;
     SalesOrderQuantity: Integer;
     SalesQuoteQuantity: Integer;
+    SalesBlanketQuantity: Integer;
     SalesInvoiceQuantity: Integer;
     SourceReviewLbl: Label 'Transactions only. Master data source: %1. Purchasing: %2; sales: %3. New orders: purchase %4, sales %5; quotes %6; invoices %7. No new master records.', Comment = '%1 = source run, %2 = purchasing selected, %3 = sales selected, %4 = purchase count, %5 = sales order count, %6 = quote count, %7 = invoice count';
     InventoryMovementLbl: Label 'Existing items and current stock are reused. Independent inventory movements are not available.';
@@ -566,6 +577,7 @@ page 90101 "BCSF Factory Setup Card"
     WholesaleLbl: Label 'Wholesale';
     ReviewLbl: Label '%1 · %2 · %3 · %4. Customers: %5; vendors: %6; items: %7.', Comment = '%1 = chart, %2 = industry, %3 = size, %4 = process, %5 = customers, %6 = vendors, %7 = items';
     DocumentsLbl: Label ' Planned purchase orders: %1; sales quotes: %2; sales orders: %3; sales invoices: %4. Quotes remain unposted; posting follows the selected process and approval.', Comment = '%1 = purchases, %2 = quotes, %3 = orders, %4 = invoices';
+    BlanketReviewLbl: Label ' Sales blanket orders: %1 (at least three lines each, always unposted).', Comment = '%1 = blanket orders';
     Initialized: Boolean;
     InstalledChart: Text;
     ChartCaption: Text;

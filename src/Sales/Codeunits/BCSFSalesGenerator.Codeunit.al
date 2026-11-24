@@ -20,17 +20,18 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
   var
     Index: Integer;
   begin
-    for Index := 1 to 3 do begin
+    for Index := 1 to 4 do begin
       Capabilities.Init();
       Capabilities."Generator Code" := 'SALES.DOCUMENT';
-      Capabilities."Entity Code" := CopyStr(SelectStr(Index, 'SALES.QUOTE,SALES.ORDER,SALES.INVOICE'), 1, 30);
+      Capabilities."Entity Code" := CopyStr(SelectStr(Index, 'SALES.QUOTE,SALES.ORDER,SALES.INVOICE,SALES.BLANKET'), 1, 30);
       Capabilities."Module Code" := 'SALES';
       Capabilities.Name := NameLbl;
       Capabilities.Version := '1';
       Capabilities."Contract Version" := 1;
       Capabilities."Minimum Mode" := "BCSF Process Mode"::UnpostedDocuments;
       Capabilities."Maximum Mode" := "BCSF Process Mode"::PostedMovements;
-      if Index = 1 then
+      // Quotes and blanket orders are never posted.
+      if Index in [1, 4] then
         Capabilities."Maximum Mode" := "BCSF Process Mode"::UnpostedDocuments;
       Capabilities."Maximum Batch Size" := 100;
       Capabilities."Contract Probe" := false;
@@ -64,7 +65,7 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
   var
     Contract: Codeunit "BCSF Contract JSON";
   begin
-    if not (Contract.GetCode(Target, 'entityCode') in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE']) then
+    if not (Contract.GetCode(Target, 'entityCode') in ['SALES.QUOTE', 'SALES.ORDER', 'SALES.INVOICE', 'SALES.BLANKET']) then
       exit;
     Reason := 'SOURCE';
     if TryInspectDocument(Context, Target, LogicalKey, Reason) then
@@ -323,6 +324,6 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
   end;
 
   var
-    NameLbl: Label 'Sales Quotes, Orders and Invoices';
+    NameLbl: Label 'Sales Quotes, Blanket Orders, Orders and Invoices';
     ResultErr: Label 'Sales results are missing, changed or already registered. Review the batch and its checkpoint; do not repeat uncertain posting.';
 }

@@ -61,7 +61,7 @@ codeunit 90361 "BCSF Company Initialization"
         Profile.LoadModules(Setup."Industry Additional Modules", TempModules);
         CheckGenerationRequest(Setup."Industry Generation Kind", Setup."Industry Master Source Id", Setup."Industry Process Mode",
           Setup."Industry Purchase Selected", Setup."Industry Sales Selected", Setup."Industry Purchase Quantity",
-          Setup."Industry Sales Order Quantity", Setup."Industry Sales Quote Quantity", Setup."Industry Sales Inv Quantity", Setup);
+          Setup."Industry Sales Order Quantity", Setup."Industry Sales Quote Quantity", Setup."Industry Sales Inv Quantity", Setup."Industry Sales Blanket Quantity", Setup);
         if Setup."Industry Ending Date" <> 0D then
             Profile.CheckDateRange(Setup."Industry Date", Setup."Industry Ending Date", Today() - 1);
         // Setup, snapshot and first batch job form one atomic transaction. Failure leaves no half company.
@@ -117,7 +117,7 @@ codeunit 90361 "BCSF Company Initialization"
         ScenarioId := Profile.CreateTemplateForId(CreateGuid(), Setup."Industry Size", Setup."Industry Process Mode", Setup."Industry Date", EndingDate, Setup."Industry Additional Modules");
         Profile.ConfigureGeneration(ScenarioId, Setup."Industry Generation Kind", Setup."Industry Master Source Id",
           Setup."Industry Purchase Selected", Setup."Industry Sales Selected", Setup."Industry Purchase Quantity",
-          Setup."Industry Sales Order Quantity", Setup."Industry Sales Quote Quantity", Setup."Industry Sales Inv Quantity");
+          Setup."Industry Sales Order Quantity", Setup."Industry Sales Quote Quantity", Setup."Industry Sales Inv Quantity", Setup."Industry Sales Blanket Quantity");
         Scenario.Get(ScenarioId);
         if Setup."Industry Process Mode".AsInteger() >= 2 then begin
             Scenario."Sales Posting Approved" := Setup."Industry Posting Approved";
@@ -157,11 +157,12 @@ codeunit 90361 "BCSF Company Initialization"
         StartConfigured(Mode, Size, ProcessMode, PostingApproved, AdditionalModules, StartingDate, EndingDate,
           "BCSF Generation Kind"::Complete, SourceId, true, true,
           Profile.Quantity(Size, "BCSF Entity Type"::PurchaseOrder), Profile.Quantity(Size, "BCSF Entity Type"::SalesOrder),
-          Profile.Quantity(Size, "BCSF Entity Type"::SalesQuote), Profile.Quantity(Size, "BCSF Entity Type"::SalesInvoice));
+          Profile.Quantity(Size, "BCSF Entity Type"::SalesQuote), Profile.Quantity(Size, "BCSF Entity Type"::SalesInvoice),
+          Profile.Quantity(Size, "BCSF Entity Type"::SalesBlanketOrder));
     end;
 
     [CommitBehavior(CommitBehavior::Error)]
-    procedure StartConfigured(Mode: Enum "BCSF Finance Mode"; Size: Integer; ProcessMode: Enum "BCSF Process Mode"; PostingApproved: Boolean; AdditionalModules: Text; StartingDate: Date; EndingDate: Date; Kind: Enum "BCSF Generation Kind"; SourceId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer)
+    procedure StartConfigured(Mode: Enum "BCSF Finance Mode"; Size: Integer; ProcessMode: Enum "BCSF Process Mode"; PostingApproved: Boolean; AdditionalModules: Text; StartingDate: Date; EndingDate: Date; Kind: Enum "BCSF Generation Kind"; SourceId: Guid; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer; Blankets: Integer)
     var
         Setup: Record "BCSF Factory Setup";
         Scenario: Record "BCSF Scenario";
@@ -175,7 +176,7 @@ codeunit 90361 "BCSF Company Initialization"
     begin
         // Zero document quantities intentionally disable that process without invalidating the request.
         PurchaseSelected := PurchaseSelected and (Purchases > 0);
-        SalesSelected := SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0));
+        SalesSelected := SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0) or (Blankets > 0));
         Profile.CheckDateRange(StartingDate, EndingDate, Today() - 1);
         if EndingDate <> Today() - 1 then
             Error(PeriodChangedErr);
@@ -195,7 +196,7 @@ codeunit 90361 "BCSF Company Initialization"
             if Mode <> Packages.GetAppliedMode() then
                 Error(ChartErr);
         end;
-        CheckGenerationRequest(Kind, SourceId, ProcessMode, PurchaseSelected, SalesSelected, Purchases, Orders, Quotes, Invoices, Setup);
+        CheckGenerationRequest(Kind, SourceId, ProcessMode, PurchaseSelected, SalesSelected, Purchases, Orders, Quotes, Invoices, Blankets, Setup);
         // Read-only finance preflight before accepting the background request.
         Packages.CheckInitialization(Mode);
         if Setup."Company Initialized" and (ProcessMode.AsInteger() >= 2) then
@@ -218,6 +219,7 @@ codeunit 90361 "BCSF Company Initialization"
         Setup."Industry Sales Order Quantity" := Orders;
         Setup."Industry Sales Quote Quantity" := Quotes;
         Setup."Industry Sales Inv Quantity" := Invoices;
+        Setup."Industry Sales Blanket Quantity" := Blankets;
         Setup."Industry Process Mode" := ProcessMode;
         Setup."Industry Date" := StartingDate;
         Setup."Industry Ending Date" := EndingDate;
@@ -265,6 +267,7 @@ codeunit 90361 "BCSF Company Initialization"
             Rec.TestField("Industry Sales Order Quantity", Previous."Industry Sales Order Quantity");
             Rec.TestField("Industry Sales Quote Quantity", Previous."Industry Sales Quote Quantity");
             Rec.TestField("Industry Sales Inv Quantity", Previous."Industry Sales Inv Quantity");
+            Rec.TestField("Industry Sales Blanket Quantity", Previous."Industry Sales Blanket Quantity");
 
             if not IsNullGuid(Previous."Industry Run Id") then
                 Rec.TestField("Industry Run Id", Previous."Industry Run Id")
@@ -287,7 +290,7 @@ codeunit 90361 "BCSF Company Initialization"
                 Profile.CheckSelection(Rec."Industry Size", Rec."Industry Process Mode");
                 CheckGenerationRequest(Rec."Industry Generation Kind", Rec."Industry Master Source Id", Rec."Industry Process Mode",
                   Rec."Industry Purchase Selected", Rec."Industry Sales Selected", Rec."Industry Purchase Quantity",
-                  Rec."Industry Sales Order Quantity", Rec."Industry Sales Quote Quantity", Rec."Industry Sales Inv Quantity", Rec);
+                  Rec."Industry Sales Order Quantity", Rec."Industry Sales Quote Quantity", Rec."Industry Sales Inv Quantity", Rec."Industry Sales Blanket Quantity", Rec);
                 if Rec."Industry Process Mode".AsInteger() >= 2 then
                     Rec.TestField("Industry Posting Approved", true);
                 Job.Get(Rec."Industry Job Id");
@@ -332,7 +335,7 @@ codeunit 90361 "BCSF Company Initialization"
             Error(ExistingErr);
     end;
 
-    local procedure CheckGenerationRequest(Kind: Enum "BCSF Generation Kind"; SourceId: Guid; ProcessMode: Enum "BCSF Process Mode"; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer; Setup: Record "BCSF Factory Setup")
+    local procedure CheckGenerationRequest(Kind: Enum "BCSF Generation Kind"; SourceId: Guid; ProcessMode: Enum "BCSF Process Mode"; PurchaseSelected: Boolean; SalesSelected: Boolean; Purchases: Integer; Orders: Integer; Quotes: Integer; Invoices: Integer; Blankets: Integer; Setup: Record "BCSF Factory Setup")
     var
         Header: Record "BCSF Run Header";
         Source: Codeunit "BCSF Master Data Source";
@@ -352,14 +355,14 @@ codeunit 90361 "BCSF Company Initialization"
         // Hidden quantities of unselected modules must not invalidate a request.
         if (ProcessMode = ProcessMode::SetupAndMasterData) or
           (PurchaseSelected and ((Purchases < 0) or (Purchases > Setup."Maximum Records per Entity"))) or
-          (SalesSelected and ((Orders < 0) or (Quotes < 0) or (Invoices < 0) or
+          (SalesSelected and ((Orders < 0) or (Quotes < 0) or (Invoices < 0) or (Blankets < 0) or
             (Orders > Setup."Maximum Records per Entity") or (Quotes > Setup."Maximum Records per Entity") or
-            (Invoices > Setup."Maximum Records per Entity"))) or
+            (Invoices > Setup."Maximum Records per Entity") or (Blankets > Setup."Maximum Records per Entity"))) or
           (not (PurchaseSelected and (Purchases > 0)) and
-            not (SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0)))) then
+            not (SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0) or (Blankets > 0)))) then
             Error(RequestErr);
         if IsNullGuid(SourceId) then
-            Source.CaptureExisting(PurchaseSelected and (Purchases > 0), SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0)))
+            Source.CaptureExisting(PurchaseSelected and (Purchases > 0), SalesSelected and ((Orders > 0) or (Quotes > 0) or (Invoices > 0) or (Blankets > 0)))
         else begin
             Header.Get(SourceId);
             Source.Capture(SourceId, 'TRADE', Header."Profile Version");
