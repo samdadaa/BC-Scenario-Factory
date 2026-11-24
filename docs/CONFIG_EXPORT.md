@@ -67,6 +67,7 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 84 | Acc. Schedule Name | Direkt |
 | 85 | Acc. Schedule Line | Direkt |
 | 88 | Financial Report | Direkt |
+| 90 | BOM Component | Direkt |
 | 92 | Customer Posting Group | Direkt |
 | 93 | Vendor Posting Group | Direkt |
 | 94 | Inventory Posting Group | Direkt |
@@ -85,6 +86,9 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 123 | Purch. Inv. Line | Direkt |
 | 124 | Purch. Cr. Memo Hdr. | Standard/Referenz |
 | 125 | Purch. Cr. Memo Line | Standard/Referenz |
+| 167 | Job | Direkt |
+| 169 | Job Ledger Entry | Direkt |
+| 203 | Res. Ledger Entry | Direkt |
 | 204 | Unit of Measure | Direkt |
 | 222 | Ship-to Address | Direkt |
 | 224 | Order Address | Direkt |
@@ -93,6 +97,7 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 232 | Gen. Journal Batch | Direkt |
 | 233 | Item Journal Batch | Standard/Referenz |
 | 242 | Source Code Setup | Direkt |
+| 246 | Requisition Line | Direkt |
 | 250 | Gen. Business Posting Group | Direkt |
 | 251 | Gen. Product Posting Group | Direkt |
 | 252 | General Posting Setup | Direkt |
@@ -101,6 +106,8 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 270 | Bank Account | Direkt |
 | 271 | Bank Account Ledger Entry | Direkt |
 | 277 | Bank Account Posting Group | Direkt |
+| 287 | Customer Bank Account | Direkt |
+| 288 | Vendor Bank Account | Direkt |
 | 289 | Payment Method | Direkt |
 | 291 | Shipping Agent | Standard/Referenz |
 | 308 | No. Series | Direkt |
@@ -109,6 +116,7 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 311 | Sales & Receivables Setup | Direkt |
 | 312 | Purchases & Payables Setup | Direkt |
 | 313 | Inventory Setup | Direkt |
+| 315 | Jobs Setup | Direkt |
 | 323 | VAT Business Posting Group | Direkt |
 | 324 | VAT Product Posting Group | Direkt |
 | 325 | VAT Posting Setup | Direkt |
@@ -127,12 +135,19 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 480 | Dimension Set Entry | Standard/Referenz |
 | 481 | Dimension Set Tree Node | Standard/Referenz |
 | 589 | G/L Account Source Currency | Standard/Referenz |
+| 900 | Assembly Header | Direkt |
+| 905 | Assembly Setup | Direkt |
+| 910 | Posted Assembly Header | Direkt |
+| 1001 | Job Task | Direkt |
+| 1003 | Job Planning Line | Direkt |
 | 5050 | Contact | Direkt |
 | 5053 | Business Relation | Direkt |
 | 5054 | Contact Business Relation | Direkt |
+| 5071 | Campaign | Direkt |
 | 5079 | Marketing Setup | Direkt |
 | 5085 | Contact Duplicate | Standard/Referenz |
 | 5086 | Cont. Duplicate Search String | Standard/Referenz |
+| 5092 | Opportunity | Direkt |
 | 5095 | Duplicate Search String Setup | Standard/Referenz |
 | 5107 | Sales Header Archive | Standard/Referenz |
 | 5108 | Sales Line Archive | Standard/Referenz |
@@ -141,10 +156,20 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 5400 | Unit Group | Standard/Referenz |
 | 5401 | Item Variant | Direkt |
 | 5404 | Item Unit of Measure | Direkt |
+| 5405 | Production Order | Direkt |
+| 5600 | Fixed Asset | Direkt |
+| 5601 | FA Ledger Entry | Direkt |
+| 5603 | FA Setup | Direkt |
 | 5700 | Stockkeeping Unit | Direkt |
 | 5715 | Item Substitution | Direkt |
 | 5722 | Item Category | Direkt |
+| 5740 | Transfer Header | Direkt |
+| 5741 | Transfer Line | Direkt |
+| 5744 | Transfer Shipment Header | Direkt |
+| 5745 | Transfer Shipment Line | Direkt |
+| 5746 | Transfer Receipt Header | Direkt |
 | 5769 | Warehouse Setup | Standard/Referenz |
+| 5772 | Registered Whse. Activity Hdr. | Direkt |
 | 5777 | Item Reference | Direkt |
 | 5790 | Shipping Agent Services | Standard/Referenz |
 | 5802 | Value Entry | Direkt |
@@ -152,6 +177,9 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 5813 | Inventory Posting Setup | Direkt |
 | 5823 | G/L - Item Ledger Relation | Direkt |
 | 5896 | Inventory Adjmt. Entry (Order) | Standard/Referenz |
+| 5900 | Service Header | Direkt |
+| 5911 | Service Mgt. Setup | Direkt |
+| 5940 | Service Item | Direkt |
 | 6507 | Item Entry Relation | Standard/Referenz |
 | 6508 | Value Entry Relation | Standard/Referenz |
 | 6509 | Whse. Item Entry Relation | Standard/Referenz |

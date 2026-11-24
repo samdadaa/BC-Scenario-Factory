@@ -77,7 +77,7 @@ codeunit 90153 "BCSF Wholesale Profile"
   var
     TempModules: Record "BCSF Scenario Module" temporary;
     Included: Text;
-    Planned: Text;
+    Optional: Text;
   begin
     LoadModules(AdditionalModules, TempModules);
     TempModules.SetRange(Enabled, true);
@@ -88,14 +88,14 @@ codeunit 90153 "BCSF Wholesale Profile"
             Included += ', ';
           Included += Format(TempModules.Module);
         end else begin
-          if Planned <> '' then
-            Planned += ', ';
-          Planned += Format(TempModules.Module);
+          if Optional <> '' then
+            Optional += ', ';
+          Optional += Format(TempModules.Module);
         end;
       until TempModules.Next() = 0;
     Included := StrSubstNo(IncludedModulesLbl, Included);
-    if Planned <> '' then
-      Included += ' ' + StrSubstNo(PlannedModulesLbl, Planned);
+    if Optional <> '' then
+      Included += ' ' + StrSubstNo(OptionalModulesLbl, Optional);
     exit(Included);
   end;
 
@@ -332,7 +332,7 @@ codeunit 90153 "BCSF Wholesale Profile"
     DateRangeErr: Label 'Enter a starting date no later than yesterday and an ending date within the approved period.';
     ModulesErr: Label 'Select valid additional modules once. Required wholesale modules must remain selected.';
     IncludedModulesLbl: Label 'Industry modules: %1.', Comment = '%1 = included module names';
-    PlannedModulesLbl: Label 'Additional modules (planning only, no generated data): %1.', Comment = '%1 = planned module names';
+    OptionalModulesLbl: Label 'Optional modules: %1.', Comment = '%1 = selected optional module names';
     WholesaleLbl: Label 'Wholesale company';
     SizeErr: Label 'Select Small, Medium or Large for the supported wholesale package.';
     PostingErr: Label 'Select master data, unposted documents, posted documents or approved payments and application for wholesale.';

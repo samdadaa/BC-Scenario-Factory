@@ -82,9 +82,11 @@ summary { cursor: pointer; width: fit-content; max-width: 100%; padding: 5px 0; 
 .sf-mod-sales { grid-column: 2 / span 2; grid-row: 2; }
 .sf-mod-inventory { grid-column: 1; grid-row: 3; }
 .sf-mod-assembly { grid-column: 2; grid-row: 3; }
-.sf-mod-finance { grid-column: 3; grid-row: 3; }
-.sf-mod-other { grid-column: 1 / -1; grid-row: 4; }
-@media (max-width: 1100px) { .sf-modules { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sf-mod-master, .sf-mod-purchase, .sf-mod-sales, .sf-mod-inventory, .sf-mod-assembly, .sf-mod-finance, .sf-mod-other { grid-column: auto; grid-row: auto; } .sf-mod-master { grid-column: 1 / -1; } }
+.sf-mod-projects { grid-column: 3; grid-row: 3; }
+.sf-mod-planning { grid-column: 1; grid-row: 4; }
+.sf-mod-finance { grid-column: 2 / span 2; grid-row: 4; }
+.sf-mod-other { grid-column: 1 / -1; grid-row: 5; }
+@media (max-width: 1100px) { .sf-modules { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sf-mod-master, .sf-mod-purchase, .sf-mod-sales, .sf-mod-inventory, .sf-mod-assembly, .sf-mod-projects, .sf-mod-planning, .sf-mod-finance, .sf-mod-other { grid-column: auto; grid-row: auto; } .sf-mod-master { grid-column: 1 / -1; } }
 @media (max-width: 700px) { .sf-modules { grid-template-columns: minmax(0, 1fr); } }
 .sf-module { --sf-module-line: #f0dc8c; --sf-module-glow: rgba(240, 220, 140, 0); position: relative; min-width: 0; padding: 14px 16px 16px; border: 1.5px solid var(--sf-module-line); border-radius: 16px; background: linear-gradient(180deg, #fffdf3 0%, #ffffff 62%); box-shadow: 0 1px 2px rgba(110, 82, 20, .07), 0 0 0 4px var(--sf-module-glow); transition: border-color .6s ease, box-shadow .6s ease, background .6s ease; }
 .sf-module-done { --sf-module-line: #2fae76; --sf-module-glow: rgba(47, 174, 118, .16); background: linear-gradient(180deg, #f2fbf6 0%, #ffffff 62%); box-shadow: 0 0 0 4px var(--sf-module-glow), 0 10px 30px rgba(47, 174, 118, .22); }

@@ -1,6 +1,6 @@
 # Planning – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/Planning/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P3.
+**Status:** Zur Prüfung (SF-056, 24.11.2026). **Nicht kompiliert, nicht nativ getestet.** Codeunit `BCSF Planning Processor` (90485); jetzt nur noch bei gewähltem Modul *Planning* im Folgeprozess. Details: [SF-028–SF-033-Bericht](../../../review/SF028_SF033_PRUEFBERICHT.md). **Pfad:** `src/Planning/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P3.
 
 ## Fachlicher Auftrag
 

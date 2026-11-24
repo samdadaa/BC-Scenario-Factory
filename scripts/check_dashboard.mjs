@@ -220,7 +220,7 @@ try {
   assert.equal(await evaluate('document.querySelector(".sf-stat-value").textContent'), '1.000');
   const germanBySource = JSON.parse(execFileSync('python3', ['-c', 'import json,xml.etree.ElementTree as E; n={"x":"urn:oasis:names:tc:xliff:document:1.2"};t=E.parse("Translations/BC Scenario Factory.de-DE.xlf"); print(json.dumps({u.find("x:source",n).text:u.find("x:target",n).text for u in t.findall(".//x:trans-unit",n)}))'], { cwd: root, encoding: 'utf8' }));
   // New labels have no compiler-generated XLIFF id before the first build; the reviewed language maps cover them.
-  for (const name of ['sf041', 'sf044', 'sf052', 'sf053', 'sf054']) {
+  for (const name of ['sf041', 'sf044', 'sf052', 'sf053', 'sf054', 'sf055']) {
     const reviewed = JSON.parse(readFileSync(join(root, 'Translations', name + '.de.json'), 'utf8'));
     for (const [source, target] of Object.entries(reviewed)) germanBySource[source] ??= target;
   }

@@ -88,7 +88,8 @@ table 90251 "BCSF Generated Record"
   {
     key(PK; "Run Id", "Node Code", "Logical Key", "Artifact Code") { Clustered = true; }
     key(Identity; "Entry Id") { Unique = true; }
-    key(ResultIdentity; "Table Id", "Record SystemId") { Unique = true; }
+    // One record can carry several artifacts (the posted invoice and, for example, a documented skip of an optional module).
+    key(ResultIdentity; "Table Id", "Record SystemId", "Artifact Code") { Unique = true; }
     key(Batch; "Batch Id", "Logical Key") { }
   }
 }

@@ -110,7 +110,7 @@ page 90101 "BCSF Factory Setup Card"
           Caption = 'Module selection';
           Editable = false;
           MultiLine = true;
-          ToolTip = 'Required modules remain selected to preserve the connected wholesale process. Additional modules are planning selections only.';
+          ToolTip = 'Required modules remain selected to preserve the connected wholesale process. Optional modules add their own data and processes in the follow-up stage.';
         }
         part(CompanyModules; "BCSF Frozen Modules")
         {
@@ -547,7 +547,7 @@ page 90101 "BCSF Factory Setup Card"
     StartingDate: Date;
     EndingDate: Date;
     PeriodLbl: Label 'Business dates: %1 to %2 (inclusive). Technical creation timestamps remain the actual creation time.', Comment = '%1 = starting date, %2 = ending date';
-    ModulesHintLbl: Label 'Wholesale requires Sales, Purchasing, Inventory and the shared Finance foundation. Select additional modules for planning; they do not generate data until supported by the company package.';
+    ModulesHintLbl: Label 'Wholesale requires Sales, Purchasing, Inventory and the shared Finance foundation. Select optional modules; they generate data in the follow-up stage of the company package.';
     OpenAsWorkflow: Boolean;
     WizardStep: Integer;
     ChartChoice: Option SKR03,SKR04,Existing;

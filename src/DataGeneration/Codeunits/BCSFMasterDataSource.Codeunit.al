@@ -549,6 +549,8 @@ codeunit 90259 "BCSF Master Data Source"
         not Location."Require Pick" and not Location."Require Put-away" and not Location."Directed Put-away and Pick" then
         exit(Location.Code);
     Location.Reset();
+    // The synthetic transfer locations of the follow-up stage are never the item location.
+    Location.SetFilter(Code, '<>%1&<>%2', 'BCSF-AUX', 'BCSF-TRN');
     Location.SetRange("Bin Mandatory", false);
     Location.SetRange("Use As In-Transit", false);
     Location.SetRange("Require Receive", false);

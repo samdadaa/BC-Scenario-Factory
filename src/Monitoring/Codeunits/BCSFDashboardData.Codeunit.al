@@ -383,6 +383,13 @@ codeunit 90365 "BCSF Dashboard Data"
     Texts.Add('modulePurchase', ModulePurchaseLbl);
     Texts.Add('moduleInventory', ModuleInventoryLbl);
     Texts.Add('moduleAssembly', ModuleAssemblyLbl);
+    Texts.Add('moduleProjects', ModuleProjectsLbl);
+    Texts.Add('modulePlanning', ModulePlanningLbl);
+    Texts.Add('moduleWarehouse', ModuleWarehouseLbl);
+    Texts.Add('moduleManufacturing', ModuleManufacturingLbl);
+    Texts.Add('moduleService', ModuleServiceLbl);
+    Texts.Add('moduleAssets', ModuleAssetsLbl);
+    Texts.Add('moduleCrm', ModuleCrmLbl);
     Texts.Add('moduleFinance', ModuleFinanceLbl);
     Texts.Add('moduleOther', ModuleOtherLbl);
     Texts.Add('moduleOpen', ModuleOpenLbl);
@@ -532,6 +539,13 @@ codeunit 90365 "BCSF Dashboard Data"
     ModulePurchaseLbl: Label 'Purchasing';
     ModuleInventoryLbl: Label 'Stock movements';
     ModuleAssemblyLbl: Label 'Assembly';
+    ModuleProjectsLbl: Label 'Projects';
+    ModulePlanningLbl: Label 'Planning';
+    ModuleWarehouseLbl: Label 'Warehouse';
+    ModuleManufacturingLbl: Label 'Manufacturing';
+    ModuleServiceLbl: Label 'Service';
+    ModuleAssetsLbl: Label 'Fixed assets';
+    ModuleCrmLbl: Label 'CRM';
     ModuleFinanceLbl: Label 'Accounting';
     ModuleOtherLbl: Label 'Further results';
     ModuleOpenLbl: Label 'In progress';

@@ -1,3 +1,7 @@
+**SF-028–SF-033 · Zur Prüfung, Teilumfang (24.11.2026):** Optionale Module Lager, Fertigung, Service, Anlagen und CRM im Folgeprozess (zusammen mit Montage, Projekten und Planung) in der Einrichtung wählbar, ohne Planungsmarkierung; Auswahl steuert die Ausführung über Snapshot-Marker. SF-032 (weitere Branchen) bleibt offen. App-Version unverändert. **Nicht kompiliert (.NET 10 fehlt), nicht nativ getestet.** [Bericht und Prüffälle](../review/SF028_SF033_PRUEFBERICHT.md).
+
+**SF-055 / SF-056 · Zur Prüfung (24.11.2026):** Projekte (Stammdaten, Aufgaben, Planungszeilen, Verbrauch über Projektbuchblatt, ungebuchte/teil-/vollgebuchte Abrechnung) und Planungsvorschläge über die Standard-Dispositionsengine im Folgeprozess, mit Vorprüfung, dokumentiertem Skip, additiver Foundation und Dashboardmodulen. App-Version unverändert. **Nicht kompiliert (.NET 10 fehlt), nicht nativ getestet.** [SF-055](../review/SF055_PRUEFBERICHT.md), [SF-056](../review/SF056_PRUEFBERICHT.md).
+
 **SF-054 · Zur Prüfung (23.11.2026):** Montage im Folgeprozess für gebuchte Einkäufe: synthetischer Montageartikel mit Stückliste (und Ressource), ungebuchter sowie voll/teilweise gebuchter Montageauftrag über Standard-Posting, Vorprüfung mit kontrolliertem Skip, additive Foundation (Montageeinrichtung, Herkunftscodes, Matrix ohne Geschäftsbuchungsgruppe). App-Version unverändert. **Nicht kompiliert (.NET 10 fehlt), nicht nativ getestet.** [Bericht und Prüffälle](../review/SF054_PRUEFBERICHT.md).
 
 **SF-053 · Zur Prüfung (23.11.2026):** Lagerbewegungen ohne WMS im Folgeprozess für alle Artikelzeilen gebuchter Einkäufe: Zugang/Abgang per Artikelbuchblatt, Inventurdifferenz und Umlagerung über Transitlager, mit Vorprüfung (freier, nicht reservierter Bestand, Dimensionen), kontrolliertem Skip und Bestandsprüfung je Lagerort/Datum. App-Version unverändert. **Nicht kompiliert (.NET 10 fehlt), nicht nativ getestet.** [Bericht und Prüffälle](../review/SF053_PRUEFBERICHT.md).
@@ -48,14 +52,14 @@ Für neue oder geänderte Generatoren gelten die [SF-042-Qualitätsregeln](../AR
 | [Sales](details/src/Sales.md) | Fach | `src/Sales/` | 7 AL-Objekte: Customer-Generator und SF-021-Angebote/Aufträge/Rechnungen; zur Prüfung, native BC-Abnahme offen. |
 | [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | 2 AL-Objekte: echter Vendor-Generator und EnumExtension-Bindung; zur Prüfung. Beleggeneratoren geplant. |
 | [Inventory](details/src/Inventory.md) | Fach | `src/Inventory/` | Sechs SF-019-Objekte, Artikel-/Beziehungsstämme ohne Bestände, zur Prüfung |
-| [Warehouse](details/src/Warehouse.md) | Fach | `src/Warehouse/` | Geplant, ohne Code |
-| [Manufacturing](details/src/Manufacturing.md) | Fach | `src/Manufacturing/` | Geplant, ohne Code |
-| [Assembly](details/src/Assembly.md) | Fach | `src/Assembly/` | Geplant, ohne Code |
-| [Projects](details/src/Projects.md) | Fach | `src/Projects/` | Geplant, ohne Code |
-| [ServiceManagement](details/src/ServiceManagement.md) | Fach | `src/ServiceManagement/` | Geplant, ohne Code |
-| [FixedAssets](details/src/FixedAssets.md) | Fach | `src/FixedAssets/` | Geplant, ohne Code |
-| [CRM](details/src/CRM.md) | Fach | `src/CRM/` | Geplant, ohne Code |
-| [Planning](details/src/Planning.md) | Fach | `src/Planning/` | Geplant, ohne Code |
+| [Warehouse](details/src/Warehouse.md) | Fach | `src/Warehouse/` | Optional wählbar: Lagereingang und Einlagerung (1 AL-Objekt, SF-028); nicht kompiliert |
+| [Manufacturing](details/src/Manufacturing.md) | Fach | `src/Manufacturing/` | Optional wählbar: Fertigungsstückliste und Fertigungsauftrag (1 AL-Objekt, SF-029); nicht kompiliert |
+| [Assembly](details/src/Assembly.md) | Fach | `src/Assembly/` | Optional wählbar: Montageartikel und -aufträge (1 AL-Objekt, SF-054); nicht kompiliert |
+| [Projects](details/src/Projects.md) | Fach | `src/Projects/` | Optional wählbar: Projekte, Verbrauch, Abrechnung (1 AL-Objekt, SF-055); nicht kompiliert |
+| [ServiceManagement](details/src/ServiceManagement.md) | Fach | `src/ServiceManagement/` | Optional wählbar: Serviceartikel und Serviceauftrag (1 AL-Objekt, SF-030); nicht kompiliert |
+| [FixedAssets](details/src/FixedAssets.md) | Fach | `src/FixedAssets/` | Optional wählbar: Anlage, Anschaffung, Abschreibung (1 AL-Objekt, SF-031); nicht kompiliert |
+| [CRM](details/src/CRM.md) | Fach | `src/CRM/` | Optional wählbar: Kampagne und Verkaufschance (1 AL-Objekt, SF-033); nicht kompiliert |
+| [Planning](details/src/Planning.md) | Fach | `src/Planning/` | Optional wählbar: Planungsvorschläge (1 AL-Objekt, SF-056); nicht kompiliert |
 
 **MVP:** Alle Kernverantwortungen konzeptionell notwendig, zunächst Finance, Sales, Purchasing, Inventory umsetzen. Warehouse usw. dürfen als leere Verzeichnisse bleiben. Jedes Modul besitzt eine eigene Spezifikation; bei Implementierung tatsächliche AL-Objekte nachtragen.
 

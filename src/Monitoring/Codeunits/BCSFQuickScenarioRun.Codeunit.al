@@ -2,6 +2,9 @@ namespace BCScenarioFactory.Monitoring;
 
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Assembly;
+using BCScenarioFactory.Planning;
+using BCScenarioFactory.CRM;
+using BCScenarioFactory.Warehouse;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.Finance;
 using BCScenarioFactory.Inventory;
@@ -73,6 +76,10 @@ codeunit 90367 "BCSF Quick Scenario Run"
         Payments: Codeunit "BCSF Payment Processor";
         Movements: Codeunit "BCSFInventoryMovementProcessor";
         AssemblyProcessor: Codeunit "BCSF Assembly Processor";
+        PlanningProcessor: Codeunit "BCSF Planning Processor";
+        CrmProcessor: Codeunit "BCSF CRM Processor";
+        WarehouseProcessor: Codeunit "BCSF Warehouse Processor";
+        Selection: Codeunit "BCSF Module Selection";
         Packages: Codeunit "BCSF Finance Package Mgt";
         RunId: Guid;
     begin
@@ -89,7 +96,15 @@ codeunit 90367 "BCSF Quick Scenario Run"
         if Scenario."Payment Posting Approved" then begin
             Payments.PrepareFoundation();
             Movements.PrepareFoundation();
-            AssemblyProcessor.PrepareFoundation();
+            // Additive foundation of the optional modules; only the modules selected in the scenario are prepared.
+            if Selection.IsSelected(ScenarioId, "BCSF Module Type"::Assembly) then
+                AssemblyProcessor.PrepareFoundation();
+            if Selection.IsSelected(ScenarioId, "BCSF Module Type"::Planning) then
+                PlanningProcessor.PrepareFoundation();
+            if Selection.IsSelected(ScenarioId, "BCSF Module Type"::CRM) then
+                CrmProcessor.PrepareFoundation();
+            if Selection.IsSelected(ScenarioId, "BCSF Module Type"::Warehouse) then
+                WarehouseProcessor.PrepareFoundation();
         end;
         RunId := Snapshot.CreateSnapshot(ScenarioId);
         Plan.SavePlan(RunId);

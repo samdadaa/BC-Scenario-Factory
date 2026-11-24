@@ -1,6 +1,6 @@
 # ServiceManagement – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/ServiceManagement/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P2.
+**Status:** Zur Prüfung, Teilumfang (SF-030, 24.11.2026). **Nicht kompiliert, nicht nativ getestet.** Codeunit `BCSF Service Processor` (90491): Serviceartikel und ungebuchter Serviceauftrag; Servicebuchung/Verträge offen. Details: [SF-028–SF-033-Bericht](../../../review/SF028_SF033_PRUEFBERICHT.md). **Pfad:** `src/ServiceManagement/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P2.
 
 ## Fachlicher Auftrag
 

@@ -352,6 +352,13 @@
     { id: "inventory", title: "moduleInventory", entities: [],
       match: key => key.startsWith("inventory/") || ["entries/itemEntry", "entries/valueEntry"].includes(key) },
     { id: "assembly", title: "moduleAssembly", entities: [], match: key => key.startsWith("assembly/") },
+    { id: "projects", title: "moduleProjects", entities: [], match: key => key.startsWith("projects/") },
+    { id: "planning", title: "modulePlanning", entities: [], match: key => key.startsWith("planning/") },
+    { id: "warehouse", title: "moduleWarehouse", entities: [], match: key => key.startsWith("warehouse/") },
+    { id: "manufacturing", title: "moduleManufacturing", entities: [], match: key => key.startsWith("manufacturing/") },
+    { id: "service", title: "moduleService", entities: [], match: key => key.startsWith("service/") },
+    { id: "assets", title: "moduleAssets", entities: [], match: key => key.startsWith("assets/") },
+    { id: "crm", title: "moduleCrm", entities: [], match: key => key.startsWith("contacts/") },
     { id: "finance", title: "moduleFinance", entities: [], match: key => key.startsWith("entries/") },
     { id: "other", title: "moduleOther", entities: [], match: () => true }
   ];

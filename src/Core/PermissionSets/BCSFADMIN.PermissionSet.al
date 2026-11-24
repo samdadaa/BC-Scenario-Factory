@@ -10,6 +10,8 @@ using BCScenarioFactory.Inventory;
 using BCScenarioFactory.Lifecycle;
 using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.Monitoring;
+using BCScenarioFactory.Planning;
+using BCScenarioFactory.Projects;
 using BCScenarioFactory.Purchasing;
 using BCScenarioFactory.ProcessEngine;
 using BCScenarioFactory.Sales;
@@ -29,6 +31,8 @@ permissionset 90105 "BCSF ADMIN"
     codeunit "BCSF Credit Memo Processor" = X,
     codeunit "BCSFInventoryMovementProcessor" = X,
     codeunit "BCSF Assembly Processor" = X,
+    codeunit "BCSF Project Processor" = X,
+    codeunit "BCSF Planning Processor" = X,
     codeunit "BCSF Purchase Evidence" = X,
     codeunit "BCSF Wholesale Profile" = X,
     codeunit "BCSF Company Initialization" = X,

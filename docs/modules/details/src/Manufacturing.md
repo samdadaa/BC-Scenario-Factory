@@ -1,6 +1,6 @@
 # Manufacturing – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/Manufacturing/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P2.
+**Status:** Zur Prüfung, Teilumfang (SF-029, 24.11.2026). **Nicht kompiliert, nicht nativ getestet.** Codeunit `BCSF Production Processor` (90490): Fertigungsstückliste, freigegebener oder gebuchter und beendeter Fertigungsauftrag; Arbeitsplan/Kapazität offen. Details: [SF-028–SF-033-Bericht](../../../review/SF028_SF033_PRUEFBERICHT.md). **Pfad:** `src/Manufacturing/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P2.
 
 ## Fachlicher Auftrag
 

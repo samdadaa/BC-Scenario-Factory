@@ -102,6 +102,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Payments: Codeunit "BCSF Payment Processor";
     Credits: Codeunit "BCSF Credit Memo Processor";
     Movements: Codeunit "BCSFInventoryMovementProcessor";
+    Selection: Codeunit "BCSF Module Selection";
     Guard: Codeunit "BCSF Environment Guard";
     Source: Codeunit "BCSF Master Data Source";
     Token: JsonToken;
@@ -395,6 +396,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Payments: Codeunit "BCSF Payment Processor";
     Credits: Codeunit "BCSF Credit Memo Processor";
     Movements: Codeunit "BCSFInventoryMovementProcessor";
+    Selection: Codeunit "BCSF Module Selection";
     PurchasePost: Codeunit "Purch.-Post";
     Token: JsonToken;
     NoParent: Guid;
@@ -516,6 +518,8 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
       // Optional stock movement of the same stage: adjustment, physical inventory difference or transfer.
       if Movements.Enabled(Context) then
         Movements.CreateForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, BatchId, Invoice, ParentId);
+      // Optional modules of the same stage (fixed assets, warehouse, manufacturing), each only when selected in the setup.
+      Selection.RunForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, BatchId, Invoice, ParentId);
     end;
   end;
 
@@ -536,6 +540,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
     Payments: Codeunit "BCSF Payment Processor";
     Credits: Codeunit "BCSF Credit Memo Processor";
     Movements: Codeunit "BCSFInventoryMovementProcessor";
+    Selection: Codeunit "BCSF Module Selection";
     RunId: Guid;
     BatchId: Guid;
     LogicalKey: Integer;
@@ -604,6 +609,7 @@ codeunit 90451 "BCSF Purchase Generator" implements "BCSF Generator"
             Credits.ValidateForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, Invoice);
           if Movements.Enabled(Context) then
             Movements.ValidateForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, Invoice);
+          Selection.ValidateForPurchaseInvoice(Context, RunId, 'PURCHASE.ORDER', LogicalKey, Invoice);
         end;
       end;
       if Mode <> 1 then begin

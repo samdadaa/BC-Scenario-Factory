@@ -89,11 +89,16 @@ codeunit 90483 "BCSF Assembly Processor"
   [CommitBehavior(CommitBehavior::Error)]
   procedure PrepareFoundation()
   var
+    Posting: Record "General Posting Setup";
+    Resource: Record Resource;
     Guard: Codeunit "BCSF Environment Guard";
   begin
     Guard.EnsureCanConfigure(CompanyName());
-    EnsureBlankBusinessPosting();
-    EnsureResource();
+    // Optional stage: without write permission the assembly resource or posting rows are simply not offered.
+    if Posting.WritePermission() then
+      EnsureBlankBusinessPosting();
+    if Resource.WritePermission() then
+      EnsureResource();
   end;
 
   local procedure EnsureBlankBusinessPosting()
@@ -142,8 +147,12 @@ codeunit 90483 "BCSF Assembly Processor"
     ProductGroup: Code[20];
   begin
     Resource.SecurityFiltering(SecurityFilter::Disallowed);
-    if Resource.Get(ResourceNo()) then
+    if Resource.Get(ResourceNo()) then begin
+      // Own synthetic resource created by an earlier run: complete a missing VAT product group (needed for project billing).
+      if (Resource."VAT Prod. Posting Group" = '') and (Resource."Gen. Prod. Posting Group" <> '') then
+        FillResourceVat(Resource);
       exit;
+    end;
     if not Measure.Get('STD') then
       exit;
     Item.SecurityFiltering(SecurityFilter::Disallowed);
@@ -165,12 +174,29 @@ codeunit 90483 "BCSF Assembly Processor"
     Resource.Insert(true);
     Resource.Validate("Base Unit of Measure", 'STD');
     Resource.Validate("Gen. Prod. Posting Group", ProductGroup);
+    FillResourceVat(Resource);
     Resource.Validate("Direct Unit Cost", 40);
     Resource.Validate("Unit Price", 60);
     Resource.Modify(true);
   end;
 
-  local procedure ResourceUsable(): Boolean
+  local procedure FillResourceVat(var Resource: Record Resource)
+  var
+    Item: Record Item;
+  begin
+    // The VAT product group of an item that uses the same general product group keeps the posting matrix consistent.
+    Item.SecurityFiltering(SecurityFilter::Disallowed);
+    Item.SetRange(Type, Item.Type::Inventory);
+    Item.SetRange("Gen. Prod. Posting Group", Resource."Gen. Prod. Posting Group");
+    Item.SetFilter("VAT Prod. Posting Group", '<>%1', '');
+    if Item.FindFirst() then begin
+      Resource.Validate("VAT Prod. Posting Group", Item."VAT Prod. Posting Group");
+      if Resource."No." <> '' then
+        if Resource.Modify(true) then;
+    end;
+  end;
+
+  procedure ResourceUsable(): Boolean
   var
     Resource: Record Resource;
     Posting: Record "General Posting Setup";
@@ -234,7 +260,7 @@ codeunit 90483 "BCSF Assembly Processor"
   end;
 
   /// <summary>The first one or two lines with different items are the components. Result is the number of components (1 or 2).</summary>
-  local procedure Components(Invoice: Record "Purch. Inv. Header"; var ItemNos: array[2] of Code[20]; var Locations: array[2] of Code[10]; var Units: array[2] of Code[10]): Integer
+  procedure Components(Invoice: Record "Purch. Inv. Header"; var ItemNos: array[2] of Code[20]; var Locations: array[2] of Code[10]; var Units: array[2] of Code[10]): Integer
   var
     InvoiceLine: Record "Purch. Inv. Line";
     Count: Integer;
@@ -349,9 +375,9 @@ codeunit 90483 "BCSF Assembly Processor"
     Kit."No." := KitNo;
     Kit.Validate(Type, Kit.Type::Inventory);
     if Contract.GetInteger(Context, 'dataLanguage') = 1 then
-      Kit.Validate(Description, CopyStr('Montageset ' + Format(LogicalKey, 0, 9), 1, MaxStrLen(Kit.Description)))
+      Kit.Validate(Description, CopyStr('Montageset ' + Component.Description, 1, MaxStrLen(Kit.Description)))
     else
-      Kit.Validate(Description, CopyStr('Assembly kit ' + Format(LogicalKey, 0, 9), 1, MaxStrLen(Kit.Description)));
+      Kit.Validate(Description, CopyStr('Assembly kit ' + Component.Description, 1, MaxStrLen(Kit.Description)));
     Kit.Validate("Costing Method", Kit."Costing Method"::FIFO);
     Kit.Validate("Gen. Prod. Posting Group", Component."Gen. Prod. Posting Group");
     Kit.Validate("VAT Prod. Posting Group", Component."VAT Prod. Posting Group");
@@ -403,9 +429,9 @@ codeunit 90483 "BCSF Assembly Processor"
     Header.Validate("Location Code", Locations[1]);
     Header.Validate(Quantity, Quantity);
     Header.Validate("Posting Date", Date);
+    // Only the due date is validated: the standard derives ending and starting date from it with the lead times.
+    // Validating start or end date separately fails whenever a lead time moves the derived dates before the chosen one.
     Header.Validate("Due Date", Date);
-    Header.Validate("Starting Date", Date);
-    Header.Validate("Ending Date", Date);
     Header.Modify(true);
     OrderNo := Header."No.";
     if not Dimensions.CheckDimIDComb(Header."Dimension Set ID") then begin
@@ -605,7 +631,7 @@ codeunit 90483 "BCSF Assembly Processor"
   end;
 
   var
-    ResourceNameLbl: Label 'Scenario Factory assembly resource';
+    ResourceNameLbl: Label 'Installation technician';
     SetupErr: Label 'The assembly setup is not supported or changed. Review the assembly number series, the assembly source code, the posting setup without business posting group and the synthetic assembly resource.';
     ResultErr: Label 'Assembly results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain posting.';
 }

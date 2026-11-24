@@ -1,6 +1,6 @@
 # Assembly – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/Assembly/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P2.
+**Status:** Zur Prüfung (SF-054, 23.11.2026). **Nicht kompiliert, nicht nativ getestet.** Codeunit `BCSF Assembly Processor` (90483); jetzt nur noch bei gewähltem Modul *Assembly* im Folgeprozess. Details: [SF-028–SF-033-Bericht](../../../review/SF028_SF033_PRUEFBERICHT.md). **Pfad:** `src/Assembly/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P2.
 
 ## Fachlicher Auftrag
 

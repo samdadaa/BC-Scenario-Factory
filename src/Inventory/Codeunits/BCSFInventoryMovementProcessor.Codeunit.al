@@ -5,6 +5,7 @@ using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Finance;
 using BCScenarioFactory.Lifecycle;
+using BCScenarioFactory.Projects;
 using BCScenarioFactory.ProcessEngine;
 using Microsoft.Finance.Dimension;
 using Microsoft.Finance.GeneralLedger.Ledger;
@@ -73,9 +74,14 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
     [CommitBehavior(CommitBehavior::Error)]
     procedure PrepareFoundation()
     var
+        Location: Record Location;
+        PostingSetup: Record "Inventory Posting Setup";
         Guard: Codeunit "BCSF Environment Guard";
     begin
         Guard.EnsureCanConfigure(CompanyName());
+        // Optional stage: without write permission the synthetic locations are simply not offered (no transfers).
+        if not Location.WritePermission() or not PostingSetup.WritePermission() then
+            exit;
         EnsureLocation(AuxiliaryLocation(), false);
         EnsureLocation(TransitLocation(), true);
         // Item postings at a location need the inventory posting setup of that location (copied from usable rows only).
@@ -92,7 +98,7 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
         if not Location.Get(LocationCode) then begin
             Location.Init();
             Location.Code := LocationCode;
-            Location.Validate(Name, LocationNameLbl);
+            Location.Validate(Name, LocationName(InTransit));
             if InTransit then
                 Location.Validate("Use As In-Transit", true);
             Location.Insert(true);
@@ -107,34 +113,28 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
 
     local procedure EnsureInventoryPostingSetup(LocationCode: Code[10])
     var
-        Item: Record Item;
+        InventoryGroup: Record "Inventory Posting Group";
         Setup: Record "Inventory Posting Setup";
         Source: Record "Inventory Posting Setup";
-        Done: List of [Code[20]];
-        GroupCode: Code[20];
     begin
-        Item.SecurityFiltering(SecurityFilter::Disallowed);
-        Item.SetRange(Type, Item.Type::Inventory);
-        Item.SetLoadFields("Inventory Posting Group");
-        if Item.FindSet() then
+        // For every inventory posting group of the company, not only those already used by items: a company
+        // without items must still be able to post at the synthetic locations.
+        InventoryGroup.SecurityFiltering(SecurityFilter::Disallowed);
+        if InventoryGroup.FindSet() then
             repeat
-                GroupCode := Item."Inventory Posting Group";
-                if (GroupCode <> '') and not Done.Contains(GroupCode) then begin
-                    Done.Add(GroupCode);
-                    if not Setup.Get(LocationCode, GroupCode) then begin
-                        Source.Reset();
-                        Source.SetRange("Invt. Posting Group Code", GroupCode);
-                        Source.SetFilter("Inventory Account", '<>%1', '');
-                        if Source.FindFirst() then begin
-                            Setup.Init();
-                            Setup.TransferFields(Source, false);
-                            Setup."Location Code" := LocationCode;
-                            Setup."Invt. Posting Group Code" := GroupCode;
-                            Setup.Insert(true);
-                        end;
+                if not Setup.Get(LocationCode, InventoryGroup.Code) then begin
+                    Source.Reset();
+                    Source.SetRange("Invt. Posting Group Code", InventoryGroup.Code);
+                    Source.SetFilter("Inventory Account", '<>%1', '');
+                    if Source.FindFirst() then begin
+                        Setup.Init();
+                        Setup.TransferFields(Source, false);
+                        Setup."Location Code" := LocationCode;
+                        Setup."Invt. Posting Group Code" := InventoryGroup.Code;
+                        Setup.Insert(true);
                     end;
                 end;
-            until Item.Next() = 0;
+            until InventoryGroup.Next() = 0;
     end;
 
     local procedure HasInventoryPosting(LocationCode: Code[10]): Boolean
@@ -162,6 +162,19 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
             exit(false);
         exit(HasInventoryPosting(AuxiliaryLocation()) and HasInventoryPosting(TransitLocation()));
     end;
+
+    local procedure LocationName(InTransit: Boolean): Text[100]
+
+    begin
+
+        if InTransit then
+
+            exit(InTransitLbl);
+
+        exit(OutsideStorageLbl);
+
+    end;
+
 
     local procedure AuxiliaryLocation(): Code[10]
     begin
@@ -194,26 +207,31 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
   var
     Seed: Codeunit "BCSF Seed Engine";
     AssemblyProcessor: Codeunit "BCSF Assembly Processor";
+    ProjectProcessor: Codeunit "BCSF Project Processor";
     ToLocation: Code[10];
     Transit: Code[10];
     Roll: Integer;
   begin
     Roll := Seed.SampleInteger(Context, NodeCode, Format(LogicalKey, 0, 9), 'MOVEMENT-PLAN', 1, 100);
     case true of
-      Roll <= 45:
+      Roll <= 40:
         exit(0);
-      Roll <= 55:
+      Roll <= 48:
         exit(1);
-      Roll <= 65:
+      Roll <= 56:
         exit(2);
-      Roll <= 75:
+      Roll <= 64:
         exit(3);
-      Roll <= 87:
+      Roll <= 74:
         if TransferTarget(Context, ToLocation, Transit) and (ToLocation <> Location) then
           exit(4);
+      Roll <= 87:
+        if AssemblyProcessor.Enabled(Context) then
+          exit(5);
+      else
+        if ProjectProcessor.Enabled(Context) then
+          exit(6);
     end;
-    if (Roll > 87) and AssemblyProcessor.Enabled(Context) then
-      exit(5);
     exit(0);
   end;
 
@@ -276,6 +294,7 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
     InvoiceLine: Record "Purch. Inv. Line";
     Registry: Codeunit "BCSF Record Registry";
     AssemblyProcessor: Codeunit "BCSF Assembly Processor";
+    ProjectProcessor: Codeunit "BCSF Project Processor";
     Kind: Integer;
     Date: Date;
     SkipReason: Code[30];
@@ -292,6 +311,11 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
     if Kind = 5 then begin
       // Assembly performs its own read-only preflight and registers its own skip.
       AssemblyProcessor.CreateForPurchaseInvoice(Context, RunId, NodeCode, LogicalKey, BatchId, Invoice, Date, ParentId);
+      exit;
+    end;
+    if Kind = 6 then begin
+      // Project: own read-only preflight and own documented skip.
+      ProjectProcessor.CreateForPurchaseInvoice(Context, RunId, NodeCode, LogicalKey, BatchId, Invoice, Date, ParentId);
       exit;
     end;
     SkipReason := StockPreflight(Context, NodeCode, LogicalKey, Invoice, Kind, Date);
@@ -615,6 +639,7 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
     ReceiptHeader: Record "Transfer Receipt Header";
     ShipmentLine: Record "Transfer Shipment Line";
     AssemblyProcessor: Codeunit "BCSF Assembly Processor";
+    ProjectProcessor: Codeunit "BCSF Project Processor";
     Kind: Integer;
     ExpectedDate: Date;
     ToLocation: Code[10];
@@ -631,7 +656,7 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
     Entry.SetRange("Run Id", RunId);
     Entry.SetRange("Node Code", NodeCode);
     Entry.SetRange("Logical Key", LogicalKey);
-    Entry.SetFilter("Artifact Code", 'MOVEMENT*|TRANSFER-*|ASSEMBLY-*');
+    Entry.SetFilter("Artifact Code", 'MOVEMENT*|TRANSFER-*|ASSEMBLY-*|PROJECT*');
     if Kind = 0 then begin
       if not Entry.IsEmpty() then
         Error(ResultErr);
@@ -644,7 +669,7 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
       Entry.TestField("Table Id", Database::"Purch. Inv. Header");
       if not (Entry."Skip Reason Code" in ['STOCK', 'DIMENSION']) then
         Error(ResultErr);
-      Entry.SetFilter("Artifact Code", 'MOVEMENT-1|TRANSFER-*|ASSEMBLY-*');
+      Entry.SetFilter("Artifact Code", 'MOVEMENT-1|TRANSFER-*|ASSEMBLY-*|PROJECT*');
       if not Entry.IsEmpty() then
         Error(ResultErr);
       exit;
@@ -652,6 +677,10 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
     ExpectedDate := MovementDate(Context, NodeCode, LogicalKey, Invoice."Posting Date");
     if Kind = 5 then begin
       AssemblyProcessor.ValidateForPurchaseInvoice(Context, RunId, NodeCode, LogicalKey, Invoice, ExpectedDate);
+      exit;
+    end;
+    if Kind = 6 then begin
+      ProjectProcessor.ValidateForPurchaseInvoice(Context, RunId, NodeCode, LogicalKey, Invoice, ExpectedDate);
       exit;
     end;
     Surplus := IsSurplus(Context, NodeCode, LogicalKey);
@@ -712,7 +741,8 @@ codeunit 90482 "BCSFInventoryMovementProcessor"
   end;
 
   var
-    LocationNameLbl: Label 'Scenario Factory synthetic test location';
+    OutsideStorageLbl: Label 'Outside storage';
+        InTransitLbl: Label 'Goods in transit';
     SetupErr: Label 'The inventory movement setup is not supported or changed. Review the item journal source codes, the transfer number series and the synthetic transfer locations.';
     ResultErr: Label 'Inventory movement results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain posting.';
 }

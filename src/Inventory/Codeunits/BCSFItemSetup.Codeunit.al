@@ -104,6 +104,8 @@ codeunit 90478 "BCSF Item Setup"
       Preferred := 'RACK';
     if Location.Get(Preferred) then
       exit(Preferred);
+    // The synthetic transfer locations of the follow-up stage are never the item location.
+    Location.SetFilter(Code, '<>%1&<>%2', 'BCSF-AUX', 'BCSF-TRN');
     Location.SetRange("Use As In-Transit", false);
     Location.SetRange("Bin Mandatory", WithBins);
     Location.SetRange("Directed Put-away and Pick", false);

@@ -32,7 +32,7 @@ page 90141 "BCSF Frozen Modules"
         field(CompanyScope; ModuleScope)
         {
           Caption = 'Company package scope';
-          ToolTip = 'Shows whether the module belongs to the executable industry package or is selected only for future planning without generated data.';
+          ToolTip = 'Shows whether the module is required by the industry package or an optional module that adds its own generated data in the follow-up stage.';
           Editable = false;
           Visible = SelectionMode;
         }
@@ -80,5 +80,5 @@ page 90141 "BCSF Frozen Modules"
     CanSelect: Boolean;
     ModuleScope: Text;
     IncludedLbl: Label 'Included in industry package';
-    PlanningLbl: Label 'Planning only; no data generation';
+    PlanningLbl: Label 'Optional module; generates data in the follow-up stage';
 }

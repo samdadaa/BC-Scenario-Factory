@@ -1,6 +1,13 @@
 namespace BCScenarioFactory.Finance;
 
 using BCScenarioFactory.Assembly;
+using BCScenarioFactory.Projects;
+using BCScenarioFactory.Planning;
+using BCScenarioFactory.CRM;
+using BCScenarioFactory.FixedAssets;
+using BCScenarioFactory.Warehouse;
+using BCScenarioFactory.Manufacturing;
+using BCScenarioFactory.ServiceManagement;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Inventory;
@@ -80,14 +87,20 @@ codeunit 90401 "BCSF Payment Processor"
         Credits: Codeunit "BCSF Credit Memo Processor";
         Movements: Codeunit "BCSFInventoryMovementProcessor";
         AssemblyProcessor: Codeunit "BCSF Assembly Processor";
+        ProjectProcessor: Codeunit "BCSF Project Processor";
+        PlanningProcessor: Codeunit "BCSF Planning Processor";
+        CrmProcessor: Codeunit "BCSF CRM Processor";
+        AssetProcessor: Codeunit "BCSF Asset Processor";
+        WarehouseProcessor: Codeunit "BCSF Warehouse Processor";
+        ProductionProcessor: Codeunit "BCSF Production Processor";
+        ServiceProcessor: Codeunit "BCSF Service Processor";
+        Selection: Codeunit "BCSF Module Selection";
     begin
         if not Scenario."Payment Posting Approved" then
             exit;
         Scenario.TestField("Sales Posting Approved", true);
         Scenario.TestField("Purchase Posting Approved", true);
         Scenario.TestField("Process Mode", "BCSF Process Mode"::FollowUpProcesses);
-        Credits.CheckSetup(true);
-        Credits.CheckSetup(false);
         Bank.Get('BCSF-PAY');
         Group.Get(Bank."Bank Acc. Posting Group");
         CheckBank(Bank, Group.Code, Group."G/L Account No.");
@@ -116,11 +129,28 @@ codeunit 90401 "BCSF Payment Processor"
         // A missing marker keeps the historical single full payment per invoice.
         Settings.Add('planVersion', 1);
         // Additive marker: credit memos for posted invoices (unposted and posted) in the same approved stage.
-        Settings.Add('creditVersion', 1);
+        // Credit memos only when the standard number series and posting setup support them; otherwise this capture simply has none.
+        if Credits.SetupUsable() then
+            Settings.Add('creditVersion', 1);
         // Additive marker: stock movements (adjustment, physical inventory, transfer) for posted purchases.
         Movements.AddSettings(Settings);
-    // Additive marker: assembly items, bills of materials and assembly orders for posted purchases.
-    AssemblyProcessor.AddSettings(Settings);
+        // Additive markers of the optional follow-up modules. A module is captured only when it is selected in the setup.
+        if Selection.IsSelected(Scenario."Scenario Id", "BCSF Module Type"::Assembly) then
+            AssemblyProcessor.AddSettings(Settings);
+        if Selection.IsSelected(Scenario."Scenario Id", "BCSF Module Type"::Projects) then
+            ProjectProcessor.AddSettings(Settings);
+        if Selection.IsSelected(Scenario."Scenario Id", "BCSF Module Type"::Planning) then
+            PlanningProcessor.AddSettings(Settings);
+        if Selection.IsSelected(Scenario."Scenario Id", "BCSF Module Type"::CRM) then
+            CrmProcessor.AddSettings(Settings);
+        if Selection.IsSelected(Scenario."Scenario Id", "BCSF Module Type"::FixedAssets) then
+            AssetProcessor.AddSettings(Settings);
+        if Selection.IsSelected(Scenario."Scenario Id", "BCSF Module Type"::Warehouse) then
+            WarehouseProcessor.AddSettings(Settings);
+        if Selection.IsSelected(Scenario."Scenario Id", "BCSF Module Type"::Manufacturing) then
+            ProductionProcessor.AddSettings(Settings);
+        if Selection.IsSelected(Scenario."Scenario Id", "BCSF Module Type"::ServiceManagement) then
+            ServiceProcessor.AddSettings(Settings);
         Settings.Add('approved', true);
         Settings.Add('bankId', Format(Bank.SystemId, 0, 4));
         Settings.Add('bankNo', Bank."No.");

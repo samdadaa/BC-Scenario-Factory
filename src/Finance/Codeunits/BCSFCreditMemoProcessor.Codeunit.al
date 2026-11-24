@@ -45,6 +45,33 @@ codeunit 90481 "BCSF Credit Memo Processor"
     exit(true);
   end;
 
+  /// <summary>True when both standard credit memo number series exist and credit memos post without separate return documents.</summary>
+
+  procedure SetupUsable(): Boolean
+
+  var
+
+    SalesSetup: Record "Sales & Receivables Setup";
+
+    PurchaseSetup: Record "Purchases & Payables Setup";
+
+  begin
+
+    if not SalesSetup.Get() or not PurchaseSetup.Get() then
+
+      exit(false);
+
+    exit((SalesSetup."Credit Memo Nos." <> '') and (SalesSetup."Posted Credit Memo Nos." <> '') and
+
+      not SalesSetup."Return Receipt on Credit Memo" and
+
+      (PurchaseSetup."Credit Memo Nos." <> '') and (PurchaseSetup."Posted Credit Memo Nos." <> '') and
+
+      not PurchaseSetup."Return Shipment on Credit Memo");
+
+  end;
+
+
   /// <summary>Read-only check of the standard number series and the supported posting setup.</summary>
   procedure CheckSetup(Sales: Boolean)
   var

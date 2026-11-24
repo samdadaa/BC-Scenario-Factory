@@ -18,6 +18,11 @@ using Microsoft.Foundation.UOM;
 using Microsoft.Bank.BankAccount;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
+using Microsoft.FixedAssets.Setup;
+using Microsoft.Manufacturing.Setup;
+using Microsoft.Projects.Project.Setup;
+using Microsoft.Service.Setup;
+using Microsoft.Warehouse.Setup;
 using Microsoft.Purchases.Setup;
 using Microsoft.Sales.Setup;
 using Microsoft.Sales.Customer;
@@ -41,6 +46,14 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Purchases: Record "Purchases & Payables Setup";
     Inventory: Record "Inventory Setup";
     AssemblySetup: Record "Assembly Setup";
+    OptionalInventory: Record "Inventory Setup";
+    OptionalSource: Record "Source Code Setup";
+    OptionalJobs: Record "Jobs Setup";
+    OptionalMarketing: Record "Marketing Setup";
+    OptionalAssets: Record "FA Setup";
+    OptionalWarehouse: Record "Warehouse Setup";
+    OptionalManufacturing: Record "Manufacturing Setup";
+    OptionalService: Record "Service Mgt. Setup";
     Location: Record Location;
     Marketing: Record "Marketing Setup";
     Country: Record "Country/Region";
@@ -126,25 +139,7 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Inventory.Init();
     Inventory."Item Nos." := 'ITEM';
     Fields.Add(Inventory.FieldNo("Item Nos."));
-    if Initializing then begin
-      Inventory."Transfer Order Nos." := 'TRANSFER-ORD';
-      Inventory."Posted Transfer Shpt. Nos." := 'TRANSFER-SHPT';
-      Inventory."Posted Transfer Rcpt. Nos." := 'TRANSFER-RCPT';
-      Fields.Add(Inventory.FieldNo("Transfer Order Nos."));
-      Fields.Add(Inventory.FieldNo("Posted Transfer Shpt. Nos."));
-      Fields.Add(Inventory.FieldNo("Posted Transfer Rcpt. Nos."));
-    end;
     SetupRow(Inventory, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
-    if Initializing then begin
-      Clear(Fields);
-      AssemblySetup.Init();
-      AssemblySetup."Assembly Order Nos." := 'ASM-ORD';
-      AssemblySetup."Posted Assembly Order Nos." := 'ASM-POST';
-      Fields.Add(AssemblySetup.FieldNo("Assembly Order Nos."));
-      Fields.Add(AssemblySetup.FieldNo("Posted Assembly Order Nos."));
-      SetupRow(AssemblySetup, Fields, true, EffectiveDate, Write, AllowCreate, TempDiff);
-      Clear(Fields);
-    end;
     Inventory.SecurityFiltering(SecurityFilter::Disallowed);
     Location.SecurityFiltering(SecurityFilter::Disallowed);
     Location.SetRange("Use As In-Transit", false);
@@ -212,17 +207,93 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Fields.Add(SourceSetup.FieldNo(Sales));
     Fields.Add(SourceSetup.FieldNo(Purchases));
     Fields.Add(SourceSetup.FieldNo("General Journal"));
-    if Initializing then begin
-      SourceSetup."Item Journal" := 'ITEMJNL';
-      SourceSetup."Phys. Inventory Journal" := 'PHYSINVJNL';
-      SourceSetup.Transfer := 'TRANSFER';
-      SourceSetup.Assembly := 'ASSEMBLY';
-      Fields.Add(SourceSetup.FieldNo("Item Journal"));
-      Fields.Add(SourceSetup.FieldNo("Phys. Inventory Journal"));
-      Fields.Add(SourceSetup.FieldNo(Transfer));
-      Fields.Add(SourceSetup.FieldNo(Assembly));
-    end;
     SetupRow(SourceSetup, Fields, false, EffectiveDate, Write, AllowCreate, TempDiff);
+    if Initializing then begin
+      // Optional follow-up stage prerequisites: only blank settings are filled, existing values are never validated or changed.
+      Clear(Fields);
+      OptionalInventory.Init();
+      OptionalInventory."Transfer Order Nos." := 'TRANSFER-ORD';
+      OptionalInventory."Posted Transfer Shpt. Nos." := 'TRANSFER-SHPT';
+      OptionalInventory."Posted Transfer Rcpt. Nos." := 'TRANSFER-RCPT';
+      Fields.Add(OptionalInventory.FieldNo("Transfer Order Nos."));
+      Fields.Add(OptionalInventory.FieldNo("Posted Transfer Shpt. Nos."));
+      Fields.Add(OptionalInventory.FieldNo("Posted Transfer Rcpt. Nos."));
+      FillOptional(OptionalInventory, Fields, true, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+      AssemblySetup.Init();
+      AssemblySetup."Assembly Order Nos." := 'ASM-ORD';
+      AssemblySetup."Posted Assembly Order Nos." := 'ASM-POST';
+      Fields.Add(AssemblySetup.FieldNo("Assembly Order Nos."));
+      Fields.Add(AssemblySetup.FieldNo("Posted Assembly Order Nos."));
+      FillOptional(AssemblySetup, Fields, true, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+      OptionalSource.Init();
+      OptionalSource."Item Journal" := 'ITEMJNL';
+      OptionalSource."Phys. Inventory Journal" := 'PHYSINVJNL';
+      OptionalSource.Transfer := 'TRANSFER';
+      OptionalSource.Assembly := 'ASSEMBLY';
+      Fields.Add(OptionalSource.FieldNo("Item Journal"));
+      Fields.Add(OptionalSource.FieldNo("Phys. Inventory Journal"));
+      Fields.Add(OptionalSource.FieldNo(Transfer));
+      Fields.Add(OptionalSource.FieldNo(Assembly));
+      FillOptional(OptionalSource, Fields, false, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+      OptionalJobs.Init();
+      OptionalJobs."Job Nos." := 'JOB';
+      Fields.Add(OptionalJobs.FieldNo("Job Nos."));
+      FillOptional(OptionalJobs, Fields, true, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+      OptionalSource.Init();
+      OptionalSource."Job Journal" := 'JOBJNL';
+      Fields.Add(OptionalSource.FieldNo("Job Journal"));
+      FillOptional(OptionalSource, Fields, false, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+      // Optional modules (CRM, fixed assets, warehouse, manufacturing, service): only blank number series and source codes are filled.
+      OptionalMarketing.Init();
+      OptionalMarketing."Campaign Nos." := 'CAMPAIGN';
+      OptionalMarketing."Opportunity Nos." := 'OPPORTUNITY';
+      Fields.Add(OptionalMarketing.FieldNo("Campaign Nos."));
+      Fields.Add(OptionalMarketing.FieldNo("Opportunity Nos."));
+      FillOptional(OptionalMarketing, Fields, true, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+      OptionalAssets.Init();
+      OptionalAssets."Fixed Asset Nos." := 'FA';
+      Fields.Add(OptionalAssets.FieldNo("Fixed Asset Nos."));
+      FillOptional(OptionalAssets, Fields, true, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+      OptionalWarehouse.Init();
+      OptionalWarehouse."Whse. Receipt Nos." := 'W-RECEIPT';
+      OptionalWarehouse."Posted Whse. Receipt Nos." := 'W-RECEIPT-P';
+      OptionalWarehouse."Whse. Put-away Nos." := 'W-PUTAWAY';
+      OptionalWarehouse."Registered Whse. Put-away Nos." := 'W-PUTAWAY-R';
+      Fields.Add(OptionalWarehouse.FieldNo("Whse. Receipt Nos."));
+      Fields.Add(OptionalWarehouse.FieldNo("Posted Whse. Receipt Nos."));
+      Fields.Add(OptionalWarehouse.FieldNo("Whse. Put-away Nos."));
+      Fields.Add(OptionalWarehouse.FieldNo("Registered Whse. Put-away Nos."));
+      FillOptional(OptionalWarehouse, Fields, true, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+      OptionalManufacturing.Init();
+      OptionalManufacturing."Production BOM Nos." := 'PROD-BOM';
+      OptionalManufacturing."Released Order Nos." := 'PROD-REL';
+      Fields.Add(OptionalManufacturing.FieldNo("Production BOM Nos."));
+      Fields.Add(OptionalManufacturing.FieldNo("Released Order Nos."));
+      FillOptional(OptionalManufacturing, Fields, true, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+      OptionalSource.Init();
+      OptionalSource."Consumption Journal" := 'CONSUMP';
+      OptionalSource."Output Journal" := 'OUTPUT';
+      Fields.Add(OptionalSource.FieldNo("Consumption Journal"));
+      Fields.Add(OptionalSource.FieldNo("Output Journal"));
+      FillOptional(OptionalSource, Fields, false, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+      OptionalService.Init();
+      OptionalService."Service Item Nos." := 'SERV-ITEM';
+      OptionalService."Service Order Nos." := 'SERV-ORDER';
+      Fields.Add(OptionalService.FieldNo("Service Item Nos."));
+      Fields.Add(OptionalService.FieldNo("Service Order Nos."));
+      FillOptional(OptionalService, Fields, true, Write, AllowCreate, TempDiff);
+      Clear(Fields);
+    end;
     Clear(Fields);
     Journal.SetRange(Type, Journal.Type::General);
     if Journal.IsEmpty() then begin
@@ -617,8 +688,12 @@ codeunit 90408 "BCSF Demo Partner Setup"
   local procedure SimpleLocation(): Code[10]
   var
     Location: Record Location;
+    InventoryPosting: Record "Inventory Posting Setup";
+    FirstCode: Code[10];
   begin
     Location.SecurityFiltering(SecurityFilter::Disallowed);
+    // The synthetic transfer locations of the follow-up stage are never the item location.
+    Location.SetFilter(Code, '<>%1&<>%2', 'BCSF-AUX', 'BCSF-TRN');
     Location.SetRange("Use As In-Transit", false);
     Location.SetRange("Bin Mandatory", false);
     Location.SetRange("Require Receive", false);
@@ -626,9 +701,20 @@ codeunit 90408 "BCSF Demo Partner Setup"
     Location.SetRange("Require Pick", false);
     Location.SetRange("Require Put-away", false);
     Location.SetRange("Directed Put-away and Pick", false);
-    if Location.FindFirst() then
-      exit(Location.Code);
-    exit('');
+    if not Location.FindSet() then
+      exit('');
+    FirstCode := Location.Code;
+    InventoryPosting.SecurityFiltering(SecurityFilter::Disallowed);
+    // Prefer a simple location whose existing inventory posting setup already has a usable inventory account.
+    repeat
+      InventoryPosting.SetRange("Location Code", Location.Code);
+      if InventoryPosting.FindSet() then
+        repeat
+          if UsableAccount(InventoryPosting."Inventory Account", false) then
+            exit(Location.Code);
+        until InventoryPosting.Next() = 0;
+    until Location.Next() = 0;
+    exit(FirstCode);
   end;
 
   // Direct Posting is not a validity criterion for receivables/payables posting
@@ -761,6 +847,103 @@ codeunit 90408 "BCSF Demo Partner Setup"
     else
       GL.Modify(true);
   end;
+
+  local procedure FillOptional(ExpectedRow: Variant; SeriesFields: List of [Integer]; NumberSeries: Boolean; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
+
+  var
+
+    Manager: Codeunit "BCSF Setup Manager";
+
+    Packages: Codeunit "BCSF Finance Package Mgt";
+
+    Expected: RecordRef;
+
+    Actual: RecordRef;
+
+    ExpectedField: FieldRef;
+
+    ActualField: FieldRef;
+
+    FieldNo: Integer;
+
+    Code: Code[20];
+
+    Missing: Boolean;
+
+    Changed: Boolean;
+
+  begin
+
+    Expected.GetTable(ExpectedRow);
+
+    Actual.Open(Expected.Number());
+
+    Actual.SecurityFiltering(SecurityFilter::Disallowed);
+
+    if not Actual.ReadPermission() or not AllowCreate then
+
+      exit;
+
+    Missing := not Actual.Get(Expected.RecordId());
+
+    if Missing then
+
+      Actual := Expected.Duplicate();
+
+    foreach FieldNo in SeriesFields do begin
+
+      ExpectedField := Expected.Field(FieldNo);
+
+      ActualField := Actual.Field(FieldNo);
+
+      if Missing or (Format(ActualField.Value) = '') then begin
+
+        Code := CopyStr(Format(ExpectedField.Value), 1, MaxStrLen(Code));
+
+        if NumberSeries then
+
+          EnsureSeries(Code, Write, AllowCreate, TempDiff)
+
+        else
+
+          EnsureSourceCode(Code, Write, AllowCreate, TempDiff);
+
+        if Write then
+
+          ActualField.Validate(Code);
+
+        Changed := true;
+
+      end;
+
+    end;
+
+    // Optional stage: missing permissions or a failed review never block the core company setup.
+
+    if Changed and Packages.HasSetupWritePermission(Actual.Number(), Missing) then begin
+
+      if Write then begin
+
+        if Missing then
+
+          Actual.Insert(true)
+
+        else
+
+          Actual.Modify(true);
+
+      end else
+
+        Manager.AddFinding(TempDiff, Actual.Caption(), false, FillLbl, ConfirmLbl);
+
+    end;
+
+    Actual.Close();
+
+    Expected.Close();
+
+  end;
+
 
   local procedure SetupRow(ExpectedRow: Variant; SeriesFields: List of [Integer]; NumberSeries: Boolean; EffectiveDate: Date; Write: Boolean; AllowCreate: Boolean; var TempDiff: Record "BCSF Setup Diff" temporary)
   var

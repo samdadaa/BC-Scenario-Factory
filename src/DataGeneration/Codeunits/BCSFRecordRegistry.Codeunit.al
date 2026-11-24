@@ -10,10 +10,23 @@ using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Inventory.Item.Substitution;
+using Microsoft.CRM.Campaign;
+using Microsoft.CRM.Opportunity;
+using Microsoft.FixedAssets.FixedAsset;
+using Microsoft.FixedAssets.Ledger;
+using Microsoft.Inventory.Requisition;
+using Microsoft.Manufacturing.Document;
+using Microsoft.Manufacturing.ProductionBOM;
+using Microsoft.Service.Document;
+using Microsoft.Service.Item;
+using Microsoft.Warehouse.Activity.History;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Transfer;
+using Microsoft.Projects.Project.Job;
+using Microsoft.Projects.Project.Ledger;
+using Microsoft.Projects.Project.Planning;
 using Microsoft.Projects.Resources.Ledger;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
@@ -135,8 +148,15 @@ codeunit 90252 "BCSF Record Registry"
       // that was rejected by read-only preflight before any posting (STOCK or DIMENSION).
       if not (((Entry."Skip Reason Code" = 'STOCK') and (Entry."Artifact Code" = 'DOCUMENT') and
         (Entry."Table Id" = Database::"Sales Header") and (Entry."Node Code" in ['SALES.ORDER', 'SALES.INVOICE'])) or
-        ((Entry."Skip Reason Code" in ['STOCK', 'DIMENSION']) and (Entry."Artifact Code" = 'MOVEMENT-SKIP') and
-        (Entry."Table Id" = Database::"Purch. Inv. Header") and (Entry."Node Code" = 'PURCHASE.ORDER')))
+        ((Entry."Skip Reason Code" in ['STOCK', 'DIMENSION', 'SOURCE']) and (Entry."Artifact Code" = 'MOVEMENT-SKIP') and
+        (Entry."Table Id" = Database::"Purch. Inv. Header") and (Entry."Node Code" = 'PURCHASE.ORDER')) or
+        ((Entry."Skip Reason Code" in ['COVERED', 'SOURCE']) and (Entry."Artifact Code" = 'PLANNING-SKIP') and
+        (Entry."Table Id" = Database::"Sales Invoice Header") and (Entry."Node Code" in ['SALES.ORDER', 'SALES.INVOICE'])) or
+        // Optional modules: a read-only preflight rejected the case before any write.
+        ((Entry."Skip Reason Code" in ['SOURCE', 'STOCK']) and (Entry."Artifact Code" in ['ASSET-SKIP', 'WHSE-SKIP', 'PRODUCTION-SKIP']) and
+        (Entry."Table Id" = Database::"Purch. Inv. Header") and (Entry."Node Code" = 'PURCHASE.ORDER')) or
+        ((Entry."Skip Reason Code" = 'SOURCE') and (Entry."Artifact Code" in ['CRM-SKIP', 'SERVICE-SKIP']) and
+        (Entry."Table Id" = Database::"Sales Invoice Header") and (Entry."Node Code" in ['SALES.ORDER', 'SALES.INVOICE'])))
       then
         Error(TargetErr);
     OnCheckBatch(Entry);
@@ -168,6 +188,10 @@ codeunit 90252 "BCSF Record Registry"
       Database::"Customer Bank Account", Database::"Vendor Bank Account",
       Database::"Transfer Shipment Header", Database::"Transfer Receipt Header",
       Database::"Assembly Header", Database::"Posted Assembly Header", Database::"BOM Component", Database::"Res. Ledger Entry",
+      Database::Job, Database::"Job Task", Database::"Job Planning Line", Database::"Job Ledger Entry", Database::"Requisition Line",
+      Database::Campaign, Database::Opportunity, Database::"Fixed Asset", Database::"FA Ledger Entry",
+      Database::"Registered Whse. Activity Hdr.", Database::"Production BOM Header", Database::"Production Order",
+      Database::"Service Item", Database::"Service Header",
       Database::"Sales Header", Database::"Purchase Header", Database::"Sales Invoice Header",
       Database::"Sales Cr.Memo Header", Database::"Sales Shipment Header", Database::"Purch. Inv. Header",
       Database::"Purch. Cr. Memo Hdr.", Database::"Purch. Rcpt. Header", Database::"Cust. Ledger Entry",

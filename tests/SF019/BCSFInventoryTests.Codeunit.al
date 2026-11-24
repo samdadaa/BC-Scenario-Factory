@@ -3,6 +3,13 @@ namespace BCScenarioFactory.Inventory.Tests;
 
 using BCScenarioFactory.Assembly;
 using BCScenarioFactory.BackgroundProcessing;
+using BCScenarioFactory.Planning;
+using BCScenarioFactory.Warehouse;
+using BCScenarioFactory.ServiceManagement;
+using BCScenarioFactory.Manufacturing;
+using BCScenarioFactory.FixedAssets;
+using BCScenarioFactory.CRM;
+using BCScenarioFactory.Projects;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Inventory;
@@ -912,8 +919,10 @@ codeunit 90700 "BCSF Inventory Tests"
     TransferSettings: JsonObject;
     LogicalKey: Integer;
     Kind: Integer;
-    Seen: array[6] of Boolean;
+    Seen: array[7] of Boolean;
     AssemblyProc: Codeunit "BCSF Assembly Processor";
+    ProjectProc: Codeunit "BCSF Project Processor";
+    PlanningProc: Codeunit "BCSF Planning Processor";
   begin
     Context := ContextFixture();
     Settings.Add('version', 1);
@@ -926,6 +935,7 @@ codeunit 90700 "BCSF Inventory Tests"
     TransferSettings.Add('transferTo', 'BCSF-AUX');
     TransferSettings.Add('transit', 'BCSF-TRN');
     TransferSettings.Add('assemblyVersion', 1);
+    TransferSettings.Add('projectVersion', 1);
     WithTransfer := Contract.Clone(Context);
     WithTransfer.Replace('paymentSetup', TransferSettings);
     Assert(Movements.Enabled(WithTransfer), 'The movement marker with approved payments enables stock movements.');
@@ -938,10 +948,18 @@ codeunit 90700 "BCSF Inventory Tests"
       Assert(Movements.PlanKind(WithTransfer, 'PURCHASE.ORDER', LogicalKey, 'BCSF-AUX') <> 4, 'No transfer onto the same location.');
       Assert(Movements.PlanKind(Context, 'PURCHASE.ORDER', LogicalKey, 'BCSF-MAIN') <> 4, 'No transfer without captured locations.');
       Assert(Movements.PlanKind(Context, 'PURCHASE.ORDER', LogicalKey, 'BCSF-MAIN') <> 5, 'No assembly without the captured marker.');
+      Assert(Movements.PlanKind(Context, 'PURCHASE.ORDER', LogicalKey, 'BCSF-MAIN') <> 6, 'No project without the captured marker.');
+      Assert(ProjectProc.Mode(Context, 'PURCHASE.ORDER', LogicalKey, 1) <> 3, 'A partial billing needs at least two units.');
+      Assert((ProjectProc.DurationDays(Context, 'PURCHASE.ORDER', LogicalKey) >= 20) and (ProjectProc.DurationDays(Context, 'PURCHASE.ORDER', LogicalKey) <= 120), 'Project durations stay within 20 to 120 days.');
+      Assert(ProjectProc.DurationDays(Context, 'PURCHASE.ORDER', LogicalKey) = ProjectProc.DurationDays(OtherRun, 'PURCHASE.ORDER', LogicalKey), 'The project duration must not depend on the run id.');
+      Assert(PlanningProc.PlanKind(Context, 'SALES.INVOICE', LogicalKey) = PlanningProc.PlanKind(OtherRun, 'SALES.INVOICE', LogicalKey), 'The planning plan must not depend on the run id.');
       Assert(AssemblyProc.SubKind(Context, 'PURCHASE.ORDER', LogicalKey, 1) <> 3, 'A partial assembly needs at least two units.');
       Assert(AssemblyProc.SubKind(Context, 'PURCHASE.ORDER', LogicalKey, 2) = AssemblyProc.SubKind(OtherRun, 'PURCHASE.ORDER', LogicalKey, 2), 'The assembly mode must not depend on the run id.');
     end;
-    Assert(Seen[1] and Seen[2] and Seen[3] and Seen[4] and Seen[5] and Seen[6], 'All movement plan kinds including assembly must occur with the captured markers.');
+    Assert(Seen[1] and Seen[2] and Seen[3] and Seen[4] and Seen[5] and Seen[6] and Seen[7], 'All movement plan kinds including assembly and project must occur with the captured markers.');
+    Assert(ProjectProc.BilledQuantity(3, 5) = 3, 'A partial billing bills half of the planned quantity in whole units.');
+    Assert(ProjectProc.BilledQuantity(4, 5) = 5, 'A full billing bills the planned quantity.');
+    Assert(ProjectProc.BilledQuantity(3, 1) = 1, 'A partial billing never exceeds the planned quantity.');
     for LogicalKey := 1 to 100 do begin
       Assert((Movements.LineUnits(Context, 'PURCHASE.ORDER', LogicalKey, 1, 50) >= 1) and (Movements.LineUnits(Context, 'PURCHASE.ORDER', LogicalKey, 1, 50) <= 4),
         'Line units are 1 to 3 and never above half of the stock reserve.');
@@ -953,6 +971,68 @@ codeunit 90700 "BCSF Inventory Tests"
     WithTransfer.Replace('paymentSetup', TransferSettings);
     asserterror Movements.Enabled(WithTransfer);
     Assert(GetLastErrorText() <> '', 'An unknown movement marker must stop.');
+  end;
+
+  [Test]
+  procedure OptionalModulePlansAreDeterministicAndNeedTheirMarker()
+  var
+    Selection: Codeunit "BCSF Module Selection";
+    Crm: Codeunit "BCSF CRM Processor";
+    Assets: Codeunit "BCSF Asset Processor";
+    Warehouse: Codeunit "BCSF Warehouse Processor";
+    Production: Codeunit "BCSF Production Processor";
+    Service: Codeunit "BCSF Service Processor";
+    Contract: Codeunit "BCSF Contract JSON";
+    Context: JsonObject;
+    Marked: JsonObject;
+    OtherRun: JsonObject;
+    Settings: JsonObject;
+    LogicalKey: Integer;
+    Seen: array[5] of Boolean;
+  begin
+    Context := ContextFixture();
+    Settings.Add('version', 1);
+    Settings.Add('approved', true);
+    Context.Add('paymentSetup', Settings);
+    Assert(not Crm.Enabled(Context) and not Assets.Enabled(Context) and not Warehouse.Enabled(Context) and
+      not Production.Enabled(Context) and not Service.Enabled(Context), 'Without markers no optional module runs.');
+    Settings.Add('crmVersion', 1);
+    Settings.Add('assetVersion', 1);
+    Settings.Add('warehouseVersion', 1);
+    Settings.Add('productionVersion', 1);
+    Settings.Add('serviceVersion', 1);
+    Marked := Contract.Clone(Context);
+    Marked.Replace('paymentSetup', Settings);
+    Assert(Crm.Enabled(Marked) and Assets.Enabled(Marked) and Warehouse.Enabled(Marked) and
+      Production.Enabled(Marked) and Service.Enabled(Marked), 'Every captured marker enables exactly its module.');
+    OtherRun := Contract.Clone(Marked);
+    OtherRun.Replace('runId', Format(CreateGuid(), 0, 4));
+    for LogicalKey := 1 to 300 do begin
+      Assert(Crm.PlanKind(Marked, 'SALES.INVOICE', LogicalKey) = Crm.PlanKind(OtherRun, 'SALES.INVOICE', LogicalKey), 'The CRM plan must not depend on the run id.');
+      Assert(Service.PlanKind(Marked, 'SALES.INVOICE', LogicalKey) = Service.PlanKind(OtherRun, 'SALES.INVOICE', LogicalKey), 'The service plan must not depend on the run id.');
+      Assert(Assets.PlanKind(Marked, 'PURCHASE.ORDER', LogicalKey) = Assets.PlanKind(OtherRun, 'PURCHASE.ORDER', LogicalKey), 'The asset plan must not depend on the run id.');
+      Assert(Warehouse.PlanKind(Marked, 'PURCHASE.ORDER', LogicalKey) = Warehouse.PlanKind(OtherRun, 'PURCHASE.ORDER', LogicalKey), 'The warehouse plan must not depend on the run id.');
+      Assert(Production.PlanKind(Marked, 'PURCHASE.ORDER', LogicalKey) = Production.PlanKind(OtherRun, 'PURCHASE.ORDER', LogicalKey), 'The production plan must not depend on the run id.');
+      Assert(Production.PlanKind(Marked, 'PURCHASE.ORDER', LogicalKey) in [0, 1, 2], 'The production plan is none, released or posted.');
+      Assert((Assets.AcquisitionCost(Marked, 'PURCHASE.ORDER', LogicalKey) >= 500) and (Assets.AcquisitionCost(Marked, 'PURCHASE.ORDER', LogicalKey) <= 5000),
+        'The acquisition cost stays within 500 to 5000.');
+      Assert((Warehouse.Units(Marked, 'PURCHASE.ORDER', LogicalKey) >= 1) and (Warehouse.Units(Marked, 'PURCHASE.ORDER', LogicalKey) <= 3), 'Warehouse receipts have one to three units.');
+      Seen[1] := Seen[1] or (Crm.PlanKind(Marked, 'SALES.INVOICE', LogicalKey) = 1);
+      Seen[2] := Seen[2] or (Service.PlanKind(Marked, 'SALES.INVOICE', LogicalKey) = 1);
+      Seen[3] := Seen[3] or (Assets.PlanKind(Marked, 'PURCHASE.ORDER', LogicalKey) = 1);
+      Seen[4] := Seen[4] or (Warehouse.PlanKind(Marked, 'PURCHASE.ORDER', LogicalKey) = 1);
+      Seen[5] := Seen[5] or (Production.PlanKind(Marked, 'PURCHASE.ORDER', LogicalKey) = 2);
+    end;
+    Assert(Seen[1] and Seen[2] and Seen[3] and Seen[4] and Seen[5], 'Every optional module must occur in 300 documents.');
+    Assert(Assets.FirstDepreciation(600) = 10, 'The first monthly depreciation is one sixtieth of the cost.');
+    Assert(Selection.IsCodeSelected('CRM|PLANNING', "BCSF Module Type"::CRM) and not Selection.IsCodeSelected('CRM|PLANNING', "BCSF Module Type"::Warehouse),
+      'The module selection is read from exact module codes.');
+    Assert(Selection.IsFollowUpModule("BCSF Module Type"::Warehouse) and not Selection.IsFollowUpModule("BCSF Module Type"::Sales),
+      'Only the optional modules are follow-up modules.');
+    Settings.Replace('crmVersion', 2);
+    Marked.Replace('paymentSetup', Settings);
+    asserterror Crm.Enabled(Marked);
+    Assert(GetLastErrorText() <> '', 'An unknown module marker must stop.');
   end;
 
   [Test]

@@ -1,7 +1,6 @@
 {
   "Open assembly orders": "Offene Montageaufträge",
   "Posted assembly orders": "Gebuchte Montageaufträge",
-  "Scenario Factory assembly resource": "Scenario-Factory-Montageressource (synthetisch)",
   "The assembly setup is not supported or changed. Review the assembly number series, the assembly source code, the posting setup without business posting group and the synthetic assembly resource.": "Die Montageeinrichtung wird nicht unterstützt oder wurde geändert. Prüfen Sie die Nummernserien und den Herkunftscode der Montage, die Buchungsmatrix ohne Geschäftsbuchungsgruppe und die synthetische Montageressource.",
   "Assembly results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain posting.": "Die Ergebnisse der Montage fehlen, wurden geändert oder sind nicht prüfbar. Lassen Sie das Paket zur Prüfung gesperrt und wiederholen Sie keine unsichere Buchung.",
   "Stock movements": "Lagerbewegungen",
@@ -19,5 +18,13 @@
   "Further results": "Weitere Ergebnisse",
   "In progress": "In Arbeit",
   "Completed": "Abgeschlossen",
-  "Review required": "Prüfung erforderlich"
+  "Review required": "Prüfung erforderlich",
+  "Installation technician": "Montagetechniker",
+  "Outside storage": "Außenlager",
+  "Goods in transit": "Ware im Transit",
+  "Projects": "Projekte",
+  "Planning": "Planung",
+  "Project usage entries": "Projektverbrauchsposten",
+  "Project sales entries": "Projektverkaufsposten",
+  "Planning proposals": "Dispositionsvorschläge"
 }

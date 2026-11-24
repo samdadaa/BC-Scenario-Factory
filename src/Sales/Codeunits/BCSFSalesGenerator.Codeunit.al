@@ -1,5 +1,6 @@
 namespace BCScenarioFactory.Sales;
 
+using BCScenarioFactory.Planning;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Finance;
@@ -205,6 +206,8 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
     Coordinator: Codeunit "BCSF Process Coordinator";
     Payments: Codeunit "BCSF Payment Processor";
     Credits: Codeunit "BCSF Credit Memo Processor";
+    PlanningProcessor: Codeunit "BCSF Planning Processor";
+    Selection: Codeunit "BCSF Module Selection";
     RunId: Guid;
     BatchId: Guid;
     LogicalKey: Integer;
@@ -248,6 +251,9 @@ codeunit 90426 "BCSF Sales Generator" implements "BCSF Generator"
           Payments.ValidatePayment(RunId, EntityCode, LogicalKey, Invoice."Cust. Ledger Entry No.", true);
           if Credits.Enabled(Context) then
             Credits.ValidateForSalesInvoice(Context, RunId, EntityCode, LogicalKey, Invoice);
+          if PlanningProcessor.Enabled(Context) then
+            PlanningProcessor.ValidateForSalesInvoice(Context, RunId, EntityCode, LogicalKey, Invoice);
+          Selection.ValidateForSalesInvoice(Context, RunId, EntityCode, LogicalKey, Invoice);
         end;
         for LineIndex := 1 to Coordinator.WholesaleLineCount(Context, EntityCode, LogicalKey) do begin
           if Coordinator.IsWholesaleQualityProfile(Context) then begin

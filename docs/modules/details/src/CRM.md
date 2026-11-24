@@ -1,6 +1,6 @@
 # CRM – Modulspezifikation
 
-**Status:** Geplant, keine AL-Objekte implementiert. **Pfad:** `src/CRM/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P3.
+**Status:** Zur Prüfung, Teilumfang (SF-033, 24.11.2026). **Nicht kompiliert, nicht nativ getestet.** Codeunit `BCSF CRM Processor` (90487): Kampagne je Lauf und Verkaufschance je Debitorenkontakt; Interaktionen/Segmente offen. Details: [SF-028–SF-033-Bericht](../../../review/SF028_SF033_PRUEFBERICHT.md). **Pfad:** `src/CRM/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P3.
 
 ## Fachlicher Auftrag
 

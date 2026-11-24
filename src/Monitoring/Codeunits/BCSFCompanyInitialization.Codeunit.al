@@ -2,6 +2,9 @@ namespace BCScenarioFactory.Monitoring;
 
 using BCScenarioFactory.BackgroundProcessing;
 using BCScenarioFactory.Assembly;
+using BCScenarioFactory.Planning;
+using BCScenarioFactory.CRM;
+using BCScenarioFactory.Warehouse;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Finance;
@@ -76,6 +79,10 @@ codeunit 90361 "BCSF Company Initialization"
         Payments: Codeunit "BCSF Payment Processor";
         Movements: Codeunit "BCSFInventoryMovementProcessor";
         AssemblyProcessor: Codeunit "BCSF Assembly Processor";
+        PlanningProcessor: Codeunit "BCSF Planning Processor";
+        CrmProcessor: Codeunit "BCSF CRM Processor";
+        WarehouseProcessor: Codeunit "BCSF Warehouse Processor";
+        Selection: Codeunit "BCSF Module Selection";
         ScenarioId: Guid;
         EndingDate: Date;
     begin
@@ -94,7 +101,15 @@ codeunit 90361 "BCSF Company Initialization"
         if Setup."Industry Process Mode" = "BCSF Process Mode"::FollowUpProcesses then begin
             Payments.PrepareFoundation();
             Movements.PrepareFoundation();
-            AssemblyProcessor.PrepareFoundation();
+            // Additive foundation of the optional modules; only the modules selected in the setup are prepared.
+            if Selection.IsCodeSelected(Setup."Industry Additional Modules", "BCSF Module Type"::Assembly) then
+                AssemblyProcessor.PrepareFoundation();
+            if Selection.IsCodeSelected(Setup."Industry Additional Modules", "BCSF Module Type"::Planning) then
+                PlanningProcessor.PrepareFoundation();
+            if Selection.IsCodeSelected(Setup."Industry Additional Modules", "BCSF Module Type"::CRM) then
+                CrmProcessor.PrepareFoundation();
+            if Selection.IsCodeSelected(Setup."Industry Additional Modules", "BCSF Module Type"::Warehouse) then
+                WarehouseProcessor.PrepareFoundation();
         end;
         EndingDate := Setup."Industry Ending Date";
         if EndingDate = 0D then

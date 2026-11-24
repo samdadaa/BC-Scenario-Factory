@@ -160,6 +160,15 @@ codeunit 90258 "BCSF Partner Children"
   end;
 
   /// <summary>Synthetic, checksum-valid German IBAN from the seed. The branch number is a fictitious test value; no real bank is referenced.</summary>
+  /// <summary>Fictitious bank names (no real institution); chosen by seed so partners share a handful of houses.</summary>
+  local procedure BankName(Context: JsonObject; EntityCode: Code[30]; LogicalKey: Integer): Text[100]
+  var
+      Seed: Codeunit "BCSF Seed Engine";
+  begin
+      exit(CopyStr(SelectStr(Seed.SampleInteger(Context, EntityCode, Format(LogicalKey, 0, 9), 'BANK-NAME', 1, 6),
+        'Nordstadt Handelsbank,Rheinland Volksbank,Süddeutsche Kreditbank,Hanse Genossenschaftsbank,Alpenland Bank,Ostsee Kreditinstitut'), 1, 100));
+  end;
+
   procedure SyntheticBank(Context: JsonObject; EntityCode: Code[30]; LogicalKey: Integer; var BranchNo: Text[20]; var AccountNo: Text[30]; var Iban: Code[50])
   var
     Seed: Codeunit "BCSF Seed Engine";
@@ -197,7 +206,7 @@ codeunit 90258 "BCSF Partner Children"
     Child.Init();
     Child.Validate("Customer No.", Partner."No.");
     Child.Validate(Code, 'GIRO');
-    Child.Validate(Name, 'Scenario Factory Test Bank');
+    Child.Validate(Name, BankName(Context, 'CUSTOMER', LogicalKey));
     Child.Validate("Bank Branch No.", BranchNo);
     Child.Validate("Bank Account No.", AccountNo);
     Child.Validate(IBAN, Iban);
@@ -245,7 +254,7 @@ codeunit 90258 "BCSF Partner Children"
     Child.Init();
     Child.Validate("Vendor No.", Partner."No.");
     Child.Validate(Code, 'GIRO');
-    Child.Validate(Name, 'Scenario Factory Test Bank');
+    Child.Validate(Name, BankName(Context, 'VENDOR', LogicalKey));
     Child.Validate("Bank Branch No.", BranchNo);
     Child.Validate("Bank Account No.", AccountNo);
     Child.Validate(IBAN, Iban);

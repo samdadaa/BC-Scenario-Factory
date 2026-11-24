@@ -1,0 +1,8 @@
+{
+  "The project setup is not supported or changed. Review the project number series, the project journal source code and the synthetic assembly resource.": "Die Projekteinrichtung wird nicht unterstützt oder wurde geändert. Prüfen Sie die Projektnummernserie, den Herkunftscode des Projektbuchblatts und die synthetische Montageressource.",
+  "Project results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain posting.": "Die Projektergebnisse fehlen, wurden geändert oder sind nicht prüfbar. Lassen Sie das Paket zur Prüfung gesperrt und wiederholen Sie keine unsichere Buchung.",
+  "Replenishment proposals": "Beschaffungsvorschläge",
+  "Proposals from sales demand": "Vorschläge aus Verkaufsbedarf",
+  "The planning setup is not supported or changed. Review the requisition worksheet for planning proposals.": "Die Dispositionseinrichtung wird nicht unterstützt oder wurde geändert. Prüfen Sie das Bedarfsvorschlagsblatt für Dispositionsvorschläge.",
+  "Planning results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain calculation.": "Die Dispositionsergebnisse fehlen, wurden geändert oder sind nicht prüfbar. Lassen Sie das Paket zur Prüfung gesperrt und wiederholen Sie keine unsichere Berechnung."
+}

@@ -8,12 +8,15 @@ using Microsoft.Assembly.History;
 using Microsoft.Bank.BankAccount;
 using Microsoft.Bank.Ledger;
 using Microsoft.CRM.BusinessRelation;
+using Microsoft.CRM.Campaign;
+using Microsoft.CRM.Opportunity;
 using Microsoft.CRM.Contact;
 using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Ledger;
 using Microsoft.FixedAssets.FixedAsset;
+using Microsoft.FixedAssets.Ledger;
 using Microsoft.Foundation.PaymentTerms;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Item.Catalog;
@@ -21,10 +24,14 @@ using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Requisition;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Projects.Resources.Ledger;
+using Microsoft.Manufacturing.Document;
 using Microsoft.Manufacturing.ProductionBOM;
 using Microsoft.Projects.Project.Job;
+using Microsoft.Projects.Project.Ledger;
+using Microsoft.Projects.Project.Planning;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
 using Microsoft.Purchases.Payables;
@@ -33,7 +40,9 @@ using Microsoft.Sales.Customer;
 using Microsoft.Sales.Document;
 using Microsoft.Sales.History;
 using Microsoft.Sales.Receivables;
+using Microsoft.Service.Document;
 using Microsoft.Service.Item;
+using Microsoft.Warehouse.Activity.History;
 using Microsoft.Warehouse.Ledger;
 using Microsoft.Warehouse.Structure;
 using System.Security.AccessControl;
@@ -68,6 +77,7 @@ codeunit 90369 "BCSF Dashboard Stock"
     AddGroup(Groups, 'warehouse', WarehouseGroupLbl);
     AddGroup(Groups, 'manufacturing', ManufacturingGroupLbl);
     AddGroup(Groups, 'projects', ProjectsGroupLbl);
+    AddGroup(Groups, 'planning', PlanningGroupLbl);
     AddGroup(Groups, 'service', ServiceGroupLbl);
     AddGroup(Groups, 'assets', AssetsGroupLbl);
     AddGroup(Groups, 'contacts', ContactsGroupLbl);
@@ -121,6 +131,13 @@ codeunit 90369 "BCSF Dashboard Stock"
     AddRunMetrics('purchase', RunId, Metrics);
     AddRunMetrics('inventory', RunId, Metrics);
     AddRunMetrics('assembly', RunId, Metrics);
+    AddRunMetrics('projects', RunId, Metrics);
+    AddRunMetrics('planning', RunId, Metrics);
+    AddRunMetrics('warehouse', RunId, Metrics);
+    AddRunMetrics('manufacturing', RunId, Metrics);
+    AddRunMetrics('service', RunId, Metrics);
+    AddRunMetrics('assets', RunId, Metrics);
+    AddRunMetrics('contacts', RunId, Metrics);
     AddRunMetrics('entries', RunId, Metrics);
     Result.Add('metrics', Metrics);
     exit(Result);
@@ -144,7 +161,7 @@ codeunit 90369 "BCSF Dashboard Stock"
       MetricKey := TextProperty(Metric, 'key');
       ShowZero := (Header."Process Mode" = "BCSF Process Mode"::FollowUpProcesses) and
         (GroupKey = 'entries') and (MetricKey in ['customerPayment', 'vendorPayment', 'bankEntry']);
-      if (GroupKey in ['entries', 'inventory', 'assembly']) or (MetricKey in ['quote', 'order', 'invoice', 'postedShipment', 'postedReceipt', 'postedInvoice', 'credit', 'postedCredit']) then
+      if (GroupKey in ['entries', 'inventory', 'assembly', 'projects', 'planning', 'warehouse', 'manufacturing', 'service', 'assets', 'contacts']) or (MetricKey in ['quote', 'order', 'invoice', 'postedShipment', 'postedReceipt', 'postedInvoice', 'credit', 'postedCredit']) then
         if IncludeRunMetric(Metric, ShowZero) then begin
           Metric.Replace('key', GroupKey + '/' + MetricKey);
           Metrics.Add(Metric);
@@ -172,22 +189,19 @@ codeunit 90369 "BCSF Dashboard Stock"
     Status: Text;
     CanOpen: Boolean;
     RowsOpened: Boolean;
+    Slash: Integer;
   begin
     if not GetDisplayedCount(LastStock, MetricKey, ExpectedCount) then
       Error(ChangedLbl);
-    if GroupKey = 'master' then
-      if CopyStr(MetricKey, 1, 6) = 'sales/' then begin
-        GroupKey := 'sales';
-        MetricKey := CopyStr(MetricKey, 7);
-      end else
-        if CopyStr(MetricKey, 1, 9) = 'purchase/' then begin
-          GroupKey := 'purchase';
-          MetricKey := CopyStr(MetricKey, 10);
-        end else
-        if CopyStr(MetricKey, 1, 8) = 'entries/' then begin
-          GroupKey := 'entries';
-          MetricKey := CopyStr(MetricKey, 9);
-        end;
+    // Run results carry the module as key prefix (sales/, purchase/, entries/, inventory/, assembly/, projects/, planning/,
+    // warehouse/, manufacturing/, service/, assets/, contacts/). The prefix selects the catalog group of the tile.
+    if GroupKey = 'master' then begin
+      Slash := StrPos(MetricKey, '/');
+      if Slash > 1 then begin
+        GroupKey := CopyStr(MetricKey, 1, Slash - 1);
+        MetricKey := CopyStr(MetricKey, Slash + 1);
+      end;
+    end;
     LoadCatalog(GroupKey, Catalog);
     foreach Item in Catalog do begin
       Metric := Item.AsObject();
@@ -224,6 +238,7 @@ codeunit 90369 "BCSF Dashboard Stock"
     CustomerEntry: Record "Cust. Ledger Entry";
     VendorEntry: Record "Vendor Ledger Entry";
     ItemEntry: Record "Item Ledger Entry";
+    JobEntry: Record "Job Ledger Entry";
     AssemblyItem: Record Item;
     FilterField: FieldRef;
     PageId: Integer;
@@ -264,6 +279,16 @@ codeunit 90369 "BCSF Dashboard Stock"
         begin
           FilterField := Rows.Field(VendorEntry.FieldNo("Document Type"));
           FilterField.SetRange(VendorEntry."Document Type"::Payment);
+        end;
+      'jobUsage':
+        begin
+          FilterField := Rows.Field(JobEntry.FieldNo("Entry Type"));
+          FilterField.SetRange(JobEntry."Entry Type"::Usage);
+        end;
+      'jobSale':
+        begin
+          FilterField := Rows.Field(JobEntry.FieldNo("Entry Type"));
+          FilterField.SetRange(JobEntry."Entry Type"::Sale);
         end;
       'positiveAdjustment':
         begin
@@ -509,8 +534,18 @@ codeunit 90369 "BCSF Dashboard Stock"
     PostedAssemblyHeader: Record "Posted Assembly Header";
     ResLedgerEntry: Record "Res. Ledger Entry";
     Job: Record "Job";
+    JobTaskRecord: Record "Job Task";
+    JobPlanningRecord: Record "Job Planning Line";
+    JobLedgerRecord: Record "Job Ledger Entry";
+    RequisitionRecord: Record "Requisition Line";
     ServiceItem: Record "Service Item";
     FixedAsset: Record "Fixed Asset";
+    AssetLedgerEntry: Record "FA Ledger Entry";
+    RegisteredActivity: Record "Registered Whse. Activity Hdr.";
+    ProductionOrderRecord: Record "Production Order";
+    ServiceHeaderRecord: Record "Service Header";
+    CampaignRecord: Record Campaign;
+    OpportunityRecord: Record Opportunity;
   begin
     if not Rows.FindFirst() then
       Error(ChangedLbl);
@@ -760,6 +795,26 @@ codeunit 90369 "BCSF Dashboard Stock"
           Rows.SetTable(Job, false);
           Page.Run(PageId, Job);
         end;
+      Database::"Job Task":
+        begin
+          Rows.SetTable(JobTaskRecord, false);
+          Page.Run(PageId, JobTaskRecord);
+        end;
+      Database::"Job Planning Line":
+        begin
+          Rows.SetTable(JobPlanningRecord, false);
+          Page.Run(PageId, JobPlanningRecord);
+        end;
+      Database::"Job Ledger Entry":
+        begin
+          Rows.SetTable(JobLedgerRecord, false);
+          Page.Run(PageId, JobLedgerRecord);
+        end;
+      Database::"Requisition Line":
+        begin
+          Rows.SetTable(RequisitionRecord, false);
+          Page.Run(PageId, RequisitionRecord);
+        end;
       Database::"Service Item":
         begin
           Rows.SetTable(ServiceItem, false);
@@ -769,6 +824,36 @@ codeunit 90369 "BCSF Dashboard Stock"
         begin
           Rows.SetTable(FixedAsset, false);
           Page.Run(PageId, FixedAsset);
+        end;
+      Database::"FA Ledger Entry":
+        begin
+          Rows.SetTable(AssetLedgerEntry, false);
+          Page.Run(PageId, AssetLedgerEntry);
+        end;
+      Database::"Registered Whse. Activity Hdr.":
+        begin
+          Rows.SetTable(RegisteredActivity, false);
+          Page.Run(PageId, RegisteredActivity);
+        end;
+      Database::"Production Order":
+        begin
+          Rows.SetTable(ProductionOrderRecord, false);
+          Page.Run(PageId, ProductionOrderRecord);
+        end;
+      Database::"Service Header":
+        begin
+          Rows.SetTable(ServiceHeaderRecord, false);
+          Page.Run(PageId, ServiceHeaderRecord);
+        end;
+      Database::Campaign:
+        begin
+          Rows.SetTable(CampaignRecord, false);
+          Page.Run(PageId, CampaignRecord);
+        end;
+      Database::Opportunity:
+        begin
+          Rows.SetTable(OpportunityRecord, false);
+          Page.Run(PageId, OpportunityRecord);
         end;
       else Error(ChangedLbl);
     end;
@@ -878,20 +963,42 @@ codeunit 90369 "BCSF Dashboard Stock"
           AddMetric(Catalog, 'postingSetup', Database::"General Posting Setup", Page::"General Posting Setup", false, '');
         end;
       'warehouse':
-        AddMetric(Catalog, 'warehouseEntry', Database::"Warehouse Entry", Page::"Warehouse Entries", false, '');
+        begin
+          AddMetric(Catalog, 'registeredPutAway', Database::"Registered Whse. Activity Hdr.", Page::"Registered Whse. Put-aways", true, RegisteredPutAwayLbl);
+          AddMetric(Catalog, 'warehouseEntry', Database::"Warehouse Entry", Page::"Warehouse Entries", false, '');
+        end;
       'manufacturing':
         begin
-          AddMetric(Catalog, 'productionBom', Database::"Production BOM Header", Page::"Production BOM List", false, '');
+          AddMetric(Catalog, 'productionBom', Database::"Production BOM Header", Page::"Production BOM List", true, '');
+          AddMetric(Catalog, 'productionOrder', Database::"Production Order", Page::"Production Order List", true, ProductionOrdersLbl);
           AddMetric(Catalog, 'assembly', Database::"Assembly Header", Page::"Assembly Orders", false, '');
         end;
       'projects':
-        AddMetric(Catalog, 'job', Database::"Job", Page::"Job List", false, '');
+        begin
+          AddMetric(Catalog, 'job', Database::"Job", Page::"Job List", true, '');
+          AddMetric(Catalog, 'jobTask', Database::"Job Task", Page::"Job Task List", true, '');
+          AddMetric(Catalog, 'jobPlanningLine', Database::"Job Planning Line", Page::"Job Planning Lines", true, '');
+          AddMetric(Catalog, 'jobUsage', Database::"Job Ledger Entry", Page::"Job Ledger Entries", true, ProjectUsageLbl);
+          AddMetric(Catalog, 'jobSale', Database::"Job Ledger Entry", Page::"Job Ledger Entries", true, ProjectSalesLbl);
+        end;
+      'planning':
+        AddMetric(Catalog, 'requisitionLine', Database::"Requisition Line", Page::"Requisition Lines", true, PlanningProposalsLbl);
       'service':
-        AddMetric(Catalog, 'serviceItem', Database::"Service Item", Page::"Service Item List", false, '');
+        begin
+          AddMetric(Catalog, 'serviceItem', Database::"Service Item", Page::"Service Item List", true, '');
+          AddMetric(Catalog, 'serviceOrder', Database::"Service Header", Page::"Service Orders", true, ServiceOrdersLbl);
+        end;
       'assets':
-        AddMetric(Catalog, 'asset', Database::"Fixed Asset", Page::"Fixed Asset List", false, '');
+        begin
+          AddMetric(Catalog, 'asset', Database::"Fixed Asset", Page::"Fixed Asset List", true, '');
+          AddMetric(Catalog, 'assetEntry', Database::"FA Ledger Entry", Page::"FA Ledger Entries", true, AssetEntriesLbl);
+        end;
       'contacts':
-        AddMetric(Catalog, 'relation', Database::"Contact Business Relation", 0, false, '');
+        begin
+          AddMetric(Catalog, 'relation', Database::"Contact Business Relation", 0, false, '');
+          AddMetric(Catalog, 'campaign', Database::Campaign, Page::"Campaign List", true, CampaignsLbl);
+          AddMetric(Catalog, 'opportunity', Database::Opportunity, Page::"Opportunity List", true, OpportunitiesLbl);
+        end;
     end;
   end;
 
@@ -972,6 +1079,16 @@ codeunit 90369 "BCSF Dashboard Stock"
     SalesGroupLbl: Label 'Sales';
     CustomerPaymentsLbl: Label 'Customer payments';
     VendorPaymentsLbl: Label 'Vendor payments';
+    PlanningGroupLbl: Label 'Planning';
+    ProjectUsageLbl: Label 'Project usage entries';
+    ProjectSalesLbl: Label 'Project sales entries';
+    PlanningProposalsLbl: Label 'Planning proposals';
+    RegisteredPutAwayLbl: Label 'Registered put-aways';
+    ProductionOrdersLbl: Label 'Production orders';
+    ServiceOrdersLbl: Label 'Service orders';
+    AssetEntriesLbl: Label 'Fixed asset entries';
+    CampaignsLbl: Label 'Campaigns';
+    OpportunitiesLbl: Label 'Opportunities';
     InventoryGroupLbl: Label 'Stock movements';
     AssemblyGroupLbl: Label 'Assembly';
     PositiveAdjustmentsLbl: Label 'Positive adjustments';

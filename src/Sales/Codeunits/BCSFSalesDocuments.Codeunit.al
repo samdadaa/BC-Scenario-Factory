@@ -1,5 +1,6 @@
 namespace BCScenarioFactory.Sales;
 
+using BCScenarioFactory.Planning;
 using BCScenarioFactory.Core;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Finance;
@@ -37,6 +38,8 @@ codeunit 90430 "BCSF Sales Documents"
     Evidence: Codeunit "BCSF Sales Evidence";
     Payments: Codeunit "BCSF Payment Processor";
     Credits: Codeunit "BCSF Credit Memo Processor";
+    PlanningProcessor: Codeunit "BCSF Planning Processor";
+    Selection: Codeunit "BCSF Module Selection";
     SalesPost: Codeunit "Sales-Post";
     QuoteToOrder: Codeunit "Sales-Quote to Order";
     ParentId: Guid;
@@ -207,6 +210,11 @@ codeunit 90430 "BCSF Sales Documents"
       // Optional follow-up of the same stage: unposted or posted credit memo for this invoice.
       if Credits.Enabled(Context) then
         Credits.CreateForSalesInvoice(Context, RunId, EntityCode, LogicalKey, BatchId, Invoice, ParentId);
+      // Optional planning proposals for the sold items (proposals only, no purchase is created).
+      if PlanningProcessor.Enabled(Context) then
+        PlanningProcessor.RunForSalesInvoice(Context, RunId, EntityCode, LogicalKey, BatchId, Invoice, ParentId);
+      // Optional modules of the same stage (CRM, service), each only when selected in the setup.
+      Selection.RunForSalesInvoice(Context, RunId, EntityCode, LogicalKey, BatchId, Invoice, ParentId);
     end;
   end;
 
