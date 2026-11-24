@@ -14,7 +14,7 @@ codeunit 90365 "BCSF Dashboard Data"
 {
   Access = Internal;
 
-  procedure Build(var SelectedRunId: Guid; StockView: JsonObject; var RunStock: JsonObject; var SummaryViews: JsonObject): Text
+  procedure Build(var SelectedRunId: Guid; StockView: JsonObject; var RunStock: JsonObject; var SummaryViews: JsonObject; ActiveView: Text): Text
   var
     Header: Record "BCSF Run Header";
     Setup: Record "BCSF Factory Setup";
@@ -29,6 +29,7 @@ codeunit 90365 "BCSF Dashboard Data"
     RunCount: Integer;
   begin
     Payload.Add('schemaVersion', 1);
+    Payload.Add('view', ActiveView);
     Payload.Add('locale', Language.GetCurrentCultureName());
     Payload.Add('language', Language.GetCultureName(GlobalLanguage()));
     AddTexts(Texts);
@@ -48,7 +49,7 @@ codeunit 90365 "BCSF Dashboard Data"
     Header.SetAscending("Run Id", false);
     if Header.Find('-') then
       repeat
-        Item := DescribeRun(Header);
+        Item := DescribeRun(Header, ActiveView = 'runs');
         Runs.Add(Item);
         if IsNullGuid(SelectedRunId) then
           SelectedRunId := Header."Run Id";
@@ -58,12 +59,15 @@ codeunit 90365 "BCSF Dashboard Data"
     Payload.Add('hasSelection', not IsNullGuid(SelectedRunId));
     if not IsNullGuid(SelectedRunId) then begin
       Header.Get(SelectedRunId);
-      Item := DescribeRun(Header);
+      Item := DescribeRun(Header, false);
       AddExecution(Header."Run Id", Item);
       Payload.Add('selected', Item);
       Payload.Add('steps', DescribeSteps(Header."Run Id"));
-      RunStock := Stock.BuildRunResults(Header."Run Id");
-      Payload.Add('runStock', RunStock);
+      // Run results are only built for the generation view; the client keeps the last result for other views.
+      if ActiveView in ['', 'generation'] then begin
+        RunStock := Stock.BuildRunResults(Header."Run Id");
+        Payload.Add('runStock', RunStock);
+      end;
     end;
     Payload.WriteTo(Result);
     exit(Result);
@@ -154,9 +158,10 @@ codeunit 90365 "BCSF Dashboard Data"
     exit(Company);
   end;
 
-  local procedure DescribeRun(Header: Record "BCSF Run Header"): JsonObject
+  local procedure DescribeRun(Header: Record "BCSF Run Header"; WithCounts: Boolean): JsonObject
   var
     Execution: Record "BCSF Run Execution";
+    Batch: Record "BCSF Batch";
     Item: JsonObject;
   begin
     Item.Add('id', Format(Header."Run Id", 0, 4));
@@ -168,6 +173,19 @@ codeunit 90365 "BCSF Dashboard Data"
       Item.Add('status', Format(Execution.Status))
     else
       Item.Add('status', NotPreparedLbl);
+    // The selected run gets these keys from AddExecution; list rows only in the runs view.
+    if WithCounts then begin
+      if Execution.Get(Header."Run Id") then begin
+        Item.Add('statusCode', Execution.Status.AsInteger());
+        Item.Add('startedIso', Format(Execution."Started At", 0, 9));
+        Item.Add('finishedIso', Format(Execution."Finished At", 0, 9));
+      end;
+      Batch.SetRange("Run Id", Header."Run Id");
+      Batch.SetRange(Status, Batch.Status::Failed);
+      Item.Add('failedBatches', Batch.Count());
+      Batch.SetRange(Status, Batch.Status::NeedsReview);
+      Item.Add('reviewBatches', Batch.Count());
+    end;
     exit(Item);
   end;
 
@@ -208,10 +226,70 @@ codeunit 90365 "BCSF Dashboard Data"
     Item.Add('earliest', Format(Execution."Earliest Start"));
     Item.Add('started', Format(Execution."Started At"));
     Item.Add('finished', Format(Execution."Finished At"));
+    Item.Add('startedIso', Format(Execution."Started At", 0, 9));
+    Item.Add('finishedIso', Format(Execution."Finished At", 0, 9));
+    AddLiveDetails(RunId, Item);
     if Control.Get(RunId) then begin
       Item.Add('pauseRequested', Control."Pause Requested");
       Item.Add('cancelRequested', Control."Cancel Requested");
     end;
+  end;
+
+  // Live view data: persisted batch states and the existing run event log only; nothing is simulated.
+  local procedure AddLiveDetails(RunId: Guid; var Item: JsonObject)
+  var
+    Batch: Record "BCSF Batch";
+    Entry: Record "BCSF Run Event";
+    Seen: Dictionary of [Text, Boolean];
+    FailedNodes: JsonArray;
+    NodeCodes: List of [Code[30]];
+    Events: JsonArray;
+    Line: JsonObject;
+    SeenKey: Text;
+    Scanned: Integer;
+  begin
+    Batch.SetRange("Run Id", RunId);
+    Batch.SetRange(Status, Batch.Status::Failed);
+    Item.Add('failedBatches', Batch.Count());
+    if Batch.FindSet() then
+      repeat
+        if not NodeCodes.Contains(Batch."Node Code") then begin
+          NodeCodes.Add(Batch."Node Code");
+          FailedNodes.Add(Batch."Node Code");
+        end;
+      until Batch.Next() = 0;
+    Item.Add('failedNodes', FailedNodes);
+    Batch.SetRange(Status, Batch.Status::NeedsReview);
+    Item.Add('reviewBatches', Batch.Count());
+    Batch.SetRange(Status, Batch.Status::Running);
+    Batch.SetCurrentKey("Run Id", "Sequence No.");
+    if Batch.FindFirst() then
+      Item.Add('currentNode', Batch."Node Code");
+    if Entry.ReadPermission() then begin
+      Entry.SetCurrentKey("Run Id", "Occurred At", "Entry Id");
+      Entry.SetRange("Run Id", RunId);
+      Entry.SetAscending("Occurred At", false);
+      Entry.SetAscending("Entry Id", false);
+      if Entry.FindSet() then
+        repeat
+          Scanned += 1;
+          // Counter updates write further events for the same state; show each state change once.
+          SeenKey := Format(Entry."Batch Id") + '|' + Format(Entry."Run Status".AsInteger()) + '|' + Format(Entry."Batch Status".AsInteger());
+          if not Seen.ContainsKey(SeenKey) then begin
+            Seen.Add(SeenKey, true);
+            Clear(Line);
+            Line.Add('at', Format(Entry."Occurred At", 0, 9));
+            Line.Add('node', Entry."Node Code");
+            if IsNullGuid(Entry."Batch Id") then
+              Line.Add('status', Format(Entry."Run Status"))
+            else
+              Line.Add('status', Format(Entry."Batch Status"));
+            Line.Add('units', Entry."Processed Units");
+            Events.Add(Line);
+          end;
+        until (Entry.Next() = 0) or (Events.Count() = 12) or (Scanned = 80);
+    end;
+    Item.Add('events', Events);
   end;
 
   local procedure DescribeSteps(RunId: Guid): JsonArray
@@ -395,7 +473,6 @@ codeunit 90365 "BCSF Dashboard Data"
     Texts.Add('moduleOpen', ModuleOpenLbl);
     Texts.Add('moduleDone', ModuleDoneLbl);
     Texts.Add('moduleReview', ModuleReviewLbl);
-    Texts.Add('dataTab', DataTabLbl);
     Texts.Add('runsTab', RunsTabLbl);
     Texts.Add('selectedRunScope', SelectedRunScopeLbl);
     Texts.Add('unavailableEntities', UnavailableEntitiesLbl);
@@ -491,6 +568,32 @@ codeunit 90365 "BCSF Dashboard Data"
     Texts.Add('selected', SelectedLbl);
     Texts.Add('skippedUnits', SkippedUnitsLbl);
     Texts.Add('reviewUnits', ReviewUnitsLbl);
+    Texts.Add('hdrIndustry', HdrIndustryLbl);
+    Texts.Add('modulesDone', ModulesDoneLbl);
+    Texts.Add('modulesRunning', ModulesRunningLbl);
+    Texts.Add('modulesWaiting', ModulesWaitingLbl);
+    Texts.Add('errorsLabel', ErrorsLabelLbl);
+    Texts.Add('warningsLabel', WarningsLabelLbl);
+    Texts.Add('elapsedLabel', ElapsedLabelLbl);
+    Texts.Add('currentStepLabel', CurrentStepLabelLbl);
+    Texts.Add('noCurrentStep', NoCurrentStepLbl);
+    Texts.Add('overallProgress', OverallProgressLbl);
+    Texts.Add('activityTitle', ActivityTitleLbl);
+    Texts.Add('noActivity', NoActivityLbl);
+    Texts.Add('moduleWaiting', ModuleWaitingLbl);
+    Texts.Add('moduleFailed', ModuleFailedLbl);
+    Texts.Add('toggleDetails', ToggleDetailsLbl);
+    Texts.Add('generationTab', GenerationTabLbl);
+    Texts.Add('companyDataTab', CompanyDataTabLbl);
+    Texts.Add('entitiesCount', EntitiesCountLbl);
+    Texts.Add('allDetails', AllDetailsLbl);
+    Texts.Add('closeLabel', CloseLabelLbl);
+    Texts.Add('moduleSearch', ModuleSearchLbl);
+    Texts.Add('filterAll', FilterAllLbl);
+    Texts.Add('filterWarnings', FilterWarningsLbl);
+    Texts.Add('filterErrors', FilterErrorsLbl);
+    Texts.Add('noMatch', NoMatchLbl);
+    Texts.Add('dataLoading', DataLoadingLbl);
   end;
 
   local procedure AddMasterPool(RunId: Guid; var Item: JsonObject)
@@ -557,7 +660,6 @@ codeunit 90365 "BCSF Dashboard Data"
     GenerationScopeLbl: Label 'Generation: %1. Purchasing: %2; sales: %3. Master data source: %4.', Comment = '%1 = generation kind, %2 = purchasing selected, %3 = sales selected, %4 = source run';
     ExportPackageLbl: Label 'Prepare data export package';
     PeriodLbl: Label 'Business dates: %1 to %2 (inclusive).', Comment = '%1 = starting date, %2 = ending date';
-    DataTabLbl: Label 'Data';
     RunsTabLbl: Label 'Runs';
     SelectedRunScopeLbl: Label 'Generated in selected run';
     UnavailableEntitiesLbl: Label 'Entities without a generator';
@@ -650,6 +752,32 @@ codeunit 90365 "BCSF Dashboard Data"
     NotRecordedLbl: Label 'Not recorded';
     SkippedUnitsLbl: Label 'Skipped before creation';
     ReviewUnitsLbl: Label 'Unconfirmed; review required';
+    HdrIndustryLbl: Label 'Industry';
+    ModulesDoneLbl: Label 'Modules completed';
+    ModulesRunningLbl: Label 'Modules in progress';
+    ModulesWaitingLbl: Label 'Modules waiting';
+    ErrorsLabelLbl: Label 'Errors';
+    WarningsLabelLbl: Label 'Warnings';
+    ElapsedLabelLbl: Label 'Elapsed time';
+    CurrentStepLabelLbl: Label 'Current step';
+    NoCurrentStepLbl: Label 'No step is running';
+    OverallProgressLbl: Label 'Overall progress';
+    ActivityTitleLbl: Label 'Live activity';
+    NoActivityLbl: Label 'No activity recorded yet';
+    ModuleWaitingLbl: Label 'Waiting';
+    ModuleFailedLbl: Label 'Failed';
+    ToggleDetailsLbl: Label 'Show or hide details';
+    GenerationTabLbl: Label 'Generation';
+    CompanyDataTabLbl: Label 'Company data';
+    EntitiesCountLbl: Label 'Entities: %1', Comment = '%1 = number of entities';
+    AllDetailsLbl: Label 'All details';
+    CloseLabelLbl: Label 'Close';
+    ModuleSearchLbl: Label 'Search modules';
+    FilterAllLbl: Label 'All modules';
+    FilterWarningsLbl: Label 'With warnings';
+    FilterErrorsLbl: Label 'With errors';
+    NoMatchLbl: Label 'No module matches the filter';
+    DataLoadingLbl: Label 'Loading company data';
     SelectedLbl: Label 'Selected';
     PostedWithoutPaymentsLbl: Label 'Posted documents without payments';
     PostedWithPaymentsLbl: Label 'Posted documents with payments and application';

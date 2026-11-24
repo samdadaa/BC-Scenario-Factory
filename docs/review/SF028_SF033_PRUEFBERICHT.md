@@ -1,6 +1,6 @@
 # SF-028 bis SF-033 – Optionale Fachmodule: Lager, Fertigung, Service, Anlagen, CRM
 
-**24.11.2026 · App-Version unverändert (1.0.12.0) · Erledigt (Teilumfang): vom Nutzer nativ getestet und abgenommen am 24.11.2026 (SF-028–SF-031, SF-033, SF-051–SF-056). SF-032 bleibt offen.** Ausdrücklich beauftragt: SF-028–SF-033. AGENTS.md, TODO.md und die Dokumentation wurden gelesen; Montage (SF-054), Projekte (SF-055) und Planung (SF-056) lagen bereits vor und sind Teil von SF-029/030/033. Kein Commit, kein Deployment. **Nicht kompiliert** (AL-Compiler braucht .NET 10, vorhanden 8.0.8), keine AL-Testausführung, keine native Sandbox. API-Namen wurden gegen die lokalen BC-28-Symbole (`.alpackages`) geprüft, nicht gegen das Laufzeitverhalten.
+**24.11.2026 · App-Version unverändert (1.0.12.0) · Erledigt (Teilumfang): vom Nutzer nativ getestet und abgenommen am 24.11.2026 (SF-028–SF-031, SF-033, SF-051–SF-056). SF-032 bleibt offen.** Ausdrücklich beauftragt: SF-028–SF-033. AGENTS.md, TODO.md und die Dokumentation wurden gelesen; Montage (SF-054), Projekte (SF-055) und Planung (SF-056) lagen bereits vor und sind Teil von SF-029/030/033. Kein Commit, kein Deployment. Zunächst nicht lokal kompiliert (AL-Compiler braucht .NET 10); vom Nutzer gebaut und nativ in der Sandbox getestet. API-Namen wurden gegen die lokalen BC-28-Symbole (`.alpackages`) geprüft, nicht gegen das Laufzeitverhalten.
 
 ## Ergebnis je Ticket
 
@@ -45,3 +45,7 @@ Neue Belegart `SALES.BLANKET` (Enum `SalesBlanketOrder`, Wert 10) im Verkaufsgen
 - **CRM:** Marker `crmExtVersion`: Segment je Lauf mit Segmentzeile je Verkaufschance-Kontakt, Nachfass-Aufgabe (Telefonat) je Chance, wenn der Debitor einen Verkäufer hat. Interaktionsprotokoll, Chancenphasen und -abschluss nicht umgesetzt (laufen über Assistenten/Chancenposten, ohne sichere Standard-API).
 - **Projekte:** Marker `projectStructureVersion`: Begin-/End-Summenaufgabe um die Buchungsaufgaben (mehrstufige Struktur). WIP/Ertragsrealisierung, Projektpreise und Kapazitätsprüfung nicht umgesetzt.
 - **Planung:** Umsetzung der Vorschläge in Bestellungen und Produktionsplanung nicht umgesetzt (Standard-Umsetzungscodeunit mit internem Commit; Produktionsplanung braucht Arbeitspläne).
+
+
+## Abnahme 24.11.2026
+Der Nutzer hat alle Umsetzungen dieses Berichts (Module, Rahmenaufträge, Retouren, Anlagen-/Service-/CRM-/Projekt-Erweiterungen, Lizenzprüfung, Dashboard) nativ getestet und abgenommen; die Stabilisierung (Bauen, Mandantenläufe, Kacheln) gilt als abgeschlossen, SF-049 ist erledigt. Offen bleiben die ausdrücklich nicht gebauten Punkte (siehe oben).

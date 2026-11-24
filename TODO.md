@@ -4,7 +4,7 @@
 
 ## Stand und nächste Arbeit
 
-Vorhanden: **156 AL-Dateien in 22 Modulen (Stand 24.11.2026, nicht kompiliert)**, separate Test-App **1.3.0.3 mit 48 Testmethoden**, sieben ausführbare führende Entitäten (Debitor, Kreditor, Artikel, Einkaufsbestellung, Verkaufsangebot/-auftrag/-rechnung). Zahlung/Ausgleich ist ein vorhandener Folgedienst, kein eigener zusätzlicher Entitätsgenerator. Die acht optionalen Fachmodule Lager, Fertigung, Montage, Projekte, Service, Anlagen, CRM und Planung sind in der Einrichtung wählbar und erzeugen im Folgeprozess eigene Daten (SF-028–SF-033, SF-054–SF-056; nativ abgenommen am 24.11.2026). Es gibt keine reine Planungsauswahl mehr.
+Vorhanden: **156 AL-Dateien in 22 Modulen (Stand 24.11.2026, nicht kompiliert)**, separate Test-App **1.3.0.3 mit 48 Testmethoden**, sieben ausführbare führende Entitäten (Debitor, Kreditor, Artikel, Einkaufsbestellung, Verkaufsangebot/-auftrag/-rechnung). Zahlung/Ausgleich ist ein vorhandener Folgedienst, kein eigener zusätzlicher Entitätsgenerator. Die acht optionalen Fachmodule Lager, Fertigung, Montage, Projekte, Service, Anlagen, CRM und Planung sind in der Einrichtung wählbar und erzeugen im Folgeprozess eigene Daten (SF-028–SF-033, SF-054–SF-056; nativ abgenommen am 24.11.2026, ebenso Rahmenaufträge, Retouren, Anlagen-/Service-/CRM-/Projekt-Erweiterungen, Lizenzprüfung und Dashboard). Es gibt keine reine Planungsauswahl mehr.
 
 Normalweg: **Einrichtung → Kontenplan einmalig → Großhandel → Module → Größe → Prozessstufe und Zeitraum → Zusammenfassung → Hintergrundstart → Dashboard/Ergebnisse**. Unterstützt sind Stammdaten, ungebuchte Belege, Standardbuchungen sowie vollständige Zahlung/Ausgleich. Der Zeitraum neuer Firmenrequests endet gestern; technische Erstellzeitstempel bleiben aktuell.
 
@@ -98,7 +98,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-046](#sf-046) | P1 | Zur Prüfung | Konfigurationspaket mit 128 Tabellen; native Exportabnahme offen |
 | [SF-048](#sf-048) | P1 | Zur Prüfung | Drei Laufarten, bestätigte Stammdatenquelle und unabhängige Einkaufs-/Verkaufsläufe; native A–G offen |
 | [SF-047](#sf-047) | P1 | Zur Prüfung | Großhandel v6: Artikelpool, zeitliche Beschaffung, geografische Streuung; native Abnahme offen |
-| [SF-049](#sf-049) | P0 | In Arbeit | Gemeinsamer Stammdatenpool, Preflight und Mengenvertrag |
+| [SF-049](#sf-049) | P0 | Erledigt | Gemeinsamer Stammdatenpool, Preflight und Mengenvertrag; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-050](#sf-050) | P0 | Erledigt | Einzelvorgänge, sichere Fortsetzung, Skip-/Prüfzustände und Existing-Foundation; nativ vom Nutzer getestet (23.11.2026) |
 | [SF-051](#sf-051) | P1 | Erledigt | Teilzahlung/Raten/offene Posten; Rabatt, Toleranz, Sammelausgleich nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-052](#sf-052) | P1 | Erledigt | Gutschriften im Folgeprozess; Retouren nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
@@ -106,6 +106,8 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-054](#sf-054) | P2 | Erledigt | Montage; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-055](#sf-055) | P2 | Erledigt | Projekte; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-056](#sf-056) | P2 | Erledigt | Planungsvorschläge; nativ vom Nutzer abgenommen (24.11.2026) |
+| [SF-057](#sf-057) | P2 | Zur Prüfung | Dashboard als Live Control Center (Laufstatus, Modulkarten, Aktivitätsfeed); native Abnahme offen |
+| [SF-058](#sf-058) | P2 | Zur Prüfung | Dashboard in drei Ansichten (Generierung, Mandantendaten, Läufe), Detail-Overlay, kompakter Kopf; native Abnahme offen |
 
 
 ## Ticketdetails
@@ -896,7 +898,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 <a name="sf-049"></a>
 ### SF-049 — Einheitlicher Preflight, Stammdatenpool und Mengenvertrag für alle Generatoren
-**Status:** In Arbeit · **Priorität:** P0 · **Abhängigkeiten:** SF-048, SF-040, SF-042 · **Gilt für:** alle Module
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · **Priorität:** P0 · **Abhängigkeiten:** SF-048, SF-040, SF-042 · **Gilt für:** alle Module
 
 **Ziel:** Einen gemeinsamen *lesenden* Eignungs- und Auswahlvertrag über existierende Partner/Artikel/Einrichtungen herstellen; Null-Run-ID, 0-Mengen, einzelne Dokumentarten und beliebige positive Belegmengen im zulässigen Limit richtig planen, ohne vorhandene Stammdaten zu ändern.
 
@@ -1004,6 +1006,32 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 **Abnahme:** reproduzierbare und fachlich passende Vorschläge für Unter-/Überdeckung inklusive negativer Varianten.
 
 **Umsetzung 24.11.2026:** siehe [Bericht](docs/review/SF056_PRUEFBERICHT.md).
+
+<a name="sf-057"></a>
+### SF-057 — Dashboard als Live Control Center
+**Status:** Zur Prüfung · **Priorität:** P2 · **Abhängigkeiten:** SF-041, SF-044 · Nutzerauftrag 24.11.2026
+
+- [x] Im vorhandenen Control-Add-in: Laufstatus-Kopf (Branche, Status, Gesamtfortschrittskreis, Module fertig/in Verarbeitung/wartend, Fehler, Warnungen, Laufzeit, aktueller Schritt), kompakte aufklappbare Modulkarten mit Akzentfarbe, Icon, Ring, Balken, zwei bis vier klickbaren Kennzahlen und vollständiger Detailansicht, Live-Aktivitätsfeed, Zählanimationen nur bei echten Änderungen. Aufklappzustand, Scrollposition und Auswahl bleiben bei der 1-s-Aktualisierung erhalten (Knoten werden gepatcht, nicht neu gebaut).
+- [x] AL-Payload minimal erweitert (`BCSF Dashboard Data`): `startedIso`, `finishedIso`, `failedBatches`, `failedNodes`, `reviewBatches`, `currentNode` und die letzten 12 Zustandswechsel aus der vorhandenen Tabelle *Run Event* (`events`). Keine neue Tabelle/Seite/Protokollarchitektur, keine Generator- oder Buchungsänderung.
+- [x] 15 neue Labels DE/EN (`Translations/sf057.de.json`, in Dashboard-Fallback und Sync-Skript eingebunden). XLIFF-IDs entstehen erst beim nächsten AL-Build, danach `python3 Translations/sync_sf_translations.py`.
+- [ ] Offen: AL-Build (Compiler hier nicht verfügbar, **nicht kompiliert**), XLIFF-Sync, native Prüfung in BC (Role Center, 20–30 Module, echter Lauf, Live-Feed mit tatsächlichen Run Events, Berechtigung ohne Leserecht auf *Run Event*).
+
+**Belege:** [dashboard.js](src/Monitoring/Dashboard/dashboard.js), [dashboard.css](src/Monitoring/Dashboard/dashboard.css), [BCSFDashboardData.Codeunit.al](src/Monitoring/Codeunits/BCSFDashboardData.Codeunit.al), [check_dashboard.mjs](scripts/check_dashboard.mjs), [DASHBOARD_EMBEDDING.md](docs/DASHBOARD_EMBEDDING.md#live-control-center-sf-057).
+**Abnahme:** [ ] Menschliche Abnahme offen.
+
+<a name="sf-058"></a>
+### SF-058 — Dashboard-Feinschliff: drei Ansichten und Detail-Overlay
+**Status:** Zur Prüfung · **Priorität:** P2 · **Abhängigkeiten:** SF-057 · Nutzerauftrag 24.11.2026
+
+- [x] Drei Tabs mit Icons im bestehenden Control-Add-in: **Generierung** (kompakter Kopf, Live-Zeile, Modulkarten, Laufauswahl, Aktionen), **Mandantendaten** (Datenumfang-/Lauffilter, dieselben Modulkarten mit Bestandszahlen, Entitäten ohne Generator im Overlay gekennzeichnet) und **Läufe** (Liste mit Branche, Modus, Kontenplan, Start, Laufzeit, Status, Fehler/Warnungen; Klick wählt den Lauf und öffnet die Generierungsansicht, Summenkacheln und Diagnose unverändert). Tab, Filter, Suche, Lauf und Overlay bleiben beim Wechsel erhalten.
+- [x] Kopf um ca. 60 % niedriger (Zeilen: Titel/Status/Branche, Statuspillen `3/4 abgeschlossen`, aktueller Schritt + letzte Aktivität). Warnungen/Fehler als anklickbare Pillen; lange Texte (Buchungsübersprünge, Stammdatenpool, Qualität) im Overlay *Alle Details*.
+- [x] Aufklappen ersetzt durch zentriertes Overlay innerhalb des Add-ins (Escape, Klick außerhalb, Schließen; Fokusrückgabe; intern scrollbar; wird gepatcht statt neu aufgebaut). Jede Entität einmal; Kennzahlen auf der Karte öffnen weiter direkt die BC-Liste. Karten mit einheitlicher Höhe (Spalten mind. 250 px, ≥ 4 pro Reihe bei 1440 px, > 6 bei 2200 px), Entitätsanzahl, grüner Haken, reservierter Balkenplatz, Modulstatus/-warnung an der Karte, Statusfilter und Modulsuche erst ab 5 bzw. 9 Modulen.
+- [x] AL: Befehl `view` (Ansicht), `BuildView` baut alle Stockgruppen nur in der Mandantendatenansicht (Schlüssel `Gruppe/Schlüssel` wie Laufergebnisse, ein `OpenMetric`-Pfad), Laufergebnisse nur in der Generierungsansicht, Fehler-/Warnzähler je Lauf nur in der Läufeansicht. Älteres `stockGroup` entfällt. Neue Labels in `Translations/sf057.de.json`.
+- [ ] Offen: AL-Build (nicht kompiliert), XLIFF-Sync, native Prüfung (Standardlistenfilter je Datenumfang/Lauf, Rechte, 20–30 Module, beide Scrollbars in BC). Eine Gesamtzahl erzeugter Datensätze wird bewusst nicht angezeigt (keine doppelfreie Quelle). Ohne Auswahl bleibt der Unternehmensfortschritt sichtbar; bei gewähltem Lauf zeigt die Generierungsansicht diesen Lauf.
+- [ ] `scripts/check_dashboard_stock.mjs` testet die entfernte Gruppen-Oberfläche mit einer DOM-Attrappe und ist durch `check_dashboard.mjs` ersetzt; Löschung bedarf der Freigabe.
+
+**Belege:** [dashboard.js](src/Monitoring/Dashboard/dashboard.js), [dashboard.css](src/Monitoring/Dashboard/dashboard.css), [BCSFDashboardStock.Codeunit.al](src/Monitoring/Codeunits/BCSFDashboardStock.Codeunit.al), [BCSFDashboardData.Codeunit.al](src/Monitoring/Codeunits/BCSFDashboardData.Codeunit.al), [BCSFDashboardPart.Page.al](src/Monitoring/Pages/BCSFDashboardPart.Page.al), [check_dashboard.mjs](scripts/check_dashboard.mjs), [DASHBOARD_EMBEDDING.md](docs/DASHBOARD_EMBEDDING.md#ansichten-und-detail-overlay-sf-058).
+**Abnahme:** [ ] Menschliche Abnahme offen.
 
 ### Detaillierte Arbeitspakete für bereits bestehende offene Modultickets
 

@@ -19,8 +19,6 @@ page 90362 "BCSF Dashboard Part"
                     Setup: Record "BCSF Factory Setup";
                 begin
                     IsReady := true;
-                    if StockGroup = '' then
-                        StockGroup := 'master';
                     ReloadStock();
                     RenderDashboard();
                     if not WizardOpened then begin
@@ -52,7 +50,14 @@ page 90362 "BCSF Dashboard Part"
                     case ActionCode of
                         'select':
                             SelectedRunId := Commands.ParseRunId(RunId);
-                        'stockGroup', 'stockScope', 'stockRun', 'stockOpen':
+                        'view':
+                            begin
+                                if not (RunId in ['generation', 'data', 'runs']) then
+                                    Error(InvalidStockSelectionErr);
+                                ActiveView := RunId;
+                                ReloadStock();
+                            end;
+                        'stockScope', 'stockRun', 'stockOpen':
                             HandleStock(ActionCode, RunId);
                         'summary':
                             Data.OpenSummary(RunId, SummaryViews);
@@ -85,12 +90,6 @@ page 90362 "BCSF Dashboard Part"
         Commands: Codeunit "BCSF Dashboard Commands";
     begin
         case ActionCode of
-            'stockGroup':
-                begin
-                    if not Stock.IsGroup(Value) then
-                        Error(InvalidStockSelectionErr);
-                    StockGroup := Value;
-                end;
             'stockScope':
                 begin
                     if (Value <> 'generated') and (Value <> 'company') then
@@ -110,7 +109,7 @@ page 90362 "BCSF Dashboard Part"
                 end;
             'stockOpen':
                 begin
-                    Stock.OpenMetric(StockGroup, Value, EntireCompany, StockRunId, StockView);
+                    Stock.OpenMetric('master', Value, EntireCompany, StockRunId, StockView);
                     exit;
                 end;
         end;
@@ -129,21 +128,21 @@ page 90362 "BCSF Dashboard Part"
     var
         Stock: Codeunit "BCSF Dashboard Stock";
     begin
-        StockView := Stock.Build(StockGroup, EntireCompany, StockRunId);
+        StockView := Stock.BuildView(ActiveView = 'data', EntireCompany, StockRunId);
     end;
 
     local procedure RenderDashboard()
     var
         DashboardData: Codeunit "BCSF Dashboard Data";
     begin
-        CurrPage.Dashboard.SetDashboard(DashboardData.Build(SelectedRunId, StockView, RunStock, SummaryViews));
+        CurrPage.Dashboard.SetDashboard(DashboardData.Build(SelectedRunId, StockView, RunStock, SummaryViews, ActiveView));
     end;
 
     var
         SelectedRunId: Guid;
         IsReady: Boolean;
         WizardOpened: Boolean;
-        StockGroup: Text;
+        ActiveView: Text;
         EntireCompany: Boolean;
         StockRunId: Guid;
         StockView: JsonObject;

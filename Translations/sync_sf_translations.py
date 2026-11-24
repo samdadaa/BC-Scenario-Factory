@@ -133,6 +133,7 @@ def sync():
     DE.update(json.loads((ROOT / "sf053.de.json").read_text(encoding="utf-8")))
     DE.update(json.loads((ROOT / "sf054.de.json").read_text(encoding="utf-8")))
     DE.update(json.loads((ROOT / "sf055.de.json").read_text(encoding="utf-8")))
+    DE.update(json.loads((ROOT / "sf057.de.json").read_text(encoding="utf-8")))
     DE.update(json.loads((ROOT / "sf028.de.json").read_text(encoding="utf-8")))
     generated = ET.parse(ROOT / f"{NAME}.g.xlf")
     units = list(generated.iter(Q("trans-unit")))

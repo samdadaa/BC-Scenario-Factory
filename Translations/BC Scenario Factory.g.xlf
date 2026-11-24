@@ -3798,6 +3798,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ActiveCountLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3267306353" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Live activity</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ActivityTitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 409744883" size-unit="char" translate="yes" xml:space="preserve">
+          <source>All details</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType AllDetailsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 3916856562" size-unit="char" translate="yes" xml:space="preserve">
           <source>Apply saved requests</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3833,6 +3843,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ChooseLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 2642805398" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Close</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType CloseLabelLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 154453158" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Company data</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType CompanyDataTabLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1563050084" size-unit="char" translate="yes" xml:space="preserve">
           <source>Company generation progress</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3863,10 +3883,15 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType CreatedLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3898954772 - NamedType 3436950423" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Data</source>
+        <trans-unit id="Codeunit 3898954772 - NamedType 4290824833" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Current step</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType DataTabLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType CurrentStepLabelLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 4255828648" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Loading company data</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType DataLoadingLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 565568802" size-unit="char" translate="yes" xml:space="preserve">
           <source>Diagnostics</source>
@@ -3878,10 +3903,20 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType EarliestLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 714848522" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Elapsed time</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ElapsedLabelLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 436939961" size-unit="char" translate="yes" xml:space="preserve">
           <source>No captured runs yet. Create a scenario to get started.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType EmptyLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3533207576" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entities: %1</source>
+          <note from="Developer" annotates="general" priority="2">%1 = number of entities</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType EntitiesCountLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 4057363531" size-unit="char" translate="yes" xml:space="preserve">
           <source>Module / entity</source>
@@ -3892,6 +3927,11 @@
           <source>The action could not be completed. Review the Business Central message and try again.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ErrorLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3428578457" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Errors</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ErrorsLabelLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 2670710358" size-unit="char" translate="yes" xml:space="preserve">
           <source>Execute &amp; control</source>
@@ -3928,6 +3968,21 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType FailedLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3726930861" size-unit="char" translate="yes" xml:space="preserve">
+          <source>All modules</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType FilterAllLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3323953939" size-unit="char" translate="yes" xml:space="preserve">
+          <source>With errors</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType FilterErrorsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1374128901" size-unit="char" translate="yes" xml:space="preserve">
+          <source>With warnings</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType FilterWarningsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 2032949676" size-unit="char" translate="yes" xml:space="preserve">
           <source>Finished</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -3942,6 +3997,16 @@
           <source>Generation: %1. Purchasing: %2; sales: %3. Master data source: %4.</source>
           <note from="Developer" annotates="general" priority="2">%1 = generation kind, %2 = purchasing selected, %3 = sales selected, %4 = source run</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType GenerationScopeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 592250749" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Generation</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType GenerationTabLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 1591984642" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Industry</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType HdrIndustryLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 2629106428" size-unit="char" translate="yes" xml:space="preserve">
           <source>Status history</source>
@@ -3987,6 +4052,11 @@
           <source>Completed</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ModuleDoneLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3225424205" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Failed</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ModuleFailedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 2603529012" size-unit="char" translate="yes" xml:space="preserve">
           <source>Accounting</source>
@@ -4043,10 +4113,35 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ModuleSalesLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 147425765" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Modules completed</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ModulesDoneLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3985848938" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Search modules</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ModuleSearchLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1357796071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Service</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ModuleServiceLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 2877411640" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Modules in progress</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ModulesRunningLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 4278427252" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Modules waiting</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ModulesWaitingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 2714284853" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Waiting</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ModuleWaitingLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1373904959" size-unit="char" translate="yes" xml:space="preserve">
           <source>Warehouse</source>
@@ -4073,6 +4168,21 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType NoAccessLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 2937177466" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No activity recorded yet</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType NoActivityLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3695090540" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No step is running</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType NoCurrentStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 2437040252" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No module matches the filter</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType NoMatchLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1799372165" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select a run to view progress and run-specific actions.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -4092,6 +4202,11 @@
           <source>Not recorded</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType NotRecordedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 61741060" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Overall progress</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType OverallProgressLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 3411495380" size-unit="char" translate="yes" xml:space="preserve">
           <source>Request pause</source>
@@ -4413,6 +4528,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType TitleLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3790455534" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Show or hide details</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType ToggleDetailsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 1169511534" size-unit="char" translate="yes" xml:space="preserve">
           <source>Total batches</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -4427,6 +4547,11 @@
           <source>Read at</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType UpdatedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3898954772 - NamedType 3918291575" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Warnings</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Data - NamedType WarningsLabelLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3898954772 - NamedType 3690483212" size-unit="char" translate="yes" xml:space="preserve">
           <source>Wholesale</source>

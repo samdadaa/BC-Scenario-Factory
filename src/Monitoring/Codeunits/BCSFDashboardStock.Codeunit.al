@@ -118,6 +118,41 @@ codeunit 90369 "BCSF Dashboard Stock"
     exit(Stock);
   end;
 
+  // Company data view: all groups in one payload. Keys carry the group prefix (like run results), so one
+  // OpenMetric call resolves group and metric; only built while the company data view is active.
+  procedure BuildView(AllGroups: Boolean; EntireCompany: Boolean; StockRunId: Guid): JsonObject
+  var
+    Stock: JsonObject;
+    Part: JsonObject;
+    Metric: JsonObject;
+    Metrics: JsonArray;
+    Groups: JsonToken;
+    Group: JsonToken;
+    Values: JsonToken;
+    Value: JsonToken;
+    GroupKey: Text;
+  begin
+    Stock := Build('', EntireCompany, StockRunId);
+    if not AllGroups then
+      exit(Stock);
+    Stock.Get('groups', Groups);
+    foreach Group in Groups.AsArray() do begin
+      GroupKey := TextProperty(Group.AsObject(), 'key');
+      Part := Build(GroupKey, EntireCompany, StockRunId);
+      Part.Get('metrics', Values);
+      foreach Value in Values.AsArray() do begin
+        Metric := Value.AsObject();
+        Metric.Add('group', GroupKey);
+        if GroupKey <> 'master' then
+          Metric.Replace('key', GroupKey + '/' + TextProperty(Metric, 'key'));
+        Metrics.Add(Metric);
+      end;
+    end;
+    Stock.Replace('metrics', Metrics);
+    Stock.Add('all', true);
+    exit(Stock);
+  end;
+
   procedure BuildRunResults(RunId: Guid): JsonObject
   var
     Stock: JsonObject;

@@ -1,6 +1,6 @@
 # Projects – Modulspezifikation
 
-**Status:** Zur Prüfung (SF-055, 24.11.2026). **Nicht kompiliert, nicht nativ getestet.** Codeunit `BCSF Project Processor` (90484); jetzt nur noch bei gewähltem Modul *Projects* im Folgeprozess. Details: [SF-028–SF-033-Bericht](../../../review/SF028_SF033_PRUEFBERICHT.md). **Pfad:** `src/Projects/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P2.
+**Status:** Zur Prüfung (SF-055, 24.11.2026). **Nativ vom Nutzer getestet und abgenommen (24.11.2026).** Codeunit `BCSF Project Processor` (90484); jetzt nur noch bei gewähltem Modul *Projects* im Folgeprozess. Details: [SF-028–SF-033-Bericht](../../../review/SF028_SF033_PRUEFBERICHT.md). **Pfad:** `src/Projects/`. **Kategorie:** Fachlicher BC-Generator. **Phase:** P2.
 
 ## Fachlicher Auftrag
 
