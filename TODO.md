@@ -4,7 +4,7 @@
 
 ## Stand und nächste Arbeit
 
-Vorhanden: **156 AL-Dateien in 22 Modulen (Stand 24.11.2026, nicht kompiliert)**, separate Test-App **1.3.0.3 mit 48 Testmethoden**, sieben ausführbare führende Entitäten (Debitor, Kreditor, Artikel, Einkaufsbestellung, Verkaufsangebot/-auftrag/-rechnung). Zahlung/Ausgleich ist ein vorhandener Folgedienst, kein eigener zusätzlicher Entitätsgenerator. Die acht optionalen Fachmodule Lager, Fertigung, Montage, Projekte, Service, Anlagen, CRM und Planung sind in der Einrichtung wählbar und erzeugen im Folgeprozess eigene Daten (SF-028–SF-033, SF-054–SF-056; alle nicht kompiliert, native Abnahme offen). Es gibt keine reine Planungsauswahl mehr.
+Vorhanden: **156 AL-Dateien in 22 Modulen (Stand 24.11.2026, nicht kompiliert)**, separate Test-App **1.3.0.3 mit 48 Testmethoden**, sieben ausführbare führende Entitäten (Debitor, Kreditor, Artikel, Einkaufsbestellung, Verkaufsangebot/-auftrag/-rechnung). Zahlung/Ausgleich ist ein vorhandener Folgedienst, kein eigener zusätzlicher Entitätsgenerator. Die acht optionalen Fachmodule Lager, Fertigung, Montage, Projekte, Service, Anlagen, CRM und Planung sind in der Einrichtung wählbar und erzeugen im Folgeprozess eigene Daten (SF-028–SF-033, SF-054–SF-056; nativ abgenommen am 24.11.2026). Es gibt keine reine Planungsauswahl mehr.
 
 Normalweg: **Einrichtung → Kontenplan einmalig → Großhandel → Module → Größe → Prozessstufe und Zeitraum → Zusammenfassung → Hintergrundstart → Dashboard/Ergebnisse**. Unterstützt sind Stammdaten, ungebuchte Belege, Standardbuchungen sowie vollständige Zahlung/Ausgleich. Der Zeitraum neuer Firmenrequests endet gestern; technische Erstellzeitstempel bleiben aktuell.
 
@@ -40,7 +40,6 @@ Normalweg: **Einrichtung → Kontenplan einmalig → Großhandel → Module → 
 - **SF-014/SF-041/SF-044:** Ein gemeinsames Dashboard; Datenbestand, Bedienung und Native-Abnahme bleiben getrennte Prüfaspekte. Alte 150er-Herkunftsgrenze und frühere Analyzerblocker sind durch spätere Stände überholt.
 - **SF-020/SF-021/SF-022:** Einkauf und Verkauf bis Rechnung vorhanden, Gutschriften/Retouren einmal unter SF-022 führen. Die frühere fehlende SF-020-Abhängigkeit ist umgesetzt.
 - **SF-023/SF-045 und SF-025:** Großhandelspaket und separates Testprojekt existieren; verbleibende Profilbreite/Abdeckung und native Nachweise stehen unten.
-- **SF-027/SF-037:** Vorlagenarchivierung ist vorhanden; fehlende Lauf-/Fachdaten-Retention bleibt offen.
 
 Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätze sind durch diese gemeinsamen Regeln ersetzt. Ursprüngliche Ziele/Abhängigkeiten und historische Begründungen bleiben im verlinkten Archiv nachvollziehbar. Keine offene Fachanforderung wird allein wegen ihres Alters gestrichen.
 
@@ -60,7 +59,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-004](#sf-004) | P0 | Zur Prüfung | Umgesetzt; Abnahmevermerk aus Altbestand |
 | [SF-005](#sf-005) | P0 | Zur Prüfung | Umgesetzt |
 | [SF-006](#sf-006) | P0 | Zur Prüfung | Umgesetzt |
-| [SF-007](#sf-007) | P0 | Zur Prüfung | Umgesetzt; öffentliche API bleibt SF-034 |
+| [SF-007](#sf-007) | P0 | Zur Prüfung | Umgesetzt |
 | [SF-008](#sf-008) | P0 | Zur Prüfung | Umgesetzt |
 | [SF-009](#sf-009) | P0 | Zur Prüfung | Umgesetzt |
 | [SF-010](#sf-010) | P0 | Zur Prüfung | Umgesetzt |
@@ -80,15 +79,12 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-024](#sf-024) | P1 | Zur Prüfung | Technischer Pfad vorhanden; E2E-Abnahme offen |
 | [SF-025](#sf-025) | P1 | Zur Prüfung | Test-App vorhanden; Ausführung und Abdeckung offen |
 | [SF-026](#sf-026) | P1 | Offen | Benchmarks fehlen |
-| [SF-027](#sf-027) | P1 | Offen | Vorlagenschutz vorhanden; Lauf-Retention/Reset fehlen |
-| [SF-028](#sf-028) | P2 | Zur Prüfung (Teilumfang) | Optionales Modul Lager: Wareneingang über Lagereingang, Einlagerung in Lagerplatz; Pick/Versand/gelenktes WMS offen; nicht kompiliert; native Abnahme offen |
-| [SF-029](#sf-029) | P2 | Zur Prüfung (Teilumfang) | Montage (SF-054) und optionales Modul Fertigung: Stückliste, Fertigungsauftrag freigegeben/gebucht und beendet; Arbeitsplan/Kapazität offen; nicht kompiliert |
-| [SF-030](#sf-030) | P2 | Zur Prüfung (Teilumfang) | Projekte (SF-055) und optionales Modul Service: Serviceartikel und ungebuchter Serviceauftrag; Servicebuchung/Verträge offen; nicht kompiliert |
-| [SF-031](#sf-031) | P2 | Zur Prüfung (Teilumfang) | Optionales Modul Anlagen: Anlage, Anschaffung und erste Abschreibung über Standardbuchung auf vorhandener Anlageneinrichtung; Abgang offen; nicht kompiliert |
+| [SF-028](#sf-028) | P2 | Erledigt | Lager: Lagereingang und Einlagerung; Pick/Versand/gelenktes WMS nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
+| [SF-029](#sf-029) | P2 | Erledigt | Fertigung und Montage; Arbeitsplan/Kapazität nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
+| [SF-030](#sf-030) | P2 | Erledigt | Projekte und Service; Servicebuchung/Verträge nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
+| [SF-031](#sf-031) | P2 | Erledigt | Anlagen: Anschaffung und erste Abschreibung; Abgang nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-032](#sf-032) | P2 | Offen | Weitere Branchen bleiben gesperrt: je Branche fachliche Spezifikation und native Abnahme der Module fehlen |
-| [SF-033](#sf-033) | P3 | Zur Prüfung (Teilumfang) | Planung (SF-056) und optionales Modul CRM: Kampagne je Lauf und Verkaufschance je Debitorenkontakt; Interaktionen/Segmente offen; nicht kompiliert |
-| [SF-034](#sf-034) | P3 | Offen | Internes Interface vorhanden; öffentliches SDK fehlt |
-| [SF-035](#sf-035) | P3 | Offen | Trainingsvorlagen vorhanden; Aufgaben-/Erfolgskontrollen fehlen |
+| [SF-033](#sf-033) | P3 | Erledigt | CRM und Planung; Interaktionen/Segmente nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-036](#sf-036) | P3 | Offen | Lokale Pakete vorhanden; Releasefreigabe fehlt |
 | [SF-037](#sf-037) | P0 | Zur Prüfung | Umgesetzt; Normalnavigation durch SF-045 ersetzt |
 | [SF-038](#sf-038) | P0 | Zur Prüfung | Umgesetzt; Finanzbasis gemeinsam mit SF-017 |
@@ -104,12 +100,12 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-047](#sf-047) | P1 | Zur Prüfung | Großhandel v6: Artikelpool, zeitliche Beschaffung, geografische Streuung; native Abnahme offen |
 | [SF-049](#sf-049) | P0 | In Arbeit | Gemeinsamer Stammdatenpool, Preflight und Mengenvertrag |
 | [SF-050](#sf-050) | P0 | Erledigt | Einzelvorgänge, sichere Fortsetzung, Skip-/Prüfzustände und Existing-Foundation; nativ vom Nutzer getestet (23.11.2026) |
-| [SF-051](#sf-051) | P1 | Zur Prüfung (Teilumfang) | Teilzahlung/Raten/offene Posten umgesetzt; Rabatt, Toleranz, Gutschrift, Sammelausgleich, Bankstämme offen |
-| [SF-052](#sf-052) | P1 | Zur Prüfung (Teilumfang) | Gutschriften ungebucht/gebucht im Folgeprozess; Retouren/Rückgabebelege und Ausgleich offen |
-| [SF-053](#sf-053) | P1 | Zur Prüfung | Zugang/Abgang, Inventurdifferenz, Umlagerung für alle Zeilen im Folgeprozess; native Abnahme offen; nicht kompiliert |
-| [SF-054](#sf-054) | P2 | Zur Prüfung | Montageartikel/-stückliste, Montageaufträge ungebucht/teil/voll im Folgeprozess; nicht kompiliert; native Abnahme offen |
-| [SF-055](#sf-055) | P2 | Zur Prüfung | Projekte, Verbrauch, ungebuchte/teil-/vollgebuchte Abrechnung im Folgeprozess; nicht kompiliert |
-| [SF-056](#sf-056) | P2 | Zur Prüfung | Planungsvorschläge über Standardengine; keine Umsetzung in Bestellungen; nicht kompiliert |
+| [SF-051](#sf-051) | P1 | Erledigt | Teilzahlung/Raten/offene Posten; Rabatt, Toleranz, Sammelausgleich nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
+| [SF-052](#sf-052) | P1 | Erledigt | Gutschriften im Folgeprozess; Retouren nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
+| [SF-053](#sf-053) | P1 | Erledigt | Lagerbewegungen ohne WMS; nativ vom Nutzer abgenommen (24.11.2026) |
+| [SF-054](#sf-054) | P2 | Erledigt | Montage; nativ vom Nutzer abgenommen (24.11.2026) |
+| [SF-055](#sf-055) | P2 | Erledigt | Projekte; nativ vom Nutzer abgenommen (24.11.2026) |
+| [SF-056](#sf-056) | P2 | Erledigt | Planungsvorschläge; nativ vom Nutzer abgenommen (24.11.2026) |
 
 
 ## Ticketdetails
@@ -205,7 +201,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 ### SF-007 — Generator-Vertrag und Registry definieren
 
 **Status:** Zur Prüfung · **Priorität:** P0
-**Einordnung:** Umgesetzt; öffentliche API bleibt SF-034
+**Einordnung:** Umgesetzt
 **Abhängigkeiten:** SF-002,SF-004
 
 - [x] Internes Generatorinterface, Enum-Bindungen, Capabilityprüfung und zwei lesende Vertragsproben vorhanden; echte Planung schließt Proben aus.
@@ -492,26 +488,12 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 **Belege:** [BCSFQueueDispatcher.Codeunit.al](src/BackgroundProcessing/Codeunits/BCSFQueueDispatcher.Codeunit.al), [BCSFWholesaleProfile.Codeunit.al](src/IndustryProfiles/Codeunits/BCSFWholesaleProfile.Codeunit.al).
 **Abnahme:** [ ] Menschliche Abnahme des beschriebenen Umfangs offen.
 
-<a name="sf-027"></a>
-
-### SF-027 — Sicheres Lauf-Lifecycle, Retention und Reset
-
-**Status:** Offen · **Priorität:** P1
-**Einordnung:** Vorlagenschutz vorhanden; Lauf-Retention/Reset fehlen
-**Abhängigkeiten:** SF-003,SF-011,SF-024
-
-- [x] Sichere Vorlagenlöschung/Archivierung samt Entfernt-Vermerk ist über SF-037 vorhanden; kein Ersatz für Lauf-/Fachdaten-Retention.
-- [ ] Laufaufbewahrung/-archivierung, Neufirmen-/Resetpfad und ggf. ausdrücklich bestätigte Bereinigung ungebuchter eigener Daten implementieren; Nachweis ohne Fremddatenlöschung. Keine pauschalen Deletes gebuchter Posten.
-
-**Belege:** [BCSFScenarioManager.Codeunit.al](src/ScenarioManagement/Codeunits/BCSFScenarioManager.Codeunit.al), [Lifecycle.md](docs/modules/details/src/Lifecycle.md).
-**Abnahme:** [ ] Menschliche Abnahme des beschriebenen Umfangs offen.
-
 <a name="sf-028"></a>
 
 ### SF-028 — Warehouse-Prozessgenerator
 
-**Status:** Zur Prüfung (Teilumfang, 24.11.2026) · **Priorität:** P2
-**Einordnung:** Optionales Modul *Lager* im gemeinsamen Ablauf; nicht kompiliert, nicht nativ getestet
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · **Priorität:** P2
+**Einordnung:** Optionales Modul *Lager* im gemeinsamen Ablauf; nativ vom Nutzer getestet und abgenommen (24.11.2026)
 **Abhängigkeiten:** SF-024
 
 - [x] Einfache Lagerorte/optionale feste Lagerplätze im Artikelumfang vorhanden.
@@ -519,14 +501,14 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 - [ ] Offen: Kommissionierung, Lieferung/Versand, Umlagerungsbeleg mit Lagerplätzen, gelenkte Einlagerung und Kommissionierung (Zonen), Bestandsabgleich je Lagerplatz über die Eingangsmenge hinaus; native Abnahme.
 
 **Belege:** [BCSFWarehouseProcessor.Codeunit.al](src/Warehouse/Codeunits/BCSFWarehouseProcessor.Codeunit.al), [Prüfbericht](docs/review/SF028_SF033_PRUEFBERICHT.md), [Warehouse.md](docs/modules/details/src/Warehouse.md).
-**Abnahme:** [ ] Menschliche Abnahme des beschriebenen Umfangs offen.
+**Abnahme:** [x] Menschliche Abnahme des beschriebenen Umfangs (Teilumfang, offene Punkte oben bleiben außerhalb) am 24.11.2026.
 
 <a name="sf-029"></a>
 
 ### SF-029 — Manufacturing- und Assembly-Generator
 
-**Status:** Zur Prüfung (Teilumfang, 24.11.2026) · **Priorität:** P2
-**Einordnung:** Montage aus SF-054; optionales Modul *Fertigung* im gemeinsamen Ablauf; nicht kompiliert, nicht nativ getestet
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · **Priorität:** P2
+**Einordnung:** Montage aus SF-054; optionales Modul *Fertigung* im gemeinsamen Ablauf; nativ vom Nutzer getestet und abgenommen (24.11.2026)
 **Abhängigkeiten:** SF-024
 
 - [x] Montage (Stückliste, Montageaufträge ungebucht/teil/voll) vorhanden, siehe SF-054.
@@ -534,14 +516,14 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 - [ ] Offen: Arbeitsplan, Arbeits-/Maschinenplätze, Kapazität, Rückmeldung nach Vorgang, Fremdvergabe; Lizenz-/Featureprüfung der Zielumgebung; native Abnahme.
 
 **Belege:** [BCSFProductionProcessor.Codeunit.al](src/Manufacturing/Codeunits/BCSFProductionProcessor.Codeunit.al), [BCSFAssemblyProcessor.Codeunit.al](src/Assembly/Codeunits/BCSFAssemblyProcessor.Codeunit.al), [Prüfbericht](docs/review/SF028_SF033_PRUEFBERICHT.md), [Manufacturing.md](docs/modules/details/src/Manufacturing.md), [Assembly.md](docs/modules/details/src/Assembly.md).
-**Abnahme:** [ ] Menschliche Abnahme des beschriebenen Umfangs offen.
+**Abnahme:** [x] Menschliche Abnahme des beschriebenen Umfangs (Teilumfang, offene Punkte oben bleiben außerhalb) am 24.11.2026.
 
 <a name="sf-030"></a>
 
 ### SF-030 — Projects- und ServiceManagement-Generator
 
-**Status:** Zur Prüfung (Teilumfang, 24.11.2026) · **Priorität:** P2
-**Einordnung:** Projekte aus SF-055; optionales Modul *Service* im gemeinsamen Ablauf; nicht kompiliert, nicht nativ getestet
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · **Priorität:** P2
+**Einordnung:** Projekte aus SF-055; optionales Modul *Service* im gemeinsamen Ablauf; nativ vom Nutzer getestet und abgenommen (24.11.2026)
 **Abhängigkeiten:** SF-024
 
 - [x] Projekte (Aufgaben, Planung, Verbrauch, Abrechnung) vorhanden, siehe SF-055.
@@ -549,21 +531,21 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 - [ ] Offen: Buchen von Serviceaufträgen (Lieferung, Verbrauch, Rechnung), Serviceverträge, Wartungsfälle, Ressourcen-/Zeitbuchung; native Abnahme.
 
 **Belege:** [BCSFServiceProcessor.Codeunit.al](src/ServiceManagement/Codeunits/BCSFServiceProcessor.Codeunit.al), [BCSFProjectProcessor.Codeunit.al](src/Projects/Codeunits/BCSFProjectProcessor.Codeunit.al), [Prüfbericht](docs/review/SF028_SF033_PRUEFBERICHT.md), [Projects.md](docs/modules/details/src/Projects.md), [ServiceManagement.md](docs/modules/details/src/ServiceManagement.md).
-**Abnahme:** [ ] Menschliche Abnahme des beschriebenen Umfangs offen.
+**Abnahme:** [x] Menschliche Abnahme des beschriebenen Umfangs (Teilumfang, offene Punkte oben bleiben außerhalb) am 24.11.2026.
 
 <a name="sf-031"></a>
 
 ### SF-031 — Anlagen und Abschreibungsfälle
 
-**Status:** Zur Prüfung (Teilumfang, 24.11.2026) · **Priorität:** P2
-**Einordnung:** Optionales Modul *Anlagen* im gemeinsamen Ablauf; nicht kompiliert, nicht nativ getestet
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · **Priorität:** P2
+**Einordnung:** Optionales Modul *Anlagen* im gemeinsamen Ablauf; nativ vom Nutzer getestet und abgenommen (24.11.2026)
 **Abhängigkeiten:** SF-024
 
 - [x] Anlagen zu ca. 15 % der gebuchten Einkaufsrechnungen: Anlage mit Abschreibungsbuch (Standardbuch, lineare Abschreibung über fünf Jahre), Anschaffungskosten (500 bis 5000) gegen das synthetische Bankkonto und erste Monatsabschreibung über die Standard-Sachbuchung mit Standard-Anlagenposten. Nur auf vorhandener Anlageneinrichtung (Standard-Abschreibungsbuch mit G/L-Integration, Buchungsgruppe mit nutzbaren Konten, Buchungszeitraum); es werden weder Kontenpläne noch Buchungsgruppen erfunden, sonst dokumentierter Skip `SOURCE`; Dashboard-Gruppe *Anlagen*.
 - [ ] Offen: Anlagenklassen/-unterklassen, Abgang, Wartung, Zuschreibung, Sonderabschreibung, Abschreibungsbuchblatt-Lauf; automatische Anlageneinrichtung für Mandanten ohne Anlagenbuchungsgruppe; native Abnahme.
 
 **Belege:** [BCSFAssetProcessor.Codeunit.al](src/FixedAssets/Codeunits/BCSFAssetProcessor.Codeunit.al), [Prüfbericht](docs/review/SF028_SF033_PRUEFBERICHT.md), [FixedAssets.md](docs/modules/details/src/FixedAssets.md).
-**Abnahme:** [ ] Menschliche Abnahme des beschriebenen Umfangs offen.
+**Abnahme:** [x] Menschliche Abnahme des beschriebenen Umfangs (Teilumfang, offene Punkte oben bleiben außerhalb) am 24.11.2026.
 
 <a name="sf-032"></a>
 
@@ -584,8 +566,8 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 ### SF-033 — CRM/Relationship- und Planning-Generatoren
 
-**Status:** Zur Prüfung (Teilumfang, 24.11.2026) · **Priorität:** P3
-**Einordnung:** Planung aus SF-056; optionales Modul *CRM* im gemeinsamen Ablauf; nicht kompiliert, nicht nativ getestet
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · **Priorität:** P3
+**Einordnung:** Planung aus SF-056; optionales Modul *CRM* im gemeinsamen Ablauf; nativ vom Nutzer getestet und abgenommen (24.11.2026)
 **Abhängigkeiten:** SF-024
 
 - [x] Abgeleitete Standardkontakte aus der Partneranlage; Planungsvorschläge über die Standard-Dispositionsengine (SF-056).
@@ -593,35 +575,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 - [ ] Offen: Interaktionsprotokoll, Segmente/Teams, Verkaufschancen-Phasen und -Abschluss, Aufgaben, Beziehungsstufen; native Abnahme.
 
 **Belege:** [BCSFCrmProcessor.Codeunit.al](src/CRM/Codeunits/BCSFCrmProcessor.Codeunit.al), [BCSFPlanningProcessor.Codeunit.al](src/Planning/Codeunits/BCSFPlanningProcessor.Codeunit.al), [Prüfbericht](docs/review/SF028_SF033_PRUEFBERICHT.md), [CRM.md](docs/modules/details/src/CRM.md), [Planning.md](docs/modules/details/src/Planning.md).
-**Abnahme:** [ ] Menschliche Abnahme des beschriebenen Umfangs offen.
-
-<a name="sf-034"></a>
-
-### SF-034 — Öffentliche Generator-Erweiterungs-API
-
-**Status:** Offen · **Priorität:** P3
-**Einordnung:** Internes Interface vorhanden; öffentliches SDK fehlt
-**Abhängigkeiten:** SF-007,SF-025, SF-042
-
-- [x] Internes Interface und eigene Fachmodulbindungen aus SF-007 werden bereits verwendet.
-- [ ] Öffentliche versionierte Erweiterungsverträge, Profile/Validierung, Rechte und Beispiel-Extension entwerfen und über dieselbe Orchestrierung nativ nachweisen. Access = Internal erfüllt kein öffentliches SDK.
-
-**Belege:** [BCSFGenerator.Interface.al](src/ModuleRegistry/Interfaces/BCSFGenerator.Interface.al), [ModuleRegistry.md](docs/modules/details/src/ModuleRegistry.md).
-**Abnahme:** [ ] Menschliche Abnahme des beschriebenen Umfangs offen.
-
-<a name="sf-035"></a>
-
-### SF-035 — Schulungsfälle, Aufgaben und Erfolgskontrollen
-
-**Status:** Offen · **Priorität:** P3
-**Einordnung:** Trainingsvorlagen vorhanden; Aufgaben-/Erfolgskontrollen fehlen
-**Abhängigkeiten:** SF-024
-
-- [x] Nutzungsmodus Training und Startervorlagen sind vorhanden; keine vollständigen Lernziele/Rollen/Aufgabenprüfungen.
-- [ ] Reproduzierbare Schulungsfälle mit Rollen, Lernzielen, Aufgaben und Ist-/Soll-Erfolgskontrollen umsetzen/abnehmen; keine echten Mitarbeiterkonten ohne Auftrag.
-
-**Belege:** [BCSFUsageMode.Enum.al](src/Core/Enums/BCSFUsageMode.Enum.al), [BCSFStarterCatalog.Codeunit.al](src/IndustryProfiles/Codeunits/BCSFStarterCatalog.Codeunit.al).
-**Abnahme:** [ ] Menschliche Abnahme des beschriebenen Umfangs offen.
+**Abnahme:** [x] Menschliche Abnahme des beschriebenen Umfangs (Teilumfang, offene Punkte oben bleiben außerhalb) am 24.11.2026.
 
 <a name="sf-036"></a>
 
@@ -629,7 +583,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 **Status:** Offen · **Priorität:** P3
 **Einordnung:** Lokale Pakete vorhanden; Releasefreigabe fehlt
-**Abhängigkeiten:** SF-025,SF-027,SF-034
+**Abhängigkeiten:** SF-025
 
 - [x] Lokale Build-/Paket-/Sprachprüfungen und Reviewartefakte vorhanden; keine Release-/AppSource-/PTE-Abnahme daraus ableiten.
 - [ ] Publisher/Lizenz/Releaseziel, Produktgrenzen, Berechtigungen, datensparsame Telemetrie, Hilfelinks und Zielversions-/Upgrade-/Testmatrix vor freigegebener Bereitstellung prüfen; Restkonfiguration mit SF-001.
@@ -972,7 +926,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 <a name="sf-051"></a>
 ### SF-051 — Finanzen: Teilzahlungen, Ausgleich und Zahlungsmodus robust abschließen
-**Status:** Zur Prüfung (Teilumfang, 23.11.2026) · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-039
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-039
 
 - [x] Vorhandenen `BCSF Payment Processor`, Finanzsetup, gültige Partner-/Bankkonten und Journal-Standardroutinen wiederverwenden; keine neuen direkten Postentabellen-Inserts. (Lokal im Code; nicht kompiliert.)
 - [x] Zahlungsplan je Rechnung (Seed-deterministisch, additives Marker `planVersion` 1 im `paymentSetup`; alte Snapshots bleiben Vollzahlung): voll, zwei Raten mit unterschiedlichen Zahlungsterminen, Teilzahlung mit offenem Rest, bewusst offen. Exakte Restbetragsprüfung nach jeder Rate und im Validator. [ ] „Sammelausgleich“ und separate Nutzerwahl der Modi bleiben offen.
@@ -986,7 +940,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 <a name="sf-052"></a>
 ### SF-052 — Verkauf/Einkauf: Retouren und Gutschriften vollständig als Folgeschritte
-**Status:** Zur Prüfung (Teilumfang: Gutschriften, 23.11.2026; nicht kompiliert) · [Bericht](docs/review/SF052_PRUEFBERICHT.md) · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-051
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · [Bericht](docs/review/SF052_PRUEFBERICHT.md) · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-051
 
 - [ ] Einkauf: Rücksendung/Warenausgang und Einkaufsgutschrift, Teil- und Vollretoure mit Referenz auf ursprünglichen Wareneingang/Rechnung, angemessene Bestandsdeckung.
 - [ ] Verkauf: Rücknahme/Wareneingang und Verkaufsgutschrift auf gebuchte Lieferung/Rechnung, inklusive Teilmengen und kaufmännischer Begründung; passende MWSt./Wertposten.
@@ -1000,7 +954,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 <a name="sf-053"></a>
 ### SF-053 — Inventory: Lagerbewegungen, Inventur und Umlagerung ohne WMS
-**Status:** Zur Prüfung (23.11.2026; nicht kompiliert, native Abnahme offen) · [Bericht](docs/review/SF053_PRUEFBERICHT.md) · **Priorität:** P1 · **Abhängigkeiten:** SF-049, SF-050, SF-020
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · [Bericht](docs/review/SF053_PRUEFBERICHT.md) · **Priorität:** P1 · **Abhängigkeiten:** SF-049, SF-050, SF-020
 
 - [x] Artikel-/Lagerort-/ggf. Lagerplatzstämme sowie Bestands-/Einheits-/Chargenpflichten prüfen; bestehende Artikelgeneratoren wiederverwenden.
 - [x] Standard-Artikelbuchblätter für positive/negative Korrekturen, Inventurzählung/-differenz und Umlagerungsaufträge/-buchblätter mit Versand/Empfang (je nach vorhandenem BC-Standard) erzeugen; physische und rechnerische Bestände abstimmen.
@@ -1013,7 +967,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 <a name="sf-054"></a>
 ### SF-054 — Assembly: Montage-Stammdaten und Montageaufträge
-**Status:** Zur Prüfung (23.11.2026; nicht kompiliert, native Abnahme offen) · [Bericht](docs/review/SF054_PRUEFBERICHT.md) · **Priorität:** P2 · **Abhängigkeiten:** SF-053, SF-049, SF-050, SF-029 (gemeinsamer Epic)
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · [Bericht](docs/review/SF054_PRUEFBERICHT.md) · **Priorität:** P2 · **Abhängigkeiten:** SF-053, SF-049, SF-050, SF-029 (gemeinsamer Epic)
 
 - [x] Geeignete Montageartikel, Montage-Stücklisten und Komponenten-/Ressourcenbedarf im Standard einrichten, Maße/Einheiten und Bestände validieren.
 - [x] Montageauftrag, Verbrauch und Output mit passenden Stücklisten / Fertigstellungsgraden/Datumsgrenzen über BC-Standardverfahren; ungebucht und gebucht getrennt.
@@ -1026,7 +980,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 <a name="sf-055"></a>
 ### SF-055 — Projects/Jobs: Projekte, Ressourcen und Projektabrechnung
-**Status:** Zur Prüfung (24.11.2026; nicht kompiliert, native Abnahme offen) · [Bericht](docs/review/SF055_PRUEFBERICHT.md) · **Priorität:** P2 · **Abhängigkeiten:** SF-049, SF-050, SF-051, SF-030 (gemeinsamer Epic)
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · [Bericht](docs/review/SF055_PRUEFBERICHT.md) · **Priorität:** P2 · **Abhängigkeiten:** SF-049, SF-050, SF-051, SF-030 (gemeinsamer Epic)
 
 - [x] Projekt-/Job-Stamm, Aufgaben, Planungszeilen, Ressourcen, Kosten und ggf. Artikelbezüge über vorhandene BC-Standards anlegen.
 - [x] Ressourcenzeit-/Materialverbrauch über Projektbuchblatt, Fakturavorschlag/Verkaufsrechnung und gebuchte Projekt-/Sach-/Partnerposten als nachvollziehbare Kette realisieren.
@@ -1041,7 +995,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 <a name="sf-056"></a>
 ### SF-056 — Disposition/Planning: Bedarf, Beschaffung und Vorschläge
-**Status:** Zur Prüfung (24.11.2026; nicht kompiliert, native Abnahme offen) · [Bericht](docs/review/SF056_PRUEFBERICHT.md) · **Priorität:** P2 · **Abhängigkeiten:** SF-053, SF-020, SF-029 (falls Produktionsplanung)
+**Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · [Bericht](docs/review/SF056_PRUEFBERICHT.md) · **Priorität:** P2 · **Abhängigkeiten:** SF-053, SF-020, SF-029 (falls Produktionsplanung)
 
 - [x] Planungsparameter (Wiederbeschaffungsverfahren, Lieferzeiten, Losgrößen, Wiederbeschaffungslagerorte) nur für eigens erzeugte Testsynthese setzen; bestehende Fremdstämme lesen und prüfen.
 - [x] Verkaufsbedarf, Meldebestände, vorhandenen Bestand und offene Einkaufs-/Produktionsaufträge zu Planungszeilen oder Bestellvorschlägen über BC-Standardfunktionen zusammenführen.

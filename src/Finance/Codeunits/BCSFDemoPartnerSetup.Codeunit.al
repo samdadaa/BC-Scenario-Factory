@@ -252,8 +252,12 @@ codeunit 90408 "BCSF Demo Partner Setup"
       OptionalMarketing.Init();
       OptionalMarketing."Campaign Nos." := 'CAMPAIGN';
       OptionalMarketing."Opportunity Nos." := 'OPPORTUNITY';
+      OptionalMarketing."Segment Nos." := 'SEGMENT';
+      OptionalMarketing."To-do Nos." := 'TODO';
       Fields.Add(OptionalMarketing.FieldNo("Campaign Nos."));
       Fields.Add(OptionalMarketing.FieldNo("Opportunity Nos."));
+      Fields.Add(OptionalMarketing.FieldNo("Segment Nos."));
+      Fields.Add(OptionalMarketing.FieldNo("To-do Nos."));
       FillOptional(OptionalMarketing, Fields, true, Write, AllowCreate, TempDiff);
       Clear(Fields);
       OptionalAssets.Init();

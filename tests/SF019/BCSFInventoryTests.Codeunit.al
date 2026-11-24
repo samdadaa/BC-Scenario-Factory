@@ -982,6 +982,7 @@ codeunit 90700 "BCSF Inventory Tests"
     Warehouse: Codeunit "BCSF Warehouse Processor";
     Production: Codeunit "BCSF Production Processor";
     Service: Codeunit "BCSF Service Processor";
+    Returns: Codeunit "BCSF Return Processor";
     Contract: Codeunit "BCSF Contract JSON";
     Context: JsonObject;
     Marked: JsonObject;
@@ -1001,6 +1002,7 @@ codeunit 90700 "BCSF Inventory Tests"
     Settings.Add('warehouseVersion', 1);
     Settings.Add('productionVersion', 1);
     Settings.Add('serviceVersion', 1);
+    Settings.Add('returnVersion', 1);
     Marked := Contract.Clone(Context);
     Marked.Replace('paymentSetup', Settings);
     Assert(Crm.Enabled(Marked) and Assets.Enabled(Marked) and Warehouse.Enabled(Marked) and
@@ -1024,6 +1026,12 @@ codeunit 90700 "BCSF Inventory Tests"
       Seen[5] := Seen[5] or (Production.PlanKind(Marked, 'PURCHASE.ORDER', LogicalKey) = 2);
     end;
     Assert(Seen[1] and Seen[2] and Seen[3] and Seen[4] and Seen[5], 'Every optional module must occur in 300 documents.');
+    Assert((Assets.AppreciationAmount(600) = 60) and (Assets.MaintenanceAmount(600) = 30) and (Assets.DisposalProceeds(600) = 360), 'Appreciation, maintenance and disposal amounts follow the cost.');
+    Assert(Assets.StepDate(20261101D, 2) = 20261231D, 'Follow-up postings are 30 days apart.');
+    for LogicalKey := 1 to 300 do
+      Assert(Returns.PlanKind(Marked, 'SALES.INVOICE', LogicalKey) = Returns.PlanKind(OtherRun, 'SALES.INVOICE', LogicalKey), 'The return plan must not depend on the run id.');
+    Assert(Returns.ReturnQuantity(5, true) = 3, 'A sales return is half of the invoiced quantity, rounded up.');
+    Assert(Returns.ReturnQuantity(5, false) = 1, 'A purchase return is one unit.');
     Assert(Assets.FirstDepreciation(600) = 10, 'The first monthly depreciation is one sixtieth of the cost.');
     Assert(Selection.IsCodeSelected('CRM|PLANNING', "BCSF Module Type"::CRM) and not Selection.IsCodeSelected('CRM|PLANNING', "BCSF Module Type"::Warehouse),
       'The module selection is read from exact module codes.');

@@ -6,6 +6,7 @@ using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.Finance;
 using BCScenarioFactory.Inventory;
 using BCScenarioFactory.Lifecycle;
+using BCScenarioFactory.ScenarioManagement;
 using BCScenarioFactory.Sales;
 using Microsoft.Finance.Dimension;
 using Microsoft.Finance.GeneralLedger.Ledger;
@@ -56,6 +57,8 @@ codeunit 90484 "BCSF Project Processor"
     if not AssemblyProcessor.ResourceUsable() then
       exit;
     Settings.Add('projectVersion', 1);
+    // Additive: new captures group the posting tasks below a begin/end total (multi-level task structure).
+    Settings.Add('projectStructureVersion', 1);
   end;
 
   /// <summary>True for new captures with the project marker; an unknown marker stops.</summary>
@@ -217,6 +220,7 @@ codeunit 90484 "BCSF Project Processor"
     Resource: Record Resource;
     AssemblyProcessor: Codeunit "BCSF Assembly Processor";
     Registry: Codeunit "BCSF Record Registry";
+    Selection: Codeunit "BCSF Module Selection";
     JobId: Guid;
     LineNo: Integer;
     Index: Integer;
@@ -240,6 +244,13 @@ codeunit 90484 "BCSF Project Processor"
     Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'PROJECT-TASK-1', BatchId, Task.RecordId(), JobId);
     CreateTask(Job."No.", 'T20', TaskName(Context, true), Task);
     Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'PROJECT-TASK-2', BatchId, Task.RecordId(), JobId);
+    if Selection.MarkerEnabled(Context, 'projectStructureVersion') then begin
+      // Multi-level structure: a begin total before and an end total after the posting tasks; the end total sums them.
+      CreateTotalTask(Job."No.", 'T00', TaskName(Context, false) + ' / ' + TaskName(Context, true), "Job Task Type"::"Begin-Total", '', Task);
+      Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'PROJECT-TASK-3', BatchId, Task.RecordId(), JobId);
+      CreateTotalTask(Job."No.", 'T30', TotalLbl, "Job Task Type"::"End-Total", 'T00..T30', Task);
+      Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'PROJECT-TASK-4', BatchId, Task.RecordId(), JobId);
+    end;
     for Index := 1 to Count do begin
       LineNo := Index * 10000;
       CreatePlanningLine(Job."No.", 'T10', LineNo, true, ItemNos[Index], Locations[Index], Measures[Index], Quantity, Date);
@@ -256,6 +267,20 @@ codeunit 90484 "BCSF Project Processor"
     if ProjectMode = 1 then
       exit('');
     exit(PostUsageAndBill(Context, RunId, NodeCode, LogicalKey, BatchId, Date, JobId, Job, ProjectMode, Quantity));
+  end;
+
+  local procedure CreateTotalTask(JobNo: Code[20]; TaskNo: Code[20]; Description: Text[100]; TaskType: Enum "Job Task Type"; Totaling: Text[250]; var Task: Record "Job Task")
+  begin
+    Task.Init();
+    Task.Validate("Job No.", JobNo);
+    Task.Validate("Job Task No.", TaskNo);
+    Task.Validate(Description, Description);
+    Task.Validate("Job Task Type", TaskType);
+    Task.Insert(true);
+    if Totaling <> '' then begin
+      Task.Validate(Totaling, Totaling);
+      Task.Modify(true);
+    end;
   end;
 
   local procedure CreateTask(JobNo: Code[20]; TaskNo: Code[20]; Description: Text[100]; var Task: Record "Job Task")
@@ -570,6 +595,7 @@ codeunit 90484 "BCSF Project Processor"
   end;
 
   var
+    TotalLbl: Label 'Total';
     SetupErr: Label 'The project setup is not supported or changed. Review the project number series, the project journal source code and the synthetic assembly resource.';
     ResultErr: Label 'Project results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain posting.';
 }

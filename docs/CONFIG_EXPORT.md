@@ -144,7 +144,10 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 5053 | Business Relation | Direkt |
 | 5054 | Contact Business Relation | Direkt |
 | 5071 | Campaign | Direkt |
+| 5076 | Segment Header | Direkt |
+| 5077 | Segment Line | Direkt |
 | 5079 | Marketing Setup | Direkt |
+| 5080 | To-do | Direkt |
 | 5085 | Contact Duplicate | Standard/Referenz |
 | 5086 | Cont. Duplicate Search String | Standard/Referenz |
 | 5092 | Opportunity | Direkt |
@@ -160,6 +163,10 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 5600 | Fixed Asset | Direkt |
 | 5601 | FA Ledger Entry | Direkt |
 | 5603 | FA Setup | Direkt |
+| 5607 | FA Class | Direkt |
+| 5608 | FA Subclass | Direkt |
+| 5625 | Maintenance Ledger Entry | Direkt |
+| 5626 | Maintenance | Direkt |
 | 5700 | Stockkeeping Unit | Direkt |
 | 5715 | Item Substitution | Direkt |
 | 5722 | Item Category | Direkt |
@@ -180,6 +187,8 @@ Quelle: tatsächliche Tabellenobjekte und Namespaces in den lokalen Microsoft-Sy
 | 5900 | Service Header | Direkt |
 | 5911 | Service Mgt. Setup | Direkt |
 | 5940 | Service Item | Direkt |
+| 5990 | Service Shipment Header | Direkt |
+| 5992 | Service Invoice Header | Direkt |
 | 6507 | Item Entry Relation | Standard/Referenz |
 | 6508 | Value Entry Relation | Standard/Referenz |
 | 6509 | Whse. Item Entry Relation | Standard/Referenz |

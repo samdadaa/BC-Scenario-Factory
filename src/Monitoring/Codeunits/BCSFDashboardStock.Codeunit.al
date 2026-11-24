@@ -10,6 +10,8 @@ using Microsoft.Bank.Ledger;
 using Microsoft.CRM.BusinessRelation;
 using Microsoft.CRM.Campaign;
 using Microsoft.CRM.Opportunity;
+using Microsoft.CRM.Segment;
+using Microsoft.CRM.Task;
 using Microsoft.CRM.Contact;
 using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Finance.GeneralLedger.Ledger;
@@ -17,6 +19,7 @@ using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Ledger;
 using Microsoft.FixedAssets.FixedAsset;
 using Microsoft.FixedAssets.Ledger;
+using Microsoft.FixedAssets.Maintenance;
 using Microsoft.Foundation.PaymentTerms;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Item.Catalog;
@@ -41,6 +44,7 @@ using Microsoft.Sales.Document;
 using Microsoft.Sales.History;
 using Microsoft.Sales.Receivables;
 using Microsoft.Service.Document;
+using Microsoft.Service.History;
 using Microsoft.Service.Item;
 using Microsoft.Warehouse.Activity.History;
 using Microsoft.Warehouse.Ledger;
@@ -161,7 +165,7 @@ codeunit 90369 "BCSF Dashboard Stock"
       MetricKey := TextProperty(Metric, 'key');
       ShowZero := (Header."Process Mode" = "BCSF Process Mode"::FollowUpProcesses) and
         (GroupKey = 'entries') and (MetricKey in ['customerPayment', 'vendorPayment', 'bankEntry']);
-      if (GroupKey in ['entries', 'inventory', 'assembly', 'projects', 'planning', 'warehouse', 'manufacturing', 'service', 'assets', 'contacts']) or (MetricKey in ['quote', 'blanket', 'order', 'invoice', 'postedShipment', 'postedReceipt', 'postedInvoice', 'credit', 'postedCredit']) then
+      if (GroupKey in ['entries', 'inventory', 'assembly', 'projects', 'planning', 'warehouse', 'manufacturing', 'service', 'assets', 'contacts']) or (MetricKey in ['quote', 'blanket', 'order', 'invoice', 'postedShipment', 'postedReceipt', 'postedInvoice', 'credit', 'postedCredit', 'return', 'postedReturn']) then
         if IncludeRunMetric(Metric, ShowZero) then begin
           Metric.Replace('key', GroupKey + '/' + MetricKey);
           Metrics.Add(Metric);
@@ -314,6 +318,21 @@ codeunit 90369 "BCSF Dashboard Stock"
         begin
           FilterField := Rows.Field(ItemEntry.FieldNo("Entry Type"));
           FilterField.SetRange(ItemEntry."Entry Type"::"Assembly Output");
+        end;
+      'productionItem':
+        begin
+          FilterField := Rows.Field(AssemblyItem.FieldNo("Replenishment System"));
+          FilterField.SetRange(AssemblyItem."Replenishment System"::"Prod. Order");
+        end;
+      'productionConsumption':
+        begin
+          FilterField := Rows.Field(ItemEntry.FieldNo("Entry Type"));
+          FilterField.SetRange(ItemEntry."Entry Type"::Consumption);
+        end;
+      'productionOutput':
+        begin
+          FilterField := Rows.Field(ItemEntry.FieldNo("Entry Type"));
+          FilterField.SetRange(ItemEntry."Entry Type"::Output);
         end;
       'assemblyItem':
         begin
@@ -546,6 +565,11 @@ codeunit 90369 "BCSF Dashboard Stock"
     ServiceHeaderRecord: Record "Service Header";
     CampaignRecord: Record Campaign;
     OpportunityRecord: Record Opportunity;
+    MaintenanceRecord: Record "Maintenance Ledger Entry";
+    SegmentRecord: Record "Segment Header";
+    TaskRecord: Record "To-do";
+    ServiceInvoiceRecord: Record "Service Invoice Header";
+    ServiceShipmentRecord: Record "Service Shipment Header";
   begin
     if not Rows.FindFirst() then
       Error(ChangedLbl);
@@ -835,6 +859,31 @@ codeunit 90369 "BCSF Dashboard Stock"
           Rows.SetTable(RegisteredActivity, false);
           Page.Run(PageId, RegisteredActivity);
         end;
+      Database::"Maintenance Ledger Entry":
+        begin
+          Rows.SetTable(MaintenanceRecord, false);
+          Page.Run(PageId, MaintenanceRecord);
+        end;
+      Database::"Segment Header":
+        begin
+          Rows.SetTable(SegmentRecord, false);
+          Page.Run(PageId, SegmentRecord);
+        end;
+      Database::"To-do":
+        begin
+          Rows.SetTable(TaskRecord, false);
+          Page.Run(PageId, TaskRecord);
+        end;
+      Database::"Service Invoice Header":
+        begin
+          Rows.SetTable(ServiceInvoiceRecord, false);
+          Page.Run(PageId, ServiceInvoiceRecord);
+        end;
+      Database::"Service Shipment Header":
+        begin
+          Rows.SetTable(ServiceShipmentRecord, false);
+          Page.Run(PageId, ServiceShipmentRecord);
+        end;
       Database::"Production Order":
         begin
           Rows.SetTable(ProductionOrderRecord, false);
@@ -906,11 +955,11 @@ codeunit 90369 "BCSF Dashboard Stock"
           AddMetric(Catalog, 'order', Database::"Sales Header", Page::"Sales Order List", true, SalesOrderLbl);
           AddMetric(Catalog, 'invoice', Database::"Sales Header", Page::"Sales Invoice List", true, SalesInvoiceLbl);
           AddMetric(Catalog, 'credit', Database::"Sales Header", Page::"Sales Credit Memos", true, SalesCreditLbl);
-          AddMetric(Catalog, 'return', Database::"Sales Header", Page::"Sales Return Order List", false, SalesReturnLbl);
+          AddMetric(Catalog, 'return', Database::"Sales Header", Page::"Sales Return Order List", true, SalesReturnLbl);
           AddMetric(Catalog, 'postedShipment', Database::"Sales Shipment Header", Page::"Posted Sales Shipments", true, SalesShipmentLbl);
           AddMetric(Catalog, 'postedInvoice', Database::"Sales Invoice Header", Page::"Posted Sales Invoices", true, SalesPostedInvoiceLbl);
           AddMetric(Catalog, 'postedCredit', Database::"Sales Cr.Memo Header", Page::"Posted Sales Credit Memos", true, SalesPostedCreditLbl);
-          AddMetric(Catalog, 'postedReturn', Database::"Return Receipt Header", Page::"Posted Return Receipts", false, SalesPostedReturnLbl);
+          AddMetric(Catalog, 'postedReturn', Database::"Return Receipt Header", Page::"Posted Return Receipts", true, SalesPostedReturnLbl);
         end;
       'purchase':
         begin
@@ -919,11 +968,11 @@ codeunit 90369 "BCSF Dashboard Stock"
           AddMetric(Catalog, 'order', Database::"Purchase Header", Page::"Purchase Order List", true, PurchaseOrderLbl);
           AddMetric(Catalog, 'invoice', Database::"Purchase Header", Page::"Purchase Invoices", false, PurchaseInvoiceLbl);
           AddMetric(Catalog, 'credit', Database::"Purchase Header", Page::"Purchase Credit Memos", true, PurchaseCreditLbl);
-          AddMetric(Catalog, 'return', Database::"Purchase Header", Page::"Purchase Return Order List", false, PurchaseReturnLbl);
+          AddMetric(Catalog, 'return', Database::"Purchase Header", Page::"Purchase Return Order List", true, PurchaseReturnLbl);
           AddMetric(Catalog, 'postedReceipt', Database::"Purch. Rcpt. Header", Page::"Posted Purchase Receipts", true, PurchaseReceiptLbl);
           AddMetric(Catalog, 'postedInvoice', Database::"Purch. Inv. Header", Page::"Posted Purchase Invoices", true, PurchasePostedInvoiceLbl);
           AddMetric(Catalog, 'postedCredit', Database::"Purch. Cr. Memo Hdr.", Page::"Posted Purchase Credit Memos", true, PurchasePostedCreditLbl);
-          AddMetric(Catalog, 'postedReturn', Database::"Return Shipment Header", Page::"Posted Return Shipments", false, PurchasePostedReturnLbl);
+          AddMetric(Catalog, 'postedReturn', Database::"Return Shipment Header", Page::"Posted Return Shipments", true, PurchasePostedReturnLbl);
         end;
       'inventory':
         begin
@@ -971,6 +1020,9 @@ codeunit 90369 "BCSF Dashboard Stock"
         begin
           AddMetric(Catalog, 'productionBom', Database::"Production BOM Header", Page::"Production BOM List", true, '');
           AddMetric(Catalog, 'productionOrder', Database::"Production Order", Page::"Production Order List", true, ProductionOrdersLbl);
+          AddMetric(Catalog, 'productionItem', Database::"Item", Page::"Item List", true, ProductionItemsLbl);
+          AddMetric(Catalog, 'productionConsumption', Database::"Item Ledger Entry", Page::"Item Ledger Entries", true, ProductionConsumptionLbl);
+          AddMetric(Catalog, 'productionOutput', Database::"Item Ledger Entry", Page::"Item Ledger Entries", true, ProductionOutputLbl);
           AddMetric(Catalog, 'assembly', Database::"Assembly Header", Page::"Assembly Orders", false, '');
         end;
       'projects':
@@ -987,17 +1039,22 @@ codeunit 90369 "BCSF Dashboard Stock"
         begin
           AddMetric(Catalog, 'serviceItem', Database::"Service Item", Page::"Service Item List", true, '');
           AddMetric(Catalog, 'serviceOrder', Database::"Service Header", Page::"Service Orders", true, ServiceOrdersLbl);
+          AddMetric(Catalog, 'serviceInvoice', Database::"Service Invoice Header", Page::"Posted Service Invoices", true, ServiceInvoicesLbl);
+          AddMetric(Catalog, 'serviceShipment', Database::"Service Shipment Header", Page::"Posted Service Shipments", true, ServiceShipmentsLbl);
         end;
       'assets':
         begin
           AddMetric(Catalog, 'asset', Database::"Fixed Asset", Page::"Fixed Asset List", true, '');
           AddMetric(Catalog, 'assetEntry', Database::"FA Ledger Entry", Page::"FA Ledger Entries", true, AssetEntriesLbl);
+          AddMetric(Catalog, 'maintenanceEntry', Database::"Maintenance Ledger Entry", Page::"Maintenance Ledger Entries", true, MaintenanceEntriesLbl);
         end;
       'contacts':
         begin
           AddMetric(Catalog, 'relation', Database::"Contact Business Relation", 0, false, '');
           AddMetric(Catalog, 'campaign', Database::Campaign, Page::"Campaign List", true, CampaignsLbl);
           AddMetric(Catalog, 'opportunity', Database::Opportunity, Page::"Opportunity List", true, OpportunitiesLbl);
+          AddMetric(Catalog, 'segment', Database::"Segment Header", Page::"Segment List", true, SegmentsLbl);
+          AddMetric(Catalog, 'task', Database::"To-do", Page::"Task List", true, TasksLbl);
         end;
     end;
   end;
@@ -1088,6 +1145,14 @@ codeunit 90369 "BCSF Dashboard Stock"
     ServiceOrdersLbl: Label 'Service orders';
     AssetEntriesLbl: Label 'Fixed asset entries';
     CampaignsLbl: Label 'Campaigns';
+    ProductionItemsLbl: Label 'Manufactured items';
+    ProductionConsumptionLbl: Label 'Production consumption';
+    ProductionOutputLbl: Label 'Production output';
+    ServiceInvoicesLbl: Label 'Posted service invoices';
+    ServiceShipmentsLbl: Label 'Posted service shipments';
+    MaintenanceEntriesLbl: Label 'Maintenance entries';
+    SegmentsLbl: Label 'Segments';
+    TasksLbl: Label 'Tasks';
     OpportunitiesLbl: Label 'Opportunities';
     InventoryGroupLbl: Label 'Stock movements';
     AssemblyGroupLbl: Label 'Assembly';

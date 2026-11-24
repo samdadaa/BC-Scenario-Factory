@@ -1613,10 +1613,20 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF CRM Processor - NamedType ResultErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 196152410 - NamedType 1187897619" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory segment %1</source>
+          <note from="Developer" annotates="general" priority="2">%1 = short run id</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF CRM Processor - NamedType SegmentLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 196152410 - NamedType 3134019194" size-unit="char" translate="yes" xml:space="preserve">
           <source>Qualification</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF CRM Processor - NamedType StageLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 196152410 - NamedType 2412533929" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Follow up on invoice %1</source>
+          <note from="Developer" annotates="general" priority="2">%1 = posted sales invoice number</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF CRM Processor - NamedType TaskLbl</note>
         </trans-unit>
         <trans-unit id="Table 4258977634 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Generated Record</source>
@@ -2713,6 +2723,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Payment Processor - NamedType SetupErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 945390612 - NamedType 2230233351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The return order dimensions are blocked or required dimensions are missing. Review the customer, vendor and item defaults.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Return Processor - NamedType DimensionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 945390612 - NamedType 2714761632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Return results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain posting.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Return Processor - NamedType ResultErr</note>
+        </trans-unit>
         <trans-unit id="Page 1160320011 - Control 4154419203 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1160320011">
           <source>Shows the finance setup mode in the immutable run snapshot.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -2747,6 +2767,16 @@
           <source>Asset: %1</source>
           <note from="Developer" annotates="general" priority="2">%1 = item description of the purchase</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Asset Processor - NamedType AssetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1342235110 - NamedType 2691832960" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory assets</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Asset Processor - NamedType ClassLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1342235110 - NamedType 3317213321" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Scenario Factory maintenance</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Asset Processor - NamedType MaintenanceLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1342235110 - NamedType 2714761632" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fixed asset results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain posting.</source>
@@ -4488,6 +4518,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType InventoryGroupLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 3568700015" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Maintenance entries</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType MaintenanceEntriesLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 714106639" size-unit="char" translate="yes" xml:space="preserve">
           <source>Manufacturing and assembly</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -4543,10 +4578,25 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType PostedAssemblyLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 627910496" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Production consumption</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType ProductionConsumptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 2598537561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manufactured items</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType ProductionItemsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 3476882944" size-unit="char" translate="yes" xml:space="preserve">
           <source>Production orders</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType ProductionOrdersLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 832235210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Production output</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType ProductionOutputLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 3123612817" size-unit="char" translate="yes" xml:space="preserve">
           <source>Project sales entries</source>
@@ -4678,15 +4728,35 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType SalesShipmentLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 3322642646" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Segments</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType SegmentsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 2468045820" size-unit="char" translate="yes" xml:space="preserve">
           <source>Service</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType ServiceGroupLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 2993798639" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted service invoices</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType ServiceInvoicesLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 2379501710" size-unit="char" translate="yes" xml:space="preserve">
           <source>Service orders</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType ServiceOrdersLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 3710430400" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted service shipments</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType ServiceShipmentsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 467020964 - NamedType 3802356408" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Tasks</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Dashboard Stock - NamedType TasksLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 467020964 - NamedType 1627975957" size-unit="char" translate="yes" xml:space="preserve">
           <source>Transfer entries</source>
@@ -5492,6 +5562,11 @@
           <source>The project setup is not supported or changed. Review the project number series, the project journal source code and the synthetic assembly resource.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Project Processor - NamedType SetupErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975767345 - NamedType 2410138484" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Project Processor - NamedType TotalLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1050560864 - NamedType 1422195362" size-unit="char" translate="yes" xml:space="preserve">
           <source>Purchase posting did not produce the expected vendor, inventory and accounting evidence. Keep the batch blocked for review.</source>
@@ -6618,6 +6693,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Module Selection - NamedType MarkerErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2674225786 - NamedType 961106146" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The module %1 needs Business Central Premium objects that the current license or permissions do not provide. Deselect it or use a user with a Premium license.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = module name</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit BCSF Module Selection - NamedType PremiumErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1340704077 - NamedType 496693286" size-unit="char" translate="yes" xml:space="preserve">
           <source>Edit scenarios only in the current approved company.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -6917,6 +6997,16 @@
           <source>Optional module; generates data in the follow-up stage</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Modules - NamedType PlanningLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 2572083249 - NamedType 4114026249" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This module needs Business Central Premium objects that the current license or permissions do not provide.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Modules - NamedType UnavailableErr</note>
+        </trans-unit>
+        <trans-unit id="Page 2572083249 - NamedType 703941102" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Not available: needs a Premium license or permissions</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page BCSF Frozen Modules - NamedType UnavailableScopeLbl</note>
         </trans-unit>
         <trans-unit id="Page 2572083249 - Control 3531180567 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Shows whether the module is required by the industry package or an optional module that adds its own generated data in the follow-up stage.</source>

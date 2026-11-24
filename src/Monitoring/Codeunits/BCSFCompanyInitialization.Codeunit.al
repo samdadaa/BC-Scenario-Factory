@@ -173,6 +173,7 @@ codeunit 90361 "BCSF Company Initialization"
         Profile: Codeunit "BCSF Wholesale Profile";
         Guard: Codeunit "BCSF Environment Guard";
         Enqueue: Codeunit "Job Queue - Enqueue";
+        Selection: Codeunit "BCSF Module Selection";
     begin
         // Zero document quantities intentionally disable that process without invalidating the request.
         PurchaseSelected := PurchaseSelected and (Purchases > 0);
@@ -181,6 +182,8 @@ codeunit 90361 "BCSF Company Initialization"
         if EndingDate <> Today() - 1 then
             Error(PeriodChangedErr);
         Profile.LoadModules(AdditionalModules, TempModules);
+        // A module needs its license: Premium modules (manufacturing, service) are refused when the objects are not available.
+        Selection.CheckAvailable(TempModules);
         // Fixed lock order shared with snapshots, configuration editors and the bootstrap job.
         Scenario.LockTable();
         SetupMgt.InitializeSetup();

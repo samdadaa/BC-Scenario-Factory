@@ -38,7 +38,11 @@ codeunit 90490 "BCSF Production Processor"
     ManufacturingSetup: Record "Manufacturing Setup";
     InventorySetup: Record "Inventory Setup";
     SourceCode: Record "Source Code Setup";
+    Order: Record "Production Order";
   begin
+    // Premium objects: without license-aware read and write permission the module is simply not captured.
+    if not Order.ReadPermission() or not Order.WritePermission() then
+      exit;
     if not ManufacturingSetup.Get() or not InventorySetup.Get() or not SourceCode.Get() then
       exit;
     if (ManufacturingSetup."Production BOM Nos." = '') or (ManufacturingSetup."Released Order Nos." = '') or

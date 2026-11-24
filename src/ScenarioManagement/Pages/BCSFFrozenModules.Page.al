@@ -25,6 +25,8 @@ page 90141 "BCSF Frozen Modules"
           Editable = CanSelect;
           trigger OnValidate()
           begin
+            if SelectionMode and Rec.Enabled and not Selection.IsAvailable(Rec.Module) then
+              Error(UnavailableErr);
             if SelectionMode and TempRequired.Get(Rec."Scenario Id", Rec.Module) and TempRequired.Enabled then
               Rec.TestField(Enabled, true);
           end;
@@ -53,6 +55,14 @@ page 90141 "BCSF Frozen Modules"
     SelectionMode := true;
     Rec.Copy(TempModules, true);
     TempRequired.Copy(TempBase, true);
+    // A module the license does not cover is never preselected.
+    if Rec.FindSet(true) then
+      repeat
+        if Rec.Enabled and not Selection.IsAvailable(Rec.Module) then begin
+          Rec.Enabled := false;
+          Rec.Modify();
+        end;
+      until Rec.Next() = 0;
     Rec.FindFirst();
     CurrPage.Update(false);
   end;
@@ -65,20 +75,26 @@ page 90141 "BCSF Frozen Modules"
 
   trigger OnAfterGetRecord()
   begin
-    CanSelect := SelectionMode;
+    CanSelect := SelectionMode and Selection.IsAvailable(Rec.Module);
     if TempRequired.Get(Rec."Scenario Id", Rec.Module) then
       CanSelect := SelectionMode and not TempRequired.Enabled;
-    if not CanSelect then
-      ModuleScope := IncludedLbl
+    if SelectionMode and not Selection.IsAvailable(Rec.Module) then
+      ModuleScope := UnavailableScopeLbl
     else
-      ModuleScope := PlanningLbl;
+      if not CanSelect then
+        ModuleScope := IncludedLbl
+      else
+        ModuleScope := PlanningLbl;
   end;
 
   var
     TempRequired: Record "BCSF Scenario Module" temporary;
+    Selection: Codeunit "BCSF Module Selection";
     SelectionMode: Boolean;
     CanSelect: Boolean;
     ModuleScope: Text;
     IncludedLbl: Label 'Included in industry package';
+    UnavailableScopeLbl: Label 'Not available: needs a Premium license or permissions';
+    UnavailableErr: Label 'This module needs Business Central Premium objects that the current license or permissions do not provide.';
     PlanningLbl: Label 'Optional module; generates data in the follow-up stage';
 }

@@ -2,12 +2,15 @@ namespace BCScenarioFactory.Core;
 
 using BCScenarioFactory.Assembly;
 using BCScenarioFactory.BackgroundProcessing;
+using BCScenarioFactory.CRM;
 using BCScenarioFactory.DataGeneration;
 using BCScenarioFactory.DependencyManager;
 using BCScenarioFactory.Finance;
+using BCScenarioFactory.FixedAssets;
 using BCScenarioFactory.IndustryProfiles;
 using BCScenarioFactory.Inventory;
 using BCScenarioFactory.Lifecycle;
+using BCScenarioFactory.Manufacturing;
 using BCScenarioFactory.ModuleRegistry;
 using BCScenarioFactory.Monitoring;
 using BCScenarioFactory.Planning;
@@ -16,8 +19,10 @@ using BCScenarioFactory.Purchasing;
 using BCScenarioFactory.ProcessEngine;
 using BCScenarioFactory.Sales;
 using BCScenarioFactory.ScenarioManagement;
+using BCScenarioFactory.ServiceManagement;
 using BCScenarioFactory.SetupManager;
 using BCScenarioFactory.Validation;
+using BCScenarioFactory.Warehouse;
 using System.Environment.Configuration;
 
 permissionset 90105 "BCSF ADMIN"
@@ -33,6 +38,13 @@ permissionset 90105 "BCSF ADMIN"
     codeunit "BCSF Assembly Processor" = X,
     codeunit "BCSF Project Processor" = X,
     codeunit "BCSF Planning Processor" = X,
+    codeunit "BCSF Module Selection" = X,
+    codeunit "BCSF Return Processor" = X,
+    codeunit "BCSF CRM Processor" = X,
+    codeunit "BCSF Asset Processor" = X,
+    codeunit "BCSF Warehouse Processor" = X,
+    codeunit "BCSF Production Processor" = X,
+    codeunit "BCSF Service Processor" = X,
     codeunit "BCSF Purchase Evidence" = X,
     codeunit "BCSF Wholesale Profile" = X,
     codeunit "BCSF Company Initialization" = X,

@@ -8,7 +8,10 @@ using Microsoft.CRM.BusinessRelation;
 using Microsoft.CRM.Campaign;
 using Microsoft.CRM.Contact;
 using Microsoft.CRM.Opportunity;
+using Microsoft.CRM.Segment;
 using Microsoft.CRM.Setup;
+using Microsoft.CRM.Task;
+using Microsoft.CRM.Team;
 using Microsoft.Sales.Customer;
 using Microsoft.Sales.History;
 
@@ -37,6 +40,9 @@ codeunit 90487 "BCSF CRM Processor"
     if (Marketing."Campaign Nos." = '') or (Marketing."Opportunity Nos." = '') or (SalesCycle() = '') then
       exit;
     Settings.Add('crmVersion', 1);
+    // Additive: new captures also create a segment of the opportunity contacts and a follow-up task per opportunity.
+    if (Marketing."Segment Nos." <> '') and (Marketing."To-do Nos." <> '') then
+      Settings.Add('crmExtVersion', 1);
   end;
 
   procedure Enabled(Context: JsonObject): Boolean
@@ -128,6 +134,7 @@ codeunit 90487 "BCSF CRM Processor"
     Campaign: Record Campaign;
     Opportunity: Record Opportunity;
     Registry: Codeunit "BCSF Record Registry";
+    Selection: Codeunit "BCSF Module Selection";
     ContactNo: Code[20];
     CycleNo: Code[10];
     SkipReason: Code[30];
@@ -161,8 +168,65 @@ codeunit 90487 "BCSF CRM Processor"
       Opportunity."Creation Date" := Invoice."Posting Date";
       Opportunity.Insert(true);
       Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'CRM-OPPORTUNITY', BatchId, Opportunity.RecordId(), ParentId);
+      if Selection.MarkerEnabled(Context, 'crmExtVersion') then
+        CreateExtension(RunId, NodeCode, LogicalKey, BatchId, ParentId, Invoice, Customer, ContactNo, Campaign."No.", Opportunity."No.");
     end else
       Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'CRM-SKIP', BatchId, Invoice.RecordId(), ParentId, SkipReason);
+  end;
+
+  procedure SegmentDescription(RunId: Guid): Text[100]
+  begin
+    exit(CopyStr(StrSubstNo(SegmentLbl, CopyStr(Format(RunId, 0, 4), 1, 8)), 1, 100));
+  end;
+
+  /// <summary>One segment per run with a line for every opportunity contact, and a follow-up task when the customer has a salesperson.</summary>
+  local procedure CreateExtension(RunId: Guid; NodeCode: Code[30]; LogicalKey: Integer; BatchId: Guid; ParentId: Guid; Invoice: Record "Sales Invoice Header"; Customer: Record Customer; ContactNo: Code[20]; CampaignNo: Code[20]; OpportunityNo: Code[20])
+  var
+    Segment: Record "Segment Header";
+    SegmentLine: Record "Segment Line";
+    FollowUp: Record "To-do";
+    Salesperson: Record "Salesperson/Purchaser";
+    Registry: Codeunit "BCSF Record Registry";
+    Description: Text[100];
+    LineNo: Integer;
+  begin
+    if not Segment.WritePermission() or not SegmentLine.WritePermission() then
+      exit;
+    Description := SegmentDescription(RunId);
+    Segment.SetRange(Description, Description);
+    if not Segment.FindFirst() then begin
+      Segment.Init();
+      Segment.Description := Description;
+      Segment.Date := Invoice."Posting Date";
+      Segment.Insert(true);
+      Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'CRM-SEGMENT', BatchId, Segment.RecordId(), ParentId);
+    end;
+    SegmentLine.SetRange("Segment No.", Segment."No.");
+    SegmentLine.SetRange("Contact No.", ContactNo);
+    if SegmentLine.IsEmpty() then begin
+      SegmentLine.Reset();
+      SegmentLine.SetRange("Segment No.", Segment."No.");
+      LineNo := 10000;
+      if SegmentLine.FindLast() then
+        LineNo := SegmentLine."Line No." + 10000;
+      SegmentLine.Init();
+      SegmentLine."Segment No." := Segment."No.";
+      SegmentLine."Line No." := LineNo;
+      SegmentLine.Validate("Contact No.", ContactNo);
+      SegmentLine.Insert(true);
+    end;
+    if (Customer."Salesperson Code" = '') or not Salesperson.Get(Customer."Salesperson Code") or not FollowUp.WritePermission() then
+      exit;
+    FollowUp.Init();
+    FollowUp.Type := FollowUp.Type::"Phone Call";
+    FollowUp.Description := CopyStr(StrSubstNo(TaskLbl, Invoice."No."), 1, MaxStrLen(FollowUp.Description));
+    FollowUp.Validate("Contact No.", ContactNo);
+    FollowUp.Validate("Salesperson Code", Customer."Salesperson Code");
+    FollowUp.Validate("Campaign No.", CampaignNo);
+    FollowUp.Validate("Opportunity No.", OpportunityNo);
+    FollowUp.Date := Invoice."Posting Date" + 7;
+    FollowUp.Insert(true);
+    Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'CRM-TASK', BatchId, FollowUp.RecordId(), ParentId);
   end;
 
   /// <summary>Read-only validation: the opportunity belongs to the contact of the invoice customer and to the run campaign.</summary>
@@ -171,6 +235,7 @@ codeunit 90487 "BCSF CRM Processor"
     Entry: Record "BCSF Generated Record";
     Opportunity: Record Opportunity;
     Campaign: Record Campaign;
+    FollowUp: Record "To-do";
   begin
     Entry.SetRange("Run Id", RunId);
     Entry.SetRange("Node Code", NodeCode);
@@ -202,11 +267,20 @@ codeunit 90487 "BCSF CRM Processor"
     Campaign.Get(Opportunity."Campaign No.");
     if Campaign.Description <> CampaignDescription(RunId) then
       Error(ResultErr);
+    Entry.SetRange("Artifact Code", 'CRM-TASK');
+    if Entry.FindFirst() then begin
+      Entry.TestField("Table Id", Database::"To-do");
+      FollowUp.GetBySystemId(Entry."Record SystemId");
+      FollowUp.TestField("Opportunity No.", Opportunity."No.");
+      FollowUp.TestField("Contact No.", Opportunity."Contact No.");
+    end;
   end;
 
   var
     CycleLbl: Label 'Scenario Factory sales cycle';
     StageLbl: Label 'Qualification';
+    SegmentLbl: Label 'Scenario Factory segment %1', Comment = '%1 = short run id';
+    TaskLbl: Label 'Follow up on invoice %1', Comment = '%1 = posted sales invoice number';
     CampaignLbl: Label 'Scenario Factory campaign %1', Comment = '%1 = short run id';
     OpportunityLbl: Label 'Follow-up opportunity for invoice %1', Comment = '%1 = posted sales invoice number';
     ResultErr: Label 'CRM results are missing, changed or not verifiable. Keep the batch blocked for review; do not repeat an uncertain step.';

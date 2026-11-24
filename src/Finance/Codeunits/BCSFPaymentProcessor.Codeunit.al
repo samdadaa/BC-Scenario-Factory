@@ -95,6 +95,7 @@ codeunit 90401 "BCSF Payment Processor"
         ProductionProcessor: Codeunit "BCSF Production Processor";
         ServiceProcessor: Codeunit "BCSF Service Processor";
         Selection: Codeunit "BCSF Module Selection";
+        ReturnProcessor: Codeunit "BCSF Return Processor";
     begin
         if not Scenario."Payment Posting Approved" then
             exit;
@@ -134,6 +135,8 @@ codeunit 90401 "BCSF Payment Processor"
             Settings.Add('creditVersion', 1);
         // Additive marker: stock movements (adjustment, physical inventory, transfer) for posted purchases.
         Movements.AddSettings(Settings);
+        // Additive marker: return orders (sales and purchase) when the return number series exist.
+        ReturnProcessor.AddSettings(Settings);
         // Additive markers of the optional follow-up modules. A module is captured only when it is selected in the setup.
         if Selection.IsSelected(Scenario."Scenario Id", "BCSF Module Type"::Assembly) then
             AssemblyProcessor.AddSettings(Settings);

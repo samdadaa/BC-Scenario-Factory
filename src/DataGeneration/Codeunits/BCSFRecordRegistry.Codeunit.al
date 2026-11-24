@@ -12,12 +12,16 @@ using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Inventory.Item.Substitution;
 using Microsoft.CRM.Campaign;
 using Microsoft.CRM.Opportunity;
+using Microsoft.CRM.Segment;
+using Microsoft.CRM.Task;
 using Microsoft.FixedAssets.FixedAsset;
 using Microsoft.FixedAssets.Ledger;
+using Microsoft.FixedAssets.Maintenance;
 using Microsoft.Inventory.Requisition;
 using Microsoft.Manufacturing.Document;
 using Microsoft.Manufacturing.ProductionBOM;
 using Microsoft.Service.Document;
+using Microsoft.Service.History;
 using Microsoft.Service.Item;
 using Microsoft.Warehouse.Activity.History;
 using Microsoft.Inventory.Item;
@@ -153,9 +157,11 @@ codeunit 90252 "BCSF Record Registry"
         ((Entry."Skip Reason Code" in ['COVERED', 'SOURCE']) and (Entry."Artifact Code" = 'PLANNING-SKIP') and
         (Entry."Table Id" = Database::"Sales Invoice Header") and (Entry."Node Code" in ['SALES.ORDER', 'SALES.INVOICE'])) or
         // Optional modules: a read-only preflight rejected the case before any write.
-        ((Entry."Skip Reason Code" in ['SOURCE', 'STOCK']) and (Entry."Artifact Code" in ['ASSET-SKIP', 'WHSE-SKIP', 'PRODUCTION-SKIP']) and
+        ((Entry."Skip Reason Code" in ['SOURCE', 'STOCK']) and (Entry."Artifact Code" in ['ASSET-SKIP', 'WHSE-SKIP', 'PRODUCTION-SKIP', 'RETURN-SKIP']) and
         (Entry."Table Id" = Database::"Purch. Inv. Header") and (Entry."Node Code" = 'PURCHASE.ORDER')) or
-        ((Entry."Skip Reason Code" = 'SOURCE') and (Entry."Artifact Code" in ['CRM-SKIP', 'SERVICE-SKIP']) and
+        ((Entry."Skip Reason Code" in ['SOURCE', 'STOCK']) and (Entry."Artifact Code" = 'SERVICE-SKIP') and
+        (Entry."Table Id" = Database::"Sales Invoice Header") and (Entry."Node Code" in ['SALES.ORDER', 'SALES.INVOICE'])) or
+        ((Entry."Skip Reason Code" = 'SOURCE') and (Entry."Artifact Code" in ['CRM-SKIP', 'RETURN-SKIP']) and
         (Entry."Table Id" = Database::"Sales Invoice Header") and (Entry."Node Code" in ['SALES.ORDER', 'SALES.INVOICE'])))
       then
         Error(TargetErr);
@@ -189,9 +195,9 @@ codeunit 90252 "BCSF Record Registry"
       Database::"Transfer Shipment Header", Database::"Transfer Receipt Header",
       Database::"Assembly Header", Database::"Posted Assembly Header", Database::"BOM Component", Database::"Res. Ledger Entry",
       Database::Job, Database::"Job Task", Database::"Job Planning Line", Database::"Job Ledger Entry", Database::"Requisition Line",
-      Database::Campaign, Database::Opportunity, Database::"Fixed Asset", Database::"FA Ledger Entry",
+      Database::Campaign, Database::Opportunity, Database::"Segment Header", Database::"To-do", Database::"Fixed Asset", Database::"FA Ledger Entry", Database::"Maintenance Ledger Entry",
       Database::"Registered Whse. Activity Hdr.", Database::"Production BOM Header", Database::"Production Order",
-      Database::"Service Item", Database::"Service Header",
+      Database::"Service Item", Database::"Service Header", Database::"Return Receipt Header", Database::"Return Shipment Header", Database::"Service Invoice Header", Database::"Service Shipment Header",
       Database::"Sales Header", Database::"Purchase Header", Database::"Sales Invoice Header",
       Database::"Sales Cr.Memo Header", Database::"Sales Shipment Header", Database::"Purch. Inv. Header",
       Database::"Purch. Cr. Memo Hdr.", Database::"Purch. Rcpt. Header", Database::"Cust. Ledger Entry",
