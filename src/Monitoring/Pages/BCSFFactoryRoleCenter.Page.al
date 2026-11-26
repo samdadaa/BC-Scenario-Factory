@@ -15,6 +15,8 @@ page 90364 "BCSF Factory Role Center"
       part(Workspace; "BCSF Dashboard Part")
       {
         ApplicationArea = All;
+        // The dashboard has its own tab bar; a blank part caption suppresses the page caption above it.
+        Caption = ' ', Locked = true;
       }
     }
   }

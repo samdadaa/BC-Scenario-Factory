@@ -112,3 +112,16 @@ Das Add-in hat drei Tabs; nur die aktive Ansicht ist im DOM. Das Wechseln ist re
 - **Module:** `moduleDefinitions` (Titel, Farbe, Icon, beanspruchte Schlüssel, `groups`, Kennzahlen) ist die einzige Stelle für neue Module.
 
 Prüfung: `node scripts/check_dashboard.mjs` (Chromium, synthetische Brücke) deckt Tabs, Hero, Karten, Overlay, Filter/Suche, Mandantendaten, Lauflisten, Zustände laufend/erfolgreich/Warnungen/fehlgeschlagen, DE/EN, Spalten bei 320–2200 px, Scrollverhalten und Polling ab. Nicht kompiliert, keine native BC-Prüfung. `scripts/check_dashboard_stock.mjs` ist für die frühere Gruppenoberfläche geschrieben und läuft gegen die neue Oberfläche nicht mehr.
+
+## Kompaktes Control Center (26.11.2026)
+
+Reine Darstellungsoptimierung im bestehenden Control Add-in (`dashboard.js`, `dashboard.css`; kein neues Objekt, keine fachliche Änderung, keine neuen Texte). **Zur Prüfung, nativ in BC nicht abgenommen.**
+
+- **Kopf:** eine Zeile mit kleinem Logo (Symbol des vorhandenen `src/image/Logo.png`, per CSS zugeschnitten, Seitenverhältnis erhalten, kein Rahmen/Name), Tabs und Aktionen. Das Logo wird über die neue Eigenschaft `Images` des Control Add-ins und `GetImageResource` geladen; fehlt es, bleibt es einfach weg. Keine Überschrift „Arbeitsplatz“, keine Szenariobeschreibung, keine Modulauflistung.
+- **Laufauswahl** ohne Beschriftung und ohne Laufkennung (Kurz-ID nur bei gleichnamigen Läufen), in einer Zeile mit Filtern/Suche.
+- **Gesamtstatus** in einer Zeile: Fortschrittskreis, Szenario, ein Status, `5/5`-Module, Laufzeit, Fehler/Warnungen (klickbar), „Alle Details“. Live-Zeile (aktueller Schritt, letzte Aktivität) **nur während der Verarbeitung**. Szenario-, Branchen-, Kontenplan-, Prozessstufen-, Zeitraum- und Modulangaben sowie die vollständige Aktivitätsliste stehen in „Alle Details“.
+- **Modulkarten:** eine Aktion (Kopfzeile) statt Pfeil plus „Alle Details“, kein doppelter Fortschrittsbalken, Entitätenzahl und Warnhinweis in der Unterzeile, Kennzahlen zweispaltig ohne Mindesthöhe, keine automatische Silbentrennung. Zentrale Maße als CSS-Variablen (`--sf-card-min`, `--sf-ring-s` …).
+- **Detail-Overlay:** kleinerer Kopf, kompaktere Kacheln; ein fehlerfreier, vollständiger Eintrag zeigt nur Name und `20 / 20`. Offene Mengen, Hinweise, Überspringungen und Abweichungen bleiben sichtbar, die vollständige Aussage steht im Tooltip.
+- **Mandantendaten:** gleiche Karten, Filter in einer Zeile, ohne wiederholten Geltungsbereichssatz.
+- **Läufe:** flache Zeilen (Name/Branche/Modus/Kontenplan, Status, Datum, Laufzeit, Fehler/Warnungen) mit eigener Aktion „Ergebnisse öffnen“ / „Fortschritt“ / „Fehler anzeigen“ je Lauf; Start eines Laufs bleibt in der Diagnose des gewählten Laufs. Diagnose und Expertenwerkzeuge teilen sich eine Überschrift.
+- **Grenzen:** Hell-/Dunkelmodus nicht geprüft; es gibt nur ein Logo und das Dashboard setzt weiterhin `color-scheme: light`. Die Mindestanzahl sichtbarer Karten (8) wurde im lokalen Chrome-Test bei 1440×900 mit 12 Modulen geprüft, nicht in BC.

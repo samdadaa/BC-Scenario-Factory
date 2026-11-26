@@ -234,24 +234,30 @@
     return append(label, select);
   }
 
+  // Runs are named by description and creation time; the short id only appears when two entries would read the same.
+  function runLabels(runs, withTime) {
+    const base = run => [run.description, withTime === false ? "" : run.createdAt].filter(Boolean).join(" · ");
+    const seen = new Map();
+    runs.forEach(run => seen.set(base(run), (seen.get(base(run)) || 0) + 1));
+    return new Map(runs.map(run => [run.id, seen.get(base(run)) > 1 ? base(run) + " · " + run.id.slice(-7, -1) : base(run)]));
+  }
   function selector() {
-    const section = node("section", "sf-run-picker");
-    const label = node("label", "sf-section-label", text("recent"));
-    label.htmlFor = "sf-run-select";
+    const section = node("div", "sf-run-picker");
     const select = node("select", "sf-select");
     select.id = "sf-run-select";
     select.disabled = busy;
     select.setAttribute("aria-label", text("choose"));
     const runs = model.runs.slice();
     if (model.hasSelection && !runs.some(run => run.id === model.selected.id)) runs.push(model.selected);
+    const labels = runLabels(runs);
     runs.forEach(run => {
-      const option = node("option", "", run.description + " · " + run.profile + " · " + run.createdAt + " · " + run.id.slice(-7, -1));
+      const option = node("option", "", labels.get(run.id));
       option.value = run.id;
       option.selected = model.hasSelection && run.id === model.selected.id;
       select.appendChild(option);
     });
     listen(select, "change", (event) => request("select", event.currentTarget.value));
-    append(section, label, select);
+    section.appendChild(select);
     return section;
   }
   // ---- Shared components: icons, counters, rings, module cards, overlay ----------------------------------------
@@ -405,6 +411,21 @@
     append(element, svgIcon(icon, "sf-pill-icon"), value, node("span", "sf-pill-label", label));
     return element;
   }
+  // The packaged logo is cropped by CSS to its symbol, so it stays small and keeps its aspect ratio.
+  let logoUrl;
+  function logo() {
+    if (logoUrl === undefined) {
+      try { logoUrl = window.Microsoft?.Dynamics?.NAV?.GetImageResource?.("src/image/Logo.png") || ""; } catch (_) { logoUrl = ""; }
+    }
+    if (!logoUrl) return null;
+    const frame = node("span", "sf-logo");
+    frame.dataset.renderKey = "logo";
+    const image = node("img");
+    image.src = logoUrl;
+    image.alt = text("title");
+    image.draggable = false;
+    return frame.appendChild(image), frame;
+  }
   function searchBox(value, onInput) {
     const label = node("label", "sf-search");
     const input = node("input", "sf-search-input");
@@ -534,7 +555,9 @@
   // ---- Module card (both views) --------------------------------------------------------------------------------
   function chip(entry) {
     const open = Boolean(entry.openKey);
-    const element = node(open ? "button" : "div", "sf-chip");
+    // A caption with a long word gets the full card width, so words are never split inside.
+    const longest = Math.max(0, ...entry.caption.split(/\s+/).map(word => word.length));
+    const element = node(open ? "button" : "div", "sf-chip" + (longest > 12 ? " sf-chip-wide" : ""));
     element.dataset.renderKey = "chip:" + entry.id;
     const value = node("strong", "sf-chip-value");
     if (entry.count === undefined) value.textContent = "—";
@@ -558,20 +581,24 @@
     const card = node(safe ? "button" : "div", "sf-tile sf-step");
     card.dataset.renderKey = "step:" + step.entityCode;
     const value = node("strong", "sf-step-value");
-    append(value, countNode(step.confirmed), node("span", "", " / " + number(step.target)));
-    append(card, node("span", "sf-stock-label", localized(step.entity)), value,
-      node("span", "sf-help", text("created") + " / " + text("target") + " · " + text("remaining") + " " + number(step.remaining)),
-      node("span", "sf-step-state", step.complete ? text("completed") : localized(step.state)));
+    append(value, countNode(step.confirmed), node("span", "sf-chip-target", " / " + number(step.target)));
+    append(card, node("span", "sf-stock-label", localized(step.entity)), value);
+    // A completed entity without findings needs no further words; deviations stay visible.
+    if (!step.complete) {
+      card.appendChild(node("span", "sf-step-state", localized(step.state) + " · " + text("remaining") + " " + number(step.remaining)));
+    }
     if (step.skipped > 0)
       card.appendChild(node("span", "sf-warning", text("skippedUnits") + " · " + number(step.skipped)));
     if (step.reviewUnits > 0)
       card.appendChild(node("span", "sf-warning", text("reviewUnits") + " · " + number(step.reviewUnits)));
     if (safe && metric.count !== step.confirmed)
       card.appendChild(node("span", "sf-help", text("stockOpen") + " · " + number(metric.count)));
+    const tip = [text("created") + " / " + text("target") + " " + number(step.confirmed) + " / " + number(step.target),
+      text("remaining") + " " + number(step.remaining), step.complete ? text("completed") : localized(step.state)];
+    card.title = (safe ? text("stockOpen") + " · " : "") + tip.join(" · ");
     if (safe) {
       card.type = "button";
       card.dataset.stockFocus = "result:" + entry.key;
-      card.title = text("stockOpen");
       card.disabled = busy;
       listen(card, "click", () => request("runOpen", entry.key));
     }
@@ -613,45 +640,26 @@
     bubble.appendChild(svgIcon(definition.icon, "sf-icon"));
     const heading = node("span", "sf-module-heading");
     heading.appendChild(node("span", "sf-module-title", module.title));
+    const sub = node("span", "sf-module-subline");
     if (run) {
       const badge = node("span", "sf-module-state");
       append(badge, module.state === "done" ? svgIcon("check", "sf-check") : node("span", "sf-module-dot"), node("span", "", stateLabel(module.state)));
-      heading.appendChild(badge);
-    } else heading.appendChild(node("span", "sf-module-sub", entityCountText(module)));
+      sub.appendChild(badge);
+    }
+    sub.appendChild(node("span", "sf-module-sub", entityCountText(module)));
+    if (module.issues > 0) {
+      const warning = node("span", "sf-more-warn", "⚠ " + number(module.issues));
+      warning.title = text("warningsLabel");
+      sub.appendChild(warning);
+    }
+    heading.appendChild(sub);
     append(toggle, bubble, heading);
     if (run) toggle.appendChild(ring(module.percent, "sf-ring-small"));
     toggle.appendChild(svgIcon("chevron", "sf-chevron"));
     card.appendChild(toggle);
-    if (run) {
-      // The bar slot stays reserved so finishing a module never moves the card content.
-      const meter = node("div", "sf-module-meter" + (module.state === "done" || module.percent === null ? " sf-meter-off" : ""));
-      meter.setAttribute("role", "progressbar");
-      meter.setAttribute("aria-label", module.title);
-      meter.setAttribute("aria-valuemin", "0");
-      meter.setAttribute("aria-valuemax", "100");
-      if (module.percent !== null) meter.setAttribute("aria-valuenow", String(module.percent));
-      const bar = node("span", "sf-module-bar");
-      bar.setAttribute("style", "width:" + (module.percent === null ? 0 : module.percent) + "%");
-      meter.appendChild(bar);
-      card.appendChild(meter);
-    }
     const chips = node("div", "sf-chips");
     module.headline.forEach(entry => chips.appendChild(chip(entry)));
     card.appendChild(chips);
-    const more = node("button", "sf-module-more");
-    more.type = "button";
-    more.dataset.action = "more:" + module.id;
-    more.disabled = busy;
-    more.setAttribute("aria-haspopup", "dialog");
-    listen(more, "click", () => openOverlay("module", module.id, "more:" + module.id));
-    append(more, node("span", "", run ? entityCountText(module) : text("allDetails")));
-    if (module.issues > 0) {
-      const warning = node("span", "sf-more-warn", "⚠ " + number(module.issues));
-      warning.title = text("warningsLabel");
-      more.appendChild(warning);
-    }
-    more.appendChild(node("span", "sf-more-link", run ? text("allDetails") : ""));
-    card.appendChild(more);
     return card;
   }
   function moduleGrid(modules, empty) {
@@ -734,7 +742,37 @@
     if (run.cancelRequested) add("warn", text("cancelRequested"));
     body.appendChild(node("p", "sf-quality" + qualityTone(run), localized(run.quality) || text("quality")));
     if (list.children.length) body.appendChild(list);
+    body.appendChild(runFacts(run));
+    const events = run.events || [];
+    if (events.length) {
+      const activity = node("section", "sf-overlay-missing");
+      activity.appendChild(node("h4", "", text("activityTitle")));
+      const feed = node("ul", "sf-feed-list");
+      events.forEach(entry => {
+        const item = node("li", "sf-feed-item");
+        item.dataset.renderKey = "event:" + entry.at + ":" + entry.node + ":" + entry.status;
+        append(item, node("time", "sf-feed-time", timeText(entry.at)), node("span", "", eventLine(entry)));
+        feed.appendChild(item);
+      });
+      body.appendChild(append(activity, feed));
+    }
     return shell.assemble();
+  }
+  // Everything the permanent header no longer repeats: scenario, industry, setup, period, modules, mode and times.
+  function runFacts(run) {
+    const company = model.company && (!model.company.runId || model.company.runId === run.id) ? model.company : undefined;
+    const industry = company?.industry ? localized(company.industry) : run.profile;
+    const facts = node("dl", "sf-facts sf-overlay-facts");
+    // Values such as the setup, process level, period and modules already carry their own wording from the server.
+    [[text("hdrIndustry"), industry], [text("status"), localized(run.status)], [text("started"), run.started], [text("finished"), run.finished],
+      [text("completedBatches"), number(run.completedBatches) + " / " + number(run.totalBatches)]].forEach(([label, value]) => {
+      if (value) facts.appendChild(append(node("div"), node("dt", "", label), node("dd", "", value)));
+    });
+    const notes = node("ul", "sf-fact-notes");
+    [company?.chart, localized(company?.processMode || run.processMode), company?.period, company?.modules].forEach(value => {
+      if (value) notes.appendChild(node("li", "", value));
+    });
+    return append(node("section", "sf-overlay-missing"), facts, notes);
   }
   const qualityTone = run => run.qualityCode === 0 ? " sf-success" : run.qualityCode === 1 ? " sf-warning" : run.qualityCode === 2 ? " sf-error" : "";
   function overlayPanel(modules, analysis) {
@@ -783,14 +821,15 @@
     });
     return list;
   }
+  // The scenario description moved into the run details. Only a company-level error stays permanently visible.
   function companyPanel() {
+    const info = model.company;
+    if (!info) return null;
+    if (!info.error && model.hasSelection) return null;
     const company = node("section", "sf-company");
-    append(company, node("strong", "", [model.company.name, localized(model.company.industry)].filter(Boolean).join(" · ")),
-      node("span", "sf-help", [model.company.chart, localized(model.company.processMode || ""), localized(model.company.status)].filter(Boolean).join(" · ")));
-    if (model.company.period) company.appendChild(node("span", "sf-help", model.company.period));
-    if (model.company.modules) company.appendChild(node("span", "sf-help", model.company.modules));
-    if (model.company.error) {
-      const error = node("div", "sf-error", localized(model.company.phase) + ": " + model.company.error);
+    if (!model.hasSelection) company.appendChild(node("strong", "", [info.name, localized(info.industry)].filter(Boolean).join(" · ")));
+    if (info.error) {
+      const error = node("div", "sf-error", localized(info.phase) + ": " + info.error);
       error.setAttribute("role", "alert");
       company.appendChild(error);
     }
@@ -803,34 +842,28 @@
     if (entry.node && entry.units > 0) line = line.concat(text("confirmed") + " " + number(entry.units));
     return line.join(" · ");
   }
-  // The newest activity and the current step are visible without opening; the full list opens on demand.
+  // While a run is active the current step and the newest activity show in one line; afterwards they live in the details.
   function feedPanel(run, analysis) {
+    if (!analysis.runActive) return null;
     const events = run.events || [];
-    const feed = node("details", "sf-feed");
-    const summary = node("summary", "sf-feed-summary");
+    const feed = node("div", "sf-feed");
     const current = run.currentNode && model.steps.find(step => step.node === run.currentNode);
-    if (analysis.runActive) {
-      const step = node("span", "sf-feed-step");
-      append(step, node("span", "sf-feed-label", text("currentStepLabel")),
-        node("strong", "", current ? localized(current.entity) : run.currentNode || text("noCurrentStep")));
-      summary.appendChild(step);
-    }
+    const step = node("span", "sf-feed-step");
+    append(step, node("span", "sf-feed-label", text("currentStepLabel")),
+      node("strong", "", current ? localized(current.entity) : run.currentNode || text("noCurrentStep")));
     const last = node("span", "sf-feed-last");
     append(last, svgIcon("activity", "sf-pill-icon"), node("span", "sf-feed-label", text("activityTitle")),
       node("span", "sf-feed-text", events.length ? timeText(events[0].at) + " · " + eventLine(events[0]) : text("noActivity")));
-    summary.appendChild(last);
-    feed.appendChild(summary);
-    const list = node("ul", "sf-feed-list");
-    events.forEach(entry => {
-      const item = node("li", "sf-feed-item");
-      item.dataset.renderKey = "event:" + entry.at + ":" + entry.node + ":" + entry.status;
-      append(item, node("time", "sf-feed-time", timeText(entry.at)), node("span", "", eventLine(entry)));
-      list.appendChild(item);
-    });
-    feed.appendChild(list);
-    return feed;
+    return append(feed, step, last);
   }
-  // Compact overall status: one title row, one row of status pills, one live row.
+  function runAction(run, id) {
+    const code = run.statusCode;
+    if ([11, 13].includes(code)) return "primaryErrors";
+    if ([4, 5, 6, 8].includes(code)) return "primaryProgress";
+    if ([9, 10].includes(code)) return "primaryResults";
+    return "";
+  }
+  // Compact overall status in one row: ring, title and status, a few counters, runtime and the details link.
   function heroPanel(analysis) {
     const run = model.selected;
     const code = run.statusCode;
@@ -842,24 +875,13 @@
     gauge.title = text("overallProgress");
     const body = node("div", "sf-hero-body");
     const top = node("div", "sf-hero-top");
-    const industry = model.company?.industry ? localized(model.company.industry) : run.profile;
-    append(top, node("h2", "", run.description), node("span", "sf-status sf-status-" + tone, localized(run.status)),
-      node("span", "sf-run-meta", [text("hdrIndustry") + ": " + industry, localized(run.processMode)].join(" · ")),
-      node("span", "sf-quality" + qualityTone(run), localized(run.quality) || text("quality")));
+    append(top, node("h2", "", run.description), node("span", "sf-status sf-status-" + tone, localized(run.status)));
     if (run.pauseRequested) top.appendChild(node("span", "sf-flag", text("pauseRequested")));
     if (run.cancelRequested) top.appendChild(node("span", "sf-flag sf-warning", text("cancelRequested")));
-    const details = node("button", "sf-button sf-link", text("allDetails"));
-    details.type = "button";
-    details.dataset.action = "issues:details";
-    details.dataset.always = "";
-    listen(details, "click", () => openOverlay("issues", "", "issues:details"));
-    top.appendChild(details);
     const pills = node("div", "sf-hero-pills");
     pills.appendChild(pill("ok", "check", append(node("strong"), countNode(analysis.done, "/" + analysis.total)), text("moduleDone"), text("modulesDone")));
-    if (analysis.runActive || analysis.running > 0)
+    if (analysis.runActive && analysis.running > 0)
       pills.appendChild(pill("run", "activity", append(node("strong"), countNode(analysis.running)), text("moduleOpen"), text("modulesRunning")));
-    if (analysis.waiting > 0)
-      pills.appendChild(pill("wait", "wait", append(node("strong"), countNode(analysis.waiting)), text("moduleWaiting"), text("modulesWaiting")));
     [["err", "error", analysis.errors, "errorsLabel"], ["warn", "warn", analysis.warnings, "warningsLabel"]].forEach(([kind, icon, value, key]) => {
       if (value <= 0) return;
       const element = pill(kind, icon, append(node("strong"), countNode(value)), text(key), text(key), "issues:" + kind);
@@ -872,9 +894,16 @@
     if (run.startedIso) elapsed.dataset.start = run.startedIso;
     if (run.startedIso && run.finishedIso) elapsed.dataset.end = run.finishedIso;
     pills.appendChild(pill("time", "timer", elapsed, "", text("elapsedLabel")));
-    append(body, top, pills);
+    const details = node("button", "sf-button sf-link", text("allDetails"));
+    details.type = "button";
+    details.dataset.action = "issues:details";
+    details.dataset.always = "";
+    listen(details, "click", () => openOverlay("issues", "", "issues:details"));
+    append(top, pills, details);
+    body.appendChild(top);
     if ([4, 5].includes(code) && run.earliest) body.appendChild(node("span", "sf-run-meta", text("earliest") + " · " + run.earliest));
-    body.appendChild(feedPanel(run, analysis));
+    const feed = feedPanel(run, analysis);
+    if (feed) body.appendChild(feed);
     return append(section, gauge, body);
   }
   const passes = (module, filter) => filter === "all" || (filter === "warn" ? module.issues > 0 || module.state === "review" :
@@ -901,14 +930,13 @@
   }
   function modulePanel(view, analysis, filtered) {
     const section = node("section", "sf-steps");
-    if (view.companyProgress)
-      append(section, node("h3", "", text("companyProgress")), node("p", "sf-scope", text("selectedRunScope") + " · " + view.selected.description));
     if (!view.steps.length) return append(section, node("p", "sf-help", text("noSteps")));
     const shown = filtered || analysis.modules;
     return append(section, moduleGrid(shown, text("noMatch")));
   }
   function generationView(main) {
-    if (model.company) main.appendChild(companyPanel());
+    const company = companyPanel();
+    if (company) main.appendChild(company);
     if (!model.hasSelection) {
       if (model.company?.steps) {
         const view = { selected: { description: model.company.industry }, steps: model.company.steps, companyProgress: true, runStock: { metrics: [] } };
@@ -922,9 +950,11 @@
     }
     const analysis = analyse(model);
     shownModules = analysis.modules;
-    append(main, selector(), heroPanel(analysis));
+    const subbar = node("div", "sf-subbar");
+    append(subbar, selector());
     const bar = filterBar(analysis.modules);
-    if (bar) main.appendChild(bar);
+    if (bar) subbar.appendChild(bar);
+    append(main, subbar, heroPanel(analysis));
     const filtered = analysis.modules.filter(module => passes(module, genFilter) && matchesQuery(module, genQuery));
     append(main, modulePanel(model, analysis, filtered), actionPanel());
     return analysis;
@@ -940,7 +970,8 @@
       const options = [["", text("stockAllRuns")]];
       const runs = model.runs.slice();
       if (model.hasSelection && !runs.some(run => run.id === model.selected.id)) runs.push(model.selected);
-      runs.forEach(run => options.push([run.id, run.description + " · " + run.createdAt + " · " + run.id.slice(-7, -1)]));
+      const labels = runLabels(runs);
+      runs.forEach(run => options.push([run.id, labels.get(run.id)]));
       if (stock.runId && !runs.some(run => run.id === stock.runId)) options.push([stock.runId, stock.runId]);
       bar.appendChild(stockSelect("stockRun", "stockRun", options, stock.runId));
     }
@@ -948,10 +979,7 @@
     shownModules = modules;
     if (modules.length >= 9) bar.appendChild(searchBox(dataQuery, value => { dataQuery = value; }));
     else dataQuery = "";
-    const scopeText = stock.entireCompany ? text("stockCompany") :
-      stock.runId ? text("selectedRunScope") + " · " + (model.runs.find(run => run.id === stock.runId)?.description || stock.runId) :
-      text("stockGenerated") + " · " + text("stockAllRuns");
-    append(section, bar, node("p", "sf-scope", scopeText));
+    section.appendChild(bar);
     if (!stock.all) section.appendChild(node("p", "sf-help", text("dataLoading")));
     else section.appendChild(moduleGrid(modules.filter(module => matchesQuery(module, dataQuery)), text("noMatch")));
     main.appendChild(section);
@@ -972,14 +1000,17 @@
     const section = node("section", "sf-run-list");
     const runs = model.runs.slice();
     if (model.hasSelection && !runs.some(run => run.id === model.selected.id)) runs.push(model.selected);
-    runs.forEach(run => {
-      const selected = model.hasSelection && run.id === model.selected.id;
-      const row = node("button", "sf-run-row" + (selected ? " sf-run-selected" : ""));
-      row.type = "button";
-      row.dataset.action = "pick:" + run.id;
+    runs.forEach(listed => {
+      const selected = model.hasSelection && listed.id === model.selected.id;
+      // The selected run is always shown with its freshest values.
+      const run = selected ? Object.assign({}, listed, model.selected) : listed;
+      const row = node("div", "sf-run-row" + (selected ? " sf-run-selected" : ""));
       row.dataset.renderKey = "run:" + run.id;
-      row.disabled = busy;
-      if (selected) row.setAttribute("aria-current", "true");
+      const pick = node("button", "sf-run-pick");
+      pick.type = "button";
+      pick.dataset.action = "pick:" + run.id;
+      pick.disabled = busy;
+      if (selected) pick.setAttribute("aria-current", "true");
       const main = node("span", "sf-run-main");
       const industry = model.company?.runId === run.id && model.company.industry ? localized(model.company.industry) : run.profile;
       const setup = model.company?.runId === run.id ? model.company.chart : "";
@@ -991,32 +1022,42 @@
       const elapsed = node("span", "sf-elapsed", elapsedText(run.startedIso, run.finishedIso));
       if (run.startedIso) elapsed.dataset.start = run.startedIso;
       if (run.startedIso && run.finishedIso) elapsed.dataset.end = run.finishedIso;
-      append(clock, node("span", "sf-run-when", (run.startedIso ? text("started") + " " : "") + started), elapsed);
+      append(clock, node("span", "sf-run-when", started), elapsed);
       const marks = node("span", "sf-run-marks");
       if (run.failedBatches > 0) marks.appendChild(pill("err", "error", append(node("strong"), countNode(run.failedBatches)), "", text("errorsLabel")));
       if (run.reviewBatches > 0) marks.appendChild(pill("warn", "warn", append(node("strong"), countNode(run.reviewBatches)), "", text("warningsLabel")));
-      append(row, main, node("span", "sf-status sf-status-" + tone, localized(run.status)), clock, marks);
-      listen(row, "click", () => pickRun(run.id));
+      append(pick, main, node("span", "sf-status sf-status-" + tone, localized(run.status)), clock, marks);
+      listen(pick, "click", () => pickRun(run.id));
+      row.appendChild(pick);
+      const action = runAction(run);
+      if (action) row.appendChild(button(action, "sf-button sf-run-open", "primary", run.id));
       section.appendChild(row);
     });
     return section;
   }
   function runsView(main) {
-    if (model.company) main.appendChild(companyPanel());
+    const company = companyPanel();
+    if (company) main.appendChild(company);
     if (!model.company) main.appendChild(summaryPanel());
     if (model.hasSelection || model.runs.length) append(main, runList());
     else append(main, node("section", "sf-empty", text("empty")));
-    if (model.hasSelection) main.appendChild(actionPanel());
+    if (model.hasSelection) main.appendChild(actionPanel(!runAction(model.selected)));
   }
-  function actionPanel() {
+  let diagnosticsShown = false;
+  function expertGroup() {
+    const group = node("div", "sf-action-group sf-experts");
+    const actions = node("div", "sf-buttons");
+    append(group, node("h3", "", text("expertTools")), actions);
+    append(actions, button("setup", "sf-button", "setup"), button("scenarios", "sf-button", "scenarios"), button("runs", "sf-button", "runs"));
+    if (model.company.hasJob) actions.appendChild(button("companyQueue", "sf-button", "companyQueue"));
+    return group;
+  }
+  function actionPanel(showPrimary = true) {
     const section = node("section", "sf-action-groups");
     const run = model.selected;
-    let primary = "run";
-    if ([11, 13].includes(run.statusCode)) primary = "primaryErrors";
-    else if ([4, 5, 6, 8].includes(run.statusCode)) primary = "primaryProgress";
-    else if ([9, 10].includes(run.statusCode)) primary = "primaryResults";
-    else if (run.canStart && (!run.hasExecution || run.statusCode === 3)) primary = "primaryStart";
-    section.appendChild(button(primary, "sf-button sf-primary", primary === "run" ? "run" : "primary", run.id));
+    let primary = runAction(run) || "run";
+    if (primary === "run" && run.canStart && (!run.hasExecution || run.statusCode === 3)) primary = "primaryStart";
+    if (showPrimary) section.appendChild(button(primary, "sf-button sf-primary", primary === "run" ? "run" : "primary", run.id));
     const diagnostics = node("details", "sf-diagnostics");
     diagnostics.appendChild(node("summary", "sf-section-label", text("diagnostics")));
     Object.entries(groups).forEach(([key, commands]) => {
@@ -1047,6 +1088,8 @@
       if (step.external) diagnostics.appendChild(node("p", "sf-help", localized(step.entity) + " · " + text("external") + " · " + localized(step.state)));
       else diagnostics.appendChild(node("p", "sf-help", localized(step.entity) + " · " + text("artifacts") + " " + number(step.artifacts)));
     });
+    if (model.company) diagnostics.appendChild(expertGroup());
+    diagnosticsShown = true;
     section.appendChild(diagnostics);
     return section;
   }
@@ -1064,6 +1107,8 @@
     if (model.company) links.appendChild(button("workflow", "sf-button sf-primary", "workflow"));
     else links.appendChild(button("setup", "sf-button", "setup"));
     links.appendChild(button("exportPackage", "sf-button", "exportPackage"));
+    const mark = logo();
+    if (mark) toolbar.appendChild(mark);
     append(toolbar, tabBar(), links, button("refresh", "sf-button sf-refresh", "refresh"));
     const main = node("main", "sf-main");
     main.id = "sf-tab-panel";
@@ -1071,15 +1116,16 @@
     main.setAttribute("role", "tabpanel");
     main.setAttribute("aria-labelledby", "sf-tab-" + activeTab);
     shownModules = [];
+    diagnosticsShown = false;
     let analysis;
     if (activeTab === "generation") analysis = generationView(main);
     else if (activeTab === "data") dataView(main);
     else runsView(main);
-    if (model.company) {
-      const experts = node("details", "sf-experts");
-      append(experts, node("summary", "", text("expertTools")), button("setup", "sf-button", "setup"), button("scenarios", "sf-button", "scenarios"), button("runs", "sf-button", "runs"));
-      if (model.company.hasJob) experts.appendChild(button("companyQueue", "sf-button", "companyQueue"));
-      main.appendChild(experts);
+    if (model.company && !diagnosticsShown) {
+      // Without a selected run the expert tools still need a home; they share the one diagnostics heading.
+      const experts = node("details", "sf-diagnostics");
+      append(experts, node("summary", "sf-section-label", text("diagnostics")), expertGroup());
+      main.appendChild(node("section", "sf-action-groups")).appendChild(experts);
     }
     const footer = node("footer", "sf-footer");
     const feedback = node("div", "sf-feedback");

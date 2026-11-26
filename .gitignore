@@ -31,3 +31,10 @@
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Build-Artefakte, Pakete und Testergebnisse (SF-Aufräumung 26.11.2026)
+artifacts/
+*.zip
+.altestrunner/codecoverage.json
+TestResults*/
+TestResults*.xml

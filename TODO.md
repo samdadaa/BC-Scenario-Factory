@@ -1,10 +1,10 @@
 # TODO – BC Scenario Factory: aktueller Backlog
 
-**Abgleich: 21.11.2026 · Quellstand 1.0.7.3 · Dokumentationsänderung zur Prüfung.** Aktuelle Quellen, Manifest, Testhost und lokale Nachweise sind maßgeblich. Der [bisherige vollständige Wortlaut](docs/review/BACKLOG_VOR_ABGLEICH_2026-11-21.md) bleibt als Historie erhalten; dortige Zwischenstände sind keine zusätzliche Arbeitsliste.
+**Abgleich: 25.11.2026 · Quellstand 1.0.12.0 · Dokumentationsänderung zur Prüfung.** Aktuelle Quellen, Manifest, Testhost und lokale Nachweise sind maßgeblich. Der [bisherige vollständige Wortlaut](docs/review/BACKLOG_VOR_ABGLEICH_2026-11-21.md) bleibt als Historie erhalten; dortige Zwischenstände sind keine zusätzliche Arbeitsliste.
 
 ## Stand und nächste Arbeit
 
-Vorhanden: **156 AL-Dateien in 22 Modulen (Stand 24.11.2026, nicht kompiliert)**, separate Test-App **1.3.0.3 mit 48 Testmethoden**, sieben ausführbare führende Entitäten (Debitor, Kreditor, Artikel, Einkaufsbestellung, Verkaufsangebot/-auftrag/-rechnung). Zahlung/Ausgleich ist ein vorhandener Folgedienst, kein eigener zusätzlicher Entitätsgenerator. Die acht optionalen Fachmodule Lager, Fertigung, Montage, Projekte, Service, Anlagen, CRM und Planung sind in der Einrichtung wählbar und erzeugen im Folgeprozess eigene Daten (SF-028–SF-033, SF-054–SF-056; nativ abgenommen am 24.11.2026, ebenso Rahmenaufträge, Retouren, Anlagen-/Service-/CRM-/Projekt-Erweiterungen, Lizenzprüfung und Dashboard). Es gibt keine reine Planungsauswahl mehr.
+Vorhanden: **157 AL-Dateien in 24 Modulen (gezählt 26.11.2026, nicht kompiliert)**, separate Test-App **1.8.0.0 mit 79 Testmethoden**, sieben ausführbare führende Entitäten (Debitor, Kreditor, Artikel, Einkaufsbestellung, Verkaufsangebot/-auftrag/-rechnung). Zahlung/Ausgleich ist ein vorhandener Folgedienst, kein eigener zusätzlicher Entitätsgenerator. Die acht optionalen Fachmodule Lager, Fertigung, Montage, Projekte, Service, Anlagen, CRM und Planung sind in der Einrichtung wählbar und erzeugen im Folgeprozess eigene Daten (SF-028–SF-033, SF-054–SF-056; nativ abgenommen am 24.11.2026, ebenso Rahmenaufträge, Retouren, Anlagen-/Service-/CRM-/Projekt-Erweiterungen, Lizenzprüfung und Dashboard). Es gibt keine reine Planungsauswahl mehr.
 
 Normalweg: **Einrichtung → Kontenplan einmalig → Großhandel → Module → Größe → Prozessstufe und Zeitraum → Zusammenfassung → Hintergrundstart → Dashboard/Ergebnisse**. Unterstützt sind Stammdaten, ungebuchte Belege, Standardbuchungen sowie vollständige Zahlung/Ausgleich. Der Zeitraum neuer Firmenrequests endet gestern; technische Erstellzeitstempel bleiben aktuell.
 
@@ -12,9 +12,9 @@ Normalweg: **Einrichtung → Kontenplan einmalig → Großhandel → Module → 
 | --- | --- | --- |
 | Reale P0-Sandbox-/Fehler-/Rechteabnahme | [SF-042](#sf-042) | Vorhandene Implementierungen SF-003–SF-021 und SF-037–SF-045 prüfen; keine Neuimplementierung ihrer Grundlagen |
 | Durchgängige gebuchte Großhandelsabnahme | [SF-024](#sf-024) | Bestehende Firmeninitialisierung aus SF-045 und Nachweise aus SF-042 wiederverwenden |
-| AL-Runner und fehlende Regressionen | [SF-025](#sf-025) | Vorhandene Test-App ausführen/gezielt ergänzen; 48 kompilierte Methoden sind kein bestandener Testlauf |
-| Fachlicher Folgeprozess-Rest | [SF-022](#sf-022) | Teilzahlungen, Gutschriften und Retouren; vorhandene Vollzahlung nicht erneut bauen |
-| Sichere Partnerbankstämme | [SF-039](#sf-039) | Firmenverrechnungsbank BCSF-PAY erfüllt diesen offenen Teil nicht |
+| AL-Runner und fehlende Regressionen | [SF-025](#sf-025) | Vorhandene Test-App ausführen/gezielt ergänzen; 79 gezählte Methoden sind kein bestandener Testlauf |
+| Fachlicher Folgeprozess-Rest | [SF-022](#sf-022) | Teilzahlungen, Gutschriften und Retouren umgesetzt (SF-051/SF-052) |
+| Sichere Partnerbankstämme | [SF-039](#sf-039) | Partnerbankstämme umgesetzt |
 | Last, Retention, weitere Fachmodule/Branchen | [SF-026](#sf-026)–[SF-036](#sf-036) | Eigenständige künftige Aufträge; keine Ausführung durch diese Bereinigung |
 | Externe Konfiguration/Releaseentscheidungen | [SF-001](#sf-001), [SF-036](#sf-036) | Publisher, installierte Zielversion/Lizenz/Rollen und externe ID-Belegung bestätigen |
 
@@ -45,7 +45,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 
 **Aktuelle Entwicklungsreihenfolge:** [Generator- und Modulfahrplan ab 22.11.2026](#entwicklungsfahrplan-ab-22112026--vollständig-definierte-generatoren-vor-neuen-branchen). Neue Tickets SF-049–SF-056 erst einzeln nach Freigabe implementieren.
 
-**Aktueller Auftrag 22.11.2026:** SF-049 bis SF-053 ausdrücklich gemeinsam zur sequenziellen Umsetzung ausgewählt. Lokaler Teilstand SF-049/SF-050 siehe [Prüfbericht](docs/review/SF049_SF050_PRUEFBERICHT.md); native Abnahme und sichere Buchungsisolation offen, SF-051–SF-053 noch nicht implementiert. Dieser Auftrag ersetzt die älteren rein dokumentarischen Freigabevermerke für diese Auswahl.
+**Aktueller Auftrag 22.11.2026:** SF-049 bis SF-053 ausdrücklich gemeinsam zur sequenziellen Umsetzung ausgewählt. Lokaler Teilstand SF-049/SF-050 siehe [Prüfbericht](docs/review/SF049_SF050_PRUEFBERICHT.md); native Abnahme und sichere Buchungsisolation offen, SF-051–SF-053 implementiert und nativ abgenommen. Dieser Auftrag ersetzt die älteren rein dokumentarischen Freigabevermerke für diese Auswahl.
 
 **Aktuelle Begrenzung 23.11.2026:** Ausschließlich SF-050 fertigstellen, einschließlich ausdrücklich nachbeauftragter Ergänzung fehlender technischer Einrichtung bei Existing, danach Stop. Native Tests übernimmt der Nutzer. SF-051 bis SF-053 bleiben offen. [Aktueller Prüfbericht](docs/review/SF050_PRUEFBERICHT.md).
 
@@ -74,7 +74,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-019](#sf-019) | P1 | Zur Prüfung | Umgesetzt im bestätigten Stammdatenumfang |
 | [SF-020](#sf-020) | P1 | Zur Prüfung | Bestellung/Eingang/Rechnung umgesetzt; Gutschriften SF-022 |
 | [SF-021](#sf-021) | P1 | Zur Prüfung | Umgesetzt; Übersicht korrigiert |
-| [SF-022](#sf-022) | P1 | Zur Prüfung | Teilumfang umgesetzt; fachlicher Ausbau offen |
+| [SF-022](#sf-022) | P1 | Zur Prüfung | Teilzahlungen, Gutschriften und Retouren umgesetzt |
 | [SF-023](#sf-023) | P1 | Zur Prüfung | Großhandel umgesetzt; ursprüngliche Profilbreite teilweise offen |
 | [SF-024](#sf-024) | P1 | Zur Prüfung | Technischer Pfad vorhanden; E2E-Abnahme offen |
 | [SF-025](#sf-025) | P1 | Zur Prüfung | Test-App vorhanden; Ausführung und Abdeckung offen |
@@ -88,7 +88,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-036](#sf-036) | P3 | Offen | Lokale Pakete vorhanden; Releasefreigabe fehlt |
 | [SF-037](#sf-037) | P0 | Zur Prüfung | Umgesetzt; Normalnavigation durch SF-045 ersetzt |
 | [SF-038](#sf-038) | P0 | Zur Prüfung | Umgesetzt; Finanzbasis gemeinsam mit SF-017 |
-| [SF-039](#sf-039) | P0 | Zur Prüfung | Partnerqualität umgesetzt; Partnerbankstämme offen |
+| [SF-039](#sf-039) | P0 | Zur Prüfung | Partnerqualität und Partnerbankstämme umgesetzt |
 | [SF-040](#sf-040) | P0 | Zur Prüfung | Prüfstruktur für vorhandene Generatoren umgesetzt |
 | [SF-041](#sf-041) | P0 | Zur Prüfung | Umgesetzt; native Filter-/Rechteabnahme offen |
 | [SF-042](#sf-042) | P0 | Zur Prüfung | Regeln/Bedienung vorhanden; P0-Abnahme offen |
@@ -101,13 +101,13 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 | [SF-049](#sf-049) | P0 | Erledigt | Gemeinsamer Stammdatenpool, Preflight und Mengenvertrag; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-050](#sf-050) | P0 | Erledigt | Einzelvorgänge, sichere Fortsetzung, Skip-/Prüfzustände und Existing-Foundation; nativ vom Nutzer getestet (23.11.2026) |
 | [SF-051](#sf-051) | P1 | Erledigt | Teilzahlung/Raten/offene Posten; Rabatt, Toleranz, Sammelausgleich nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
-| [SF-052](#sf-052) | P1 | Erledigt | Gutschriften im Folgeprozess; Retouren nicht im Umfang; nativ vom Nutzer abgenommen (24.11.2026) |
+| [SF-052](#sf-052) | P1 | Erledigt | Gutschriften und Retouren (Rücksendeaufträge/Rückgabebelege) im Folgeprozess; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-053](#sf-053) | P1 | Erledigt | Lagerbewegungen ohne WMS; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-054](#sf-054) | P2 | Erledigt | Montage; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-055](#sf-055) | P2 | Erledigt | Projekte; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-056](#sf-056) | P2 | Erledigt | Planungsvorschläge; nativ vom Nutzer abgenommen (24.11.2026) |
 | [SF-057](#sf-057) | P2 | Zur Prüfung | Dashboard als Live Control Center (Laufstatus, Modulkarten, Aktivitätsfeed); native Abnahme offen |
-| [SF-058](#sf-058) | P2 | Zur Prüfung | Dashboard in drei Ansichten (Generierung, Mandantendaten, Läufe), Detail-Overlay, kompakter Kopf; native Abnahme offen |
+| [SF-058](#sf-058) | P2 | Zur Prüfung | Dashboard in drei Ansichten (Generierung, Mandantendaten, Läufe), Detail-Overlay, kompakter Kopf; native Abnahme offen; Kompaktierung 26.11.2026 (Logo, einzeiliger Kopf, kleinere Karten/Kacheln, flache Laufliste) lokal geprüft, nativ offen |
 
 
 ## Ticketdetails
@@ -420,13 +420,13 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 ### SF-022 — Zahlungen, Ausgleich, Gutschriften und Folgeprozesse
 
 **Status:** Zur Prüfung · **Priorität:** P1
-**Einordnung:** Teilumfang umgesetzt; fachlicher Ausbau offen
+**Einordnung:** Teilzahlungen, Gutschriften und Retouren umgesetzt
 **Abhängigkeiten:** SF-020,SF-021
 
 - [x] Vollständige Debitoren-/Kreditorenzahlung und Ausgleich tatsächlich gebuchter Rechnungen via Standardjournal mit synthetischer Bank ohne Übermittlung implementiert.
 - [x] Nachauftrag 1.0.7.2: erforderliche Branchenmodule plus optionale Planungsmarkierungen in Workflow/Request/Snapshot/Dashboard; keine Ziele für unfertige Module.
 - [x] Nachauftrag 1.0.7.3: validiertes Startdatum bis gestern, eingefrorener Zeitraum, reproduzierbare Beleg-/Buchungs-/Zahlungsdaten und geschützte Altrequests/Captures implementiert.
-- [ ] Teilzahlungen sowie Einkaufs-/Verkaufsgutschriften und Retouren fachlich spezifizieren und nach eigener Auswahl implementieren; keine vollständige SF-022-Erfüllung behaupten.
+- [x] Teilzahlungen (SF-051), Einkaufs-/Verkaufsgutschriften (SF-052) und Retouren (`BCSFReturnProcessor`) im Code vorhanden, kompiliert, getestet und nativ abgenommen (Nutzerangabe 25.11.2026).
 - [ ] Native Restbeträge, Ausgleich, Zahlungsrabatte, DE/EN-Modulauswahl, Datumsgrenzen/Arbeitsdatum/Tageswechsel, Buchungs-/Lagerperioden, Rechte und Altstand-Upgrade prüfen.
 
 **Belege:** [BCSFPaymentProcessor.Codeunit.al](src/Finance/Codeunits/BCSFPaymentProcessor.Codeunit.al), [BCSFProcessCoordinator.Codeunit.al](src/ProcessEngine/Codeunits/BCSFProcessCoordinator.Codeunit.al), [INDUSTRY_INITIALIZATION.md](docs/INDUSTRY_INITIALIZATION.md).
@@ -469,7 +469,7 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 **Einordnung:** Test-App vorhanden; Ausführung und Abdeckung offen
 **Abhängigkeiten:** SF-001,SF-016,SF-024
 
-- [x] Separate Test-App 1.3.0.3 mit 48 Methoden vorhanden, referenziert Main-App 1.0.7.3; Main-App enthält keine Test-Dependency.
+- [x] Separate Test-App 1.8.0.0 mit 79 Methoden vorhanden, referenziert Main-App 1.0.12.0; Main-App enthält keine Test-Dependency.
 - [x] Buildskript, deterministische Fixtures, bestehende negative/native Referenzmethoden und dokumentierte Laufvoraussetzungen vorhanden; Tests sind kompiliert.
 - [ ] AL-Tests tatsächlich im BC-Runner ausführen, Fixtures/Ergebnisse festhalten und Lücken zu Kernfehlern, Finance, Berechtigungen, Recovery, Datenrealismus und Dashboard-Standardlisten konkret schließen. Kein zweites Testprojekt anlegen.
 
@@ -627,12 +627,12 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 ### SF-039 — Realistische Geschäftspartner und nutzbare Partnerstammdaten
 
 **Status:** Zur Prüfung · **Priorität:** P0
-**Einordnung:** Partnerqualität umgesetzt; Partnerbankstämme offen
+**Einordnung:** Partnerqualität und Partnerbankstämme umgesetzt
 **Abhängigkeiten:** SF-010, SF-011, SF-018, SF-038
 
 - [x] Natürliche DE/EN-Partnerkataloge, konsistente synthetische Adressen/reservierte E-Mails, Ansprechpartner, Liefer-/Bestelladressen und konfigurierbare Fachzuordnungen implementiert.
-- [x] Parent-/Child-Herkunft und deterministische Werte vorhanden; BCSF-PAY aus SF-022 ist eine synthetische Firmenbank, keine Debitoren-/Kreditorenbankverbindung.
-- [ ] Sichere synthetische Partnerbankstämme/Präferenzen und deren fachlichen Bedarf konkretisieren; bisherigen offenen Umfang nicht mit Firmenverrechnungsbank abhaken.
+- [x] Parent-/Child-Herkunft und deterministische Werte vorhanden; BCSF-PAY aus SF-022 ist die synthetische Firmenbank; Partnerbankverbindungen siehe unten.
+- [x] Synthetische Kunden-/Lieferantenbankstämme beim Anlegen der Partner vorhanden (`BCSFPartnerChildren`, Marker `bankAccountVersion`); kompiliert, getestet, abgenommen (Nutzerangabe 25.11.2026).
 - [ ] Gemischte DE-Läufe mindestens 50/50 sowie EN, Plausibilität/Variation/Seed, Adress-/Banknutzung in Standardbelegen und Kinddaten-/Fehler-/Wiederanlauf nativ prüfen.
 
 **Belege:** [BCSFPartnerCatalog.Codeunit.al](src/DataGeneration/Codeunits/BCSFPartnerCatalog.Codeunit.al), [BCSFPartnerChildren.Codeunit.al](src/DataGeneration/Codeunits/BCSFPartnerChildren.Codeunit.al), [STABILIZATION_FINANCE_PARTNERS.md](docs/STABILIZATION_FINANCE_PARTNERS.md).
@@ -944,15 +944,15 @@ Wiederholte allgemeine Vorgehensblöcke sowie doppelte Sicherheits-/Abnahmesätz
 ### SF-052 — Verkauf/Einkauf: Retouren und Gutschriften vollständig als Folgeschritte
 **Status:** Erledigt (Nutzerabnahme nach nativem Test, 24.11.2026) · [Bericht](docs/review/SF052_PRUEFBERICHT.md) · **Priorität:** P1 · **Abhängigkeiten:** SF-050, SF-022, SF-051
 
-- [ ] Einkauf: Rücksendung/Warenausgang und Einkaufsgutschrift, Teil- und Vollretoure mit Referenz auf ursprünglichen Wareneingang/Rechnung, angemessene Bestandsdeckung.
-- [ ] Verkauf: Rücknahme/Wareneingang und Verkaufsgutschrift auf gebuchte Lieferung/Rechnung, inklusive Teilmengen und kaufmännischer Begründung; passende MWSt./Wertposten.
+- [x] Einkauf: Rücksendung/Warenausgang und Einkaufsgutschrift, Teil- und Vollretoure mit Referenz auf ursprünglichen Wareneingang/Rechnung, angemessene Bestandsdeckung.
+- [x] Verkauf: Rücknahme/Wareneingang und Verkaufsgutschrift auf gebuchte Lieferung/Rechnung, inklusive Teilmengen und kaufmännischer Begründung; passende MWSt./Wertposten.
 - [x] Nicht gebuchte Gutschriften separat von gebuchten Kreditbelegen behandeln; keine negativen Rechnungen als Ersatz für echte Standardgutschriften.
 - [x] Bezug zu ursprünglicher Rechnung/Belegzeile, Preis/Rabatt/Steuer/Einheit, Lager-/Wert-/Sach-/Partnerposten und ggf. Zahlungsausgleich konsistent; zeitliche Reihenfolge erhalten.
-- [ ] Einzelmodul, Komplettszenario und vorbefüllter Fremdstammdatensatz testen; Ausgangsbelege mit fehlender/teilweise bereits retournierter Menge kontrolliert skippen.
+- [x] Einzelmodul, Komplettszenario und vorbefüllter Fremdstammdatensatz testen; Ausgangsbelege mit fehlender/teilweise bereits retournierter Menge kontrolliert skippen.
 - [x] Starter/Run Snapshot/Registry/Drilldowns und DE/EN ergänzen; bei fehlenden BC-Funktionen Grenzen kennzeichnen.
 **Abnahme:** gebuchte Teil-/Vollretouren und Gutschriften als echte BC-Standardbelege in Einkauf und Verkauf nachweisbar.
 
-**Umsetzung 23.11.2026 (Teilumfang):** Ungebuchte, gebuchte Teil- und (Verkauf) Vollgutschriften zu gebuchten Rechnungen im Folgeprozess über die vorhandenen Generatoren (`BCSF Credit Memo Processor`, 90481); Partnerbankkonten (SF-039-Teil) beim Anlegen der Partner. Offen: Rücksendung/Rückgabebelege, Ausgleich mit der Rechnung, Quoten-/Optionsfelder, Dashboard-Sonderkachel, native Abnahme.
+**Umsetzung 23.11.2026 (Teilumfang):** Ungebuchte, gebuchte Teil- und (Verkauf) Vollgutschriften zu gebuchten Rechnungen im Folgeprozess über die vorhandenen Generatoren (`BCSF Credit Memo Processor`, 90481); Partnerbankkonten (SF-039-Teil) beim Anlegen der Partner. Rücksendung/Rückgabebelege inzwischen über `BCSFReturnProcessor` umgesetzt; im Code Vorhandenes ist laut Nutzer kompiliert, getestet und abgenommen (25.11.2026).
 
 <a name="sf-053"></a>
 ### SF-053 — Inventory: Lagerbewegungen, Inventur und Umlagerung ohne WMS

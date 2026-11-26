@@ -14,6 +14,7 @@ controladdin "BCSF Dashboard"
   Scripts = 'src/Monitoring/Dashboard/translations.js',
     'src/Monitoring/Dashboard/dashboard.js';
   StyleSheets = 'src/Monitoring/Dashboard/dashboard.css';
+  Images = 'src/image/Logo.png';
   StartupScript = 'src/Monitoring/Dashboard/startup.js';
   RecreateScript = 'src/Monitoring/Dashboard/startup.js';
 

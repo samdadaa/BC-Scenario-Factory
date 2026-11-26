@@ -14,7 +14,10 @@
 
 **SF-049/SF-050, lokaler Teilstand 1.0.10.0:** Neuer modulabhängiger Mandantenpool Version 3, eingefrorene Auswahl und explizite STOCK-Auslassungsnachweise mit Dashboard-/Qualitätswarnung. Zwei additive Registryfelder, weiterhin 145 Main-Objekte. SF-049/SF-050 In Arbeit; SF-051–SF-053 nicht implementiert. [Umfang, echte Prüfungen und offene native Abnahme](../review/SF049_SF050_PRUEFBERICHT.md).
 
-# Modulindex – Zielarchitektur
+# Modulindex
+
+**Verifizierter Bestand (26.11.2026, aus dem Quellcode gezählt):** 157 `.al`-Dateien unter `src/` in 24 Modulordnern, alle 24 mit AL-Code. Davon 154 Objekte mit ID im `app.json`-Bereich 90100–90999 (belegt: 90100–90492, keine doppelte ID); Interface, Control Add-in und Profile haben keine ID. Typen: 82 Codeunits, 22 Pages, 21 Tables, 14 Enums, 9 PageExtensions, 5 EnumExtensions, je 1 PermissionSet (90105 „BCSF ADMIN“), Interface, ControlAddIn und Profile. Pro Modul: Core 15, ScenarioManagement 23, Monitoring 24, BackgroundProcessing 16, DataGeneration 10, ModuleRegistry 9, DependencyManager 9, Finance 8, Sales 7, Inventory 7, Purchasing 5, SetupManager 4, Validation 4, Lifecycle 4, IndustryProfiles 3, je 1 in Assembly, CRM, FixedAssets, Manufacturing, Planning, ProcessEngine, Projects, ServiceManagement, Warehouse. Die Ticketabschnitte darunter sind historische Zwischenstände; bei Widerspruch gilt dieser Block und die Tabelle.
+
 
 **SF-048 / 1.0.9.0:** 145 Main-AL-Objekte. Core ergänzt Enum 90114, DataGeneration den lesenden Master Data Source 90259; vorhandene ScenarioManagement-, IndustryProfiles-, DependencyManager-, BackgroundProcessing-, ProcessEngine-, Monitoring-, Sales-, Purchasing- und Inventoryobjekte verwenden explizit bestätigte Fremdlaufstammdaten. Keine neue Tabelle/Seite/Engine. [Vertrag](../MODULAR_GENERATION.md), [Prüfbericht](../review/SF048_PRUEFBERICHT.md). **Zur Prüfung**. Nachfolgende Zählstände sind historisch.
 
@@ -36,22 +39,22 @@ Für neue oder geänderte Generatoren gelten die [SF-042-Qualitätsregeln](../AR
 
 | Modul | Kategorie | Ziel | Status |
 | --- | --- | --- | --- |
-| [Core](details/src/Core.md) | Kern | `src/Core/` | Grundlagen/Sprache/Vertrag/Finanzmodus: 14 AL-Objekte, zur Prüfung |
-| [ScenarioManagement](details/src/ScenarioManagement.md) | Kern | `src/ScenarioManagement/` | Vorlagen/Ziele/Snapshots/Steps/Wizard: 22 AL-Objekte, zur Prüfung |
-| [IndustryProfiles](details/src/IndustryProfiles.md) | Kern | `src/IndustryProfiles/` | 1 AL-Objekt: generische versionierte Syntheseregeln; zur Prüfung. Vollständige Branchenprofile weiterhin geplant. |
-| [ModuleRegistry](details/src/ModuleRegistry.md) | Kern | `src/ModuleRegistry/` | Vertrag/Katalog/Proben: 10 AL-Objekte, zur Prüfung |
+| [Core](details/src/Core.md) | Kern | `src/Core/` | Grundlagen/Sprache/Vertrag/Finanzmodus: 15 AL-Objekte, zur Prüfung |
+| [ScenarioManagement](details/src/ScenarioManagement.md) | Kern | `src/ScenarioManagement/` | Vorlagen/Ziele/Snapshots/Steps/Wizard: 23 AL-Objekte, zur Prüfung |
+| [IndustryProfiles](details/src/IndustryProfiles.md) | Kern | `src/IndustryProfiles/` | 3 AL-Objekte: generische versionierte Syntheseregeln, Starterkatalog, Großhandelsprofil; zur Prüfung. Vollständige Branchenprofile weiterhin geplant. |
+| [ModuleRegistry](details/src/ModuleRegistry.md) | Kern | `src/ModuleRegistry/` | Vertrag/Katalog/Proben: 9 AL-Objekte, zur Prüfung |
 | [DependencyManager](details/src/DependencyManager.md) | Kern | `src/DependencyManager/` | Graph/Plan/Vorschau: 9 AL-Objekte, zur Prüfung |
 | [SetupManager](details/src/SetupManager.md) | Kern | `src/SetupManager/` | 4 AL-Objekte: temporärer Setup-Diff, Manager, Vorschau und Laufkarten-Erweiterung; zur Prüfung. |
-| [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | 9 AL-Objekte: Partnerregeln/-katalog/-kinddaten, Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. |
+| [DataGeneration](details/src/DataGeneration.md) | Kern | `src/DataGeneration/` | 10 AL-Objekte: Partnerregeln/-katalog/-kinddaten, Seed, Vorschau und immutable Herkunftsregistry; zur Prüfung. |
 | [ProcessEngine](details/src/ProcessEngine.md) | Kern | `src/ProcessEngine/` | 1 Objekt für SF-021-Prozessquoten, Mengen und Datum, zur Prüfung |
-| [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 17 AL-Objekte: Qualitätsabschluss, Ausführung, Queue und begrenzte Recovery mit Checkpoints/Steuerung; zur Prüfung. |
+| [BackgroundProcessing](details/src/BackgroundProcessing.md) | Kern | `src/BackgroundProcessing/` | 16 AL-Objekte: Qualitätsabschluss, Ausführung, Queue und begrenzte Recovery mit Checkpoints/Steuerung; zur Prüfung. |
 | [Validation](details/src/Validation.md) | Kern | `src/Validation/` | 4 AL-Objekte: immutable Qualitätsbefunde, Manager, Severity und Ergebnisliste; zur Prüfung |
-| [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | 18 AL-Objekte: JS-Dashboard, Role-Center/Profil, Kennzahlen, Historie und Wizard-Ausführungsintegration, zur Prüfung |
+| [Monitoring](details/src/Monitoring.md) | Kern | `src/Monitoring/` | 24 AL-Objekte: JS-Dashboard, Role-Center/Profil, Kennzahlen, Historie und Wizard-Ausführungsintegration, zur Prüfung |
 | [Lifecycle](details/src/Lifecycle.md) | Kern | `src/Lifecycle/` | Teilweise implementiert, 4 AL-Objekte, Zur Prüfung. |
-| [Finance](details/src/Finance.md) | Fach | `src/Finance/` | 7 AL-Objekte: lesender Finanzcheck, versionierter Paketmanager/Paketvermerk, Auswahl/Vorschau und zwei PageExtensions; zur Prüfung. Keine Fachbuchungsgeneratoren. |
+| [Finance](details/src/Finance.md) | Fach | `src/Finance/` | 8 AL-Objekte: lesender Finanzcheck, versionierter Paketmanager/Paketvermerk, Auswahl/Vorschau und zwei PageExtensions; zur Prüfung. Keine Fachbuchungsgeneratoren. |
 | [Sales](details/src/Sales.md) | Fach | `src/Sales/` | 7 AL-Objekte: Customer-Generator und SF-021-Angebote/Aufträge/Rechnungen; zur Prüfung, native BC-Abnahme offen. |
-| [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | 2 AL-Objekte: echter Vendor-Generator und EnumExtension-Bindung; zur Prüfung. Beleggeneratoren geplant. |
-| [Inventory](details/src/Inventory.md) | Fach | `src/Inventory/` | Sechs SF-019-Objekte, Artikel-/Beziehungsstämme ohne Bestände, zur Prüfung |
+| [Purchasing](details/src/Purchasing.md) | Fach | `src/Purchasing/` | 5 AL-Objekte: Vendor-Generator, Einkaufsbestellung/-rechnung und EnumExtension-Bindungen; zur Prüfung. |
+| [Inventory](details/src/Inventory.md) | Fach | `src/Inventory/` | 7 AL-Objekte: Artikel-/Beziehungsstämme und Lagerbewegungen ohne WMS (SF-053), zur Prüfung |
 | [Warehouse](details/src/Warehouse.md) | Fach | `src/Warehouse/` | Optional wählbar: Lagereingang und Einlagerung (1 AL-Objekt, SF-028); nativ abgenommen |
 | [Manufacturing](details/src/Manufacturing.md) | Fach | `src/Manufacturing/` | Optional wählbar: Fertigungsstückliste und Fertigungsauftrag (1 AL-Objekt, SF-029); nativ abgenommen |
 | [Assembly](details/src/Assembly.md) | Fach | `src/Assembly/` | Optional wählbar: Montageartikel und -aufträge (1 AL-Objekt, SF-054); nativ abgenommen |

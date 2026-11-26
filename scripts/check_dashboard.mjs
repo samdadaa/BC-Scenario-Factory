@@ -51,7 +51,7 @@ fixture.stock = { entireCompany: true, runId: '', all: true, groups: [{ key: 'ma
 const fixtureText = JSON.stringify(fixture).replaceAll('<', '\\u003c');
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/dashboard.css"></head><body><div id="controlAddIn"></div><script>
 window.fixture=${fixtureText}; window.calls=[]; window.hold=false; window.failNext=false;
-window.Microsoft={Dynamics:{NAV:{InvokeExtensibilityMethod:function(name,args,skip,success,failure){
+window.Microsoft={Dynamics:{NAV:{GetImageResource:function(name){return '/Logo.png';},InvokeExtensibilityMethod:function(name,args,skip,success,failure){
   window.calls.push({name,args,skip});
   function finish(){if(window.failNext){window.failNext=false;failure();return;}
     if(name==='Command' && args[0]==='select'){window.fixture.selected=window.fixture.runs.find(r=>r.id===args[1]);}
@@ -66,6 +66,7 @@ const server = createServer(async (request, response) => {
   try {
     if (request.url === '/') { response.setHeader('Content-Type', 'text/html; charset=utf-8'); response.end(html); return; }
     const name = request.url.slice(1);
+    if (name === 'Logo.png') { response.setHeader('Content-Type', 'image/png'); response.end(await readFile(join(root, 'src/image/Logo.png'))); return; }
     if (!['translations.js', 'dashboard.js', 'startup.js', 'dashboard.css'].includes(name)) { response.writeHead(404); response.end(); return; }
     response.setHeader('Content-Type', name.endsWith('.css') ? 'text/css' : 'text/javascript');
     response.end(await readFile(join(root, 'src/Monitoring/Dashboard', name)));
@@ -130,14 +131,15 @@ try {
   assert.ok(await ev('document.querySelector(".sf-hero").getBoundingClientRect().height') < 150, 'Overall status is compact.');
   assert.equal(await ev('document.querySelector(".sf-pill-ok").textContent.startsWith("1/4")'), true, 'Completed modules read 1/4.');
   assert.equal(await ev('document.querySelector(".sf-pill-run strong").textContent'), '2');
-  assert.equal(await ev('document.querySelector(".sf-pill-wait strong").textContent'), '1');
+  assert.equal(await ev('document.querySelector(".sf-pill-wait")'), null, 'Waiting modules are no permanent counter.');
   assert.equal(await ev('document.querySelector(".sf-pill-warn strong").textContent'), '1', 'Entities with skipped units count as warnings.');
   assert.equal(await ev('document.querySelector(".sf-pill-err")'), null, 'No error pill without errors.');
   assert.ok(/^0:01:\d\d$/.test(await ev('document.querySelector(".sf-hero .sf-elapsed").textContent')));
   assert.equal(await ev('document.querySelector(".sf-feed-step strong").textContent'), 'Items', 'Current step is visible while running.');
   assert.ok((await ev('document.querySelector(".sf-feed-last").textContent')).includes('Items · Running'), 'Latest activity is visible without opening.');
-  assert.equal(await ev('document.querySelector(".sf-feed").open'), false);
-  assert.equal(await ev('document.querySelectorAll(".sf-feed-item").length'), 3);
+  assert.equal(await ev('document.querySelectorAll(".sf-feed-item").length'), 0, 'The full activity list is not permanent.');
+  assert.equal(await ev('document.querySelector(".sf-hero .sf-run-meta")'), null, 'Industry and mode are no longer repeated in the hero.');
+  assert.equal(await ev('document.querySelector("h1, .sf-title")'), null, 'No workplace headline.');
   assert.equal(await ev('document.querySelector(".sf-warning, .sf-hero .sf-scope")'), null, 'Long warning texts are not shown across the page.');
 
   // ---- Module cards ---------------------------------------------------------------------------------------------
@@ -145,10 +147,10 @@ try {
   assert.equal(await ev('document.querySelectorAll(".sf-module.sf-running").length'), 1);
   assert.equal(await ev('document.querySelectorAll(".sf-module-done .sf-check").length'), 1, 'Completed modules carry a green check.');
   assert.equal(await ev('new Set([...document.querySelectorAll(".sf-module")].map(e=>Math.round(e.getBoundingClientRect().height))).size'), 1, 'Equal card height.');
-  assert.equal(await ev('document.querySelector(".sf-mod-master .sf-module-more").textContent.includes("Entities: 4")'), true, 'Entity count is shown quietly.');
+  assert.equal(await ev('document.querySelector(".sf-mod-master .sf-module-sub").textContent.includes("Entities: 4")'), true, 'Entity count is shown quietly.');
+  assert.equal(await ev('document.querySelectorAll(".sf-module-more, .sf-module-meter").length'), 0, 'Each card has one details action and no duplicate meter.');
+  assert.equal(await ev('document.querySelectorAll(".sf-module > button").length'), 4, 'Exactly one details action per card (header).');
   assert.equal(await ev('document.querySelector(".sf-mod-master .sf-more-warn").textContent'), '⚠ 1', 'Module warning shown on its module.');
-  assert.equal(await ev('document.querySelector(".sf-mod-purchase .sf-module-meter").classList.contains("sf-meter-off")'), true, 'Finished module hides its bar without removing it.');
-  assert.equal(await ev('document.querySelector(".sf-mod-master .sf-module-meter").classList.contains("sf-meter-off")'), false);
   assert.equal(await ev('[...document.querySelectorAll(".sf-chips")].every(e=>e.children.length>=1&&e.children.length<=4)'), true);
   const handlerBase = await calls();
   await click('.sf-mod-master .sf-chip[data-render-key="chip:step:ITEM"]');
@@ -169,7 +171,10 @@ try {
   const labels = await ev('[...document.querySelectorAll(".sf-overlay .sf-stock-label")].map(e=>e.textContent)');
   assert.equal(new Set(labels).size, labels.length, 'No entity appears twice in the overlay.');
   assert.equal(await ev('document.querySelector(".sf-overlay .sf-step-value").textContent'), '20 / 20');
-  assert.ok(await ev('document.querySelector(".sf-overlay .sf-step.sf-tile .sf-help").textContent.includes("Outstanding")'), 'Created, target and open quantity are shown.');
+  assert.equal(await ev('document.querySelector(".sf-overlay .sf-step[data-render-key=\\"step:CUSTOMER\\"]").children.length'), 2, 'A completed entity shows only label and value.');
+  assert.ok(await ev('document.querySelector(".sf-overlay .sf-step[data-render-key=\\"step:ITEM\\"] .sf-step-state").textContent.includes("Outstanding")'), 'Open quantities stay visible.');
+  assert.ok(await ev('document.querySelector(".sf-overlay .sf-step[data-render-key=\\"step:CUSTOMER\\"]").title.includes("Outstanding")'), 'Created, target and open quantity stay available as tooltip.');
+  assert.ok(await ev('document.querySelector(".sf-overlay .sf-tile").getBoundingClientRect().height') < 70, 'Entity tiles are compact.');
   assert.ok(await ev('document.querySelector(".sf-overlay .sf-warning").textContent.includes("2")'), 'Existing hints stay visible.');
   await click('.sf-overlay [data-stock-focus="result:itemUnit"]');
   assert.deepEqual(await lastArgs(), ['runOpen', 'itemUnit']);
@@ -185,7 +190,7 @@ try {
   await ev('document.dispatchEvent(new KeyboardEvent("keydown",{key:"Escape"}))');
   assert.equal(await ev('document.querySelector(".sf-overlay")'), null, 'Escape closes.');
   assert.equal(await ev('document.activeElement.dataset.action'), 'module:master', 'Focus returns to the opener.');
-  await click('[data-action="more:sales"]');
+  await click('[data-action="module:sales"]');
   await ev('document.querySelector(".sf-overlay").click()');
   assert.equal(await ev('document.querySelector(".sf-overlay")'), null, 'Click outside closes.');
   await click('[data-action="module:purchase"]');
@@ -247,7 +252,7 @@ try {
   assert.equal(await ev('document.querySelectorAll(".sf-ring, .sf-module-meter, .sf-module-state").length'), 0, 'No progress or generation status for stock.');
   assert.equal(await ev('document.querySelector(".sf-mod-master .sf-chip[data-render-key=\\"chip:metric:customer\\"] .sf-count").textContent'), '25');
   assert.equal(await ev('document.querySelector(".sf-mod-master .sf-module-sub").textContent'), 'Entities: 4');
-  assert.equal(await ev('document.querySelector(".sf-scope").textContent'), texts.stockCompany);
+  assert.equal(await ev('document.querySelector(".sf-scope")'), null, 'No repeated scope sentence.');
   await click('.sf-mod-master .sf-chip[data-render-key="chip:metric:customer"]');
   assert.deepEqual(await lastArgs(), ['stockOpen', 'customer']);
   await click('.sf-mod-sales .sf-chip[data-render-key="chip:metric:sales/order"]');
@@ -265,7 +270,6 @@ try {
   await idle();
   assert.deepEqual(await lastArgs(), ['stockScope', 'generated']);
   await redraw(`window.fixture.stock.entireCompany=false;window.fixture.stock.runId=${JSON.stringify(firstId)};window.fixture.stock.metrics.push({key:'planned',group:'master',caption:'Planned entity',noGenerator:true,status:'No executable generator'})`);
-  assert.ok((await ev('document.querySelector(".sf-scope").textContent')).includes(texts.selectedRunScope));
   assert.equal(await ev('document.querySelectorAll("select").length'), 2, 'Scope and run filter are both available.');
   assert.equal(await ev('document.querySelector(".sf-mod-master .sf-module-sub").textContent'), 'Entities: 4', 'Entities without generator are not counted.');
   await click('[data-action="module:master"]');
@@ -298,12 +302,14 @@ try {
   assert.equal(await ev('document.querySelector(".sf-stat-review").tagName'), 'DIV', 'Zero has no unsupported action.');
   for (const [status, expectedText] of [[3, texts.primaryStart], [6, texts.primaryProgress], [9, texts.primaryResults], [11, texts.primaryErrors]]) {
     await redraw(`window.fixture.selected.statusCode=${status};window.fixture.selected.canStart=true`);
-    assert.equal(await ev('document.querySelector("[data-action=primary]").textContent'), expectedText);
-    await click('[data-action=primary]');
+    const primarySelector = status === 3 ? '.sf-action-groups > [data-action=primary]' : '.sf-run-selected [data-action=primary]';
+    assert.equal(await ev(`document.querySelector(${JSON.stringify(primarySelector)}).textContent`), expectedText);
+    if (status !== 3) assert.equal(await ev('document.querySelector(".sf-action-groups > [data-action=primary]")'), null, 'The result action sits on the run, not below the list.');
+    await click(primarySelector);
     assert.deepEqual(await lastArgs(), ['primary', firstId]);
   }
   await redraw('window.fixture.selected.statusCode=6');
-  await click('.sf-run-row:not(.sf-run-selected)');
+  await click('.sf-run-row:not(.sf-run-selected) .sf-run-pick');
   await until('document.querySelector("#sf-tab-generation").getAttribute("aria-selected")==="true"');
   assert.deepEqual(await ev('window.calls.filter(c=>c.args[0]==="select").at(-1).args'), ['select', secondId]);
   assert.equal(await ev('document.querySelector(".sf-hero h2").textContent'), 'Training · Returns', 'The chosen run opens in the generation view.');
@@ -329,7 +335,7 @@ try {
   assert.ok((await ev('document.querySelector(".sf-overlay").textContent')).includes('2 documents unposted: STOCK'));
   assert.ok((await ev('document.querySelector(".sf-overlay").textContent')).includes('Eligible 1/2 customers'));
   await redraw('window.fixture.selected.postingSkips="<img src=x onerror=window.injected=true>"');
-  assert.equal(await ev('document.querySelectorAll("img").length'), 0);
+  assert.equal(await ev('document.querySelectorAll("main img, .sf-overlay img").length'), 0);
   await ev('document.querySelector(".sf-overlay-close").click()');
   await redraw('window.fixture.selected.postingSkips="";window.fixture.selected.masterPool="";window.fixture.selected.statusCode=9;window.fixture.selected.status="Completed";window.fixture.steps=window.fixture.steps.map(s=>({...s,confirmed:s.target,remaining:0,complete:true,skipped:0}))');
   assert.equal(await ev('document.querySelector(".sf-hero").classList.contains("sf-tone-done")'), true);
@@ -337,7 +343,6 @@ try {
   assert.equal(await ev('document.querySelector(".sf-pill-run")'), null, 'Finished runs drop the running pill.');
   assert.equal(await ev('document.querySelector(".sf-hero .sf-elapsed").hasAttribute("data-end")'), true, 'The clock stops at completion.');
   assert.equal(await ev('document.querySelectorAll(".sf-module-done").length'), 4);
-  assert.equal(await ev('document.querySelectorAll(".sf-meter-off").length'), 4);
 
   // ---- Completion confirmation only on a real change ------------------------------------------------------------------
   await redraw('window.fixture.selected.statusCode=6;window.fixture.selected.status="Running";window.fixture.selected.finishedIso="";window.fixture.steps[3].confirmed=0;window.fixture.steps[3].complete=false;window.fixture.steps[3].remaining=10');
@@ -361,26 +366,26 @@ try {
     await redraw(`window.fixture.language=${JSON.stringify(language)};window.fixture.locale='de-DE'`);
     assert.equal(await ev('[...document.querySelectorAll("[role=tab]")].map(e=>e.textContent).join("|")'), 'Generierung|Mandantendaten|Läufe');
     assert.equal(await ev('document.querySelector(".sf-mod-master .sf-module-title").textContent'), 'Stammdaten');
-    assert.equal(await ev('document.querySelector(".sf-mod-master .sf-module-more").textContent.includes("Entitäten: 4")'), true);
+    assert.equal(await ev('document.querySelector(".sf-mod-master .sf-module-sub").textContent.includes("Entitäten: 4")'), true);
     assert.equal(await ev('document.querySelector(".sf-link").textContent'), 'Alle Details');
   }
   await redraw(`window.fixture.texts=${JSON.stringify(germanTexts)};window.fixture.language='de-DE'`);
   assert.equal(await ev('document.querySelector(".sf-pill-ok .sf-pill-label").textContent'), germanTexts.moduleDone);
   await redraw('window.fixture.language="en-US";window.fixture.locale="de-DE";window.fixture.texts=' + JSON.stringify(texts));
   await redraw('window.fixture.selected.description="<img src=x onerror=window.injected=true>"');
-  assert.equal(await ev('document.querySelectorAll("img").length'), 0);
+  assert.equal(await ev('document.querySelectorAll("main img, .sf-overlay img").length'), 0);
   assert.equal(await ev('Boolean(window.injected)'), false);
   assert.equal(await ev('document.querySelector(".sf-hero h2").textContent'), '<img src=x onerror=window.injected=true>');
   await redraw('window.fixture.selected.description="Training · Returns"');
-  await width(1440, 500);
+  await width(1440, 300);
   await ev('document.querySelector("#controlAddIn").scrollTop=100000');
-  assert.equal(await ev('document.querySelector(".sf-footer").getBoundingClientRect().bottom<=501'), true, 'Everything stays reachable by scrolling.');
+  assert.equal(await ev('document.querySelector(".sf-footer").getBoundingClientRect().bottom<=301'), true, 'Everything stays reachable by scrolling.');
   const scroll = await ev('document.querySelector("#controlAddIn").scrollTop');
   assert.ok(scroll > 0);
   await redraw('window.fixture.readAt="scroll"');
   assert.equal(await ev('document.querySelector("#controlAddIn").scrollTop'), scroll, 'Refresh keeps the scroll position.');
   await click('[data-action="module:master"]');
-  assert.equal(await ev('document.querySelector(".sf-overlay-panel").getBoundingClientRect().bottom<=500&&document.querySelector(".sf-overlay-panel").getBoundingClientRect().top>=0'), true, 'The overlay stays inside the visible area.');
+  assert.equal(await ev('document.querySelector(".sf-overlay-panel").getBoundingClientRect().bottom<=300&&document.querySelector(".sf-overlay-panel").getBoundingClientRect().top>=0'), true, 'The overlay stays inside the visible area.');
   await ev('document.querySelector(".sf-overlay-close").click()');
   await width(1440);
   const shot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
@@ -388,20 +393,26 @@ try {
 
   // ---- Company wizard path, real one-second polling ----------------------------------------------------------------
   await redraw(`window.fixture.company={name:"Wholesale Sandbox",industry:"Wholesale",chart:"SKR04",status:"Company initialized",processMode:"Posted documents without payments",phase:"Company foundation",error:"",runId:${JSON.stringify(secondId)},hasJob:true}`);
-  assert.equal(await ev('document.querySelectorAll(".sf-company").length'), 1);
+  assert.equal(await ev('document.querySelectorAll(".sf-company").length'), 0, 'The scenario description is not permanently shown.');
   assert.equal(await ev('document.querySelector(".sf-toolbar [data-action=scenarios]")'), null);
-  assert.equal(await ev('document.querySelector(".sf-hero .sf-run-meta").textContent.includes("Großhandel")||document.querySelector(".sf-hero .sf-run-meta").textContent.includes("Wholesale")'), true);
+  await click('[data-action="issues:details"]');
+  const detailText = await ev('document.querySelector(".sf-overlay").textContent');
+  assert.ok(detailText.includes('SKR04') && detailText.includes('Posted documents without payments'), 'Setup and mode stay reachable in the run details.');
+  assert.ok(detailText.includes('Wholesale') || detailText.includes('Großhandel'), 'Industry stays reachable in the run details.');
+  assert.equal(await ev('document.querySelectorAll(".sf-overlay .sf-feed-item").length'), 3, 'The activity list lives in the run details.');
+  await ev('document.querySelector(".sf-overlay-close").click()');
   await click('[data-action=workflow]');
   assert.deepEqual(await lastArgs(), ['workflow', '']);
   await redraw('window.fixture.company.error="<img src=x onerror=alert(1)>"');
   assert.equal(await ev('document.querySelector(".sf-company img")'), null);
   assert.equal(await ev('document.querySelector(".sf-company [role=alert]").textContent.includes("<img")'), true);
   await redraw('window.fixture.company.error=""');
-  await ev('document.querySelector(".sf-experts").open=true');
+  await ev('document.querySelector(".sf-diagnostics").open=true');
+  assert.equal(await ev('document.querySelectorAll("summary.sf-section-label").length'), 1, 'One diagnostics heading only.');
   await click('[data-action=companyQueue]');
   assert.equal(await lastArgs().then(a => a[0]), 'companyQueue');
   await redraw('window.fixture.readAt="before"');
-  await ev(`window.stableChip=document.querySelector(".sf-chip .sf-count");window.stableSelect=document.querySelector("#sf-run-select");window.stableExpert=document.querySelector(".sf-experts");window.fixture.runStock.metrics[0].count=21;window.fixture.steps[0].confirmed=21;window.fixture.readAt="after";window.hold=true;window.calls=[]`);
+  await ev(`window.stableChip=document.querySelector(".sf-chip .sf-count");window.stableSelect=document.querySelector("#sf-run-select");window.stableExpert=document.querySelector(".sf-diagnostics");window.fixture.runStock.metrics[0].count=21;window.fixture.steps[0].confirmed=21;window.fixture.readAt="after";window.hold=true;window.calls=[]`);
   await until('window.calls.some(call=>call.args[0]==="autoRefresh")');
   const autoCalls = await calls();
   assert.equal(await ev('document.querySelector("#controlAddIn").getAttribute("aria-busy")'), 'false');
@@ -411,7 +422,7 @@ try {
   await ev('window.hold=false;window.pending()');
   await until('document.querySelector(".sf-footer").textContent.includes("after")');
   assert.equal(await ev('window.stableSelect===document.querySelector("#sf-run-select")'), true, 'Run picker survives refresh.');
-  assert.equal(await ev('window.stableExpert===document.querySelector(".sf-experts") && window.stableExpert.open'), true);
+  assert.equal(await ev('window.stableExpert===document.querySelector(".sf-diagnostics") && window.stableExpert.open'), true);
   await evaluate('window.failNext=true');
   await until('document.querySelector(".sf-feedback").textContent===window.fixture.texts.error');
   assert.equal(await ev('document.querySelector("[data-action=workflow]").disabled'), false);

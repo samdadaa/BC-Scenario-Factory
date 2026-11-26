@@ -1,3 +1,9 @@
+## Verifizierter Stand und Lizenz (26.11.2026)
+
+Aus `app.json` und dem Quellcode: App `BC Scenario Factory`, Version 1.0.12.0, Publisher `Sam Da`, Application 28.0.0.0, Runtime 17.0, IDs 90100–90999, keine Abhängigkeiten, Features `NoImplicitWith` und `TranslationFile`. Quellbestand: 157 AL-Dateien in 24 Modulen ([Modulindex](modules/INDEX.md)). Separate Test-App `tests/SF019/` (Version 1.8.0.0, ID-Bereich 90700–90709, hängt von der Hauptapp ab, Hauptapp erlaubt sie über `internalsVisibleTo`) mit **79 Testmethoden im Code gezählt; nicht ausgeführt**. Die Abschnitte darunter sind historische Ticketstände; bei Widerspruch gilt dieser Abschnitt.
+
+**Lizenz:** MIT, Copyright (c) 2026 Samer Dadah, siehe [LICENSE](../LICENSE). Der `app.json`-Publisher (`Sam Da`) ist davon unabhängig; Abgleich mit dem Copyright-Namen: **Zu prüfen**.
+
 **SF-055 / SF-056 · Zur Prüfung (24.11.2026):** Projekte (Stammdaten, Aufgaben, Planungszeilen, Verbrauch über Projektbuchblatt, ungebuchte/teil-/vollgebuchte Abrechnung) und Planungsvorschläge über die Standard-Dispositionsengine im Folgeprozess, mit Vorprüfung, dokumentiertem Skip, additiver Foundation und Dashboardmodulen. App-Version unverändert. **Nativ vom Nutzer getestet und abgenommen (24.11.2026).** [SF-055](review/SF055_PRUEFBERICHT.md), [SF-056](review/SF056_PRUEFBERICHT.md).
 
 **SF-054 · Zur Prüfung (23.11.2026):** Montage im Folgeprozess für gebuchte Einkäufe: synthetischer Montageartikel mit Stückliste (und Ressource), ungebuchter sowie voll/teilweise gebuchter Montageauftrag über Standard-Posting, Vorprüfung mit kontrolliertem Skip, additive Foundation (Montageeinrichtung, Herkunftscodes, Matrix ohne Geschäftsbuchungsgruppe). App-Version unverändert. **Nativ vom Nutzer getestet und abgenommen (24.11.2026).** [Bericht und Prüffälle](review/SF054_PRUEFBERICHT.md).
@@ -42,11 +48,11 @@ Manifest: App-ID `618c08c6-601b-430a-90d2-55f96866bfa4`, Name `BC Scenario Facto
 | --- | --- |
 | Name | BC Scenario Factory |
 | App-ID | `618c08c6-601b-430a-90d2-55f96866bfa4` |
-| Publisher | `Default Publisher` (Platzhalter) |
-| Version | `1.0.0.0` |
+| Publisher | `Sam Da` (app.json, Stand 26.11.2026; frühere Platzhalter `Default Publisher` sind historisch) |
+| Version | `1.0.12.0` (app.json, Stand 26.11.2026) |
 | Application | `28.0.0.0` (aus app.json; Laufzeit-Kompatibilität ungetestet) |
 | Runtime | `17.0` (aus app.json; Kompatibilität ungetestet) |
-| IDs | `50100..50149` (50 IDs; voraussichtlich zu wenig) |
+| IDs | `90100..90999` (900 IDs; belegt 90100–90492) |
 | Abhängigkeiten | `[]` |
 | AL-Objekte | **0**, noch nicht implementiert |
 | Module | 24 geplante Verzeichnisse unter `src/`, noch ohne Code |
