@@ -49,7 +49,10 @@ page 90362 "BCSF Dashboard Part"
                     end;
                     case ActionCode of
                         'select':
-                            SelectedRunId := Commands.ParseRunId(RunId);
+                            begin
+                                SelectedRunId := Commands.ParseRunId(RunId);
+                                Clear(RunStock);
+                            end;
                         'view':
                             begin
                                 if not (RunId in ['generation', 'data', 'runs']) then
@@ -64,7 +67,10 @@ page 90362 "BCSF Dashboard Part"
                         'runOpen':
                             Stock.OpenMetric('master', RunId, false, SelectedRunId, RunStock);
                         'refresh':
-                            ReloadStock();
+                            begin
+                                Clear(RunStock);
+                                ReloadStock();
+                            end;
                         else
                             Commands.Execute(ActionCode, RunId);
                     end;
@@ -120,7 +126,9 @@ page 90362 "BCSF Dashboard Part"
     [TryFunction]
     local procedure TryAutoRefresh()
     begin
-        ReloadStock();
+        // Polling must stay cheap: the company data counts are rebuilt only on explicit view, scope or refresh commands.
+        if ActiveView <> 'data' then
+            ReloadStock();
         RenderDashboard();
     end;
 

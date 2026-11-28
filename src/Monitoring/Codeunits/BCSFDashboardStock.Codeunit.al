@@ -178,6 +178,7 @@ codeunit 90369 "BCSF Dashboard Stock"
     AddRunMetrics('assets', RunId, Metrics);
     AddRunMetrics('contacts', RunId, Metrics);
     AddRunMetrics('entries', RunId, Metrics);
+    Result.Add('runId', Format(RunId, 0, 4));
     Result.Add('metrics', Metrics);
     exit(Result);
   end;

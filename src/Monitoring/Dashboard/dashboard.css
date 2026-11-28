@@ -306,15 +306,15 @@ button.sf-chip .sf-chip-value { color: color-mix(in srgb, var(--sf-accent) 78%, 
 @keyframes sf-pop { 0% { transform: scale(1); } 35% { transform: scale(1.14); } 100% { transform: scale(1); } }
 @keyframes sf-confirm { 0% { box-shadow: 0 0 0 0 rgba(31, 157, 99, .45); } 100% { box-shadow: 0 0 0 14px rgba(31, 157, 99, 0); } }
 
-/* Logo: the symbol of the packaged logo, cropped by CSS (no distortion), transparent, no card or frame. */
-.sf-logo { flex: none; display: block; width: 46px; height: 32px; overflow: hidden; }
-.sf-logo img { display: block; width: 74px; height: 74px; max-width: none; margin: -15px 0 0 -16px; pointer-events: none; user-select: none; }
+/* Logo: the S symbol of the packaged logo, centred in a square frame (no distortion), transparent, no card or frame. */
+.sf-logo { flex: none; display: block; width: 32px; height: 32px; overflow: hidden; }
+.sf-logo img { display: block; width: 42px; height: 42px; max-width: none; margin: -5px 0 0 -5px; pointer-events: none; user-select: none; }
 .sf-tab-icon { width: 15px; height: 15px; }
 .sf-tab { padding: 6px 10px; }
 .sf-fact-notes { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--sf-soft); }
 .sf-overlay-facts { margin: 0; }
 .sf-feed-step strong, .sf-feed-text { font-weight: 500; }
-@media (max-width: 760px) { .sf-hero-pills { margin-left: 0; } .sf-run-open { display: none; } .sf-logo { width: 38px; height: 26px; } .sf-logo img { width: 61px; height: 61px; margin: -12px 0 0 -13px; } }
+@media (max-width: 760px) { .sf-hero-pills { margin-left: 0; } .sf-run-open { display: none; } .sf-logo { width: 26px; height: 26px; } .sf-logo img { width: 34px; height: 34px; margin: -4px 0 0 -4px; } }
 
 /* Section spacing: about 3 mm between toolbar rows, status row and the card grid. */
 .sf-subbar, .sf-stock .sf-data-bar, .sf-hero, .sf-summary, .sf-run-list { margin-bottom: var(--sf-section-gap); }

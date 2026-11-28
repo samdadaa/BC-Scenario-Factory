@@ -64,13 +64,31 @@ codeunit 90365 "BCSF Dashboard Data"
       Payload.Add('selected', Item);
       Payload.Add('steps', DescribeSteps(Header."Run Id"));
       // Run results are only built for the generation view; the client keeps the last result for other views.
+      // The counters of a finished run no longer change: reuse them until an explicit refresh instead of
+      // recounting every generated record on each poll.
       if ActiveView in ['', 'generation'] then begin
-        RunStock := Stock.BuildRunResults(Header."Run Id");
+        if not CanReuseRunStock(Header."Run Id", RunStock) then
+          RunStock := Stock.BuildRunResults(Header."Run Id");
         Payload.Add('runStock', RunStock);
       end;
     end;
     Payload.WriteTo(Result);
     exit(Result);
+  end;
+
+  local procedure CanReuseRunStock(RunId: Guid; RunStock: JsonObject): Boolean
+  var
+    Execution: Record "BCSF Run Execution";
+    Token: JsonToken;
+  begin
+    if not RunStock.Get('runId', Token) then
+      exit(false);
+    if Token.AsValue().AsText() <> Format(RunId, 0, 4) then
+      exit(false);
+    if not Execution.Get(RunId) then
+      exit(false);
+    exit(Execution.Status in [Execution.Status::Completed, Execution.Status::CompletedWithWarnings,
+      Execution.Status::Failed, Execution.Status::ValidationFailed, Execution.Status::Cancelled]);
   end;
 
   local procedure DescribeCompany(): JsonObject

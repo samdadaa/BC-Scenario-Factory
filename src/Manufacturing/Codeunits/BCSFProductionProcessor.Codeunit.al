@@ -165,6 +165,9 @@ codeunit 90490 "BCSF Production Processor"
       Registry.RegisterResult(RunId, NodeCode, LogicalKey, 'PRODUCTION-SKIP', BatchId, Invoice.RecordId(), ParentId, SkipReason);
   end;
 
+  // Standard status change and posting code may call Commit internally. Within this atomic batch such calls are
+  // ignored, so the batch stays all-or-nothing instead of failing with 'commit not allowed in the current scope'.
+  [CommitBehavior(CommitBehavior::Ignore)]
   local procedure Build(RunId: Guid; NodeCode: Code[30]; LogicalKey: Integer; BatchId: Guid; Date: Date; ParentId: Guid; Kind: Integer; Quantity: Decimal; Count: Integer; ItemNos: array[2] of Code[20]; Locations: array[2] of Code[10]; Measures: array[2] of Code[10]; Context: JsonObject)
   var
     Product: Record Item;

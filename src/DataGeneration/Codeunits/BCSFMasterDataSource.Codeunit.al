@@ -150,7 +150,12 @@ codeunit 90259 "BCSF Master Data Source"
     ItemVendors: JsonArray;
     CompatibleIds: JsonArray;
     BestItems: JsonArray;
+    ItemPairs: List of [Text];
+    CompatibleCache: Dictionary of [Text, JsonArray];
     HasCustomer: Boolean;
+    VendorAdded: Boolean;
+    EligibleCustomers: List of [Guid];
+    EligibleId: Guid;
     Binding: JsonObject;
     Pairs: List of [Text];
     LocationCode: Code[10];
@@ -168,6 +173,7 @@ codeunit 90259 "BCSF Master Data Source"
       if Vendor.FindSet() then
         repeat
           CheckedVendors += 1;
+          VendorAdded := false;
           if EligibleSelectedVendor(Vendor) then begin
             Item.Reset();
             Item.SetRange("Vendor No.", Vendor."No.");
@@ -177,8 +183,11 @@ codeunit 90259 "BCSF Master Data Source"
                 if EligibleItemFor(Item, LocationCode, true, SalesSelected) then begin
                   Items.Add(Format(Item.SystemId, 0, 4));
                   ItemVendors.Add(Format(Vendor.SystemId, 0, 4));
-                  if not IsSelectedVendor(Vendors, Vendor.SystemId) then
+                  // Vendors are visited once, so a flag replaces a linear search through the JSON array per item.
+                  if not VendorAdded then begin
                     Vendors.Add(Format(Vendor.SystemId, 0, 4));
+                    VendorAdded := true;
+                  end;
                 end;
               until Item.Next() = 0;
           end;
@@ -193,10 +202,13 @@ codeunit 90259 "BCSF Master Data Source"
     if SalesSelected then begin
       // Keep a compatible cohort instead of requiring one customer to support
       // every posting group found anywhere in the company.
+      // Posting pairs of the items are read once; customers with the same posting groups share one result.
+      CollectItemPairs(Items, ItemPairs);
       if Customer.FindSet() then
         repeat
           if EligibleSelectedCustomer(Customer) then begin
-            CompatibleIds := CompatibleItems(Customer, Items);
+            EligibleCustomers.Add(Customer.SystemId);
+            CompatibleIds := CompatibleItems(Customer, Items, ItemPairs, CompatibleCache);
             if CompatibleIds.Count() > BestItems.Count() then begin
               BestItems := CompatibleIds;
               HasCustomer := true;
@@ -206,12 +218,12 @@ codeunit 90259 "BCSF Master Data Source"
       if HasCustomer then
         Items := BestItems;
       CollectPostingPairs(Items, Pairs);
-      if Customer.FindSet() then
-        repeat
-          CheckedCustomers += 1;
-          if EligibleSelectedCustomer(Customer) and CustomerSupportsItems(Customer, Pairs, true) then
+      // Eligibility was already evaluated above; only the final item set still needs the posting check.
+      foreach EligibleId in EligibleCustomers do
+        if Customer.GetBySystemId(EligibleId) then
+          if CustomerSupportsItems(Customer, Pairs, true) then
             Customers.Add(Format(Customer.SystemId, 0, 4));
-        until Customer.Next() = 0;
+      CheckedCustomers := Customer.Count();
     end;
     if (Items.Count() = 0) or (SalesSelected and (Customers.Count() = 0)) or
       (PurchaseSelected and (Vendors.Count() = 0)) then
@@ -234,21 +246,51 @@ codeunit 90259 "BCSF Master Data Source"
     exit(Binding);
   end;
 
-  local procedure CompatibleItems(Customer: Record Customer; Items: JsonArray): JsonArray
+  local procedure CollectItemPairs(Items: JsonArray; var ItemPairs: List of [Text])
+  var
+    Item: Record Item;
+    Token: JsonToken;
+    Id: Guid;
+  begin
+    Clear(ItemPairs);
+    foreach Token in Items do begin
+      Evaluate(Id, Token.AsValue().AsText());
+      Item.SetLoadFields("Gen. Prod. Posting Group", "VAT Prod. Posting Group");
+      Item.GetBySystemId(Id);
+      ItemPairs.Add(Item."Gen. Prod. Posting Group" + '|' + Item."VAT Prod. Posting Group");
+    end;
+  end;
+
+  local procedure CompatibleItems(Customer: Record Customer; Items: JsonArray; ItemPairs: List of [Text]; var Cache: Dictionary of [Text, JsonArray]): JsonArray
   var
     Token: JsonToken;
-    SingleItem: JsonArray;
     Selected: JsonArray;
-    Pairs: List of [Text];
+    SinglePair: List of [Text];
+    Supported: Dictionary of [Text, Boolean];
+    CacheKey: Text;
+    Pair: Text;
+    Index: Integer;
+    Fits: Boolean;
   begin
-    foreach Token in Items do begin
-      Clear(SingleItem);
-      Clear(Pairs);
-      SingleItem.Add(Token);
-      CollectPostingPairs(SingleItem, Pairs);
-      if CustomerSupportsItems(Customer, Pairs, true) then
+    CacheKey := Customer."Gen. Bus. Posting Group" + '|' + Customer."VAT Bus. Posting Group" + '|' + Customer."Customer Posting Group";
+    if Cache.ContainsKey(CacheKey) then
+      exit(Cache.Get(CacheKey));
+    for Index := 1 to Items.Count() do begin
+      Pair := ItemPairs.Get(Index);
+      if Supported.ContainsKey(Pair) then
+        Fits := Supported.Get(Pair)
+      else begin
+        Clear(SinglePair);
+        SinglePair.Add(Pair);
+        Fits := CustomerSupportsItems(Customer, SinglePair, true);
+        Supported.Add(Pair, Fits);
+      end;
+      if Fits then begin
+        Items.Get(Index - 1, Token);
         Selected.Add(Token);
+      end;
     end;
+    Cache.Add(CacheKey, Selected);
     exit(Selected);
   end;
 
